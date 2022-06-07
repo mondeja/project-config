@@ -11,7 +11,6 @@ from project_config.exceptions import ProjectConfigException
 def add_check_command_parser(
     subparsers: "argparse._SubParsersAction[argparse.ArgumentParser]",
 ) -> argparse.ArgumentParser:
-    print(type(subparsers))
     parser = subparsers.add_parser(
         "check",
         help="Check the configuration of the project",
@@ -56,6 +55,8 @@ def build_parser() -> argparse.ArgumentParser:
 
     subparsers = parser.add_subparsers(
         title="commands",
+        dest="command",
+        required=True,
     )
     add_check_command_parser(subparsers)
     add_fix_command_parser(subparsers)
@@ -65,15 +66,11 @@ def build_parser() -> argparse.ArgumentParser:
 def run(argv: List[str] = []) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
-    if len(sys.argv) < 2:
-        parser.print_help()
-        return 1
-    command = sys.argv[1]
 
     try:
         valid = getattr(
-            importlib.import_module(f"project_config.commands.{command}"),
-            command,
+            importlib.import_module(f"project_config.commands.{args.command}"),
+            args.command,
         )(args)
     except ProjectConfigException as exc:
         if args.traceback:

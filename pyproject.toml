@@ -10,10 +10,40 @@ packages = [{ include = "project_config", from = "src" }]
 [tool.poetry.dependencies]
 python = "^3.7"
 tomlkit = "^0.11.0"
+importlib-metadata = { version = "*", python = "3.7" }
 importlib-metadata-argparse-version = "^0.1.0"
+jsonschema = "^4.6.0"
+
+[tool.poetry.group.dev.dependencies]
+mondeja-bump = "*"
+
+[tool.poetry.group.test.dependencies]
+pytest = "^7.0.0"
+pytest-cov = "^3.0.0"
+pre-commit = "^2.19.0"
+contextlib-chdir = "*"
 
 [tool.poetry.scripts]
 project-config = "project_config.__main__:main"
+
+[tool.poetry.plugins."project-config.plugins"]
+includer = "project_config.plugins.includer:IncluderPlugin"
+
+[tool.project-config]
+style = ["self-styles/foo.json"]
+
+[tool.poetry-exec-plugin.commands]
+t = "pytest"
+test = "pytest"
+"test:all" = "pytest"
+"test:show" = """pytest &&
+python -c 'import webbrowser as w;w.open("http://127.0.0.1:8080")' &&
+python -m http.server 8080 -b localhost -d htmlcov
+"""
+lint = "pre-commit run -a"
+
+[tool.pytest.ini_options]
+addopts = "-s --cov=src --cov-report=html"
 
 [tool.mypy]
 python_version = "3.7"
