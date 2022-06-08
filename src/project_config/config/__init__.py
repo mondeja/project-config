@@ -1,6 +1,7 @@
 import os
 import re
 import typing as t
+from dataclasses import dataclass
 
 import tomlkit
 
@@ -10,6 +11,7 @@ from project_config.config.exceptions import (
     ProjectConfigInvalidConfigSchema,
     PyprojectTomlFoundButHasNoConfig,
 )
+from project_config.config.style import get_style
 
 
 CONFIG_CACHE_REGEX = r"^(\d+ (minutes?)|(hours?)|(days?)|(weeks?))|(never)$"
@@ -89,3 +91,14 @@ def validate_config(config_path: str, config: t.Any) -> None:
             config_path,
             error_messages,
         )
+
+
+@dataclass
+class Config:
+    path : str
+
+    def read(self):
+        config_path, config = read_config(self.path)
+        validate_config(config_path, config)
+        config["style"] = get_style(config_path, config["style"])
+        return config

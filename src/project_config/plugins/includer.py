@@ -1,25 +1,27 @@
-import types
+import os
 import typing as t
 
-
-VerbResult = t.Dict[str, t.List[str]]
+from project_config.plugins.types import Files, Rule, VerbResult
 
 
 class IncluderPlugin:
+    @classmethod
     def verb_includeAllLines(
-        self, value: t.List[str], rule: t.Any, rule_index: int
+        cls, value: t.List[str], files: Files, rule: Rule, rule_index: int,
     ) -> VerbResult:
         expected_lines = [line.strip("\r\n") for line in value]
-        result: VerbResult = {
-            "errors": [],
-            "fixes": [],
-        }
+        result: VerbResult = {"errors": []}
 
-        for f, fpath, fcontent in enumerate(rule["files"]):
-            if isinstance(fcontent, types.GeneratorType):  # is directory
+        for f, (fpath, fcontent) in enumerate(files):
+            if not isinstance(fcontent, str):  # is directory
                 result["errors"].append(
-                    f"Found directory defined at rules[{rule_index}].files[{f}]."
-                    " The verb 'includeAllLines' can't accept directories as inputs."
+                    {
+                        "message": (
+                            f"Found directory defined at 'rules[{rule_index}].files[{f}]'."
+                            " The verb 'includeAllLines' can't accept directories as inputs."
+                        ),
+                        "file": fpath + os.sep,
+                    }
                 )
                 continue
 
@@ -28,9 +30,14 @@ class IncluderPlugin:
             for l, expected_line in enumerate(expected_lines):
                 if expected_line not in fcontent_lines:
                     result["errors"].append(
-                        f"Expected line '{expected_line}' defined"
-                        f" at 'rules[{rule_index}].includeAllLines[{l}]'"
-                        f" not found in file {fpath}"
+                        {
+                            "message": (
+                                f"Expected line '{expected_line}' defined"
+                                f" at 'rules[{rule_index}].includeAllLines[{l}]'"
+                                f" not found"
+                            ),
+                            "file": fpath,
+                        }
                     )
 
         return result

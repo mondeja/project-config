@@ -30,7 +30,7 @@ project-config = "project_config.__main__:main"
 includer = "project_config.plugins.includer:IncluderPlugin"
 
 [tool.project-config]
-style = ["self-styles/foo.json"]
+style = ["self-styles/pyproject-toml-lines.json"]
 
 [tool.poetry-exec-plugin.commands]
 t = "pytest"

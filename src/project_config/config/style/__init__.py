@@ -1,6 +1,7 @@
 import typing as t
 
-from project_config.style.fetchers import fetch_style
+from project_config.config.exceptions import ProjectConfigInvalidConfigSchema
+from project_config.config.style.fetchers import fetch_style
 
 
 def validate_style_plugins(style_path: str, style: t.Any) -> t.List[str]:
@@ -11,9 +12,6 @@ def validate_style_plugins(style_path: str, style: t.Any) -> t.List[str]:
 
 
 def validate_style_rules(style_path: str, style: t.Any) -> t.List[str]:
-    # TODO: validate rules properties consistency against plugins
-    #
-
     error_messages = []
     if "rules" not in style:
         error_messages.append(f"{style_path}.rules -> is required")
@@ -43,6 +41,9 @@ def validate_style_rules(style_path: str, style: t.Any) -> t.List[str]:
                         error_messages.append(
                             f"{style_path}.rules[{r}].files[{f}] -> must not be empty"
                         )
+            # TODO: validate rules properties consistency against plugins.
+            #   This needs the passing of the plugins object and the reading
+            #   of plugin verbs at style validation time.
     return error_messages
 
 
@@ -55,24 +56,34 @@ def validate_style(style_path: str, style: t.Any) -> t.List[str]:
     return error_messages
 
 
-def get_style(config_style: t.Union[str, t.List[str]]) -> t.Any:
+def get_style(config_path: str, config_style: t.Union[str, t.List[str]]) -> t.Any:
     error_messages = []
     if isinstance(config_style, str):
-        style = fetch_style(config_style)
-        error_messages = validate_style(config_style, style)
+        style, error_message = fetch_style(config_style)
+        if error_message:
+            error_messages.append(f"style -> {error_message}")
+        error_messages.extend(validate_style(config_style, style))
     else:
         style = {"rules": [], "plugins": []}
         # TODO: extend styles with nested styles ("extend" property)
-        for partial_style_uri in config_style:
-            partial_style = fetch_style(partial_style_uri)
+        for s, partial_style_uri in enumerate(config_style):
+            partial_style, error_message = fetch_style(partial_style_uri)
+            if error_message:
+                error_messages.append(f"style[{s}] -> {error_message}")
+                continue
+
             error_messages.extend(
                 validate_style(partial_style_uri, partial_style),
             )
 
             # extend style
             style["rules"].extend(partial_style["rules"])
-            for plugin in partial_style["plugins"]:
+            for plugin in partial_style.get("plugins", []):
                 if plugin not in style["plugins"]:
                     style["plugins"].append(plugin)
-    print(error_messages)  # TODO: raise error if style does not validates
+    if error_messages:
+        raise ProjectConfigInvalidConfigSchema(
+            config_path,
+            error_messages,
+        )
     return style

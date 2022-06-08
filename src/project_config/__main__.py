@@ -1,11 +1,20 @@
 import argparse
 import importlib
+import os
 import sys
 from typing import List, Type
 
 from importlib_metadata_argparse_version import ImportlibMetadataVersionAction
 
 from project_config.exceptions import ProjectConfigException
+from project_config.reporters import reporters
+
+
+def controlled_error(show_traceback: bool, exc: Exception, message: str) -> int:
+    if show_traceback:
+        raise exc
+    sys.stderr.write(f"{message}\n")
+    return 1
 
 
 def add_check_command_parser(
@@ -52,6 +61,22 @@ def build_parser() -> argparse.ArgumentParser:
         type=str,
         help="Custom configuration file path. As default is read from .project-config.toml or pyproject.toml",
     )
+    parser.add_argument(
+        "--root",
+        "--rootdir",
+        dest="rootdir",
+        type=str,
+        help="Root directory of the project. Useful if you want to execute project-config for another project rather than the current working directory.",
+        default=os.getcwd(),
+    )
+    parser.add_argument(
+        '-r',
+        '--reporter',
+        dest="reporter",
+        default="default",
+        choices=list(reporters),
+        help="Style of generated report when failed."
+    )
 
     subparsers = parser.add_subparsers(
         title="commands",
@@ -73,10 +98,9 @@ def run(argv: List[str] = []) -> int:
             args.command,
         )(args)
     except ProjectConfigException as exc:
-        if args.traceback:
-            raise
-        sys.stderr.write(f"{exc.message}\n")
-        return 1
+        return controlled_error(args.traceback, exc, exc.message)
+    except FileNotFoundError as exc:
+        return controlled_error(args.traceback, exc, f"{exc.args[1]} '{exc.filename}'")
     else:
         return 0 if valid else 1
 

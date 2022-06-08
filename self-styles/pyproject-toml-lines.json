@@ -1,0 +1,8 @@
+{
+  "rules": [
+    {
+      "files": ["pyproject.toml", "self-styles"],
+      "includeAllLines": ["[tool.project-config]", "[tool.mypy]", "hola"]
+    }
+  ]
+}
