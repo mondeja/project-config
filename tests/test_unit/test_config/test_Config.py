@@ -16,7 +16,7 @@ def test_Config___getitem__(tmp_path, chdir, minimal_valid_config, minimal_valid
 
     with chdir(tmp_path):
         config = Config(None)
-    assert json.dumps(config["style"]) == minimal_valid_style.string
+    assert config["style"] == "foo"
 
 
 def test_Config_fails(tmp_path, chdir):

@@ -1,33 +1,32 @@
 import os
 import typing as t
 
-from typing_extensions import TypeAlias  # Python < 3.9
 
-
-TreeFile = str
-TreeDirectory: TypeAlias = "os._ScandirIterator[str]"
-TreeNode = t.Union[TreeFile, TreeDirectory]
-TreeNodeFiles = t.Iterator[t.Tuple[str, TreeNode]]
+TreeDirectory = t.Iterator[str]
+TreeNode = t.Union[str, TreeDirectory]
+TreeNodeFilesIterator = t.Iterator[t.Tuple[str, TreeNode]]
 
 
 class Tree:
     def __init__(self, rootdir: str) -> None:
         self.rootdir = rootdir
-        self.files: t.Dict[str, TreeNode] = {}
+        # TODO: this type becomes recursive, in the future, define it properly
+        # https://github.com/python/mypy/issues/731
+        self.files: t.Dict[str, t.Any] = {}
 
-    def files_generator(self, fpaths: t.List[str]) -> TreeNodeFiles:
+    def generator(
+        self, fpaths: t.Union[t.Iterator[str], t.List[str]]
+    ) -> TreeNodeFilesIterator:
         for fpath in fpaths:
+            fpath = os.path.join(self.rootdir, fpath)
             if fpath not in self.files:
-                fcontent: TreeNode = ""
                 if os.path.isfile(fpath):
                     with open(fpath) as f:
-                        fcontent = f.read()
+                        self.files[fpath] = f.read()
                 elif os.path.isdir(fpath):
-                    fcontent = os.scandir(fpath)
-                else:
-                    # TODO: file must exist
-                    continue
-                    # TODO: symlinks?
-
-                self.files[fpath] = fcontent
+                    # recursive generation
+                    self.files[fpath] = self.generator(
+                        os.path.join(fpath, fname) for fname in os.listdir(fpath)
+                    )
+                # TODO: file must exist
             yield fpath, self.files[fpath]

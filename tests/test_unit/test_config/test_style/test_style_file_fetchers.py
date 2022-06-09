@@ -1,6 +1,8 @@
+import re
+
 import pytest
 
-from project_config.config.style.fetchers import fetch_style
+from project_config.config.style.fetchers import FetchStyleError, fetch_style
 
 
 @pytest.mark.parametrize(
@@ -175,7 +177,13 @@ def test_fetch_style_file(
     if expected_result is True:
         expected_result = content
     url = url.replace("{tmp_path}", str(tmp_path))
+
     with chdir(tmp_path):
-        result, error_message = fetch_style(url)
-    assert result == expected_result
-    assert error_message == expected_error_message
+        if expected_error_message:
+            with pytest.raises(
+                FetchStyleError, match=re.escape(expected_error_message)
+            ):
+                fetch_style(url)
+        else:
+            result = fetch_style(url)
+            assert result == expected_result

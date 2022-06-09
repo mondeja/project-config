@@ -1,10 +1,10 @@
 import os
 import typing as t
 
-from project_config.plugins.types import Files, Rule, VerbResult
+from project_config import Files, Rule, VerbResult
 
 
-class IncluderPlugin:
+class IncludePlugin:
     @classmethod
     def verb_includeAllLines(
         cls,

@@ -30,7 +30,7 @@ contextlib-chdir = "^1.0.2"
 project-config = "project_config.__main__:main"
 
 [tool.poetry.plugins."project-config.plugins"]
-includer = "project_config.plugins.includer:IncluderPlugin"
+include = "project_config.plugins.include:IncludePlugin"
 
 [tool.project-config]
 style = ["self-styles/pyproject-toml-lines.json"]

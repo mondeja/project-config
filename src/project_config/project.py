@@ -19,7 +19,7 @@ class Project:
 
     def check(self) -> None:
         for r, rule in enumerate(self.config["style"]["rules"]):
-            files = self.tree.files_generator(rule.pop("files"))
+            files = self.tree.generator(rule.pop("files"))
             for verb in rule:
                 result = self.config.style.plugins.get_method_for_verb(verb)(
                     rule[verb],
