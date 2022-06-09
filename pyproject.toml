@@ -18,6 +18,7 @@ simple_chalk = "^0.1.0"
 
 [tool.poetry.group.dev.dependencies]
 mondeja-bump = "*"
+types-PyYAML = "^6.0.8"
 
 [tool.poetry.group.test.dependencies]
 pytest = "^7.0.0"

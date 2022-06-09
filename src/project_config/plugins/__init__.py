@@ -17,7 +17,7 @@ except ImportError:  # Python 3.7
 
 
 class Plugins:
-    def __init__(self):
+    def __init__(self) -> None:
         # map from plugin names to loaded classes
         self.loaded_plugins: t.Dict[str, type] = {}
 
@@ -31,21 +31,21 @@ class Plugins:
         # prepare default plugins cache, third party ones will be loaded
         # on demand at style validation time
         self._prepare_default_plugins_cache()
-    
+
     @property
     def plugin_names_verbs(self) -> t.Dict[str, t.List[str]]:
         """Map from plugin names to their allowed verbs."""
-        result = {}
+        result: t.Dict[str, t.List[str]] = {}
         for verb, plugin_name in self.verbs_plugin_names.items():
             if plugin_name not in result:
                 result[plugin_name] = []
             result[plugin_name].append(verb)
         return result
-    
+
     @property
     def plugin_names(self) -> t.List[str]:
         return list(self.plugin_names_loaders)
-    
+
     @property
     def loaded_plugin_names(self) -> t.List[str]:
         return list(self.loaded_plugin_names)
@@ -65,17 +65,19 @@ class Plugins:
         for plugin in importlib_metadata.entry_points(group="project-config.plugins"):
             if not plugin.value.startswith("project_config.plugins."):
                 continue
-            
+
             self._add_plugin_to_cache(plugin)
-    
+
     def prepare_third_party_plugin(self, plugin_name: str) -> None:
-        for plugin in importlib_metadata.entry_points(group="project-config.plugins", name=plugin_name):
+        for plugin in importlib_metadata.entry_points(
+            group="project-config.plugins", name=plugin_name
+        ):
             # Allow third party plugins to avorride default plugins
             if plugin.value.startswith("project_config.plugins."):
                 continue
-        
+
             self._add_plugin_to_cache(plugin)
-    
+
     def _add_plugin_to_cache(self, plugin: importlib_metadata.EntryPoint) -> None:
         # do not load plugin until any verb is called
         # instead just save in cache and will be loaded on demand
@@ -101,5 +103,3 @@ class Plugins:
     def is_valid_verb(self, verb: str) -> bool:
         """Return if a verb is prepared."""
         return verb in self.verbs_plugin_names
-    
-    

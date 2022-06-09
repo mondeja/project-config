@@ -6,10 +6,8 @@ from project_config.exceptions import ProjectConfigCheckFailedBase
 
 
 class AbstractReporter(abc.ABC):
-    
-
     @abc.abstractmethod
-    def generate_report(self) -> str:
+    def generate_report(self) -> t.Any:  # TODO: this type must be str
         pass
 
 

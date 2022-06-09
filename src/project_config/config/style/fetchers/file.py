@@ -1,9 +1,11 @@
-import json
 import os
-import typing as t
 
-from project_config.config.style.fetchers import FetchResult
+from project_config.config.style.fetchers import FetchStyleError
 
-def fetch(url: str) -> FetchResult:
-    with open(os.path.expanduser(url)) as f:
-        return f.read()
+
+def fetch(url: str) -> str:
+    try:
+        with open(os.path.expanduser(url)) as f:
+            return f.read()
+    except FileNotFoundError as exc:
+        raise FetchStyleError(f"'{url}' file not found")

@@ -29,7 +29,7 @@ def read_config_from_pyproject_toml() -> t.Optional[t.Any]:
     return None
 
 
-def read_config(custom_file_path: t.Optional[str] = None) -> t.Any:
+def read_config(custom_file_path: t.Optional[str] = None) -> t.Tuple[str, t.Any]:
     if custom_file_path:
         if not os.path.isfile(custom_file_path):
             raise CustomConfigFileNotFound(custom_file_path)
@@ -100,11 +100,11 @@ class Config:
     def __post_init__(self) -> None:
         self.path, config = read_config(self.path)
         validate_config(self.path, config)
-        self.dict_ : t.Dict[str, t.Union[str, t.List[t.Any]]] = config
+        self.dict_: t.Dict[str, t.Union[str, t.List[str]]] = config
         self.style = Style(self)
 
     def __getitem__(self, key: str) -> t.Any:
         return self.dict_.__getitem__(key)
-    
+
     def __setitem__(self, key: str, value: t.Any) -> None:
-        return self.dict_.__setitem__(key, value)
+        self.dict_.__setitem__(key, value)

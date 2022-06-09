@@ -1,19 +1,31 @@
 import typing as t
 from dataclasses import dataclass
 
+import typing_extensions
+
 from project_config.config.exceptions import ProjectConfigInvalidConfigSchema
 from project_config.config.style.fetchers import (
+    FetchStyleError,
     fetch_style,
     resolve_maybe_relative_url,
 )
 from project_config.plugins import Plugins
 
 
+RuleType = t.Any
+ExtendType = t.Any
+PluginType = t.Any
+# TODO: improve style type with TypedDict?
+# https://docs.python.org/3/library/typing.html#typing.TypedDict
+StyleType = t.Dict[str, t.List[t.Any]]
+StyleLoderIterator = t.Iterator[t.Union[StyleType, str]]
+
+
 @dataclass
 class Style:
-    config: type
+    config: t.Any
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         self.plugins = Plugins()
 
         self._load_styles_or_raise_if_invalid()
@@ -21,7 +33,7 @@ class Style:
     def __getitem__(self, key: str) -> t.Any:
         return self.config["style"].__getitem__(key)
 
-    def _load_styles_or_raise_if_invalid(self):
+    def _load_styles_or_raise_if_invalid(self) -> None:
         style_gen = self._load_styles()
         error_messages = []
         while True:
@@ -40,7 +52,7 @@ class Style:
                 error_messages,
             )
 
-    def _load_styles(self) -> t.Iterator[t.Union[t.Dict[str, t.Any], str]]:
+    def _load_styles(self) -> StyleLoderIterator:
         """Load styles yielding error messages if found.
 
         Error messages are of type string and style is of type dict.
@@ -48,9 +60,10 @@ class Style:
         """
         style_urls = self.config["style"]
         if isinstance(style_urls, str):
-            style, error_message = fetch_style(style_urls)
-            if error_message:
-                yield f"style -> {error_message}"
+            try:
+                style = fetch_style(style_urls)
+            except FetchStyleError as exc:
+                yield f"style -> {exc.message}"
             else:
                 _partial_style_is_valid = True
                 validator = self._validate_style_preparing_new_plugins(
@@ -71,9 +84,10 @@ class Style:
         elif isinstance(style_urls, list):
             style = {"rules": [], "plugins": []}
             for s, partial_style_url in enumerate(style_urls):
-                partial_style, error_message = fetch_style(partial_style_url)
-                if error_message:
-                    yield f"style[{s}] -> {error_message}"
+                try:
+                    partial_style = fetch_style(partial_style_url)
+                except FetchStyleError as exc:
+                    yield f"style[{s}] -> {exc.message}"
                     continue
 
                 # extend style only if it is valid
@@ -104,12 +118,13 @@ class Style:
             yield style
 
     def _extend_partial_style(
-        self, parent_style_url: str, style: t.Dict[str, t.List[str]]
-    ):
+        self, parent_style_url: str, style: StyleType
+    ) -> StyleLoderIterator:
         for s, extend_url in enumerate(style["extends"]):
-            partial_style, error_message = fetch_style(extend_url)
-            if error_message:
-                yield f"{parent_style_url}: .extends[{s}] -> {error_message}"
+            try:
+                partial_style = fetch_style(extend_url)
+            except FetchStyleError as exc:
+                yield f"{parent_style_url}: .extends[{s}] -> {exc.message}"
                 continue
 
             _partial_style_is_valid = True
@@ -140,11 +155,11 @@ class Style:
 
     def _add_new_rules_plugins_to_style(
         self,
-        style: t.Dict[str, t.List[t.Any]],
-        new_rules: t.List[t.Any],
-        new_plugins: t.List[str],
+        style: StyleType,
+        new_rules: t.List[RuleType],
+        new_plugins: t.List[PluginType],
         prepend: bool = False,
-    ):
+    ) -> None:
         if prepend:
             style["rules"] = new_rules + style["rules"]
             for plugin in new_plugins:
@@ -160,7 +175,7 @@ class Style:
         self,
         style_url: str,
         style: t.Any,
-    ):
+    ) -> t.Iterator[str]:
         # validate extends urls
         if "extends" in style:
             if not isinstance(style["extends"], list):

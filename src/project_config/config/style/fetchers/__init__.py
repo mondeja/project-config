@@ -2,11 +2,27 @@ import importlib
 import os
 import sys
 import typing as t
-import urllib.request
+import urllib.parse
 
-from project_config.exceptions import ProjectConfigNotImplementedError
+import typing_extensions
 
-FetchResult = t.Dict[str, t.Union[str, t.List[str]]]
+from project_config.exceptions import (
+    ProjectConfigException,
+    ProjectConfigNotImplementedError,
+)
+
+
+FetchResult = t.Dict[str, t.List[str]]
+
+
+class DecoderFunction(typing_extensions.Protocol):
+    def __call__(self, style_string: str, **kwargs: t.Any) -> FetchResult:
+        ...
+
+
+class FetchStyleError(ProjectConfigException):
+    pass
+
 
 class SchemeProtocolNotImplementedError(ProjectConfigNotImplementedError):
     def __init__(self, scheme: str):
@@ -16,7 +32,8 @@ class SchemeProtocolNotImplementedError(ProjectConfigNotImplementedError):
         )
 
 
-decoders = {
+# TODO: improve type to take into account optional fields
+decoders: t.Dict[str, t.Dict[str, t.Any]] = {
     ".json": {
         "module": "json",
     },
@@ -31,22 +48,23 @@ decoders = {
             "Loader": {
                 "module": "yaml",
                 "object": "CSafeLoader",
-                "object_fallback": "SafeLoader"
+                "object_fallback": "SafeLoader",
             }
-        }
+        },
     },
     ".toml": {
         # TODO: use tomlkit as fallback, try tomli first or toml
         #   if we are in Python >= 3.11
         "module": "tomlkit",
         "function": "parse",
-    }
+    },
 }
 
+
 def _file_can_not_be_decoded_as_json_error(
-    url,
-    error_message,
-):
+    url: str,
+    error_message: str,
+) -> str:
     return f"'{url}' can't be decoded as a valid JSON file:{error_message}"
 
 
@@ -58,7 +76,7 @@ def _decode_style_string(url: str, style_string: str) -> FetchResult:
         decoder = decoders[".json"]  # JSON as fallback
 
     # prepare decoder function
-    loader_function = getattr(
+    loader_function: DecoderFunction = getattr(
         importlib.import_module(decoder["module"]),
         decoder.get("function", "loads"),
     )
@@ -87,47 +105,44 @@ def _decode_style_string(url: str, style_string: str) -> FetchResult:
         exc_class, exc, _ = sys.exc_info()
         package_name = exc_class.__module__.split(".")[0]
         if package_name in (  # Examples:
-            "json",           # json.decoder.JSONDecodeError
-            "pyjson5",        # pyjson5.Json5IllegalCharacter
-            "tomlkit",        # tomlkit.exceptions.UnexpectedEofError
+            "json",  # json.decoder.JSONDecodeError
+            "pyjson5",  # pyjson5.Json5IllegalCharacter
+            "tomlkit",  # tomlkit.exceptions.UnexpectedEofError
         ):
-            return None, _file_can_not_be_decoded_as_json_error(url, f" {exc.args[0]}")
+            raise FetchStyleError(
+                _file_can_not_be_decoded_as_json_error(url, f" {exc.args[0]}"),  # type: ignore
+            )
         elif package_name == "yaml":
             # Example: yaml.scanner.ScannerError
-            return None, _file_can_not_be_decoded_as_json_error(url, f"\n{exc.__str__()}")
+            raise FetchStyleError(
+                _file_can_not_be_decoded_as_json_error(url, f"\n{exc.__str__()}")
+            )
         raise
     else:
-        return result, None
+        return result
 
 
 def fetch_style(url: str) -> FetchResult:
-    scheme = urllib.request.urlsplit(url).scheme or 'file'
+    scheme = urllib.parse.urlsplit(url).scheme or "file"
     try:
         mod = importlib.import_module(f"project_config.config.style.fetchers.{scheme}")
     except ImportError:
         # TODO: add more fetchers
         raise SchemeProtocolNotImplementedError(scheme)
-    try:
-        style_string = getattr(mod, "fetch")(url)
-    except FileNotFoundError:
-        return None, f"'{url}' file not found"
+
+    style_string = getattr(mod, "fetch")(url)
     return _decode_style_string(url, style_string)
 
 
 def resolve_maybe_relative_url(url: str, parent_url: str) -> str:
-    url_parts = urllib.request.urlsplit(url)
+    url_parts = urllib.parse.urlsplit(url)
 
-    if url_parts.scheme in ('', 'file'):  # is a file
+    if url_parts.scheme in ("", "file"):  # is a file
         if os.path.isabs(url):
             return url
 
-        parent_path = urllib.request.urlsplit(parent_url).path
+        parent_path = urllib.parse.urlsplit(parent_url).path
         parent_dirpath = os.path.split(parent_path)[0]
-        return os.path.abspath(
-            os.path.join(
-                parent_dirpath,
-                os.path.expanduser(url)
-            )
-        )
+        return os.path.abspath(os.path.join(parent_dirpath, os.path.expanduser(url)))
 
     raise SchemeProtocolNotImplementedError(url_parts.scheme)

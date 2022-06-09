@@ -1,4 +1,5 @@
 import importlib
+import typing as t
 
 
 reporters = {
@@ -12,7 +13,7 @@ reporters = {
 }
 
 
-def get_reporter(reporter_name: str) -> type:
+def get_reporter(reporter_name: str) -> t.Any:
     # TODO: custom reporters by module dotpath?
     return getattr(
         importlib.import_module(f"project_config.reporters.{reporter_name}"),

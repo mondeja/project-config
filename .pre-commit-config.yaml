@@ -24,6 +24,8 @@ repos:
     hooks:
       - id: mypy
         files: ^src
+        additional_dependencies:
+          - "types-PyYAML"
   - repo: https://github.com/PyCQA/isort
     rev: 5.10.1
     hooks:
