@@ -1,5 +1,5 @@
 {
-  "extends": ["parent-style.json5"],
+  "extends": ["parent-style.json5", "parent-style-2.json5"],
   "rules": [
     {
       "files": ["pyproject.toml", "self-styles"],

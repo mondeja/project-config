@@ -10,10 +10,11 @@ packages = [{ include = "project_config", from = "src" }]
 [tool.poetry.dependencies]
 python = "^3.7"
 importlib-metadata = { version = "*", python = "3.7" }
-importlib-metadata-argparse-version = "^0.1.0"
+importlib-metadata-argparse-version = "*"
 tomlkit = "^0.11.0"
 pyjson5 = "*"
 PyYAML = "^6.0"
+simple_chalk = "^0.1.0"
 
 [tool.poetry.group.dev.dependencies]
 mondeja-bump = "*"

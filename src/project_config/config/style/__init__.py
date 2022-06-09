@@ -1,18 +1,20 @@
-from distutils.log import error
 import typing as t
 from dataclasses import dataclass
 
 from project_config.config.exceptions import ProjectConfigInvalidConfigSchema
-from project_config.config.style.fetchers import fetch_style, resolve_maybe_relative_url
+from project_config.config.style.fetchers import (
+    fetch_style,
+    resolve_maybe_relative_url,
+)
 from project_config.plugins import Plugins
 
 
 @dataclass
 class Style:
-    config : type
+    config: type
 
     def __post_init__(self):
-        self.plugins  = Plugins()
+        self.plugins = Plugins()
 
         self._load_styles_or_raise_if_invalid()
 
@@ -37,10 +39,10 @@ class Style:
                 self.config.path,
                 error_messages,
             )
-        
+
     def _load_styles(self) -> t.Iterator[t.Union[t.Dict[str, t.Any], str]]:
         """Load styles yielding error messages if found.
-        
+
         Error messages are of type string and style is of type dict.
         If the first yielded value is a dict, we have a style without errors.
         """
@@ -87,19 +89,23 @@ class Style:
                         break
                     else:
                         _partial_style_is_valid = False
-                
+
                 if _partial_style_is_valid:
                     if "extends" in partial_style:
-                        yield from self._extend_partial_style(partial_style_url, partial_style)
-                    
+                        yield from self._extend_partial_style(
+                            partial_style_url, partial_style
+                        )
+
                     self._add_new_rules_plugins_to_style(
                         style,
                         partial_style["rules"],
                         partial_style.get("plugins", []),
                     )
             yield style
-    
-    def _extend_partial_style(self, parent_style_url: str, style: t.Dict[str, t.List[str]]):
+
+    def _extend_partial_style(
+        self, parent_style_url: str, style: t.Dict[str, t.List[str]]
+    ):
         for s, extend_url in enumerate(style["extends"]):
             partial_style, error_message = fetch_style(extend_url)
             if error_message:
@@ -127,17 +133,17 @@ class Style:
                     style,
                     partial_style["rules"],
                     partial_style.get("plugins", []),
-                    prepend=True
+                    prepend=True,
                 )
 
         yield style
-    
+
     def _add_new_rules_plugins_to_style(
         self,
-        style : t.Dict[str, t.List[t.Any]],
-        new_rules : t.List[t.Any],
-        new_plugins : t.List[str],
-        prepend: bool=False,
+        style: t.Dict[str, t.List[t.Any]],
+        new_rules: t.List[t.Any],
+        new_plugins: t.List[str],
+        prepend: bool = False,
     ):
         if prepend:
             style["rules"] = new_rules + style["rules"]
@@ -182,7 +188,7 @@ class Style:
                     else:
                         # cache plugins on demand
                         self.plugins.prepare_third_party_plugin(plugin_name)
-                
+
         # validate rules
         if "rules" not in style:
             yield f"{style_url}: .rules -> is required"
@@ -209,17 +215,16 @@ class Style:
                             yield (
                                 f"{style_url}: .rules[{r}].files[{f}] -> must not be empty"
                             )
-                
+
                 # Validate rules properties consistency against plugins
                 for verb in rule:
                     if verb == "files":
                         continue
-                    
+
                     # the action must be prepared
                     if not verb:
                         yield (
-                            f"{style_url}: .rules[{r}].{verb}"
-                            " -> must not be empty"
+                            f"{style_url}: .rules[{r}].{verb}" " -> must not be empty"
                         )
                     elif not self.plugins.is_valid_verb(verb):
                         yield (

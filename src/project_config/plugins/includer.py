@@ -22,7 +22,8 @@ class IncluderPlugin:
                     {
                         "message": (
                             f"Found directory defined at 'rules[{rule_index}].files[{f}]'."
-                            " The verb 'includeAllLines' can't accept directories as inputs."
+                            " The verb 'includeAllLines' does not accepts directories as"
+                            " inputs."
                         ),
                         "file": fpath + os.sep,
                     }

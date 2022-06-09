@@ -2,7 +2,7 @@
     // this is the parent style
     rules: [
         {
-            "files": [".pre-commit-config.yaml"],
+            "files": ["tests/conftest.py"],
             "includeAllLines": ["    // this is the parent style", "hello"],
         }
     ]
