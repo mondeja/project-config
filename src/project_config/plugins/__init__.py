@@ -17,7 +17,7 @@ except ImportError:  # Python 3.7
 
 
 class Plugins:
-    def __init__(self, possible_plugin_names: t.List[str]):
+    def __init__(self):
         # map from plugin names to loaded classes
         self.loaded_plugins: t.Dict[str, type] = {}
 
@@ -28,8 +28,27 @@ class Plugins:
         self.verbs_plugin_names: t.Dict[str, str] = {}
         # TODO: how to handle conditionals?
 
-        # prepare plugins cache
-        self._prepare_plugins_cache(possible_plugin_names)
+        # prepare default plugins cache, third party ones will be loaded
+        # on demand at style validation time
+        self._prepare_default_plugins_cache()
+    
+    @property
+    def plugin_names_verbs(self) -> t.Dict[str, t.List[str]]:
+        """Map from plugin names to their allowed verbs."""
+        result = {}
+        for verb, plugin_name in self.verbs_plugin_names.items():
+            if plugin_name not in result:
+                result[plugin_name] = []
+            result[plugin_name].append(verb)
+        return result
+    
+    @property
+    def plugin_names(self) -> t.List[str]:
+        return list(self.plugin_names_loaders)
+    
+    @property
+    def loaded_plugin_names(self) -> t.List[str]:
+        return list(self.loaded_plugin_names)
 
     @functools.lru_cache(maxsize=None)
     def get_method_for_verb(self, verb: str) -> t.Any:  # TODO: improve this type
@@ -42,34 +61,29 @@ class Plugins:
             plugin_class = self.loaded_plugins[plugin_name]
         return getattr(plugin_class, f"verb_{verb}")
 
-    def _prepare_plugins_cache(self, possible_plugin_names: t.List[str]) -> None:
-        # NOTE: possible_plugin_names must be a list qith unique items
-
-        plugins = importlib_metadata.entry_points(group="project-config.plugins")
-
-        processed_plugins: t.List[str] = []
-        for plugin in plugins:
-            # Filter plugins always loading built-in ones
-            if (
-                not plugin.value.startswith("project_config.plugins.")
-                and plugin.name not in possible_plugin_names
-            ):
-                processed_plugins.append(plugin.name)
+    def _prepare_default_plugins_cache(self) -> None:
+        for plugin in importlib_metadata.entry_points(group="project-config.plugins"):
+            if not plugin.value.startswith("project_config.plugins."):
                 continue
-
-            # Allow third-party plugins to override core plugins
-            if plugin.name in processed_plugins and plugin.value.startswith(
-                "project_config.plugins."
-            ):
+            
+            self._add_plugin_to_cache(plugin)
+    
+    def prepare_third_party_plugin(self, plugin_name: str) -> None:
+        for plugin in importlib_metadata.entry_points(group="project-config.plugins", name=plugin_name):
+            # Allow third party plugins to avorride default plugins
+            if plugin.value.startswith("project_config.plugins."):
                 continue
+        
+            self._add_plugin_to_cache(plugin)
+    
+    def _add_plugin_to_cache(self, plugin: importlib_metadata.EntryPoint) -> None:
+        # do not load plugin until any verb is called
+        # instead just save in cache and will be loaded on demand
+        self.plugin_names_loaders[plugin.name] = plugin.load
 
-            # do not load plugin until any verb is called
-            # instead just save in cache and will be loaded on demand
-            self.plugin_names_loaders[plugin.name] = plugin.load
-
-            for verb in self._extract_verbs_from_plugin_module(plugin.module):
-                if verb not in self.verbs_plugin_names:
-                    self.verbs_plugin_names[verb] = plugin.name
+        for verb in self._extract_verbs_from_plugin_module(plugin.module):
+            if verb not in self.verbs_plugin_names:
+                self.verbs_plugin_names[verb] = plugin.name
 
     def _extract_verbs_from_plugin_module(self, module_dotpath: str) -> t.Iterator[str]:
         # TODO: raise error is the specification is not found
@@ -84,37 +98,8 @@ class Plugins:
                         yield match.group(1)
             # else:  # TODO: this could even happen? raise error
 
-
-'''
-
-def get_plugins(plugin_names: t.List[str] = []) -> t.Iterator[type]:
-    """Return a dict of all installed Plugins as {name: EntryPoint}."""
-
-    plugins = importlib_metadata.entry_points(group="project-config.plugins")
-
-    processed_plugins: t.List[str] = []
-    for plugin in plugins:
-        # Filter plugins always loading built-in ones
-        if (
-            not plugin.value.startswith("project_config.plugins.")
-            and plugin.name not in plugin_names
-        ):
-            processed_plugins.append(plugin.name)
-            continue
-
-        # Allow third-party plugins to override core plugins
-        if plugin.name in processed_plugins and plugin.value.startswith(
-            "project_config.plugins."
-        ):
-            continue
-
-        yield plugin.load()
-
-
-def get_plugin_verbs(plugin: type) -> t.Iterator[t.Tuple[str, str]]:
-    for method_name in plugin.__dict__.keys():
-        if method_name.startswith("_"):
-            continue
-        if method_name.startswith("verb_"):
-            yield method_name.split("_")[1], method_name
-'''
+    def is_valid_verb(self, verb: str) -> bool:
+        """Return if a verb is prepared."""
+        return verb in self.verbs_plugin_names
+    
+    

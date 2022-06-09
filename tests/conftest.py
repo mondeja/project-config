@@ -2,6 +2,11 @@ import pytest
 from contextlib_chdir import chdir as chdir_ctx
 
 
+@pytest.fixture
+def chdir():
+    return chdir_ctx
+
+
 def _assert_minimal_valid_config(config, expected_style="foo"):
     assert isinstance(config, dict)
     assert len(config) == 1
@@ -29,6 +34,18 @@ def minimal_valid_config():
     return min_valid_config
 
 
+def _assert_minimal_valid_style(value):
+    pass
+
+
 @pytest.fixture
-def chdir():
-    return chdir_ctx
+def minimal_valid_style():
+    min_valid_style = type(
+        "MinimalValidStyle",
+        (),
+        {
+            "asserts": _assert_minimal_valid_style,
+        },
+    )
+    min_valid_style.string = '{"rules": [{"files": ["foo"]}]}'
+    return min_valid_style

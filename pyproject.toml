@@ -9,10 +9,11 @@ packages = [{ include = "project_config", from = "src" }]
 
 [tool.poetry.dependencies]
 python = "^3.7"
-tomlkit = "^0.11.0"
 importlib-metadata = { version = "*", python = "3.7" }
 importlib-metadata-argparse-version = "^0.1.0"
-jsonschema = "^4.6.0"
+tomlkit = "^0.11.0"
+pyjson5 = "*"
+PyYAML = "^6.0"
 
 [tool.poetry.group.dev.dependencies]
 mondeja-bump = "*"
@@ -21,7 +22,7 @@ mondeja-bump = "*"
 pytest = "^7.0.0"
 pytest-cov = "^3.0.0"
 pre-commit = "^2.19.0"
-contextlib-chdir = "*"
+contextlib-chdir = "^1.0.2"
 
 [tool.poetry.scripts]
 project-config = "project_config.__main__:main"
@@ -41,6 +42,7 @@ python -c 'import webbrowser as w;w.open("http://127.0.0.1:8080")' &&
 python -m http.server 8080 -b localhost -d htmlcov
 """
 lint = "pre-commit run -a"
+printf = "printf"
 
 [tool.pytest.ini_options]
 addopts = "-s --cov=src --cov-report=html"

@@ -2,11 +2,8 @@ import json
 import os
 import typing as t
 
+from project_config.config.style.fetchers import FetchResult
 
-def get(url: str) -> t.Any:
-    path = os.path.expanduser(url)
-    if os.path.isabs(path) and not path.startswith("file://"):
-        path = "file://" + path.lstrip("/\\")
-
-    with open(path) as f:
-        return json.load(f)
+def fetch(url: str) -> FetchResult:
+    with open(os.path.expanduser(url)) as f:
+        return f.read()

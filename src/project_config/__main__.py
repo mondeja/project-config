@@ -1,12 +1,12 @@
 import argparse
-import importlib
 import os
 import sys
-from typing import List, Type
+import typing as t
 
 from importlib_metadata_argparse_version import ImportlibMetadataVersionAction
 
 from project_config.exceptions import ProjectConfigException
+from project_config.project import Project
 from project_config.reporters import reporters
 
 
@@ -70,12 +70,12 @@ def build_parser() -> argparse.ArgumentParser:
         default=os.getcwd(),
     )
     parser.add_argument(
-        '-r',
-        '--reporter',
+        "-r",
+        "--reporter",
         dest="reporter",
         default="default",
         choices=list(reporters),
-        help="Style of generated report when failed."
+        help="Style of generated report when failed.",
     )
 
     subparsers = parser.add_subparsers(
@@ -88,21 +88,18 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def run(argv: List[str] = []) -> int:
+def run(argv: t.List[str] = []) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
 
     try:
-        valid = getattr(
-            importlib.import_module(f"project_config.commands.{args.command}"),
-            args.command,
-        )(args)
+        project = Project(args.config, args.rootdir, args.reporter)
+        getattr(project, args.command)()
     except ProjectConfigException as exc:
         return controlled_error(args.traceback, exc, exc.message)
     except FileNotFoundError as exc:
         return controlled_error(args.traceback, exc, f"{exc.args[1]} '{exc.filename}'")
-    else:
-        return 0 if valid else 1
+    return 0
 
 
 def main() -> None:

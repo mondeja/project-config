@@ -7,7 +7,11 @@ from project_config.plugins.types import Files, Rule, VerbResult
 class IncluderPlugin:
     @classmethod
     def verb_includeAllLines(
-        cls, value: t.List[str], files: Files, rule: Rule, rule_index: int,
+        cls,
+        value: t.List[str],
+        files: Files,
+        rule: Rule,
+        rule_index: int,
     ) -> VerbResult:
         expected_lines = [line.strip("\r\n") for line in value]
         result: VerbResult = {"errors": []}

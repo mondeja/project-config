@@ -11,7 +11,7 @@ from project_config.config.exceptions import (
     ProjectConfigInvalidConfigSchema,
     PyprojectTomlFoundButHasNoConfig,
 )
-from project_config.config.style import get_style
+from project_config.config.style import Style
 
 
 CONFIG_CACHE_REGEX = r"^(\d+ (minutes?)|(hours?)|(days?)|(weeks?))|(never)$"
@@ -95,10 +95,16 @@ def validate_config(config_path: str, config: t.Any) -> None:
 
 @dataclass
 class Config:
-    path : str
+    path: t.Optional[str]
 
-    def read(self):
-        config_path, config = read_config(self.path)
-        validate_config(config_path, config)
-        config["style"] = get_style(config_path, config["style"])
-        return config
+    def __post_init__(self) -> None:
+        self.path, config = read_config(self.path)
+        validate_config(self.path, config)
+        self.dict_ : t.Dict[str, t.Union[str, t.List[t.Any]]] = config
+        self.style = Style(self)
+
+    def __getitem__(self, key: str) -> t.Any:
+        return self.dict_.__getitem__(key)
+    
+    def __setitem__(self, key: str, value: t.Any) -> None:
+        return self.dict_.__setitem__(key, value)

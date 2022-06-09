@@ -15,3 +15,6 @@ class ProjectConfigCheckFailed(ProjectConfigCheckFailedBase):
         super().__init__(
             "Project configuration check has found failures:\n" f"{errors_report}"
         )
+
+class ProjectConfigNotImplementedError(ProjectConfigException, NotImplementedError):
+    pass
