@@ -28,5 +28,7 @@ class Tree:
                     self.files[fpath] = self.generator(
                         os.path.join(fpath, fname) for fname in os.listdir(fpath)
                     )
-                # TODO: file must exist
+                else:
+                    # file or directory does not exist
+                    self.files[fpath] = None
             yield fpath, self.files[fpath]

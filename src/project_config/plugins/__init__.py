@@ -4,7 +4,6 @@ These plugins are not required to be specified in ``plugins``
 properties of styles.
 """
 
-import functools
 import importlib.util
 import re
 import typing as t
@@ -24,8 +23,8 @@ class Plugins:
         # map from plugin names to plugin class loaders functions
         self.plugin_names_loaders: t.Dict[str, t.Callable[[], type]] = {}
 
-        # map from verbs to plugins names
-        self.verbs_plugin_names: t.Dict[str, str] = {}
+        # map from actions to plugins names
+        self.actions_plugin_names: t.Dict[str, str] = {}
         # TODO: how to handle conditionals?
 
         # prepare default plugins cache, third party ones will be loaded
@@ -33,10 +32,10 @@ class Plugins:
         self._prepare_default_plugins_cache()
 
     @property
-    def plugin_names_verbs(self) -> t.Dict[str, t.List[str]]:
-        """Map from plugin names to their allowed verbs."""
+    def plugin_names_actions(self) -> t.Dict[str, t.List[str]]:
+        """Map from plugin names to their allowed actions."""
         result: t.Dict[str, t.List[str]] = {}
-        for verb, plugin_name in self.verbs_plugin_names.items():
+        for verb, plugin_name in self.actions_plugin_names.items():
             if plugin_name not in result:
                 result[plugin_name] = []
             result[plugin_name].append(verb)
@@ -50,16 +49,19 @@ class Plugins:
     def loaded_plugin_names(self) -> t.List[str]:
         return list(self.loaded_plugin_names)
 
-    @functools.lru_cache(maxsize=None)
-    def get_method_for_verb(self, verb: str) -> t.Any:  # TODO: improve this type
-        plugin_name = self.verbs_plugin_names[verb]
+    def get_method_for_action(self, action: str) -> t.Any:  # TODO: improve this type
+        plugin_name = self.actions_plugin_names[action]
         if plugin_name not in self.loaded_plugins:
             load_plugin = self.plugin_names_loaders[plugin_name]
             plugin_class = load_plugin()
             self.loaded_plugins[plugin_name] = plugin_class
         else:
             plugin_class = self.loaded_plugins[plugin_name]
-        return getattr(plugin_class, f"verb_{verb}")
+        return getattr(plugin_class, action)
+
+    def is_valid_action(self, action: str) -> bool:
+        """Return if an action is prepared."""
+        return action in self.actions_plugin_names
 
     def _prepare_default_plugins_cache(self) -> None:
         for plugin in importlib_metadata.entry_points(group="project-config.plugins"):
@@ -83,11 +85,13 @@ class Plugins:
         # instead just save in cache and will be loaded on demand
         self.plugin_names_loaders[plugin.name] = plugin.load
 
-        for verb in self._extract_verbs_from_plugin_module(plugin.module):
-            if verb not in self.verbs_plugin_names:
-                self.verbs_plugin_names[verb] = plugin.name
+        for verb in self._extract_actions_from_plugin_module(plugin.module):
+            if verb not in self.actions_plugin_names:
+                self.actions_plugin_names[verb] = plugin.name
 
-    def _extract_verbs_from_plugin_module(self, module_dotpath: str) -> t.Iterator[str]:
+    def _extract_actions_from_plugin_module(
+        self, module_dotpath: str
+    ) -> t.Iterator[str]:
         # TODO: raise error is the specification is not found
         #   this could happen if an user as defined an entrypoint
         #   pointing to a non existent module
@@ -96,10 +100,6 @@ class Plugins:
             module_path = module_spec.origin
             if module_path is not None:
                 with open(module_path) as f:
-                    for match in re.finditer(r"def verb_(\w+)\(", f.read()):
+                    for match in re.finditer(r"def ([^_]\w+)\(", f.read()):
                         yield match.group(1)
             # else:  # TODO: this could even happen? raise error
-
-    def is_valid_verb(self, verb: str) -> bool:
-        """Return if a verb is prepared."""
-        return verb in self.verbs_plugin_names

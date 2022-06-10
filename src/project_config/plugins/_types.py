@@ -4,10 +4,14 @@ from project_config.config.style import RuleType as Rule
 from project_config.tree import TreeNodeFilesIterator as Files
 
 
-VerbResult = t.Dict[str, t.List[t.Dict[str, str]]]
+ErrorResultType = t.Dict[str, str]
+ResultType = str
+ResultValue = str
+Result = t.Tuple[ErrorResultType, ResultValue]
+Results = t.Iterator[Result]
 
 __all__ = (
     "Files",
     "Rule",
-    "VerbResult",
+    "Results",
 )

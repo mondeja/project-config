@@ -1,48 +1,48 @@
 import os
 import typing as t
 
-from project_config import Files, Rule, VerbResult
+from project_config import Files, Results, Rule
 
 
 class IncludePlugin:
     @classmethod
-    def verb_includeAllLines(
+    def includeAllLines(
         cls,
         value: t.List[str],
         files: Files,
         rule: Rule,
-        rule_index: int,
-    ) -> VerbResult:
+    ) -> Results:
         expected_lines = [line.strip("\r\n") for line in value]
-        result: VerbResult = {"errors": []}
 
         for f, (fpath, fcontent) in enumerate(files):
-            if not isinstance(fcontent, str):  # is directory
-                result["errors"].append(
-                    {
-                        "message": (
-                            f"Found directory defined at 'rules[{rule_index}].files[{f}]'."
-                            " The verb 'includeAllLines' does not accepts directories as"
-                            " inputs."
-                        ),
-                        "file": fpath + os.sep,
-                    }
-                )
+            if fcontent is None:
+                continue
+            elif not isinstance(fcontent, str):
+                yield "error", {
+                    "message": (
+                        f"Directory found but he verb 'includeAllLines' does not"
+                        " accepts directories as inputs"
+                    ),
+                    "file": fpath.rstrip(os.sep) + os.sep,
+                    "definition": f".files[{f}]",
+                }
                 continue
 
             # Normalize newlines
             fcontent_lines = fcontent.replace("\r\n", "\n").split("\n")
             for l, expected_line in enumerate(expected_lines):
                 if expected_line not in fcontent_lines:
-                    result["errors"].append(
-                        {
-                            "message": (
-                                f"Expected line '{expected_line}' defined"
-                                f" at 'rules[{rule_index}].includeAllLines[{l}]'"
-                                f" not found"
-                            ),
-                            "file": fpath,
-                        }
-                    )
+                    yield "error", {
+                        "message": f"Expected line '{expected_line}' not found",
+                        "file": fpath,
+                        "definition": f".includeAllLines[{l}]",
+                    }
 
-        return result
+    @classmethod
+    def ifIncludeAllLines(
+        cls,
+        value: t.List[str],
+        files: Files,
+        rule: Rule,
+    ) -> Results:
+        pass

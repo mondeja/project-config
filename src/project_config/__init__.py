@@ -6,7 +6,7 @@ import typing as t
 modules_objects = {
     "Files": "project_config.plugins._types",
     "Rule": "project_config.plugins._types",
-    "VerbResult": "project_config.plugins._types",
+    "Results": "project_config.plugins._types",
 }
 
 

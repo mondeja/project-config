@@ -77,6 +77,15 @@ def build_parser() -> argparse.ArgumentParser:
         choices=list(reporters),
         help="Style of generated report when failed.",
     )
+    parser.add_argument(
+        "--no-color",
+        dest="color",
+        action="store_false",
+        help=(
+            "Disable colored output. You can also set a value in"
+            " the environment variable NO_COLOR."
+        ),
+    )
 
     subparsers = parser.add_subparsers(
         title="commands",
@@ -93,7 +102,7 @@ def run(argv: t.List[str] = []) -> int:
     args = parser.parse_args(argv)
 
     try:
-        project = Project(args.config, args.rootdir, args.reporter)
+        project = Project(args.config, args.rootdir, args.reporter, args.color)
         getattr(project, args.command)()
     except ProjectConfigException as exc:
         return controlled_error(args.traceback, exc, exc.message)

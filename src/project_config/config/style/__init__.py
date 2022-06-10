@@ -232,18 +232,18 @@ class Style:
                             )
 
                 # Validate rules properties consistency against plugins
-                for verb in rule:
-                    if verb == "files":
+                for action in rule:
+                    if action == "files":
                         continue
 
                     # the action must be prepared
-                    if not verb:
+                    if not action:
                         yield (
-                            f"{style_url}: .rules[{r}].{verb}" " -> must not be empty"
+                            f"{style_url}: .rules[{r}].{action}" " -> must not be empty"
                         )
-                    elif not self.plugins.is_valid_verb(verb):
+                    elif not self.plugins.is_valid_action(action):
                         yield (
-                            f"{style_url}: .rules[{r}].{verb}"
+                            f"{style_url}: .rules[{r}].{action}"
                             " -> invalid action, not found in"
                             " defined plugins:"
                             f" {', '.join(self.plugins.plugin_names)}"

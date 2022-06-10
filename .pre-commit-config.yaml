@@ -25,7 +25,8 @@ repos:
       - id: mypy
         files: ^src
         additional_dependencies:
-          - "types-PyYAML"
+          - types-PyYAML
+          - types-tabulate
   - repo: https://github.com/PyCQA/isort
     rev: 5.10.1
     hooks:

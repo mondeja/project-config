@@ -15,6 +15,7 @@ tomlkit = "^0.11.0"
 pyjson5 = "*"
 PyYAML = "^6.0"
 simple_chalk = "^0.1.0"
+tabulate = "^0.8.9"
 
 [tool.poetry.group.dev.dependencies]
 mondeja-bump = "*"
@@ -44,7 +45,6 @@ python -c 'import webbrowser as w;w.open("http://127.0.0.1:8080")' &&
 python -m http.server 8080 -b localhost -d htmlcov
 """
 lint = "pre-commit run -a"
-printf = "printf"
 
 [tool.pytest.ini_options]
 addopts = "-s --cov=src --cov-report=html"
