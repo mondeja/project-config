@@ -4,7 +4,9 @@ import typing as t
 
 TreeDirectory = t.Iterator[str]
 TreeNode = t.Union[str, TreeDirectory]
+TreeNodeFiles = t.List[t.Tuple[str, TreeNode]]
 TreeNodeFilesIterator = t.Iterator[t.Tuple[str, TreeNode]]
+FilePathsArgument = t.Union[t.Iterator[str], t.List[str]]
 
 
 class Tree:
@@ -18,33 +20,32 @@ class Tree:
         self.files_cache: t.Dict[str, t.Any] = {}
 
         # latest cached files
-        self.files: t.List[t.Any] = []
+        self.files: TreeNodeFiles = []
 
-    def cache_file(self, fpath: str) -> str:
-        fpath = os.path.join(self.rootdir, fpath)
-        if fpath not in self.files_cache:
-            if os.path.isfile(fpath):
-                with open(fpath) as f:
-                    self.files_cache[fpath] = f.read()
-            elif os.path.isdir(fpath):
+    def cache_file(self, fpath: str) -> t.Tuple[str, str]:
+        normalized_fpath = os.path.join(self.rootdir, fpath)
+        if normalized_fpath not in self.files_cache:
+            if os.path.isfile(normalized_fpath):
+                with open(normalized_fpath) as f:
+                    self.files_cache[normalized_fpath] = f.read()
+            elif os.path.isdir(normalized_fpath):
                 # recursive generation
-                self.files_cache[fpath] = self.generator(
-                    os.path.join(fpath, fname) for fname in os.listdir(fpath)
+                self.files_cache[normalized_fpath] = self.generator(
+                    os.path.join(normalized_fpath, fname)
+                    for fname in os.listdir(normalized_fpath)
                 )
             else:
                 # file or directory does not exist
-                self.files_cache[fpath] = None
-        return fpath
+                self.files_cache[normalized_fpath] = None
+        return fpath, normalized_fpath
 
-    def get_file(self, fpath: str) -> TreeNode:
-        return self.files_cache[self.cache_file(fpath)]
+    def get_file_content(self, fpath: str) -> TreeNode:
+        return self.files_cache[self.cache_file(fpath)[1]]  # type: ignore
 
-    def generator(
-        self, fpaths: t.Union[t.Iterator[str], t.List[str]]
-    ) -> TreeNodeFilesIterator:
+    def generator(self, fpaths: FilePathsArgument) -> TreeNodeFilesIterator:
         for fpath in fpaths:
-            fpath = self.cache_file(fpath)
-            yield fpath, self.files_cache[fpath]
+            fpath, normalized_fpath = self.cache_file(fpath)
+            yield fpath, self.files_cache[normalized_fpath]
 
-    def cache_files(self, fpaths: t.List[str]):
+    def cache_files(self, fpaths: FilePathsArgument) -> None:
         self.files = list(self.generator(fpaths))

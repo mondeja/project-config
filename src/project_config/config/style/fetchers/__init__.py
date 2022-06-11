@@ -60,6 +60,11 @@ decoders: t.Dict[str, t.Dict[str, t.Any]] = {
     },
 }
 
+schemes_to_modnames = {
+    "gh": "github",
+    # TODO: add more fetchers
+}
+
 
 def _file_can_not_be_decoded_as_json_error(
     url: str,
@@ -123,14 +128,20 @@ def _decode_style_string(url: str, style_string: str) -> FetchResult:
 
 
 def fetch_style(url: str) -> FetchResult:
-    scheme = urllib.parse.urlsplit(url).scheme or "file"
+    url_parts = urllib.parse.urlsplit(url)
+    scheme = (
+        "file"
+        if not url_parts.scheme
+        else (schemes_to_modnames.get(url_parts.scheme, url_parts.scheme))
+    )
     try:
-        mod = importlib.import_module(f"project_config.config.style.fetchers.{scheme}")
+        mod = importlib.import_module(
+            f"project_config.config.style.fetchers.{scheme}",
+        )
     except ImportError:
-        # TODO: add more fetchers
         raise SchemeProtocolNotImplementedError(scheme)
 
-    style_string = getattr(mod, "fetch")(url)
+    style_string = getattr(mod, "fetch")(url_parts)
     return _decode_style_string(url, style_string)
 
 
@@ -138,11 +149,30 @@ def resolve_maybe_relative_url(url: str, parent_url: str) -> str:
     url_parts = urllib.parse.urlsplit(url)
 
     if url_parts.scheme in ("", "file"):  # is a file
-        if os.path.isabs(url):
-            return url
+        parent_url_parts = urllib.parse.urlsplit(parent_url)
 
-        parent_path = urllib.parse.urlsplit(parent_url).path
-        parent_dirpath = os.path.split(parent_path)[0]
-        return os.path.abspath(os.path.join(parent_dirpath, os.path.expanduser(url)))
+        if parent_url_parts.scheme in ("", "file"):  # parent url is file also
+            # we are offline, doing just path manipulation
+            if os.path.isabs(url):
+                return url
 
-    raise SchemeProtocolNotImplementedError(url_parts.scheme)
+            parent_dirpath = os.path.split(parent_url_parts.path)[0]
+            return os.path.abspath(
+                os.path.join(parent_dirpath, os.path.expanduser(url)),
+            )
+        elif parent_url_parts.scheme in ("gh", "github"):
+            project, parent_path = parent_url_parts.path.lstrip("/").split(
+                "/", maxsplit=1
+            )
+            parent_dirpath = os.path.split(parent_path)[0]
+            return (
+                f"{parent_url_parts.scheme}://{parent_url_parts.netloc}/"
+                f"{project}/{urllib.parse.urljoin(parent_path, url)}"
+            )
+
+        # parent url is another protocol like https, so we are online,
+        # must convert to a relative URI depending on the protocol
+        raise SchemeProtocolNotImplementedError(parent_url_parts.scheme)
+
+    # other protocols like https uses absolute URLs
+    return url

@@ -37,6 +37,14 @@ optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
 [[package]]
+name = "colored"
+version = "1.4.3"
+description = "Simple library for color and formatting to terminal"
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "contextlib-chdir"
 version = "1.0.2"
 description = "Backport of contextlib.chdir stdlib class added in Python3.11."
@@ -272,14 +280,6 @@ optional = false
 python-versions = ">=3.6"
 
 [[package]]
-name = "simple-chalk"
-version = "0.1.0"
-description = "A terminal string styling library"
-category = "main"
-optional = false
-python-versions = ">=3.6"
-
-[[package]]
 name = "six"
 version = "1.16.0"
 description = "Python 2 and 3 compatibility utilities"
@@ -372,7 +372,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "f9475afdea06e8e99ab2066e978e10f70deb479fed3b816fccb1b57a479b646f"
+content-hash = "96e92b3567131dc6c9091201021f9dd9367cad91da5becefdf5cb93c6fe0aa58"
 
 [metadata.files]
 atomicwrites = [
@@ -390,6 +390,9 @@ cfgv = [
 colorama = [
     {file = "colorama-0.4.4-py2.py3-none-any.whl", hash = "sha256:9f47eda37229f68eee03b24b9748937c7dc3868f906e8ba69fbcbdd3bc5dc3e2"},
     {file = "colorama-0.4.4.tar.gz", hash = "sha256:5941b2b48a20143d2267e95b1c2a7603ce057ee39fd88e7329b0c292aa16869b"},
+]
+colored = [
+    {file = "colored-1.4.3.tar.gz", hash = "sha256:b7b48b9f40e8a65bbb54813d5d79dd008dc8b8c5638d5bbfd30fc5a82e6def7a"},
 ]
 contextlib-chdir = [
     {file = "contextlib-chdir-1.0.2.tar.gz", hash = "sha256:58406a71db00647fcccfc7e52e9e04e44d29eacf30400e7c0ba3b15f09d5f3fa"},
@@ -610,9 +613,6 @@ pyyaml = [
     {file = "PyYAML-6.0-cp39-cp39-win32.whl", hash = "sha256:b5b9eccad747aabaaffbc6064800670f0c297e52c12754eb1d976c57e4f74dcb"},
     {file = "PyYAML-6.0-cp39-cp39-win_amd64.whl", hash = "sha256:b3d267842bf12586ba6c734f89d1f5b871df0273157918b0ccefa29deb05c21c"},
     {file = "PyYAML-6.0.tar.gz", hash = "sha256:68fb519c14306fec9720a2a5b45bc9f0c8d1b9c72adf45c37baedfcd949c35a2"},
-]
-simple-chalk = [
-    {file = "simple_chalk-0.1.0.tar.gz", hash = "sha256:d80f55993dfa040c1b55d2fbfb925e4fbb5798c2934601aa448ef4a192d84196"},
 ]
 six = [
     {file = "six-1.16.0-py2.py3-none-any.whl", hash = "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"},

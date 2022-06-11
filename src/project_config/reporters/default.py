@@ -1,7 +1,3 @@
-import abc
-
-import simple_chalk
-
 from project_config.reporters.base import (
     BaseColorReporter,
     BaseFormattedReporter,
@@ -27,6 +23,9 @@ class DefaultReporter(BaseNoopFormattedReporter, DefaultBaseReporter):
         return f"- {error_message}"
 
 
-class DefaultColorReporter(BaseColorReporter, DefaultBaseReporter):
+class DefaultColorReporter(BaseColorReporter, DefaultReporter):
     def format_error_message(self, error_message: str) -> str:
-        return simple_chalk.bold.yellow(f"- {error_message}")
+        return (
+            f"{super().format_metachar('-')}"
+            f" {super().format_error_message(error_message)}"
+        )

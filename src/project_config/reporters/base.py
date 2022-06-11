@@ -2,7 +2,7 @@ import abc
 import os
 import typing as t
 
-import simple_chalk as chalk
+import colored
 
 from project_config.exceptions import ProjectConfigCheckFailedBase
 
@@ -81,10 +81,22 @@ class BaseNoopFormattedReporter(BaseFormattedReporter):
         return metachar
 
 
-class BaseColorReporter(BaseFormattedReporter):
-    format_file = chalk.bold.redBright
-    format_error_message = chalk.bold.yellow
-    format_definition = chalk.bold.blue
+def bold_color(value: str, color: str) -> str:
+    return colored.stylize(value, colored.fg(color) + colored.attr("bold"))  # type: ignore
 
-    format_key = chalk.bold.green
-    format_metachar = chalk.yellowBright
+
+class BaseColorReporter(BaseFormattedReporter):
+    def format_file(self, fname: str) -> str:
+        return bold_color(fname, "light_red")
+
+    def format_error_message(self, error_message: str) -> str:
+        return bold_color(error_message, "yellow")
+
+    def format_definition(self, definition: str) -> str:
+        return bold_color(definition, "blue")
+
+    def format_key(self, key: str) -> str:
+        return bold_color(key, "green")
+
+    def format_metachar(self, metachar: str) -> str:
+        return bold_color(metachar, "grey_37")

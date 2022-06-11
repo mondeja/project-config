@@ -1,16 +1,9 @@
 {
-  "extends": [],
+  "extends": ["parent-style.json5", "parent-style-2.json5"],
   "rules": [
     {
-      "files": ["pyproject.toml"],
-      "includeAllLines": ["[tool.project-config]", "[tool.mypy]"]
-    },
-    {
-      "files": ["pyproject.toml"],
-      "includeAllLines": ["[tool.project-config]", "foobarbaz"],
-      "ifIncludeAllLines": {
-        "pyproject.toml": ["[tool.project-config]"]
-      }
+      "files": ["pyproject.toml", "self-styles", "hello"],
+      "includeAllLines": ["[tool.project-config]", "[tool.mypy]", "hola"]
     }
   ]
 }

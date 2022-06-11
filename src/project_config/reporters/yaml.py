@@ -5,30 +5,26 @@ import yaml
 
 
 try:
-    from yaml import CSafeDumper as Dumper, CSafeLoader as Loader
+    from yaml import CSafeDumper as Dumper
 except ImportError:
-    from yaml import SafeLoader as Loader, SafeDumper as Dumper  # type: ignore
+    from yaml import SafeDumper as Dumper  # type: ignore
 
 from project_config.reporters.base import BaseColorReporter, BaseReporter
 
 
-class YamlReporterMixin:
-    def dump_yaml_lines(self) -> t.List[str]:
-        return yaml.dump(
-            yaml.load(
-                json.dumps(self.errors),
-                Loader=Loader,
-            ),
-            Dumper=Dumper,
-            default_flow_style=False,
-            width=88888,  # no newlines in strings
-        ).split("\n")
+def dump_yaml_lines(obj: t.Any) -> t.Any:
+    return yaml.dump(
+        obj,
+        Dumper=Dumper,
+        default_flow_style=False,
+        width=88888,  # no newlines in strings
+    ).split("\n")
 
 
-class YamlReporter(YamlReporterMixin, BaseReporter):
+class YamlReporter(BaseReporter):
     def generate_report(self) -> str:
         report = ""
-        for line in self.dump_yaml_lines():
+        for line in dump_yaml_lines(self.errors):
             if line.startswith(("- ", "  ")):
                 report += f"  {line}\n"
             else:
@@ -36,10 +32,10 @@ class YamlReporter(YamlReporterMixin, BaseReporter):
         return report
 
 
-class YamlColorReporter(YamlReporterMixin, BaseColorReporter):
+class YamlColorReporter(BaseColorReporter):
     def generate_report(self) -> t.Any:
         report = ""
-        for line in self.dump_yaml_lines():
+        for line in dump_yaml_lines(self.errors):
             if line.startswith("- "):  # definition
                 report += (
                     f'  {self.format_metachar("-")}'
@@ -55,5 +51,7 @@ class YamlColorReporter(YamlReporterMixin, BaseColorReporter):
                     f" {self.format_error_message(line[11:])}\n"
                 )
             elif line:
-                report += f"{self.format_file(line)}\n"
+                report += (
+                    f"{self.format_file(line[:-1])}" f"{self.format_metachar(':')}\n"
+                )
         return report.rstrip("\n")

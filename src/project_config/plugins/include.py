@@ -13,17 +13,17 @@ from project_config.utils import normalize_newlines
 
 
 def _directories_not_accepted_as_inputs_error(
-    action_type,
-    action_name,
-    dir_path,
-    definition,
-):
+    action_type: str,
+    action_name: str,
+    dir_path: str,
+    definition: str,
+) -> t.Dict[str, str]:
     return {
         "message": (
             f"Directory found but the {action_type} '{action_name}' does not"
             " accepts directories as inputs"
         ),
-        "file": dir_path.rstrip(os.sep) + os.sep,
+        "file": f"{dir_path.rstrip(os.sep)}/",
         "definition": definition,
     }
 
@@ -68,10 +68,15 @@ class IncludePlugin:
         rule: Rule,
     ) -> Results:
         for fpath, expected_lines in value.items():
-            fcontent = tree.get_file(fpath)
+            fcontent = tree.get_file_content(fpath)
 
             if fcontent is None:
-                continue
+                yield InterruptingError, {
+                    "message": "File specified in conditional 'ifIncludeAllLines' not found",
+                    "file": fpath,
+                    "definition": f"ifIncludeAllLines[{fpath}]",
+                }
+                return
             elif not isinstance(fcontent, str):
                 yield InterruptingError, _directories_not_accepted_as_inputs_error(
                     "conditional",
@@ -79,12 +84,14 @@ class IncludePlugin:
                     fpath,
                     f"ifIncludeAllLines[{fpath}]",
                 )
-                continue
+                return
 
             expected_lines = [line.strip("\r\n") for line in expected_lines]
             fcontent_lines = normalize_newlines(fcontent).split("\n")
             for expected_line in expected_lines:
                 if expected_line not in fcontent_lines:
                     yield ResultValue, False
-                    raise StopIteration()
+                    return
         yield ResultValue, True
+
+    # TODO: add jsonschema for plugin action values

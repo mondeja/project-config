@@ -4,9 +4,8 @@ from dataclasses import dataclass
 
 from project_config import Error, InterruptingError, ResultValue
 from project_config.config import Config
-from project_config.exceptions import ProjectConfigException
 from project_config.reporters import get_reporter
-from project_config.tree import Tree
+from project_config.tree import Tree, TreeNodeFiles
 
 
 class InterruptCheck(Exception):
@@ -31,7 +30,11 @@ class Project:
             self.rootdir,
         )
 
-    def _check_files_existence(self, files: t.List[str], rule_index: int) -> None:
+    def _check_files_existence(
+        self,
+        files: TreeNodeFiles,
+        rule_index: int,
+    ) -> None:
         for f, (fpath, fcontent) in enumerate(files):
             if fcontent is None:  # file or directory does not exist
                 ftype = "directory" if fpath.endswith(("/", os.sep)) else "file"
@@ -46,7 +49,7 @@ class Project:
     def _process_conditionals_for_rule(
         self,
         conditionals: t.List[str],
-        files: t.List[t.Any],
+        tree: Tree,
         rule: t.Any,  # TODO: improve this type
         rule_index: int,
     ) -> None:
@@ -56,7 +59,7 @@ class Project:
             )
             for breakage_type, breakage_value in action_function(
                 rule[conditional],
-                files,
+                tree,
                 rule,
             ):
                 if breakage_type == InterruptingError:
