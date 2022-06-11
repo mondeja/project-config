@@ -10,9 +10,9 @@ import typing as t
 
 
 try:
-    import importlib.metadata as importlib_metadata
-except ImportError:  # Python 3.7
     import importlib_metadata
+except ImportError:  # Python > 3.9
+    import importlib.metadata as importlib_metadata
 
 
 class Plugins:

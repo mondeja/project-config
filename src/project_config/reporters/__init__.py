@@ -17,6 +17,7 @@ reporters = {
 
 # TODO: custom reporters by module dotpath?
 
+
 def get_reporter(reporter_name: str, color: bool) -> t.Any:
     # if ':' in the reporter, is passing the kwarg 'format' with the value
     if ":" in reporter_name:

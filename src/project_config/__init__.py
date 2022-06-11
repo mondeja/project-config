@@ -4,9 +4,12 @@ import typing as t
 
 # PEP 562
 modules_objects = {
-    "Files": "project_config.plugins._types",
+    "Tree": "project_config.tree",
     "Rule": "project_config.plugins._types",
     "Results": "project_config.plugins._types",
+    "Error": "project_config.plugins._constants",
+    "InterruptingError": "project_config.plugins._constants",
+    "ResultValue": "project_config.plugins._constants",
 }
 
 

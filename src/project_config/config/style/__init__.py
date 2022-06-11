@@ -1,8 +1,6 @@
 import typing as t
 from dataclasses import dataclass
 
-import typing_extensions
-
 from project_config.config.exceptions import ProjectConfigInvalidConfigSchema
 from project_config.config.style.fetchers import (
     FetchStyleError,
