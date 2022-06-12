@@ -1,10 +1,14 @@
 import os
+import sys
 import typing as t
 from dataclasses import dataclass
 
 from project_config import Error, InterruptingError, ResultValue
 from project_config.config import Config
-from project_config.reporters import get_reporter
+from project_config.reporters import (
+    get_reporter,
+    reporter_not_implemented_error_factory,
+)
 from project_config.tree import Tree, TreeNodeFiles
 
 
@@ -18,16 +22,21 @@ class ConditionalsFalseResult(InterruptCheck):
 
 @dataclass
 class Project:
+    command: str
     config_path: str
     rootdir: str
     reporter_name: str
     color: bool
+    reporter_format: t.Optional[str] = None
 
     def __post_init__(self) -> None:
         self.config = Config(self.config_path)
         self.tree = Tree(self.rootdir)
-        self.reporter = get_reporter(self.reporter_name, self.color)(
+        self.reporter, self.reporter_name, self.reporter_format = get_reporter(
+            self.reporter_name,
+            self.color,
             self.rootdir,
+            self.command,
         )
 
     def _check_files_existence(
@@ -38,7 +47,7 @@ class Project:
         for f, (fpath, fcontent) in enumerate(files):
             if fcontent is None:  # file or directory does not exist
                 ftype = "directory" if fpath.endswith(("/", os.sep)) else "file"
-                self.reporter.report(
+                self.reporter.report_error(
                     {
                         "message": f"Expected {ftype} does not exists",
                         "file": fpath,
@@ -66,7 +75,7 @@ class Project:
                     breakage_value["definition"] = (
                         f".rules[{rule_index}]" + breakage_value["definition"]
                     )
-                    self.reporter.report(breakage_value)
+                    self.reporter.report_error(breakage_value)
                     raise InterruptCheck()
                 elif breakage_type == ResultValue:
                     if breakage_value is False:
@@ -117,12 +126,12 @@ class Project:
                         breakage_value["definition"] = (
                             f".rules[{r}]" + breakage_value["definition"]
                         )
-                        self.reporter.report(breakage_value)
+                        self.reporter.report_error(breakage_value)
                     elif breakage_type == InterruptingError:
                         breakage_value["definition"] = (
                             f".rules[{r}]" + breakage_value["definition"]
                         )
-                        self.reporter.report(breakage_value)
+                        self.reporter.report_error(breakage_value)
                         raise InterruptCheck()
                         # TODO: show 'INTERRUPTED' in report
                     else:
@@ -131,10 +140,28 @@ class Project:
                             " for verbs checking"
                         )
 
-    def check(self) -> None:
+    def check(self, args: t.List[t.Any]) -> None:
         try:
             self._run_check()
         except InterruptCheck:
             pass
         finally:
-            self.reporter.run()
+            self.reporter.raise_errors()
+
+    def show(self, args: t.List[t.Any]) -> None:
+        data = self.config.dict_
+        if args.data == "config":
+            data.pop("style")
+            data["style"] = data.pop("_style")
+        else:
+            data = data.pop("style")
+
+        try:
+            report = self.reporter.generate_data_report(args.data, data)
+        except NotImplementedError:
+            raise reporter_not_implemented_error_factory(
+                self.reporter_name,
+                self.reporter_format,
+                args.command,
+            )
+        sys.stdout.write(report)

@@ -20,19 +20,25 @@ class BaseReporter(abc.ABC):
         self.errors = errors
         self.format = format
 
+        # configuration, styles...
+        self.data: t.Dict[str, t.Any] = {}
+
     @abc.abstractmethod
-    def generate_report(self) -> str:
+    def generate_errors_report(self) -> str:
         pass
+
+    def generate_data_report(self, data_key: str, data: t.Dict[str, t.Any]) -> str:
+        raise NotImplementedError
 
     @property
     def success(self) -> bool:
         return len(self.errors) == 0
 
-    def run(self) -> None:
+    def raise_errors(self) -> None:
         if not self.success:
-            raise self.exception_class(self.generate_report())
+            raise self.exception_class(self.generate_errors_report())
 
-    def report(self, error: t.Dict[str, str]) -> None:
+    def report_error(self, error: t.Dict[str, str]) -> None:
         file = os.path.relpath(error.pop("file"), self.rootdir)
         if file not in self.errors:
             self.errors[file] = []
@@ -60,6 +66,16 @@ class BaseFormattedReporter(BaseReporter, abc.ABC):
     def format_metachar(self, metachar: str) -> str:
         raise NotImplementedError
 
+    @abc.abstractmethod
+    def format_config_key(self, config_key: str) -> str:
+        """Configuration data key formatter, for example 'style'."""
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def format_config_value(self, config_value: str) -> str:
+        """Configuration data value formatter, for example 'style' urls."""
+        raise NotImplementedError
+
 
 self_format_noop: t.Callable[[type, str], str] = lambda s, v: v
 
@@ -79,6 +95,12 @@ class BaseNoopFormattedReporter(BaseFormattedReporter):
 
     def format_metachar(self, metachar: str) -> str:
         return metachar
+
+    def format_config_key(self, config_key: str) -> str:
+        return config_key
+
+    def format_config_value(self, config_value: str) -> str:
+        return config_value
 
 
 def bold_color(value: str, color: str) -> str:
@@ -100,3 +122,6 @@ class BaseColorReporter(BaseFormattedReporter):
 
     def format_metachar(self, metachar: str) -> str:
         return bold_color(metachar, "grey_37")
+
+    format_config_key = format_definition
+    format_config_value = format_error_message

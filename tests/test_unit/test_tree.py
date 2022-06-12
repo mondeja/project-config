@@ -32,7 +32,7 @@ def test_Tree_generator(tmp_path):
     assert tree.files_cache == {}  # files are cached when used
     assert isinstance(files, types.GeneratorType)
 
-    assert next(files) == (path.as_posix(), expected_content)
+    assert next(files) == (path.name, expected_content)
     assert tree.files_cache == {path.as_posix(): expected_content}
 
     with pytest.raises(StopIteration):
@@ -80,7 +80,7 @@ def test_Tree_directory(tmp_path):
     assert isinstance(directory_generator, types.GeneratorType)
 
     fpath, fcontent = next(directory_generator)
-    assert fpath == dir_path.as_posix()
+    assert fpath == dir_path.name
     assert isinstance(fcontent, collections.abc.Iterable)
     assert tree.files_cache.setitem_calls == 1
 
@@ -115,11 +115,11 @@ def test_file_symlink(tmp_path):
     generator = tree.generator([target_link_path, source_link_path])
 
     target_fpath, target_fcontent = next(generator)
-    assert target_fpath == target_link_path.as_posix()
+    assert str(target_fpath) == target_link_path.as_posix()
     assert target_fcontent == "target"
 
     source_fpath, source_fcontent = next(generator)
-    assert source_fpath == source_link_path.as_posix()
+    assert str(source_fpath) == source_link_path.as_posix()
     assert source_fcontent == "target"
 
     with pytest.raises(StopIteration):

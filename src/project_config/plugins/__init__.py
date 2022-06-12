@@ -35,10 +35,10 @@ class Plugins:
     def plugin_names_actions(self) -> t.Dict[str, t.List[str]]:
         """Map from plugin names to their allowed actions."""
         result: t.Dict[str, t.List[str]] = {}
-        for verb, plugin_name in self.actions_plugin_names.items():
+        for action, plugin_name in self.actions_plugin_names.items():
             if plugin_name not in result:
                 result[plugin_name] = []
-            result[plugin_name].append(verb)
+            result[plugin_name].append(action)
         return result
 
     @property
@@ -81,13 +81,13 @@ class Plugins:
             self._add_plugin_to_cache(plugin)
 
     def _add_plugin_to_cache(self, plugin: importlib_metadata.EntryPoint) -> None:
-        # do not load plugin until any verb is called
+        # do not load plugin until any action is called
         # instead just save in cache and will be loaded on demand
         self.plugin_names_loaders[plugin.name] = plugin.load
 
-        for verb in self._extract_actions_from_plugin_module(plugin.module):
-            if verb not in self.actions_plugin_names:
-                self.actions_plugin_names[verb] = plugin.name
+        for action in self._extract_actions_from_plugin_module(plugin.module):
+            if action not in self.actions_plugin_names:
+                self.actions_plugin_names[action] = plugin.name
 
     def _extract_actions_from_plugin_module(
         self, module_dotpath: str

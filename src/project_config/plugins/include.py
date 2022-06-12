@@ -74,7 +74,7 @@ class IncludePlugin:
                 yield InterruptingError, {
                     "message": "File specified in conditional 'ifIncludeAllLines' not found",
                     "file": fpath,
-                    "definition": f"ifIncludeAllLines[{fpath}]",
+                    "definition": f".ifIncludeAllLines[{fpath}]",
                 }
                 return
             elif not isinstance(fcontent, str):
@@ -82,7 +82,7 @@ class IncludePlugin:
                     "conditional",
                     "ifIncludeAllLines",
                     fpath,
-                    f"ifIncludeAllLines[{fpath}]",
+                    f".ifIncludeAllLines[{fpath}]",
                 )
                 return
 

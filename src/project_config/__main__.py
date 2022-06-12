@@ -37,6 +37,17 @@ def add_fix_command_parser(
     return parser
 
 
+def add_show_command_parser(
+    subparsers: "argparse._SubParsersAction[argparse.ArgumentParser]",
+) -> argparse.ArgumentParser:
+    parser = subparsers.add_parser("show", help="Show configuration or style.")
+    parser.add_argument(
+        "data",
+        choices=["config", "style"],
+        help="Indicate which data must be shown, discovered configuration or extended style.",
+    )
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Validate the configuration of your project against the configured styles."
@@ -79,8 +90,11 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--no-color",
+        "--nocolor",
         dest="color",
-        action="store_false",
+        action="store_const",
+        const=False,
+        default=None,
         help=(
             "Disable colored output. You can also set a value in"
             " the environment variable NO_COLOR."
@@ -94,6 +108,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     add_check_command_parser(subparsers)
     add_fix_command_parser(subparsers)
+    add_show_command_parser(subparsers)
     return parser
 
 
@@ -102,8 +117,14 @@ def run(argv: t.List[str] = []) -> int:
     args = parser.parse_args(argv)
 
     try:
-        project = Project(args.config, args.rootdir, args.reporter, args.color)
-        getattr(project, args.command)()
+        project = Project(
+            args.command,
+            args.config,
+            args.rootdir,
+            args.reporter,
+            args.color,
+        )
+        getattr(project, args.command)(args)
     except ProjectConfigException as exc:
         return controlled_error(args.traceback, exc, exc.message)
     except FileNotFoundError as exc:

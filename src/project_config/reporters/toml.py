@@ -6,12 +6,15 @@ from project_config.reporters.base import BaseColorReporter, BaseReporter
 
 
 class TomlReporter(BaseReporter):
-    def generate_report(self) -> str:
+    def generate_errors_report(self) -> str:
         return t.cast(str, tomlkit.dumps(self.errors))
+
+    def generate_data_report(self, data_key: str, data: t.Dict[str, t.Any]) -> str:
+        return t.cast(str, tomlkit.dumps(data))
 
 
 class TomlColorReporter(BaseColorReporter):
-    def generate_report(self) -> str:
+    def generate_errors_report(self) -> str:
         report = ""
         for line in tomlkit.dumps(self.errors).split("\n"):
             if line.startswith("[["):

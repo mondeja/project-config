@@ -56,6 +56,7 @@ class Style:
         Error messages are of type string and style is of type dict.
         If the first yielded value is a dict, we have a style without errors.
         """
+        self.config["_style"] = self.config["style"]
         style_urls = self.config["style"]
         if isinstance(style_urls, str):
             try:
@@ -110,7 +111,7 @@ class Style:
 
                     self._add_new_rules_plugins_to_style(
                         style,
-                        partial_style["rules"],
+                        partial_style.get("rules", []),
                         partial_style.get("plugins", []),
                     )
             yield style
@@ -158,6 +159,8 @@ class Style:
         new_plugins: t.List[PluginType],
         prepend: bool = False,
     ) -> None:
+        style["plugins"] = style.pop("plugins", [])
+        style["rules"] = style.pop("rules", [])
         if prepend:
             style["rules"] = new_rules + style["rules"]
             for plugin in new_plugins:
@@ -174,6 +177,7 @@ class Style:
         style_url: str,
         style: t.Any,
     ) -> t.Iterator[str]:
+
         # validate extends urls
         if "extends" in style:
             if not isinstance(style["extends"], list):
@@ -204,7 +208,9 @@ class Style:
 
         # validate rules
         if "rules" not in style:
-            yield f"{style_url}: .rules -> is required"
+            if "extends" not in style:
+                # TODO: after loading all styles, if any rule is found, raise error
+                yield f"{style_url}: .rules or .extends -> one of both is required"
         elif not isinstance(style["rules"], list):
             yield f"{style_url}: .rules -> must be of type array"
         elif not style["rules"]:

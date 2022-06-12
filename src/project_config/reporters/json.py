@@ -1,10 +1,11 @@
 import json
+import typing as t
 
 from project_config.reporters.base import BaseColorReporter, BaseReporter
 
 
 class JsonReporter(BaseReporter):
-    def generate_report(self) -> str:
+    def generate_errors_report(self) -> str:
         return json.dumps(
             self.errors,
             indent=2
@@ -12,9 +13,20 @@ class JsonReporter(BaseReporter):
             else (4 if self.format == "pretty4" else None),
         )
 
+    def generate_data_report(self, data_key: str, data: t.Dict[str, t.Any]) -> str:
+        return (
+            json.dumps(
+                data,
+                indent=2
+                if self.format == "pretty"
+                else (4 if self.format == "pretty4" else None),
+            )
+            + "\n"
+        )
+
 
 class JsonColorReporter(BaseColorReporter):
-    def generate_report(self) -> str:
+    def generate_errors_report(self) -> str:
         message_key = self.format_key('"message"')
         definition_key = self.format_key('"definition"')
 

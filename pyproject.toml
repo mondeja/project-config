@@ -36,7 +36,8 @@ project-config = "project_config.__main__:main"
 include = "project_config.plugins.include:IncludePlugin"
 
 [tool.project-config]
-style = ["self-styles/pyproject-toml-lines.json"]
+style = ["../project-config-styles/python/base.json5"]
+cache = "5 minutes"
 
 [tool.poetry-exec-plugin.commands]
 t = "pytest"

@@ -32,6 +32,13 @@ from project_config.plugins.include import IncludePlugin
             ],
             id="file-one-line-no-match-one-line",
         ),
+        pytest.param(
+            {"foo.ext": "foo\r\nbar\r\nbaz\r\n"},
+            ["foo", "baz"],
+            None,
+            [],
+            id="file-two-lines-match-two-lines",
+        ),
     ),
 )
 def test_includeAllLines(
@@ -72,7 +79,7 @@ def test_includeAllLines(
                 (
                     InterruptingError,
                     {
-                        "definition": "ifIncludeAllLines[bar.ext]",
+                        "definition": ".ifIncludeAllLines[bar.ext]",
                         "file": "bar.ext",
                         "message": (
                             "File specified in conditional"
@@ -112,7 +119,7 @@ def test_includeAllLines(
                 (
                     InterruptingError,
                     {
-                        "definition": "ifIncludeAllLines[foo]",
+                        "definition": ".ifIncludeAllLines[foo]",
                         "file": "foo/",
                         "message": (
                             "Directory found but the conditional"
@@ -132,7 +139,7 @@ def test_includeAllLines(
                 (
                     InterruptingError,
                     {
-                        "definition": "ifIncludeAllLines[foo]",
+                        "definition": ".ifIncludeAllLines[foo]",
                         "file": "foo/",
                         "message": (
                             "Directory found but the conditional"

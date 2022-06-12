@@ -27,7 +27,7 @@ def _common_generate_rows(
     return rows
 
 
-def _common_generate_report(
+def _common_generate_errors_report(
     errors: t.Dict[str, t.List[t.Dict[str, str]]],
     format: str,
     format_key: t.Callable[[str], str],
@@ -52,8 +52,8 @@ def _common_generate_report(
 
 
 class TableReporter(BaseNoopFormattedReporter):
-    def generate_report(self) -> str:
-        return _common_generate_report(
+    def generate_errors_report(self) -> str:
+        return _common_generate_errors_report(
             self.errors,
             t.cast(str, self.format),
             self.format_key,
@@ -64,8 +64,8 @@ class TableReporter(BaseNoopFormattedReporter):
 
 
 class TableColorReporter(BaseColorReporter):
-    def generate_report(self) -> str:
-        return _common_generate_report(
+    def generate_errors_report(self) -> str:
+        return _common_generate_errors_report(
             self.errors,
             t.cast(str, self.format),
             self.format_key,

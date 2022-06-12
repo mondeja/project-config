@@ -12,19 +12,19 @@ except ImportError:
 from project_config.reporters.base import BaseColorReporter, BaseReporter
 
 
-def dump_yaml_lines(obj: t.Any) -> t.Any:
+def yaml_dump(obj: t.Any) -> t.Any:
     return yaml.dump(
         obj,
         Dumper=Dumper,
         default_flow_style=False,
         width=88888,  # no newlines in strings
-    ).split("\n")
+    )
 
 
 class YamlReporter(BaseReporter):
-    def generate_report(self) -> str:
+    def generate_errors_report(self) -> str:
         report = ""
-        for line in dump_yaml_lines(self.errors):
+        for line in yaml_dump(self.errors).split("\n"):
             if line.startswith(("- ", "  ")):
                 report += f"  {line}\n"
             else:
@@ -33,9 +33,9 @@ class YamlReporter(BaseReporter):
 
 
 class YamlColorReporter(BaseColorReporter):
-    def generate_report(self) -> t.Any:
+    def generate_errors_report(self) -> t.Any:
         report = ""
-        for line in dump_yaml_lines(self.errors):
+        for line in yaml_dump(self.errors).split("\n"):
             if line.startswith("- "):  # definition
                 report += (
                     f'  {self.format_metachar("-")}'
