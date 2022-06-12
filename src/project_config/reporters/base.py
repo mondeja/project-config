@@ -39,9 +39,15 @@ class BaseReporter(abc.ABC):
             raise self.exception_class(self.generate_errors_report())
 
     def report_error(self, error: t.Dict[str, str]) -> None:
-        file = os.path.relpath(error.pop("file"), self.rootdir)
+        file = error.pop("file") or "[CONFIGURATION]"
+        if file:
+            file = os.path.relpath(file, self.rootdir)
         if file not in self.errors:
             self.errors[file] = []
+
+        error["message"] = (  # Remove newlines from messages
+            error.pop("message").replace("\r\n", "\n").replace("\n", " ")
+        )
         self.errors[file].append(error)
 
 

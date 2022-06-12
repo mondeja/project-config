@@ -1,3 +1,4 @@
+import functools
 import importlib
 import os
 import sys
@@ -16,11 +17,11 @@ FetchResult = t.Dict[str, t.List[str]]
 
 
 class DecoderFunction(typing_extensions.Protocol):
-    def __call__(self, style_string: str, **kwargs: t.Any) -> FetchResult:
+    def __call__(self, string: str, **kwargs: t.Any) -> FetchResult:
         ...
 
 
-class FetchStyleError(ProjectConfigException):
+class FetchError(ProjectConfigException):
     pass
 
 
@@ -73,7 +74,7 @@ def _file_can_not_be_decoded_as_json_error(
     return f"'{url}' can't be decoded as a valid JSON file:{error_message}"
 
 
-def _decode_style_string(url: str, style_string: str) -> FetchResult:
+def get_decoder(url: str) -> t.Any:  # TODO: improve this type
     ext = os.path.splitext(url)[-1]
     try:
         decoder = decoders[ext]
@@ -102,9 +103,16 @@ def _decode_style_string(url: str, style_string: str) -> FetchResult:
     else:
         function_kwargs = {}
 
+    return functools.partial(loader_function, **function_kwargs)
+
+
+def decode_with_decoder(
+    string: str,
+    decoder: t.Callable[[str, t.Dict[str, t.Any]], FetchResult],
+):
     try:
         # decode
-        result = loader_function(style_string, **function_kwargs)
+        result = decoder(string)
     except Exception:
         # handle exceptions in third party packages without importing them
         exc_class, exc, _ = sys.exc_info()
@@ -114,12 +122,12 @@ def _decode_style_string(url: str, style_string: str) -> FetchResult:
             "pyjson5",  # pyjson5.Json5IllegalCharacter
             "tomlkit",  # tomlkit.exceptions.UnexpectedEofError
         ):
-            raise FetchStyleError(
+            raise FetchError(
                 _file_can_not_be_decoded_as_json_error(url, f" {exc.args[0]}"),  # type: ignore
             )
         elif package_name == "yaml":
             # Example: yaml.scanner.ScannerError
-            raise FetchStyleError(
+            raise FetchError(
                 _file_can_not_be_decoded_as_json_error(url, f"\n{exc.__str__()}")
             )
         raise
@@ -127,7 +135,11 @@ def _decode_style_string(url: str, style_string: str) -> FetchResult:
         return result
 
 
-def fetch_style(url: str) -> FetchResult:
+def decode_for_url(url: str, string: str) -> FetchResult:
+    return decode_with_decoder(string, get_decoder(url))
+
+
+def fetch(url: str) -> FetchResult:
     url_parts = urllib.parse.urlsplit(url)
     scheme = (
         "file"
@@ -135,14 +147,12 @@ def fetch_style(url: str) -> FetchResult:
         else (schemes_to_modnames.get(url_parts.scheme, url_parts.scheme))
     )
     try:
-        mod = importlib.import_module(
-            f"project_config.config.style.fetchers.{scheme}",
-        )
+        mod = importlib.import_module(f"project_config.fetchers.{scheme}")
     except ImportError:
         raise SchemeProtocolNotImplementedError(scheme)
 
-    style_string = getattr(mod, "fetch")(url_parts)
-    return _decode_style_string(url, style_string)
+    string = getattr(mod, "fetch")(url_parts)
+    return decode_for_url(url, string)
 
 
 def resolve_maybe_relative_url(url: str, parent_url: str) -> str:

@@ -2,7 +2,7 @@ import re
 
 import pytest
 
-from project_config.config.style.fetchers import FetchStyleError, fetch_style
+from project_config.fetchers import FetchError, fetch
 
 
 @pytest.mark.parametrize(
@@ -169,7 +169,7 @@ from project_config.config.style.fetchers import FetchStyleError, fetch_style
         ),
     ),
 )
-def test_fetch_style_file(
+def test_fetch_file(
     tmp_path, chdir, path, url, content, expected_result, expected_error_message
 ):
     (tmp_path / path).write_text(content)
@@ -180,10 +180,8 @@ def test_fetch_style_file(
 
     with chdir(tmp_path):
         if expected_error_message:
-            with pytest.raises(
-                FetchStyleError, match=re.escape(expected_error_message)
-            ):
-                fetch_style(url)
+            with pytest.raises(FetchError, match=re.escape(expected_error_message)):
+                fetch(url)
         else:
-            result = fetch_style(url)
+            result = fetch(url)
             assert result == expected_result

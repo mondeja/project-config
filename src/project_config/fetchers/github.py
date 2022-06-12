@@ -2,10 +2,9 @@ import json
 import re
 import urllib.parse
 
-from project_config.config.style.fetchers.https import GET
+from project_config.utils import GET
 
 
-# TODO: cache this result
 def get_default_branch_from_git_repo(repo_owner: str, repo_name: str) -> str:
     # try from repository HTML
     result = GET(f"https://github.com/{repo_owner}/{repo_name}/branches")
@@ -31,7 +30,6 @@ def build_raw_githubusercontent_url(
     )
 
 
-# TODO: cache this result
 def fetch(url_parts: urllib.parse.SplitResult) -> str:
     # extract project, filepath and git reference
     project_maybe_with_gitref, fpath = url_parts.path.lstrip("/").split("/", maxsplit=1)

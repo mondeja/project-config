@@ -1,7 +1,7 @@
 import os
 import urllib.parse
 
-from project_config.config.style.fetchers import FetchStyleError
+from project_config.fetchers import FetchError
 
 
 def fetch(url_parts: urllib.parse.SplitResult) -> str:
@@ -10,4 +10,4 @@ def fetch(url_parts: urllib.parse.SplitResult) -> str:
         with open(os.path.expanduser(url)) as f:
             return f.read()
     except FileNotFoundError as exc:
-        raise FetchStyleError(f"'{url}' file not found")
+        raise FetchError(f"'{url}' file not found")

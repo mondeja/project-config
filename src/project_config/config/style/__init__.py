@@ -2,9 +2,9 @@ import typing as t
 from dataclasses import dataclass
 
 from project_config.config.exceptions import ProjectConfigInvalidConfigSchema
-from project_config.config.style.fetchers import (
-    FetchStyleError,
-    fetch_style,
+from project_config.fetchers import (
+    FetchError,
+    fetch,
     resolve_maybe_relative_url,
 )
 from project_config.plugins import Plugins
@@ -60,8 +60,8 @@ class Style:
         style_urls = self.config["style"]
         if isinstance(style_urls, str):
             try:
-                style = fetch_style(style_urls)
-            except FetchStyleError as exc:
+                style = fetch(style_urls)
+            except FetchError as exc:
                 yield f"style -> {exc.message}"
             else:
                 _partial_style_is_valid = True
@@ -84,8 +84,8 @@ class Style:
             style = {"rules": [], "plugins": []}
             for s, partial_style_url in enumerate(style_urls):
                 try:
-                    partial_style = fetch_style(partial_style_url)
-                except FetchStyleError as exc:
+                    partial_style = fetch(partial_style_url)
+                except FetchError as exc:
                     yield f"style[{s}] -> {exc.message}"
                     continue
 
@@ -121,8 +121,8 @@ class Style:
     ) -> StyleLoderIterator:
         for s, extend_url in enumerate(style["extends"]):
             try:
-                partial_style = fetch_style(extend_url)
-            except FetchStyleError as exc:
+                partial_style = fetch(extend_url)
+            except FetchError as exc:
                 yield f"{parent_style_url}: .extends[{s}] -> {exc.message}"
                 continue
 

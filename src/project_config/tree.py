@@ -1,6 +1,8 @@
 import os
 import typing as t
 
+from project_config.fetchers import decode_with_decoder, get_decoder
+
 
 TreeDirectory = t.Iterator[str]
 TreeNode = t.Union[str, TreeDirectory]
@@ -18,6 +20,12 @@ class Tree:
         # TODO: this type becomes recursive, in the future, define it properly
         # https://github.com/python/mypy/issues/731
         self.files_cache: t.Dict[str, t.Any] = {}
+
+        # cache for decoded version of files
+        #
+        # JSON encodable version of files are cached here to avoid
+        # multiple calls to decoder for the same file
+        self.decoded_files_cache: t.Dict[str, str] = {}
 
         # latest cached files
         self.files: TreeNodeFiles = []
@@ -49,3 +57,12 @@ class Tree:
 
     def cache_files(self, fpaths: FilePathsArgument) -> None:
         self.files = list(self.generator(fpaths))
+
+    def decode_file(self, fpath: str, fcontent: str) -> t.Any:
+        normalized_fpath = os.path.join(self.rootdir, fpath)
+        try:
+            result = self.decoded_files_cache[normalized_fpath]
+        except KeyError:
+            result = decode_with_decoder(fcontent, get_decoder(fpath))
+            self.decoded_files_cache[normalized_fpath] = result
+        return result

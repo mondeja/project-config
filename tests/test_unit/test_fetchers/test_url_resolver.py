@@ -2,7 +2,7 @@ import os
 
 import pytest
 
-from project_config.config.style.fetchers import resolve_maybe_relative_url
+from project_config.fetchers import resolve_maybe_relative_url
 
 
 @pytest.mark.parametrize(
