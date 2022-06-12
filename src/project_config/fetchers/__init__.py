@@ -6,6 +6,7 @@ import typing as t
 import urllib.parse
 
 import typing_extensions
+from identify import identify
 
 from project_config.exceptions import (
     ProjectConfigException,
@@ -35,13 +36,8 @@ class SchemeProtocolNotImplementedError(ProjectConfigNotImplementedError):
 
 # TODO: improve type to take into account optional fields
 decoders: t.Dict[str, t.Dict[str, t.Any]] = {
-    ".json": {
-        "module": "json",
-    },
-    ".json5": {
-        "module": "pyjson5",
-        # TODO: json5 as fallback module
-    },
+    ".json": {"module": "json"},
+    ".json5": {"module": "pyjson5"},  # TODO: json5 as fallback
     ".yaml": {
         "module": "yaml",
         "function": "load",
@@ -54,11 +50,13 @@ decoders: t.Dict[str, t.Dict[str, t.Any]] = {
         },
     },
     ".toml": {
-        # TODO: use tomlkit as fallback, try tomli first or toml
+        # TODO: tomlkit as fallback, try tomli first or toml
         #   if we are in Python >= 3.11
         "module": "tomlkit",
         "function": "parse",
     },
+    ".ini": {"module": "project_config.decoders.ini"},
+    ".editorconfig": {"module": "project_config.decoders.editorconfig"},
 }
 
 schemes_to_modnames = {
@@ -79,7 +77,14 @@ def get_decoder(url: str) -> t.Any:  # TODO: improve this type
     try:
         decoder = decoders[ext]
     except KeyError:
-        decoder = decoders[".json"]  # JSON as fallback
+        # try to guess the file type with identify
+        decoder = None
+        for tag in identify.tags_from_filename(os.path.basename(url)):
+            if f".{tag}" in decoders:
+                decoder = decoders[f".{tag}"]
+                break
+        if decoder is None:
+            decoder = decoders[".json"]  # JSON as fallback
 
     # prepare decoder function
     loader_function: DecoderFunction = getattr(

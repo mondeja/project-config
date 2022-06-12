@@ -30,7 +30,7 @@ def _directories_not_accepted_as_inputs_error(
 
 class IncludePlugin:
     @classmethod
-    def includeAllLines(
+    def includeLines(
         cls,
         value: t.List[str],
         tree: Tree,
@@ -44,7 +44,7 @@ class IncludePlugin:
             elif not isinstance(fcontent, str):
                 yield InterruptingError, _directories_not_accepted_as_inputs_error(
                     "verb",
-                    "includeAllLines",
+                    "includeLines",
                     fpath,
                     f".files[{f}]",
                 )
@@ -57,11 +57,11 @@ class IncludePlugin:
                     yield Error, {
                         "message": f"Expected line '{expected_line}' not found",
                         "file": fpath,
-                        "definition": f".includeAllLines[{l}]",
+                        "definition": f".includeLines[{l}]",
                     }
 
     @classmethod
-    def ifIncludeAllLines(
+    def ifIncludeLines(
         cls,
         value: t.Dict[str, t.List[str]],
         tree: Tree,
@@ -72,17 +72,17 @@ class IncludePlugin:
 
             if fcontent is None:
                 yield InterruptingError, {
-                    "message": "File specified in conditional 'ifIncludeAllLines' not found",
+                    "message": "File specified in conditional 'ifIncludeLines' not found",
                     "file": fpath,
-                    "definition": f".ifIncludeAllLines[{fpath}]",
+                    "definition": f".ifIncludeLines[{fpath}]",
                 }
                 return
             elif not isinstance(fcontent, str):
                 yield InterruptingError, _directories_not_accepted_as_inputs_error(
                     "conditional",
-                    "ifIncludeAllLines",
+                    "ifIncludeLines",
                     fpath,
-                    f".ifIncludeAllLines[{fpath}]",
+                    f".ifIncludeLines[{fpath}]",
                 )
                 return
 

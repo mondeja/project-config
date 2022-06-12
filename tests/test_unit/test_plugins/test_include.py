@@ -24,7 +24,7 @@ from project_config.plugins.include import IncludePlugin
                 (
                     Error,
                     {
-                        "definition": ".includeAllLines[0]",
+                        "definition": ".includeLines[0]",
                         "file": "foo.ext",
                         "message": "Expected line 'bar' not found",
                     },
@@ -41,11 +41,11 @@ from project_config.plugins.include import IncludePlugin
         ),
     ),
 )
-def test_includeAllLines(
+def test_includeLines(
     tmp_path, files, value, rule, expected_results, assert_plugin_action
 ):
     assert_plugin_action(
-        IncludePlugin.includeAllLines,
+        IncludePlugin.includeLines,
         tmp_path,
         files,
         value,
@@ -79,11 +79,11 @@ def test_includeAllLines(
                 (
                     InterruptingError,
                     {
-                        "definition": ".ifIncludeAllLines[bar.ext]",
+                        "definition": ".ifIncludeLines[bar.ext]",
                         "file": "bar.ext",
                         "message": (
                             "File specified in conditional"
-                            " 'ifIncludeAllLines' not found"
+                            " 'ifIncludeLines' not found"
                         ),
                     },
                 )
@@ -119,11 +119,11 @@ def test_includeAllLines(
                 (
                     InterruptingError,
                     {
-                        "definition": ".ifIncludeAllLines[foo]",
+                        "definition": ".ifIncludeLines[foo]",
                         "file": "foo/",
                         "message": (
                             "Directory found but the conditional"
-                            " 'ifIncludeAllLines' does not accepts"
+                            " 'ifIncludeLines' does not accepts"
                             " directories as inputs"
                         ),
                     },
@@ -139,11 +139,11 @@ def test_includeAllLines(
                 (
                     InterruptingError,
                     {
-                        "definition": ".ifIncludeAllLines[foo]",
+                        "definition": ".ifIncludeLines[foo]",
                         "file": "foo/",
                         "message": (
                             "Directory found but the conditional"
-                            " 'ifIncludeAllLines' does not accepts"
+                            " 'ifIncludeLines' does not accepts"
                             " directories as inputs"
                         ),
                     },
@@ -160,7 +160,7 @@ def test_includeAllLines(
         ),
     ),
 )
-def test_ifIncludeAllLines(
+def test_ifIncludeLines(
     tmp_path,
     files,
     value,
@@ -169,7 +169,7 @@ def test_ifIncludeAllLines(
     assert_plugin_action,
 ):
     assert_plugin_action(
-        IncludePlugin.ifIncludeAllLines,
+        IncludePlugin.ifIncludeLines,
         tmp_path,
         files,
         value,

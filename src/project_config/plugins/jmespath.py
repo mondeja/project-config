@@ -17,7 +17,7 @@ from project_config.utils import GET
 
 class JMESPathPlugin:
     @classmethod
-    def JMESPathsAnyMatch(
+    def JMESPathsMatch(
         cls,
         value: t.List[t.List[str]],  # list of tuples
         tree: Tree,
@@ -26,14 +26,14 @@ class JMESPathPlugin:
         if not isinstance(value, list):
             yield InterruptingError, {
                 "message": "The JMES path - match tuples must be of type array",
-                "definition": ".JMESPathsAnyMatch",
+                "definition": ".JMESPathsMatch",
                 "file": None,
             }
             return
         if not value:
             yield InterruptingError, {
                 "message": "The JMES path - match tuples must not be empty",
-                "definition": ".JMESPathsAnyMatch",
+                "definition": ".JMESPathsMatch",
                 "file": None,
             }
             return
@@ -41,21 +41,21 @@ class JMESPathPlugin:
             if not isinstance(jmespath_match_tuple, list):
                 yield InterruptingError, {
                     "message": "The JMES path - match tuple must be of type array",
-                    "definition": f".JMESPathsAnyMatch[{t}]",
+                    "definition": f".JMESPathsMatch[{t}]",
                     "file": None,
                 }
                 return
             if not len(jmespath_match_tuple) == 2:
                 yield InterruptingError, {
                     "message": "The JMES path - match tuple must be of length 2",
-                    "definition": f".JMESPathsAnyMatch[{t}]",
+                    "definition": f".JMESPathsMatch[{t}]",
                     "file": None,
                 }
                 return
             if not isinstance(jmespath_match_tuple[0], str):
                 yield InterruptingError, {
                     "message": "The JMES path must be of type string",
-                    "definition": f".JMESPathsAnyMatch[{t}][0]",
+                    "definition": f".JMESPathsMatch[{t}][0]",
                     "file": None,
                 }
                 return
@@ -67,7 +67,7 @@ class JMESPathPlugin:
             except jmespath.exceptions.ParseError as exc:
                 yield InterruptingError, {
                     "message": str(exc),
-                    "definition": f".JMESPathsAnyMatch[{e}][0]",
+                    "definition": f".JMESPathsMatch[{e}][0]",
                     "file": None,
                 }
                 return
@@ -87,12 +87,14 @@ class JMESPathPlugin:
 
             instance = tree.decode_file(fpath, fcontent)
             for e, (exp, expected_value) in enumerate(jmespath_expressions):
-                if exp.search(instance) != expected_value:
+                expression_result = exp.search(instance)
+                if expression_result != expected_value:
                     yield Error, {
                         "message": (
-                            f"The JMESPath expression '{exp.expression}' does not match"
-                            f" against {pprint.pformat(expected_value)}"
+                            f"The JMESPath expression '{exp.expression}' does not match."
+                            f" Expected {pprint.pformat(expected_value)}, returned"
+                            f" '{expression_result}'"
                         ),
-                        "definition": f".JMESPathsAnyMatch[{e}]",
+                        "definition": f".JMESPathsMatch[{e}]",
                         "file": fpath,
                     }
