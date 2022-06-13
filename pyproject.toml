@@ -38,7 +38,7 @@ project-config = "project_config.__main__:main"
 
 [tool.poetry.plugins."project-config.plugins"]
 include = "project_config.plugins.include:IncludePlugin"
-jsonschema = "project_config.plugins.jmespath:JMESPathPlugin"
+jmespath = "project_config.plugins.jmespath:JMESPathPlugin"
 
 [tool.project-config]
 style = ["../project-config-styles/python/base.json5"]

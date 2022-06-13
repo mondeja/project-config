@@ -5,6 +5,7 @@ from dataclasses import dataclass
 
 from project_config import Error, InterruptingError, ResultValue
 from project_config.config import Config
+from project_config.plugins import InvalidPluginMethod
 from project_config.reporters import (
     get_reporter,
     reporter_not_implemented_error_factory,
@@ -49,11 +50,54 @@ class Project:
                 ftype = "directory" if fpath.endswith(("/", os.sep)) else "file"
                 self.reporter.report_error(
                     {
-                        "message": f"Expected {ftype} does not exists",
+                        "message": f"Expected existing {ftype} does not exists",
                         "file": fpath,
-                        "definition": f".rules[{rule_index}].files[{f}]",
-                    }
+                        "definition": f"rules[{rule_index}].files[{f}]",
+                    },
                 )
+
+    def _check_files_absence(
+        self,
+        files: t.Union[t.List[str], t.Dict[str, str]],
+        rule_index: int,
+    ):
+        if isinstance(files, dict):
+            for fpath, reason in files.items():
+                normalized_fpath = os.path.join(self.rootdir, fpath)
+                ftype = "directory" if fpath.endswith(("/", os.sep)) else "file"
+                exists = (
+                    os.path.isdir(normalized_fpath)
+                    if ftype == "directory"
+                    else os.path.isfile(normalized_fpath)
+                )
+                if exists:
+                    message = f"Expected absent {ftype} exists"
+                    if reason:
+                        message += f". {reason}"
+                    self.reporter.report_error(
+                        {
+                            "message": message,
+                            "file": fpath,
+                            "definition": f"rules[{rule_index}].files.not[{fpath}]",
+                        },
+                    )
+        else:
+            for f, fpath in enumerate(files):
+                normalized_fpath = os.path.join(self.rootdir, fpath)
+                ftype = "directory" if fpath.endswith(("/", os.sep)) else "file"
+                exists = (
+                    os.path.isdir(normalized_fpath)
+                    if ftype == "directory"
+                    else os.path.isfile(normalized_fpath)
+                )
+                if exists:
+                    self.reporter.report_error(
+                        {
+                            "message": f"Expected absent {ftype} exists",
+                            "file": fpath,
+                            "definition": f"rules[{rule_index}].files.not[{f}]",
+                        },
+                    )
 
     def _process_conditionals_for_rule(
         self,
@@ -63,9 +107,19 @@ class Project:
         rule_index: int,
     ) -> None:
         for conditional in conditionals:
-            action_function = self.config.style.plugins.get_method_for_action(
-                conditional,
-            )
+            try:
+                action_function = self.config.style.plugins.get_method_for_action(
+                    conditional,
+                )
+            except InvalidPluginMethod as exc:
+                self.reporter.report_error(
+                    {
+                        "message": exc.message,
+                        "definition": f"rules[{rule_index}].{conditional}",
+                        "file": None,
+                    },
+                )
+                raise InterruptCheck()
             for breakage_type, breakage_value in action_function(
                 rule[conditional],
                 tree,
@@ -73,7 +127,7 @@ class Project:
             ):
                 if breakage_type == InterruptingError:
                     breakage_value["definition"] = (
-                        f".rules[{rule_index}]" + breakage_value["definition"]
+                        f"rules[{rule_index}]" + breakage_value["definition"]
                     )
                     self.reporter.report_error(breakage_value)
                     raise InterruptCheck()
@@ -85,14 +139,20 @@ class Project:
                 else:
                     raise NotImplementedError(
                         f"Breakage type '{breakage_type}' is not implemented"
-                        " for conditionals checking"
+                        " for conditionals checking",
                     )
 
     def _run_check(self) -> None:
         for r, rule in enumerate(self.config["style"]["rules"]):
-            self.tree.cache_files(rule.pop("files"))
-            # check if files exists
-            self._check_files_existence(self.tree.files, r)
+            files = rule.pop("files")
+            if isinstance(files, list):
+                self.tree.cache_files(files)
+                # check if files exists
+                self._check_files_existence(self.tree.files, r)
+            else:
+                # requiring absent of files
+                self._check_files_absence(files["not"], r)
+                continue  # any other verb can be used in the rule
 
             verbs, conditionals = ([], [])
             for action in rule:
@@ -115,7 +175,20 @@ class Project:
 
             # handle verbs
             for verb in verbs:
-                action_function = self.config.style.plugins.get_method_for_action(verb)
+                try:
+                    action_function = self.config.style.plugins.get_method_for_action(
+                        verb,
+                    )
+                except InvalidPluginMethod as exc:
+                    self.reporter.report_error(
+                        {
+                            "message": exc.message,
+                            "definition": f"rules[{r}].{verb}",
+                            "file": None,
+                        },
+                    )
+                    raise InterruptCheck()
+                    # TODO: show 'INTERRUPTED' in report
                 for breakage_type, breakage_value in action_function(
                     rule[verb],
                     self.tree,
@@ -124,12 +197,12 @@ class Project:
                     if breakage_type == Error:
                         # prepend rule index to definition, so plugins don't need to specify it
                         breakage_value["definition"] = (
-                            f".rules[{r}]" + breakage_value["definition"]
+                            f"rules[{r}]" + breakage_value["definition"]
                         )
                         self.reporter.report_error(breakage_value)
                     elif breakage_type == InterruptingError:
                         breakage_value["definition"] = (
-                            f".rules[{r}]" + breakage_value["definition"]
+                            f"rules[{r}]" + breakage_value["definition"]
                         )
                         self.reporter.report_error(breakage_value)
                         raise InterruptCheck()
@@ -137,7 +210,7 @@ class Project:
                     else:
                         raise NotImplementedError(
                             f"Breakage type '{breakage_type}' is not implemented"
-                            " for verbs checking"
+                            " for verbs checking",
                         )
 
     def check(self, args: t.List[t.Any]) -> None:

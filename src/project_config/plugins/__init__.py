@@ -5,8 +5,15 @@ properties of styles.
 """
 
 import importlib.util
+import inspect
 import re
 import typing as t
+
+from project_config.exceptions import ProjectConfigException
+
+
+class InvalidPluginMethod(ProjectConfigException):
+    pass
 
 
 try:
@@ -25,7 +32,9 @@ class Plugins:
 
         # map from actions to plugins names
         self.actions_plugin_names: t.Dict[str, str] = {}
-        # TODO: how to handle conditionals?
+
+        # map from actions to static methods
+        self.actions_static_methods: t.Dict[str, t.Any] = {}  # TODO: improve type
 
         # prepare default plugins cache, third party ones will be loaded
         # on demand at style validation time
@@ -50,14 +59,32 @@ class Plugins:
         return list(self.loaded_plugin_names)
 
     def get_method_for_action(self, action: str) -> t.Any:  # TODO: improve this type
-        plugin_name = self.actions_plugin_names[action]
-        if plugin_name not in self.loaded_plugins:
-            load_plugin = self.plugin_names_loaders[plugin_name]
-            plugin_class = load_plugin()
-            self.loaded_plugins[plugin_name] = plugin_class
+        if action not in self.actions_static_methods:
+            plugin_name = self.actions_plugin_names[action]
+            if plugin_name not in self.loaded_plugins:
+                load_plugin = self.plugin_names_loaders[plugin_name]
+                plugin_class = load_plugin()
+                self.loaded_plugins[plugin_name] = plugin_class
+            else:
+                plugin_class = self.loaded_plugins[plugin_name]
+            method = getattr(plugin_class, action)
+            # the actions in plugins must be defined as static methods
+            # to not compromise performance
+            #
+            # this check is realized just one time for each action
+            # thanks to the cache
+            if not isinstance(
+                inspect.getattr_static(plugin_class, action),
+                staticmethod,
+            ):
+                raise InvalidPluginMethod(
+                    f"The method '{action}' of the plugin '{plugin_name}'"
+                    f" (class '{plugin_class.__name__}') must be a static method",
+                )
+            self.actions_static_methods[action] = method
         else:
-            plugin_class = self.loaded_plugins[plugin_name]
-        return getattr(plugin_class, action)
+            method = self.actions_static_methods[action]
+        return method
 
     def is_valid_action(self, action: str) -> bool:
         """Return if an action is prepared."""
@@ -72,7 +99,8 @@ class Plugins:
 
     def prepare_third_party_plugin(self, plugin_name: str) -> None:
         for plugin in importlib_metadata.entry_points(
-            group="project-config.plugins", name=plugin_name
+            group="project-config.plugins",
+            name=plugin_name,
         ):
             # Allow third party plugins to avorride default plugins
             if plugin.value.startswith("project_config.plugins."):
@@ -90,7 +118,8 @@ class Plugins:
                 self.actions_plugin_names[action] = plugin.name
 
     def _extract_actions_from_plugin_module(
-        self, module_dotpath: str
+        self,
+        module_dotpath: str,
     ) -> t.Iterator[str]:
         # TODO: raise error is the specification is not found
         #   this could happen if an user as defined an entrypoint

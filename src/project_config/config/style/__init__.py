@@ -10,6 +10,10 @@ from project_config.fetchers import (
 from project_config.plugins import Plugins
 
 
+class ProjectConfigInvalidStyle(ProjectConfigInvalidConfigSchema):
+    pass
+
+
 RuleType = t.Any
 ExtendType = t.Any
 PluginType = t.Any
@@ -41,14 +45,18 @@ class Style:
                 break
             else:
                 if isinstance(style_or_error, dict):
-                    self.config["style"] = style_or_error
+                    # after collecting the full style, at least one rule
+                    # must be defined, otherwise raise an error
+                    if not style_or_error["rules"]:
+                        error_messages.append(
+                            "[styles]: .rules -> must not be empty",
+                        )
+                    else:
+                        self.config["style"] = style_or_error
                 else:
                     error_messages.append(style_or_error)
         if error_messages:
-            raise ProjectConfigInvalidConfigSchema(
-                self.config.path,
-                error_messages,
-            )
+            raise ProjectConfigInvalidStyle(self.config.path, error_messages)
 
     def _load_styles(self) -> StyleLoderIterator:
         """Load styles yielding error messages if found.
@@ -106,7 +114,8 @@ class Style:
                 if _partial_style_is_valid:
                     if "extends" in partial_style:
                         yield from self._extend_partial_style(
-                            partial_style_url, partial_style
+                            partial_style_url,
+                            partial_style,
                         )
 
                     self._add_new_rules_plugins_to_style(
@@ -117,7 +126,9 @@ class Style:
             yield style
 
     def _extend_partial_style(
-        self, parent_style_url: str, style: StyleType
+        self,
+        parent_style_url: str,
+        style: StyleType,
     ) -> StyleLoderIterator:
         for s, extend_url in enumerate(style["extends"]):
             try:
@@ -219,21 +230,52 @@ class Style:
             for r, rule in enumerate(style["rules"]):
                 if "files" not in rule:
                     yield f"{style_url}: .rules[{r}].files -> is required"
-                elif not isinstance(rule["files"], list):
-                    yield f"{style_url}: .rules[{r}].files -> must be of type array"
+                elif not isinstance(rule["files"], (list, dict)):
+                    yield f"{style_url}: .rules[{r}].files -> must be of type array or object"
                 elif not rule["files"]:
                     yield f"{style_url}: .rules[{r}].files -> at least one file is required"
-
                 else:
-                    for f, file in enumerate(rule["files"]):
-                        if not isinstance(file, str):
+                    if isinstance(rule["files"], dict):
+                        # requiring absence of files with `files: {not: {<file>: reason}}`
+                        if len(rule["files"]) != 1 or "not" not in rule["files"].keys():
+                            yield f"{style_url}: .rules[{r}].files -> when files is an object, must have one 'not' key"
+                        elif not isinstance(rule["files"]["not"], (dict, list)):
+                            yield f"{style_url}: .rules[{r}].files.not -> must be of type array or object"
+                        elif not rule["files"]["not"]:
+                            yield f"{style_url}: .rules[{r}].files.not -> must not be empty"
+                        else:
+                            if isinstance(rule["files"]["not"], dict):
+                                # when 'not' is an object, is a mapping from files to absence reasons
+                                for fpath, reason in rule["files"]["not"].items():
+                                    if reason and not isinstance(reason, str):
+                                        yield f"{style_url}: .rules[{r}].files.not.{fpath} -> must be of type string"
+                                    if not isinstance(fpath, str):
+                                        yield f"{style_url}: .rules[{r}].files.not[{fpath}] -> file path must be of type string"
+                                    elif not fpath:
+                                        yield f"{style_url}: .rules[{r}].files.not[{fpath}] -> file path must not be empty"
+                            else:
+                                for f, fpath in enumerate(rule["files"]["not"]):
+                                    if not isinstance(fpath, str):
+                                        yield f"{style_url}: .rules[{r}].files.not[{f}] -> must be of type string"
+                                    elif not fpath:
+                                        yield f"{style_url}: .rules[{r}].files.not[{f}] -> must not be empty"
+
+                        # when requiring absence of files, any other verb can be used
+                        if len(rule) != 1:
                             yield (
-                                f"{style_url}: .rules[{r}].files[{f}] -> must be of type string"
+                                f"{style_url}: .rules[{r}] -> when requiring absence of files"
+                                " with '.files.not', any other verb can be used in the same rule"
                             )
-                        elif not file:
-                            yield (
-                                f"{style_url}: .rules[{r}].files[{f}] -> must not be empty"
-                            )
+                    else:
+                        for f, file in enumerate(rule["files"]):
+                            if not isinstance(file, str):
+                                yield (
+                                    f"{style_url}: .rules[{r}].files[{f}] -> must be of type string"
+                                )
+                            elif not file:
+                                yield (
+                                    f"{style_url}: .rules[{r}].files[{f}] -> must not be empty"
+                                )
 
                 # Validate rules properties consistency against plugins
                 for action in rule:

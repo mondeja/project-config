@@ -1,7 +1,7 @@
 import os
 import typing as t
 
-from project_config.fetchers import decode_with_decoder, get_decoder
+from project_config.fetchers import decode_for_url
 
 
 TreeDirectory = t.Iterator[str]
@@ -63,6 +63,6 @@ class Tree:
         try:
             result = self.decoded_files_cache[normalized_fpath]
         except KeyError:
-            result = decode_with_decoder(fcontent, get_decoder(fpath))
+            result = decode_for_url(fpath, fcontent)
             self.decoded_files_cache[normalized_fpath] = result
         return result

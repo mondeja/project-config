@@ -89,11 +89,20 @@ def loads(string: str):
             if len(optname) > MAX_PROPERTY_LENGTH or len(optval) > MAX_VALUE_LENGTH:
                 continue
             if sectname:
-                result[sectname][optname] = optval
+                result[sectname][optname] = (
+                    int(optval)
+                    if optname in ("indent_size", "tab_width")
+                    else (
+                        optval.lower() == "true"
+                        if optname
+                        in ("trim_trailing_whitespace", "insert_final_newline")
+                        else optval
+                    )
+                )
             elif not sectname and optname == "root":
                 if "" not in result:
                     result[""] = {}
-                result[""] = optval.lower() == "true"
+                result[""][optname] = optval.lower() == "true"
             continue
 
         # a non-fatal parsing error occurred.  set up the

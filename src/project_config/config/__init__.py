@@ -29,22 +29,26 @@ def read_config_from_pyproject_toml() -> t.Optional[t.Any]:
     return None
 
 
-def read_config(custom_file_path: t.Optional[str] = None) -> t.Tuple[str, t.Any]:
+def read_config(
+    custom_file_path: t.Optional[str] = None,
+) -> t.Tuple[str, t.Dict[str, t.Union[str, t.List[str]]]]:
     if custom_file_path:
         if not os.path.isfile(custom_file_path):
             raise CustomConfigFileNotFound(custom_file_path)
-        return custom_file_path, read_toml_file(custom_file_path)
+        return custom_file_path, dict(read_toml_file(custom_file_path))
 
     pyproject_toml_exists = os.path.isfile("pyproject.toml")
     config = None
     if pyproject_toml_exists:
         config = read_config_from_pyproject_toml()
     if config is not None:
-        return '"pyproject.toml".[tool.project-config]', config
+        return '"pyproject.toml".[tool.project-config]', dict(config)
 
     project_config_toml_exists = os.path.isfile(".project-config.toml")
     if project_config_toml_exists:
-        return ".project-config.toml", read_toml_file(".project-config.toml")
+        return ".project-config.toml", dict(
+            read_toml_file(".project-config.toml"),
+        )
 
     if pyproject_toml_exists:
         raise PyprojectTomlFoundButHasNoConfig()

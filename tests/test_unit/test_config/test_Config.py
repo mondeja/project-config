@@ -17,6 +17,7 @@ def test_Config___getitem__(tmp_path, chdir, minimal_valid_config, minimal_valid
     with chdir(tmp_path):
         config = Config(None)
     assert config["style"] == "foo"
+    assert isinstance(config.dict_, dict)
 
 
 def test_Config_fails(tmp_path, chdir):

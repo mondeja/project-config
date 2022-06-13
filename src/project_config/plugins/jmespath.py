@@ -1,4 +1,5 @@
 import pprint
+import re
 import typing as t
 
 import jmespath
@@ -11,14 +12,37 @@ from project_config import (
     Rule,
     Tree,
 )
-from project_config.fetchers import decode_with_decoder, get_decoder
-from project_config.utils import GET
+
+
+class JMESPathProjectConfigFunctions(jmespath.functions.Functions):
+    """Custom functionso object to support some custom functions.
+
+    Custom functions added:
+
+    - ``regex_match('<regex>', @) -> boolean``: Match a Python regular
+      expression against a JMESPath result.
+    - ``regex_search('<regex>', @) -> array[string]``: Search with
+      Python regular expression against a JMESPath result. It returns
+      an array with all groups, if groups are defined inside the regular
+      expression or an array with the full match otherwise.
+    """
+
+    @jmespath.functions.signature({"types": ["string"]}, {"types": ["string"]})
+    def _func_regex_match(self, regex: str, value: str) -> bool:
+        return bool(re.match(regex, value))
+
+    @jmespath.functions.signature({"types": ["string"]}, {"types": ["string"]})
+    def _func_regex_search(self, regex: str, value: str) -> bool:
+        match = re.search(regex, value)
+        return [match.group(0)] if not match.groups() else list(match.groups())
+
+
+jmespath_options = jmespath.Options(custom_functions=JMESPathProjectConfigFunctions())
 
 
 class JMESPathPlugin:
-    @classmethod
+    @staticmethod
     def JMESPathsMatch(
-        cls,
         value: t.List[t.List[str]],  # list of tuples
         tree: Tree,
         rule: Rule,
@@ -87,14 +111,32 @@ class JMESPathPlugin:
 
             instance = tree.decode_file(fpath, fcontent)
             for e, (exp, expected_value) in enumerate(jmespath_expressions):
-                expression_result = exp.search(instance)
-                if expression_result != expected_value:
+                try:
+                    expression_result = exp.search(
+                        instance,
+                        options=jmespath_options,
+                    )
+                except jmespath.exceptions.JMESPathTypeError as exc:
                     yield Error, {
                         "message": (
-                            f"The JMESPath expression '{exp.expression}' does not match."
-                            f" Expected {pprint.pformat(expected_value)}, returned"
-                            f" '{expression_result}'"
+                            f"JMESPath '{exp.expression}' invalid in context."
+                            f" Expected to return {pprint.pformat(expected_value)}, raised"
+                            f" JMESPath type error: {exc.__str__()}"
                         ),
                         "definition": f".JMESPathsMatch[{e}]",
                         "file": fpath,
                     }
+                    continue
+                if expression_result != expected_value:
+                    yield Error, {
+                        "message": (
+                            f"JMESPath '{exp.expression}' does not match."
+                            f" Expected {pprint.pformat(expected_value)}, returned"
+                            f" {pprint.pformat(expression_result)}"
+                        ),
+                        "definition": f".JMESPathsMatch[{e}]",
+                        "file": fpath,
+                    }
+            import json
+
+            # print(json.dumps(instance))

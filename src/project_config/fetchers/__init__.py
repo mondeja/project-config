@@ -30,7 +30,7 @@ class SchemeProtocolNotImplementedError(ProjectConfigNotImplementedError):
     def __init__(self, scheme: str):
         super().__init__(
             f"Retrieving of styles from scheme protocol '{scheme}:'"
-            " is not implemented."
+            " is not implemented.",
         )
 
 
@@ -46,7 +46,7 @@ decoders: t.Dict[str, t.Dict[str, t.Any]] = {
                 "module": "yaml",
                 "object": "CSafeLoader",
                 "object_fallback": "SafeLoader",
-            }
+            },
         },
     },
     ".toml": {
@@ -111,13 +111,10 @@ def get_decoder(url: str) -> t.Any:  # TODO: improve this type
     return functools.partial(loader_function, **function_kwargs)
 
 
-def decode_with_decoder(
-    string: str,
-    decoder: t.Callable[[str, t.Dict[str, t.Any]], FetchResult],
-):
+def decode_for_url(url: str, string: str) -> FetchResult:
     try:
         # decode
-        result = decoder(string)
+        result = get_decoder(url)(string)
     except Exception:
         # handle exceptions in third party packages without importing them
         exc_class, exc, _ = sys.exc_info()
@@ -133,15 +130,10 @@ def decode_with_decoder(
         elif package_name == "yaml":
             # Example: yaml.scanner.ScannerError
             raise FetchError(
-                _file_can_not_be_decoded_as_json_error(url, f"\n{exc.__str__()}")
+                _file_can_not_be_decoded_as_json_error(url, f"\n{exc.__str__()}"),
             )
         raise
-    else:
-        return result
-
-
-def decode_for_url(url: str, string: str) -> FetchResult:
-    return decode_with_decoder(string, get_decoder(url))
+    return result
 
 
 def fetch(url: str) -> FetchResult:
@@ -177,7 +169,8 @@ def resolve_maybe_relative_url(url: str, parent_url: str) -> str:
             )
         elif parent_url_parts.scheme in ("gh", "github"):
             project, parent_path = parent_url_parts.path.lstrip("/").split(
-                "/", maxsplit=1
+                "/",
+                maxsplit=1,
             )
             parent_dirpath = os.path.split(parent_path)[0]
             return (

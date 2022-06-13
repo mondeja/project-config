@@ -27,16 +27,6 @@ def add_check_command_parser(
     return parser
 
 
-def add_fix_command_parser(
-    subparsers: "argparse._SubParsersAction[argparse.ArgumentParser]",
-) -> argparse.ArgumentParser:
-    parser = subparsers.add_parser(
-        "fix",
-        help="Fix the configuration of the project",
-    )
-    return parser
-
-
 def add_show_command_parser(
     subparsers: "argparse._SubParsersAction[argparse.ArgumentParser]",
 ) -> argparse.ArgumentParser:
@@ -50,7 +40,7 @@ def add_show_command_parser(
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="Validate the configuration of your project against the configured styles."
+        description="Validate the configuration of your project against the configured styles.",
     )
     parser.add_argument(
         "-v",
@@ -107,7 +97,6 @@ def build_parser() -> argparse.ArgumentParser:
         required=True,
     )
     add_check_command_parser(subparsers)
-    add_fix_command_parser(subparsers)
     add_show_command_parser(subparsers)
     return parser
 

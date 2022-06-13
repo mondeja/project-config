@@ -29,9 +29,8 @@ def _directories_not_accepted_as_inputs_error(
 
 
 class IncludePlugin:
-    @classmethod
+    @staticmethod
     def includeLines(
-        cls,
         value: t.List[str],
         tree: Tree,
         rule: Rule,
@@ -60,9 +59,8 @@ class IncludePlugin:
                         "definition": f".includeLines[{l}]",
                     }
 
-    @classmethod
+    @staticmethod
     def ifIncludeLines(
-        cls,
         value: t.Dict[str, t.List[str]],
         tree: Tree,
         rule: Rule,
