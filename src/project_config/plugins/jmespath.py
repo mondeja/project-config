@@ -4,14 +4,7 @@ import typing as t
 
 import jmespath
 
-from project_config import (
-    Error,
-    InterruptingError,
-    Results,
-    ResultValue,
-    Rule,
-    Tree,
-)
+from project_config import Error, InterruptingError, Results, Rule, Tree
 
 
 class JMESPathProjectConfigFunctions(jmespath.functions.Functions):
@@ -110,6 +103,12 @@ class JMESPathPlugin:
                 }
 
             instance = tree.decode_file(fpath, fcontent)
+            import json
+
+            if "pyproject.toml" in fpath:
+                print(json.dumps(instance))
+                print(type(instance["tool"]))
+                print("HERE", jmespath.search("keys(@)", instance))
             for e, (exp, expected_value) in enumerate(jmespath_expressions):
                 try:
                     expression_result = exp.search(
@@ -117,11 +116,23 @@ class JMESPathPlugin:
                         options=jmespath_options,
                     )
                 except jmespath.exceptions.JMESPathTypeError as exc:
+                    print(exp.expression)
                     yield Error, {
                         "message": (
-                            f"JMESPath '{exp.expression}' invalid in context."
+                            f"Invalid JMESPath {pprint.pformat(exp.expression)} in context."
                             f" Expected to return {pprint.pformat(expected_value)}, raised"
                             f" JMESPath type error: {exc.__str__()}"
+                        ),
+                        "definition": f".JMESPathsMatch[{e}]",
+                        "file": fpath,
+                    }
+                    continue
+                except jmespath.exceptions.JMESPathError as exc:
+                    yield Error, {
+                        "message": (
+                            f"Invalid JMESPath {pprint.pformat(exp.expression)}."
+                            f" Expected to return {pprint.pformat(expected_value)}, raised"
+                            f" JMESPath error: {exc.__str__()}"
                         ),
                         "definition": f".JMESPathsMatch[{e}]",
                         "file": fpath,
@@ -137,6 +148,3 @@ class JMESPathPlugin:
                         "definition": f".JMESPathsMatch[{e}]",
                         "file": fpath,
                     }
-            import json
-
-            # print(json.dumps(instance))
