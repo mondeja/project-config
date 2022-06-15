@@ -4,16 +4,16 @@ import os
 import sys
 import typing as t
 
-import typing_extensions as te
 from identify import identify
 
+from project_config.compat import Protocol, tomllib_package_name
 from project_config.exceptions import ProjectConfigException
 
 
 DecoderResult = t.Dict[str, t.List[str]]
 
 
-class DecoderFunction(te.Protocol):
+class DecoderFunction(Protocol):
     def __call__(self, string: str, **kwargs: t.Any) -> DecoderResult:
         ...
 
@@ -27,22 +27,34 @@ decoders: t.Dict[str, t.Dict[str, t.Any]] = {
     ".json": {"module": "json"},
     ".json5": {"module": "pyjson5"},  # TODO: json5 as fallback
     ".yaml": {
-        "module": "yaml",
-        "function": "load",
-        "function_kwargs": {
-            "Loader": {
-                "module": "yaml",
-                "object": "CSafeLoader",
-                "object_fallback": "SafeLoader",
-            },
-        },
+        # Implementation notes:
+        #
+        # PyYaml is currently using the Yaml 1.1 specification,
+        # which converts some words like `on` and `off` to `True`
+        # and `False`. This leads to problems, for example, checking
+        # `on.` objects in Github workflows.
+        #
+        # There is an issue open to track the progress to support
+        # YAML 1.2 at https://github.com/yaml/pyyaml/issues/486
+        #
+        # Comparison of v1.1 vs v1.2 at:
+        # https://perlpunk.github.io/yaml-test-schema/schemas.html
+        #
+        # "module": "yaml",
+        # "function": "load",
+        # "function_kwargs": {
+        #    "Loader": {
+        #        "module": "yaml",
+        #        "object": "CSafeLoader",
+        #        "object_fallback": "SafeLoader",
+        #    },
+        # },
+        #
+        # So we use ruamel.yaml, which supports v1.2 by default
+        "module": "project_config.decoders.yaml",
     },
     ".toml": {
-        # TODO: tomlkit as fallback, try tomli first or toml
-        #   if we are in Python >= 3.11
-        "module": "tomli"
-        if sys.version_info < (3, 11)
-        else "tomllib",
+        "module": tomllib_package_name,
     },
     ".ini": {"module": "project_config.decoders.ini"},
     ".editorconfig": {"module": "project_config.decoders.editorconfig"},

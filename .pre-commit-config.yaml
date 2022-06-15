@@ -16,6 +16,8 @@ repos:
     hooks:
       - id: add-trailing-comma
         name: add-trailing-comma
+        args:
+          - --py37-plus
   - repo: https://github.com/myint/autoflake
     rev: v1.4
     hooks:
@@ -26,6 +28,21 @@ repos:
           - --remove-unused-variables
           - --remove-duplicate-keys
           - --ignore-init-module-imports
+  - repo: https://github.com/flakeheaven/flakeheaven
+    rev: 1.0.1
+    hooks:
+      - id: flakeheaven
+        additional_dependencies:
+          - flake8-builtins
+          - flake8-comprehensions
+          - flake8-docstrings
+          - flake8-executable
+          - flake8-implicit-str-concat
+          - flake8-print
+          - flake8-printf-formatting
+          - flake8-pytest-style
+          - pysetenv
+        entry: pysetenv FLAKEHEAVEN_CACHE_TIMEOUT=0 flakeheaven lint
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v3.2.0
     hooks:
@@ -66,3 +83,10 @@ repos:
       - id: editorconfig-checker
         name: editorconfig-checker
         alias: ec
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.26.3
+    hooks:
+      - id: yamllint
+        args:
+          - -c
+          - .yamllint.yaml

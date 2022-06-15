@@ -1,0 +1,7 @@
+- id: project-config
+  name: project-config
+  entry: project-config check
+  description: Reproducible configuration across projects.
+  language: python
+  types:
+    - text

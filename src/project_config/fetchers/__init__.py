@@ -3,13 +3,12 @@ import os
 import typing as t
 import urllib.parse
 
-import typing_extensions as te
-
+from project_config.compat import TypeAlias
 from project_config.decoders import DecoderError, DecoderResult, decode_for_url
 from project_config.exceptions import ProjectConfigNotImplementedError
 
 
-FetchResult: te.TypeAlias = DecoderResult
+FetchResult: TypeAlias = DecoderResult
 
 
 class FetchError(DecoderError):

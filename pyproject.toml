@@ -5,7 +5,20 @@ description = "Reproducible configuration across projects."
 authors = ["Álvaro Mondéjar Rubio <mondejar1994@gmail.com>"]
 license = "BSD-3-License"
 readme = "README.md"
+repository = "https://github.com/mondeja/project-config"
+documentation = "https://github.com/mondeja/project-config#documentation"
 packages = [{ include = "project_config", from = "src" }]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Operating System :: OS Independent",
+  "Intended Audience :: Developers",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+  "Topic :: Software Development :: Quality Assurance",
+  "Environment :: Console",
+]
+
+[tool.poetry.urls]
+"Bug tracker" = "https://github.com/mondeja/project-config/issues"
 
 [tool.poetry.dependencies]
 python = "^3.7"
@@ -14,16 +27,16 @@ importlib-metadata = { version = "*", python = "<3.10" }
 importlib-metadata-argparse-version = "*"
 tomli = { version = "^2.0.1", python = "<3.11" }
 pyjson5 = "*"
-PyYAML = "^6.0"
 colored = "*"
 tabulate = "^0.8.9"
 typing-extensions = "^4.2.0"
 jmespath = "^1.0.0"
 identify = "^2.5.1"
+"ruamel.yaml" = "^0.17.21"
 
 [tool.poetry.group.dev.dependencies]
 mondeja-bump = "*"
-types-PyYAML = "^6.0.8"
+pre-commit = "*"
 
 [tool.poetry.group.test.dependencies]
 pytest = "^7.0.0"
@@ -39,7 +52,10 @@ include = "project_config.plugins.include:IncludePlugin"
 jmespath = "project_config.plugins.jmespath:JMESPathPlugin"
 
 [tool.project-config]
-style = ["../project-config-styles/python/base.json5"]
+style = [
+  "../project-config-styles/python/base.json5",
+  "../project-config-styles/python/version/min-37.json5",
+]
 cache = "5 minutes"
 
 [tool.poetry-exec-plugin.commands]
@@ -76,4 +92,33 @@ extra_standard_library = [
   "importlib.metadata",
   "zoneinfo",
   "graphlib",
+  "tomllib",
+  "wsgiref.types",
+]
+
+[tool.flakeheaven]
+pytest_parametrize_values_type = "tuple"
+
+[tool.flakeheaven.plugins]
+pycodestyle = ["+*", "-W503"]
+pyflakes = ["+*"]
+pylint = ["+*"]
+flake8-builtins = ["+*"]
+flake8-comprehensions = ["+*"]
+flake8-docstrings = ["+*"]
+flake8-executable = ["+*"]
+flake8-implicit-str-concat = ["+*"]
+flake8-print = ["+*"]
+flake8-printf-formatting = ["+*"]
+flake8-pytest-style = ["+*"]
+
+[tool.flakeheaven.exceptions."tests/**"]
+flake8-docstrings = [
+  "-D100",
+  "-D101",
+  "-D102",
+  "-D103",
+  "-D107",
+  "-D205",
+  "-D415"
 ]

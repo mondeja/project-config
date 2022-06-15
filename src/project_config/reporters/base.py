@@ -45,9 +45,6 @@ class BaseReporter(abc.ABC):
         if file not in self.errors:
             self.errors[file] = []
 
-        error["message"] = (  # Remove newlines from messages
-            error.pop("message").replace("\r\n", "\n").replace("\n", " ")
-        )
         self.errors[file].append(error)
 
 

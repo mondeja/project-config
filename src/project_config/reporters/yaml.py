@@ -1,30 +1,13 @@
-import json
 import typing as t
 
-import yaml
-
-
-try:
-    from yaml import CSafeDumper as Dumper
-except ImportError:
-    from yaml import SafeDumper as Dumper  # type: ignore
-
+from project_config.decoders.yaml import dumps as yaml_dumps
 from project_config.reporters.base import BaseColorReporter, BaseReporter
-
-
-def yaml_dump(obj: t.Any) -> t.Any:
-    return yaml.dump(
-        obj,
-        Dumper=Dumper,
-        default_flow_style=False,
-        width=88888,  # no newlines in strings
-    )
 
 
 class YamlReporter(BaseReporter):
     def generate_errors_report(self) -> str:
         report = ""
-        for line in yaml_dump(self.errors).split("\n"):
+        for line in yaml_dumps(self.errors).splitlines():
             if line.startswith(("- ", "  ")):
                 report += f"  {line}\n"
             else:
@@ -35,7 +18,7 @@ class YamlReporter(BaseReporter):
 class YamlColorReporter(BaseColorReporter):
     def generate_errors_report(self) -> t.Any:
         report = ""
-        for line in yaml_dump(self.errors).split("\n"):
+        for line in yaml_dumps(self.errors).splitlines():
             if line.startswith("- "):  # definition
                 report += (
                     f'  {self.format_metachar("-")}'
@@ -45,7 +28,7 @@ class YamlColorReporter(BaseColorReporter):
                 )
             elif line.startswith("  "):  # message
                 report += (
-                    f'  {self.format_metachar("-")}'
+                    f"   "
                     f' {self.format_key("message")}'
                     f'{self.format_metachar(":")}'
                     f" {self.format_error_message(line[11:])}\n"
