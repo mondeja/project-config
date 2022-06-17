@@ -1,21 +1,28 @@
+"""Fetchers for different types of resources by URI schema."""
+
 import importlib
 import os
-import typing as t
 import urllib.parse
 
 from project_config.compat import TypeAlias
-from project_config.decoders import DecoderError, DecoderResult, decode_for_url
 from project_config.exceptions import ProjectConfigNotImplementedError
+from project_config.serializers import (
+    SerializerError,
+    SerializerResult,
+    serialize_for_url,
+)
 
 
-FetchResult: TypeAlias = DecoderResult
+FetchResult: TypeAlias = SerializerResult
 
 
-class FetchError(DecoderError):
-    pass
+class FetchError(SerializerError):
+    """Error happened during the fetching of a resource."""
 
 
 class SchemeProtocolNotImplementedError(ProjectConfigNotImplementedError):
+    """A URI schema has not been implemented."""
+
     def __init__(self, scheme: str):
         super().__init__(
             f"Retrieving of styles from scheme protocol '{scheme}:'"
@@ -25,11 +32,16 @@ class SchemeProtocolNotImplementedError(ProjectConfigNotImplementedError):
 
 schemes_to_modnames = {
     "gh": "github",
-    # TODO: add more fetchers
+    # TODO: add nitpick fetchers
 }
 
 
 def fetch(url: str) -> FetchResult:
+    """Fetch a result given an URI.
+
+    Args:
+        url (str): The URL of the resource to fetch.
+    """
     url_parts = urllib.parse.urlsplit(url)
     scheme = (
         "file"
@@ -42,10 +54,20 @@ def fetch(url: str) -> FetchResult:
         raise SchemeProtocolNotImplementedError(scheme)
 
     string = getattr(mod, "fetch")(url_parts)
-    return decode_for_url(url, string)
+    return serialize_for_url(url, string)
 
 
 def resolve_maybe_relative_url(url: str, parent_url: str) -> str:
+    """Relative URL resolver.
+
+    Args:
+        url (str): URL or relative URI to the target resource.
+        parent_url (str): Absolute URI of the origin resource, which
+            acts as the requester.
+
+    Returns:
+        str: Absolute URI for the children resource.
+    """
     url_parts = urllib.parse.urlsplit(url)
 
     if url_parts.scheme in ("", "file"):  # is a file

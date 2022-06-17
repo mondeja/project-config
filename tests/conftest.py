@@ -86,13 +86,20 @@ def create_tree():
     return _create_tree
 
 
-def _assert_plugin_action(plugin_method, rootdir, files, value, rule, expected_results):
+def _assert_plugin_action(
+    plugin_method,
+    rootdir,
+    files,
+    value,
+    rule,
+    expected_results,
+):
     results = list(
         plugin_method(
             value,
             _create_tree(files, rootdir, cache_files=True),
             rule,
-        )
+        ),
     )
 
     assert len(results) == len(expected_results)

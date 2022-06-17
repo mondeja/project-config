@@ -1,4 +1,5 @@
-import functools
+"""Error reporters."""
+
 import importlib
 import typing as t
 
@@ -8,7 +9,27 @@ from project_config.exceptions import ProjectConfigNotImplementedError
 
 
 class ReporterNotImplementedError(ProjectConfigNotImplementedError):
-    pass
+    """A reporter has not been implemented."""
+
+    @classmethod
+    def factory(
+        cls,
+        reporter_name: str,
+        fmt: t.Optional[str],
+        command: str,
+    ) -> "ReporterNotImplementedError":
+        """Create an error using convenient arguments.
+
+        Args:
+            reporter_name (str): Reporter name.
+            fmt (str): Format for reporter.
+            command (str): Check mode used.
+        """
+        format_message = f" with format '{fmt}'" if fmt else ""
+        return cls(
+            f"The reporter '{reporter_name}'{format_message}"
+            f" has not been implemented for the command '{command}'",
+        )
 
 
 reporters = {
@@ -29,17 +50,27 @@ def get_reporter(
     color: t.Optional[bool],
     rootdir: str,
     command: str,
-) -> t.Any:
+) -> t.Any:  # TODO: improve type?
+    """Reporters factory.
+
+    Args:
+        reporter_name (str): Reporter identifier name.
+        color (bool): Return the colorized version of the reporter,
+            if is implemented, using the black/white version as
+            a fallback.
+        rootdir (str): Root directory of the project.
+        command (str): Check mode used.
+    """
     # if ':' in the reporter, is passing the kwarg 'format' with the value
     if ":" in reporter_name:
-        reporter_name, format = reporter_name.split(":")
+        reporter_name, fmt = reporter_name.split(":")
     else:
-        format = None
+        fmt = None
 
     try:
         reporter_class_name = reporters[reporter_name]
     except KeyError:
-        reporter_class_name = reporters[f"{reporter_name}:{format}"]
+        reporter_class_name = reporters[f"{reporter_name}:{fmt}"]
 
     if color in (True, None):
         reporter_class_name = reporter_class_name.replace(
@@ -52,7 +83,7 @@ def get_reporter(
         reporter_class_name,
     )
     try:
-        return Reporter(rootdir, format=format), reporter_name, format
+        return Reporter(rootdir, fmt=fmt), reporter_name, fmt
     except TypeError as exc:
         if "Can't instantiate abstract class" in str(exc) and color is None:
             # reporter not implemented for color
@@ -61,32 +92,20 @@ def get_reporter(
             try:
                 Reporter = getattr(
                     importlib.import_module(
-                        f"project_config.reporters.{reporter_name}"
+                        f"project_config.reporters.{reporter_name}",
                     ),
                     reporter_class_name.replace(
                         "ColorReporter",
                         "Reporter",
                     ),
                 )
-                return Reporter(rootdir, format=format), reporter_name, format
+                return Reporter(rootdir, fmt=fmt), reporter_name, fmt
             except TypeError as exc:
                 if "Can't instantiate abstract class" not in str(exc):
                     raise
-                raise reporter_not_implemented_error_factory(
+                raise ReporterNotImplementedError.factory(
                     reporter_name,
-                    format,
+                    fmt,
                     command,
                 )
         raise
-
-
-def reporter_not_implemented_error_factory(
-    reporter_name: str,
-    format: t.Optional[str],
-    command: str,
-) -> type:
-    format_message = f" with format '{format}'" if format else ""
-    return ReporterNotImplementedError(
-        f"The reporter '{reporter_name}'{format_message}"
-        f" has not been implemented for the command '{command}'"
-    )

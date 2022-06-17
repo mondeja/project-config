@@ -25,24 +25,29 @@ python = "^3.7"
 # importlib.metadata.entry_points lacks 'group' argument until 3.10
 importlib-metadata = { version = "*", python = "<3.10" }
 importlib-metadata-argparse-version = "*"
-tomli = { version = "^2.0.1", python = "<3.11" }
+tomli = { version = "^2", python = "<3.11" }
 pyjson5 = "*"
 colored = "*"
-tabulate = "^0.8.9"
-typing-extensions = "^4.2.0"
-jmespath = "^1.0.0"
-identify = "^2.5.1"
-"ruamel.yaml" = "^0.17.21"
+tabulate = "^0.8"
+typing-extensions = { version = "^4", python = "<3.10" }
+jmespath = "^1"
+identify = "^2"
+"ruamel.yaml" = "~0.17"
 
 [tool.poetry.group.dev.dependencies]
 mondeja-bump = "*"
 pre-commit = "*"
 
 [tool.poetry.group.test.dependencies]
-pytest = "^7.0.0"
-pytest-cov = "^3.0.0"
-pre-commit = "^2.19.0"
-contextlib-chdir = "^1.0.2"
+pytest = "^7"
+pytest-cov = "^3"
+pre-commit = "^2.9"
+contextlib-chdir = "^1"
+
+[tool.poetry.group.doc.dependencies]
+Sphinx = "^5"
+importlib-metadata = { version = "*", python = "<3.10" }
+sphinx-rtd-theme = "^1"
 
 [tool.poetry.scripts]
 project-config = "project_config.__main__:main"
@@ -55,6 +60,11 @@ jmespath = "project_config.plugins.jmespath:JMESPathPlugin"
 style = [
   "../project-config-styles/python/base.json5",
   "../project-config-styles/python/version/min-37.json5",
+  "../project-config-styles/python/double-quotes.json5",
+  "../project-config-styles/python/line-length-80.json5",
+  "../project-config-styles/python/sphinx.json5",
+  "../project-config-styles/python/google-docstrings.json5",
+  "../project-config-styles/python/readthedocs.json5",
 ]
 cache = "5 minutes"
 
@@ -66,6 +76,10 @@ test = "pytest"
 python -c 'import webbrowser as w;w.open("http://127.0.0.1:8080")' &&
 python -m http.server 8080 -b localhost -d htmlcov
 """
+doc = "python -m sphinx -n -T -E -W docs docs/_build/html"
+"doc:show" = """python -m sphinx -n -T -E -W docs docs/_build/html &&
+python -c 'import webbrowser as w;w.open("http://127.0.0.1:8080")' &&
+python -m http.server 8080 -b localhost -d docs/_build/html"""
 lint = "pre-commit run -a"
 
 [tool.pytest.ini_options]
@@ -96,8 +110,16 @@ extra_standard_library = [
   "wsgiref.types",
 ]
 
+[tool.black]
+line-length = 80
+target-version = ["py37"]
+
 [tool.flakeheaven]
+max_line_length = 80
+inline_quotes = "double"
+docstring_convention = "google"
 pytest_parametrize_values_type = "tuple"
+pytest_fixture_no_parentheses = true
 
 [tool.flakeheaven.plugins]
 pycodestyle = ["+*", "-W503"]
@@ -105,7 +127,7 @@ pyflakes = ["+*"]
 pylint = ["+*"]
 flake8-builtins = ["+*"]
 flake8-comprehensions = ["+*"]
-flake8-docstrings = ["+*"]
+flake8-docstrings = ["+*", "-D105", "-D107"]
 flake8-executable = ["+*"]
 flake8-implicit-str-concat = ["+*"]
 flake8-print = ["+*"]
@@ -121,4 +143,13 @@ flake8-docstrings = [
   "-D107",
   "-D205",
   "-D415"
+]
+
+[tool.flakeheaven.exceptions."src/project_config/plugins/**"]
+flake8-docstrings = [
+  # Plugins must not add docstrings for public classes because they
+  # do not have constructors, are documented in module docstrings
+  "-D101",
+  # Plugins must not document all arguments because are always repeated
+  "-D417",
 ]

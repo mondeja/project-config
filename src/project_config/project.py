@@ -1,3 +1,6 @@
+"""High level logic for checking a project."""
+
+import argparse
 import os
 import sys
 import typing as t
@@ -5,24 +8,43 @@ from dataclasses import dataclass
 
 from project_config import Error, InterruptingError, ResultValue
 from project_config.config import Config
-from project_config.plugins import InvalidPluginMethod
-from project_config.reporters import (
-    get_reporter,
-    reporter_not_implemented_error_factory,
-)
+from project_config.plugins import InvalidPluginFunction
+from project_config.reporters import ReporterNotImplementedError, get_reporter
 from project_config.tree import Tree, TreeNodeFiles
 
 
 class InterruptCheck(Exception):
-    pass
+    """An action has reported an invalid context for a rule.
+
+    This exceptions prevents to continue executing subsecuents rules.
+    """
 
 
 class ConditionalsFalseResult(InterruptCheck):
-    pass
+    """A conditional must skip a rule."""
 
 
 @dataclass
 class Project:
+    """Wrapper for a single project.
+
+    This class encapsulates all the high level logic to execute all
+    CLI commands against a project.
+
+    Its public method expose the commands that can be executed through
+    the CLI.
+
+    Args:
+        command (str): Command that will be executed, used by the reporters.
+        config_path (str): Custom configuration file path.
+        rootdir (str): Root directory of the project.
+        reporter_name (str): Reporter to use.
+        color (bool): Colorized output in reporters.
+        reporter_format (str): Additional format for reporter.
+    """
+
+    # TODO: don't pass command to reporters
+    # TODO: refactor ``reporter_name`` -> ``reporter_id``
     command: str
     config_path: str
     rootdir: str
@@ -60,7 +82,7 @@ class Project:
         self,
         files: t.Union[t.List[str], t.Dict[str, str]],
         rule_index: int,
-    ):
+    ) -> None:
         if isinstance(files, dict):
             for fpath, reason in files.items():
                 normalized_fpath = os.path.join(self.rootdir, fpath)
@@ -78,7 +100,9 @@ class Project:
                         {
                             "message": message,
                             "file": fpath,
-                            "definition": f"rules[{rule_index}].files.not[{fpath}]",
+                            "definition": (
+                                f"rules[{rule_index}].files.not[{fpath}]"
+                            ),
                         },
                     )
         else:
@@ -108,10 +132,12 @@ class Project:
     ) -> None:
         for conditional in conditionals:
             try:
-                action_function = self.config.style.plugins.get_method_for_action(
-                    conditional,
+                action_function = (
+                    self.config.style.plugins.get_function_for_action(
+                        conditional,
+                    )
                 )
-            except InvalidPluginMethod as exc:
+            except InvalidPluginFunction as exc:
                 self.reporter.report_error(
                     {
                         "message": exc.message,
@@ -176,10 +202,12 @@ class Project:
             # handle verbs
             for verb in verbs:
                 try:
-                    action_function = self.config.style.plugins.get_method_for_action(
-                        verb,
+                    action_function = (
+                        self.config.style.plugins.get_function_for_action(
+                            verb,
+                        )
                     )
-                except InvalidPluginMethod as exc:
+                except InvalidPluginFunction as exc:
                     self.reporter.report_error(
                         {
                             "message": exc.message,
@@ -195,7 +223,8 @@ class Project:
                     rule,
                 ):
                     if breakage_type == Error:
-                        # prepend rule index to definition, so plugins don't need to specify it
+                        # prepend rule index to definition, so plugins do not
+                        # need to specify them
                         breakage_value["definition"] = (
                             f"rules[{r}]" + breakage_value["definition"]
                         )
@@ -209,11 +238,15 @@ class Project:
                         # TODO: show 'INTERRUPTED' in report
                     else:
                         raise NotImplementedError(
-                            f"Breakage type '{breakage_type}' is not implemented"
-                            " for verbs checking",
+                            f"Breakage type '{breakage_type}' is not"
+                            " implemented for verbal checking",
                         )
 
-    def check(self, args: t.List[t.Any]) -> None:
+    def check(self, args: argparse.Namespace) -> None:
+        """Checks that the styles configured for a project match.
+
+        Raises an error if report errors.
+        """
         try:
             self._run_check()
         except InterruptCheck:
@@ -221,8 +254,12 @@ class Project:
         finally:
             self.reporter.raise_errors()
 
-    def show(self, args: t.List[t.Any]) -> None:
-        data = self.config.dict_
+    def show(self, args: argparse.Namespace) -> None:
+        """Show configuration or fetched style for a project.
+
+        It will depend in the ``args.data`` property.
+        """
+        data = t.cast(t.Any, self.config.dict_)
         if args.data == "config":
             data.pop("style")
             data["style"] = data.pop("_style")
@@ -232,7 +269,7 @@ class Project:
         try:
             report = self.reporter.generate_data_report(args.data, data)
         except NotImplementedError:
-            raise reporter_not_implemented_error_factory(
+            raise ReporterNotImplementedError.factory(
                 self.reporter_name,
                 self.reporter_format,
                 args.command,

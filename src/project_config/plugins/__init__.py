@@ -12,8 +12,8 @@ import typing as t
 from project_config.exceptions import ProjectConfigException
 
 
-class InvalidPluginMethod(ProjectConfigException):
-    pass
+class InvalidPluginFunction(ProjectConfigException):
+    """Exception raised when a method of a plugin class is not valid."""
 
 
 try:
@@ -23,6 +23,15 @@ except ImportError:  # Python > 3.9
 
 
 class Plugins:
+    """Plugins wrapper.
+
+    Performs all the logic concerning to plugins.
+
+    Plugins modules are loaded on demand, only when an action
+    specified by a rule requires it, and cached for later
+    demanding from rules.
+    """
+
     def __init__(self) -> None:
         # map from plugin names to loaded classes
         self.loaded_plugins: t.Dict[str, type] = {}
@@ -34,7 +43,10 @@ class Plugins:
         self.actions_plugin_names: t.Dict[str, str] = {}
 
         # map from actions to static methods
-        self.actions_static_methods: t.Dict[str, t.Any] = {}  # TODO: improve type
+        self.actions_static_methods: t.Dict[
+            str,
+            t.Any,
+        ] = {}  # TODO: improve type
 
         # prepare default plugins cache, third party ones will be loaded
         # on demand at style validation time
@@ -52,13 +64,26 @@ class Plugins:
 
     @property
     def plugin_names(self) -> t.List[str]:
+        """List of available plugin names."""
         return list(self.plugin_names_loaders)
 
     @property
     def loaded_plugin_names(self) -> t.List[str]:
+        """List of loaded plugin names."""
         return list(self.loaded_plugin_names)
 
-    def get_method_for_action(self, action: str) -> t.Any:  # TODO: improve this type
+    def get_function_for_action(
+        self,
+        action: str,
+    ) -> t.Any:  # TODO: improve this type
+        """Get the function that performs an action given her name.
+
+        Args:
+            action (str): Action name whose function will be returned.
+
+        Returns:
+            function: Function that process the action.
+        """
         if action not in self.actions_static_methods:
             plugin_name = self.actions_plugin_names[action]
             if plugin_name not in self.loaded_plugins:
@@ -77,9 +102,10 @@ class Plugins:
                 inspect.getattr_static(plugin_class, action),
                 staticmethod,
             ):
-                raise InvalidPluginMethod(
+                raise InvalidPluginFunction(
                     f"The method '{action}' of the plugin '{plugin_name}'"
-                    f" (class '{plugin_class.__name__}') must be a static method",
+                    f" (class '{plugin_class.__name__}') must be a static"
+                    " method",
                 )
             self.actions_static_methods[action] = method
         else:
@@ -87,17 +113,33 @@ class Plugins:
         return method
 
     def is_valid_action(self, action: str) -> bool:
-        """Return if an action is prepared."""
+        """Return if an action exists in available plugins.
+
+        Args:
+            action (str): Action to check for their existence.
+
+        Returns:
+            bool: ``True`` if the action exists, ``False`` otherwise.
+        """
         return action in self.actions_plugin_names
 
     def _prepare_default_plugins_cache(self) -> None:
-        for plugin in importlib_metadata.entry_points(group="project-config.plugins"):
+        for plugin in importlib_metadata.entry_points(
+            group="project-config.plugins",
+        ):
             if not plugin.value.startswith("project_config.plugins."):
                 continue
 
             self._add_plugin_to_cache(plugin)
 
     def prepare_third_party_plugin(self, plugin_name: str) -> None:
+        """Prepare cache for third party plugins.
+
+        After that a plugin has been prepared can be load on demand.
+
+        Args:
+            plugin_name (str): Name of the entry point of the plugin.
+        """
         for plugin in importlib_metadata.entry_points(
             group="project-config.plugins",
             name=plugin_name,
@@ -108,7 +150,10 @@ class Plugins:
 
             self._add_plugin_to_cache(plugin)
 
-    def _add_plugin_to_cache(self, plugin: importlib_metadata.EntryPoint) -> None:
+    def _add_plugin_to_cache(
+        self,
+        plugin: importlib_metadata.EntryPoint,
+    ) -> None:
         # do not load plugin until any action is called
         # instead just save in cache and will be loaded on demand
         self.plugin_names_loaders[plugin.name] = plugin.load

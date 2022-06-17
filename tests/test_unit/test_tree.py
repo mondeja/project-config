@@ -28,7 +28,7 @@ def test_Tree_generator(tmp_path):
     tree = Tree(tmp_path)
     assert tree.rootdir == tmp_path
 
-    files = tree.generator([path.name])  # paths relative to rootdir
+    files = tree._generator([path.name])  # paths relative to rootdir
     assert tree.files_cache == {}  # files are cached when used
     assert isinstance(files, types.GeneratorType)
 
@@ -49,14 +49,14 @@ def test_Tree_file_caching(tmp_path):
     tree.files_cache = TreeFilesCacheListenerMock()
 
     expected_files = {path.as_posix(): expected_content}
-    files1 = tree.generator([path.name])
+    files1 = tree._generator([path.name])
     assert tree.files_cache == {}
     assert tree.files_cache.setitem_calls == 0
     next(files1)
     assert tree.files_cache.setitem_calls == 1
     assert tree.files_cache == expected_files
 
-    files2 = tree.generator([path.name])
+    files2 = tree._generator([path.name])
     next(files2)
     assert tree.files_cache.setitem_calls == 1  # no more __setitem__
     assert tree.files_cache == expected_files
@@ -76,7 +76,7 @@ def test_Tree_directory(tmp_path):
     tree.files_cache = TreeFilesCacheListenerMock()
 
     # directory generator
-    directory_generator = tree.generator([dir_path.name])
+    directory_generator = tree._generator([dir_path.name])
     assert isinstance(directory_generator, types.GeneratorType)
 
     fpath, fcontent = next(directory_generator)
@@ -112,7 +112,7 @@ def test_file_symlink(tmp_path):
     tree = Tree(tmp_path)
     tree.files_cache = TreeFilesCacheListenerMock()
 
-    generator = tree.generator([target_link_path, source_link_path])
+    generator = tree._generator([target_link_path, source_link_path])
 
     target_fpath, target_fcontent = next(generator)
     assert str(target_fpath) == target_link_path.as_posix()

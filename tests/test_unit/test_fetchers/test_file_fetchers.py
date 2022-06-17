@@ -19,7 +19,10 @@ from project_config.fetchers import FetchError, fetch
             "foo.txt",
             "foo\nbar\n",
             None,
-            "'foo.txt' can't be decoded as a valid JSON file: Expecting value: line 1 column 1 (char 0)",
+            (
+                "'foo.txt' can't be serialized as a valid JSON file:"
+                " Expecting value: line 1 column 1 (char 0)"
+            ),
             id=".txt",
         ),
         pytest.param(
@@ -36,7 +39,7 @@ from project_config.fetchers import FetchError, fetch
             "",
             None,
             (
-                "'foo.json' can't be decoded as a valid JSON file:"
+                "'foo.json' can't be serialized as a valid JSON file:"
                 " Expecting value: line 1 column 1 (char 0)"
             ),
             id=".txt (invalid JSON as empty)",
@@ -55,7 +58,7 @@ from project_config.fetchers import FetchError, fetch
             "",
             None,
             (
-                "'foo.json' can't be decoded as a valid JSON file:"
+                "'foo.json' can't be serialized as a valid JSON file:"
                 " Expecting value: line 1 column 1 (char 0)"
             ),
             id=".json (empty)",
@@ -66,7 +69,7 @@ from project_config.fetchers import FetchError, fetch
             "{foo}",
             None,
             (
-                "'foo.json' can't be decoded as a valid JSON file:"
+                "'foo.json' can't be serialized as a valid JSON file:"
                 " Expecting property name enclosed in double quotes:"
                 " line 1 column 2 (char 1)"
             ),
@@ -86,7 +89,7 @@ from project_config.fetchers import FetchError, fetch
             "",
             None,
             (
-                "'foo.json5' can't be decoded as a valid JSON file:"
+                "'foo.json5' can't be serialized as a valid JSON file:"
                 " No JSON data found near 0"
             ),
             id=".json5 (empty)",
@@ -97,7 +100,7 @@ from project_config.fetchers import FetchError, fetch
             "{foo}",
             None,
             (
-                "'foo.json5' can't be decoded as a valid JSON file:"
+                "'foo.json5' can't be serialized as a valid JSON file:"
                 " Expected b'colon' near 5, found U+007d"
             ),
             id=".json5 (invalid JSON)",
@@ -124,7 +127,7 @@ from project_config.fetchers import FetchError, fetch
             "true: 1\n2\n3'foo",
             None,
             (
-                "'foo.yaml' can't be decoded as a valid JSON file:\n"
+                "'foo.yaml' can't be serialized as a valid JSON file:\n"
                 "while scanning a simple key\n"
                 '  in "<unicode string>", line 2, column 1\n'
                 "could not find expected ':'\n"
@@ -154,7 +157,7 @@ from project_config.fetchers import FetchError, fetch
             "foo = 'bar",
             None,
             (
-                "'foo.toml' can't be decoded as a valid JSON file:"
+                "'foo.toml' can't be serialized as a valid JSON file:"
                 " Unexpected end of file at line 1 col 10"
             ),
             id=".toml (invalid JSON)",
@@ -170,7 +173,13 @@ from project_config.fetchers import FetchError, fetch
     ),
 )
 def test_fetch_file(
-    tmp_path, chdir, path, url, content, expected_result, expected_error_message
+    tmp_path,
+    chdir,
+    path,
+    url,
+    content,
+    expected_result,
+    expected_error_message,
 ):
     (tmp_path / path).write_text(content)
 
@@ -180,7 +189,10 @@ def test_fetch_file(
 
     with chdir(tmp_path):
         if expected_error_message:
-            with pytest.raises(FetchError, match=re.escape(expected_error_message)):
+            with pytest.raises(
+                FetchError,
+                match=re.escape(expected_error_message),
+            ):
                 fetch(url)
         else:
             result = fetch(url)

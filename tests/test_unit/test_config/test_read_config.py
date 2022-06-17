@@ -30,7 +30,11 @@ def test_read_config_from_empty_custom_file(tmp_path):
     read_config(input_path)
 
 
-def test_read_config_from_project_config_toml(tmp_path, minimal_valid_config, chdir):
+def test_read_config_from_project_config_toml(
+    tmp_path,
+    minimal_valid_config,
+    chdir,
+):
     path = tmp_path / ".project-config.toml"
     path.write_text(minimal_valid_config.string)
     with chdir(tmp_path):

@@ -1,3 +1,5 @@
+"""JSON reporters."""
+
 import json
 import typing as t
 
@@ -5,7 +7,10 @@ from project_config.reporters.base import BaseColorReporter, BaseReporter
 
 
 class JsonReporter(BaseReporter):
+    """Black/white reporter in JSON format."""
+
     def generate_errors_report(self) -> str:
+        """Generate an errors report in black/white JSON format."""
         return json.dumps(
             self.errors,
             indent=2
@@ -13,7 +18,12 @@ class JsonReporter(BaseReporter):
             else (4 if self.format == "pretty4" else None),
         )
 
-    def generate_data_report(self, data_key: str, data: t.Dict[str, t.Any]) -> str:
+    def generate_data_report(
+        self,
+        data_key: str,
+        data: t.Dict[str, t.Any],
+    ) -> str:
+        """Generate a data report in black/white JSON format."""
         return (
             json.dumps(
                 data,
@@ -26,7 +36,10 @@ class JsonReporter(BaseReporter):
 
 
 class JsonColorReporter(BaseColorReporter):
+    """Color reporter in JSON format."""
+
     def generate_errors_report(self) -> str:
+        """Generate an errors report in JSON format with colors."""
         message_key = self.format_key('"message"')
         definition_key = self.format_key('"definition"')
 
@@ -48,12 +61,18 @@ class JsonColorReporter(BaseColorReporter):
                 + newline4
             )
             for e, error in enumerate(errors):
+                error_message = self.format_error_message(
+                    json.dumps(error["message"]),
+                )
+                definition = self.format_definition(
+                    json.dumps(error["definition"]),
+                )
                 report += (
                     f"{self.format_metachar('{')}{newline6}{message_key}:"
-                    f' {self.format_error_message(json.dumps(error["message"]))}'
+                    f" {error_message}"
                     f'{self.format_metachar(", ")}{newline6}'
                     f'{definition_key}{self.format_metachar(":")}'
-                    f' {self.format_definition(json.dumps(error["definition"]))}'
+                    f" {definition}"
                     f"{newline4}{self.format_metachar('}')}"
                 )
                 if e < len(errors) - 1:

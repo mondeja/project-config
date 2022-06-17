@@ -11,13 +11,6 @@ repos:
       - id: pyupgrade
         args:
           - --py37-plus
-  - repo: https://github.com/asottile/add-trailing-comma
-    rev: v2.2.1
-    hooks:
-      - id: add-trailing-comma
-        name: add-trailing-comma
-        args:
-          - --py37-plus
   - repo: https://github.com/myint/autoflake
     rev: v1.4
     hooks:
@@ -28,6 +21,28 @@ repos:
           - --remove-unused-variables
           - --remove-duplicate-keys
           - --ignore-init-module-imports
+  - repo: https://github.com/asottile/add-trailing-comma
+    rev: v2.2.1
+    hooks:
+      - id: add-trailing-comma
+        name: add-trailing-comma
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v3.2.0
+    hooks:
+      - id: trailing-whitespace
+        name: trailing-whitespace
+      - id: end-of-file-fixer
+        name: end-of-file-fixer
+      - id: debug-statements
+        name: debug-statements
+  - repo: https://github.com/psf/black
+    rev: 22.3.0
+    hooks:
+      - id: black
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.10.1
+    hooks:
+      - id: isort
   - repo: https://github.com/flakeheaven/flakeheaven
     rev: 1.0.1
     hooks:
@@ -43,28 +58,17 @@ repos:
           - flake8-pytest-style
           - pysetenv
         entry: pysetenv FLAKEHEAVEN_CACHE_TIMEOUT=0 flakeheaven lint
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v3.2.0
-    hooks:
-      - id: trailing-whitespace
-        name: trailing-whitespace
-      - id: end-of-file-fixer
-        name: end-of-file-fixer
-      - id: debug-statements
-        name: debug-statements
-  - repo: https://github.com/psf/black
-    rev: 22.3.0
-    hooks:
-      - id: black
   - repo: https://github.com/pre-commit/mirrors-prettier
     rev: v2.6.2
     hooks:
       - id: prettier
         types_or:
           - toml
+          - css
         additional_dependencies:
           - prettier
           - prettier-plugin-toml
+        minimum_pre_commit_version: 2.9.0
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v0.960
     hooks:
@@ -73,10 +77,6 @@ repos:
         additional_dependencies:
           - types-PyYAML
           - types-tabulate
-  - repo: https://github.com/PyCQA/isort
-    rev: 5.10.1
-    hooks:
-      - id: isort
   - repo: https://github.com/editorconfig-checker/editorconfig-checker.python
     rev: 2.4.0
     hooks:

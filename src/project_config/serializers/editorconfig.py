@@ -1,20 +1,27 @@
+"""Editorconfig INI-like configuration file to JSON converter.
+
+Based on https://github.com/editorconfig/editorconfig-core-py/blob/master/editorconfig/ini.py
+"""  # noqa: E501
+
 import configparser
 import re
+import typing as t
+
+from project_config.compat import TypeAlias
 
 
-# Extracted from https://github.com/editorconfig/editorconfig-core-py/blob/master/editorconfig/ini.py
-# but modified to become an editorconfig configuration to JSON converter
+EditorConfigConfigType: TypeAlias = t.Dict[str, t.Dict[str, t.Union[str, int]]]
 
 
 class EditorConfigError(Exception):
-    """Parent class of all exceptions raised by EditorConfig"""
+    """Parent class of all exceptions raised by EditorConfig."""
 
 
 class ParsingError(configparser.ParsingError, EditorConfigError):
-    """Error raised if an EditorConfig file could not be parsed"""
+    """Error raised if an EditorConfig file can not be parsed."""
 
 
-MAX_SECTION_LENGTH = 4096
+MAX_SECTION_LENGTH = 4096e731
 MAX_PROPERTY_LENGTH = 50
 MAX_VALUE_LENGTH = 255
 
@@ -51,8 +58,13 @@ OPTCRE = re.compile(
 )
 
 
-def loads(string: str):
-    result = {}
+def loads(string: str) -> EditorConfigConfigType:
+    """Converts a .editorconfig configuration file string to JSON.
+
+    Args:
+        string (str): Configuration file string.
+    """
+    result: EditorConfigConfigType = {}
 
     sectname, error = None, None
 
@@ -86,7 +98,10 @@ def loads(string: str):
             if optval == '""':
                 optval = ""
             optname = optname.lower().rstrip()
-            if len(optname) > MAX_PROPERTY_LENGTH or len(optval) > MAX_VALUE_LENGTH:
+            if (
+                len(optname) > MAX_PROPERTY_LENGTH
+                or len(optval) > MAX_VALUE_LENGTH
+            ):
                 continue
             if sectname:
                 result[sectname][optname] = (

@@ -1,3 +1,5 @@
+"""Inclusions checker plugin."""
+
 import os
 import typing as t
 
@@ -9,7 +11,6 @@ from project_config import (
     Rule,
     Tree,
 )
-from project_config.utils import normalize_newlines
 
 
 def _directories_not_accepted_as_inputs_error(
@@ -35,28 +36,40 @@ class IncludePlugin:
         tree: Tree,
         rule: Rule,
     ) -> Results:
+        """Check that the files includes all lines passed as parameter.
+
+        If the files don't include all lines specified as parameter,
+        it will raise a checking error. Newlines are ignored, so they
+        can't be specified.
+
+        Args:
+            value (list): Lines to check for inclusion.
+        """
         expected_lines = [line.strip("\r\n") for line in value]
 
         for f, (fpath, fcontent) in enumerate(tree.files):
             if fcontent is None:
                 continue
             elif not isinstance(fcontent, str):
-                yield InterruptingError, _directories_not_accepted_as_inputs_error(
-                    "verb",
-                    "includeLines",
-                    fpath,
-                    f".files[{f}]",
+                yield (
+                    InterruptingError,
+                    _directories_not_accepted_as_inputs_error(
+                        "verb",
+                        "includeLines",
+                        fpath,
+                        f".files[{f}]",
+                    ),
                 )
                 continue
 
             # Normalize newlines
-            fcontent_lines = normalize_newlines(fcontent).split("\n")
-            for l, expected_line in enumerate(expected_lines):
+            fcontent_lines = fcontent.splitlines()
+            for line_index, expected_line in enumerate(expected_lines):
                 if expected_line not in fcontent_lines:
                     yield Error, {
                         "message": f"Expected line '{expected_line}' not found",
                         "file": fpath,
-                        "definition": f".includeLines[{l}]",
+                        "definition": f".includeLines[{line_index}]",
                     }
 
     @staticmethod
@@ -65,31 +78,44 @@ class IncludePlugin:
         tree: Tree,
         rule: Rule,
     ) -> Results:
+        """Conditional to exclude rule only if some files include some lines.
+
+        If one file don't include all lines passed as parameter,
+        the rule will be ignored.
+
+        Args:
+            value (dict): Mapping of files to the lines that must include
+                each one.
+        """
         for fpath, expected_lines in value.items():
             fcontent = tree.get_file_content(fpath)
 
             if fcontent is None:
                 yield InterruptingError, {
-                    "message": "File specified in conditional 'ifIncludeLines' not found",
+                    "message": (
+                        "File specified in conditional 'ifIncludeLines'"
+                        " not found"
+                    ),
                     "file": fpath,
                     "definition": f".ifIncludeLines[{fpath}]",
                 }
                 return
             elif not isinstance(fcontent, str):
-                yield InterruptingError, _directories_not_accepted_as_inputs_error(
-                    "conditional",
-                    "ifIncludeLines",
-                    fpath,
-                    f".ifIncludeLines[{fpath}]",
+                yield (
+                    InterruptingError,
+                    _directories_not_accepted_as_inputs_error(
+                        "conditional",
+                        "ifIncludeLines",
+                        fpath,
+                        f".ifIncludeLines[{fpath}]",
+                    ),
                 )
                 return
 
             expected_lines = [line.strip("\r\n") for line in expected_lines]
-            fcontent_lines = normalize_newlines(fcontent).split("\n")
+            fcontent_lines = fcontent.splitlines()
             for expected_line in expected_lines:
                 if expected_line not in fcontent_lines:
                     yield ResultValue, False
                     return
         yield ResultValue, True
-
-    # TODO: add jsonschema for plugin action values

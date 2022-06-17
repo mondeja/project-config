@@ -1,3 +1,5 @@
+"""JMESPath expressions plugin."""
+
 import operator
 import pprint
 import re
@@ -5,7 +7,16 @@ import typing as t
 
 import jmespath
 
-from project_config import Error, InterruptingError, Results, Rule, Tree
+from project_config import (
+    Error,
+    InterruptingError,
+    Results,
+    ResultValue,
+    Rule,
+    Tree,
+)
+from project_config.compat import cached_function
+from project_config.exceptions import ProjectConfigException
 
 
 OPERATORS_FUNCTIONS = {
@@ -46,70 +57,127 @@ OPERATORS_FUNCTIONS = {
 }
 
 
-class InvalidOperator(jmespath.exceptions.JMESPathError):
+class InvalidOperator(jmespath.exceptions.JMESPathError):  # type: ignore
     def __init__(self, operator: str):
         super().__init__(
             f"Invalid operator '{operator}' passed to op() function,"
-            f" expected one of: {', '.join(list(OPERATORS_FUNCTIONS))}"
+            f" expected one of: {', '.join(list(OPERATORS_FUNCTIONS))}",
         )
 
 
-class JMESPathProjectConfigFunctions(jmespath.functions.Functions):
-    """Custom functionso object to support some custom functions.
+class JMESPathProjectConfigFunctions(
+    jmespath.functions.Functions,  # type: ignore
+):
+    """JMESPath class to include custom functions.
 
     Custom functions added:
 
     - ``regex_match('<regex>', '<string>') -> boolean``: Match a Python regular
       expression against a string.
-    - ``regex_matchall('<regex>', <container>) -> boolean``: Match a Python regular
-      expression against all items in a container.
+    - ``regex_matchall('<regex>', <container>) -> boolean``: Match a Python
+      regular expression against all items in a container.
     - ``regex_search('<regex>', '<string>') -> array[string]``: Search with
       Python regular expression against a JMESPath result. It returns
       an array with all groups, if groups are defined inside the regular
       expression or an array with the full match otherwise.
-    - ``gt(<source_number>, <target_number>)``: Returns if ``target``
-      is equal to ``source``. Both values accepts any types.
-    - ``gt(<source_number>, <target_number>)``: Returns if ``target_number``
-      is greater than ``source_number``.
-    - ``gte(<source_number>, <target_number>)``: Returns if ``target_number``
-      is greater or equal than ``source_number``.
-    - ``is_empty(<container>)``: Returns if ``container`` is empty. Works for
-      strings, arrays and objects.
+    - ``op(<source>, '<operator>', <target>)``: Compare two values using an
+      operator.
     """
 
-    @jmespath.functions.signature({"types": ["string"]}, {"types": ["string"]})
+    @jmespath.functions.signature(  # type: ignore
+        {"types": ["string"]},
+        {"types": ["string"]},
+    )
     def _func_regex_match(self, regex: str, value: str) -> bool:
         return bool(re.match(regex, value))
 
-    @jmespath.functions.signature({"types": ["string"]}, {"types": ["array", "object"]})
+    @jmespath.functions.signature(  # type: ignore
+        {"types": ["string"]},
+        {"types": ["array", "object"]},
+    )
     def _func_regex_matchall(self, regex: str, container: str) -> bool:
         return all(bool(re.match(regex, value)) for value in container)
 
-    @jmespath.functions.signature({"types": ["string"]}, {"types": ["string"]})
-    def _func_regex_search(self, regex: str, value: str) -> t.List[str]:
+    @jmespath.functions.signature(  # type: ignore
+        {"types": ["string"]},
+        {"types": ["string"]},
+    )
+    def _func_regex_search(
+        self,
+        regex: str,
+        value: str,
+    ) -> t.Optional[t.List[str]]:
         match = re.search(regex, value)
+        if not match:
+            return None
         return [match.group(0)] if not match.groups() else list(match.groups())
 
-    @jmespath.functions.signature(
-        {"types": ["number", "string"]},
+    @jmespath.functions.signature(  # type: ignore
+        {"types": ["number", "string", "array", "object"]},
         {"types": ["string"]},
-        {"types": ["number", "string"]},
+        {"types": ["number", "string", "array", "object"]},
     )
     def _func_op(self, a: float, operator: str, b: float) -> bool:
         try:
-            return OPERATORS_FUNCTIONS[operator](a, b)
+            return OPERATORS_FUNCTIONS[operator](a, b)  # type: ignore
         except KeyError:
             raise InvalidOperator(operator)
 
-    @jmespath.functions.signature({"types": ["string", "array", "object"]})
-    def _func_is_empty(
-        self,
-        container: t.Union[str, t.List[t.Any], t.Dict[t.Any, t.Any]],
-    ) -> bool:
-        return not bool(container)
+
+jmespath_options = jmespath.Options(
+    custom_functions=JMESPathProjectConfigFunctions(),
+)
 
 
-jmespath_options = jmespath.Options(custom_functions=JMESPathProjectConfigFunctions())
+class JMESPathError(ProjectConfigException):
+    """Class to wrap all JMESPath errors of the plugin."""
+
+
+@cached_function
+def _compile_JMESPath_expression(
+    expression: str,
+) -> jmespath.parser.ParsedResult:
+    return jmespath.compile(expression)
+
+
+def _compile_JMESPath(
+    expression: str,
+    expected_value: t.Any,
+) -> jmespath.parser.ParsedResult:
+    try:
+        return _compile_JMESPath_expression(expression)
+    except jmespath.exceptions.ParseError as exc:
+        raise JMESPathError(
+            f"Invalid JMESPath expression {pprint.pformat(expression)}."
+            f" Expected to return {pprint.pformat(expected_value)}, raised"
+            f" JMESPath parsing error: {exc.__str__()}",
+        )
+
+
+def _evaluate_JMESPath(
+    compiled_expression: jmespath.parser.ParsedResult,
+    expected_value: t.Any,
+    instance: t.Dict[str, t.Any],
+) -> t.Any:
+    try:
+        return compiled_expression.search(
+            instance,
+            options=jmespath_options,
+        )
+    except jmespath.exceptions.JMESPathTypeError as exc:
+        formatted_expression = pprint.pformat(compiled_expression.expression)
+        raise JMESPathError(
+            f"Invalid JMESPath {formatted_expression} in context."
+            f" Expected to return {pprint.pformat(expected_value)}, raised"
+            f" JMESPath type error: {exc.__str__()}",
+        )
+    except jmespath.exceptions.JMESPathError as exc:
+        formatted_expression = pprint.pformat(compiled_expression.expression)
+        raise JMESPathError(
+            f"Invalid JMESPath {formatted_expression}."
+            f" Expected to return {pprint.pformat(expected_value)}, raised"
+            f" JMESPath error: {exc.__str__()}",
+        )
 
 
 class JMESPathPlugin:
@@ -119,44 +187,49 @@ class JMESPathPlugin:
         tree: Tree,
         rule: Rule,
     ) -> Results:
+        """Compares a set of JMESPath expression against results.
+
+        JSON-serializes each file in the ``files`` property of the rule
+        and executes each expression given in the first item of the
+        tuples passed as value. If a result don't match, report an error.
+        """
         if not isinstance(value, list):
             yield InterruptingError, {
-                "message": "The JMES path - match tuples must be of type array",
+                "message": (
+                    "The JMES path - match tuples must be of type array"
+                ),
                 "definition": ".JMESPathsMatch",
-                "file": None,
             }
             return
         if not value:
             yield InterruptingError, {
-                "message": "The JMES path - match tuples must not be empty",
+                "message": ("The JMES path - match tuples must not be empty"),
                 "definition": ".JMESPathsMatch",
-                "file": None,
             }
             return
-        for t, jmespath_match_tuple in enumerate(value):
+        for i, jmespath_match_tuple in enumerate(value):
             if not isinstance(jmespath_match_tuple, list):
                 yield InterruptingError, {
-                    "message": "The JMES path - match tuple must be of type array",
-                    "definition": f".JMESPathsMatch[{t}]",
-                    "file": None,
+                    "message": (
+                        "The JMES path - match tuple must be of type array"
+                    ),
+                    "definition": f".JMESPathsMatch[{i}]",
                 }
                 return
             if not len(jmespath_match_tuple) == 2:
                 yield InterruptingError, {
-                    "message": "The JMES path - match tuple must be of length 2",
-                    "definition": f".JMESPathsMatch[{t}]",
-                    "file": None,
+                    "message": (
+                        "The JMES path - match tuple must be of length 2"
+                    ),
+                    "definition": f".JMESPathsMatch[{i}]",
                 }
                 return
             if not isinstance(jmespath_match_tuple[0], str):
                 yield InterruptingError, {
                     "message": "The JMES path must be of type string",
-                    "definition": f".JMESPathsMatch[{t}][0]",
-                    "file": None,
+                    "definition": f".JMESPathsMatch[{i}][0]",
                 }
                 return
-
-        jmespath_expressions = None
 
         for f, (fpath, fcontent) in enumerate(tree.files):
             if fcontent is None:
@@ -167,55 +240,33 @@ class JMESPathPlugin:
                     "definition": f".files[{f}]",
                     "file": f"{fpath}/",
                 }
-            elif jmespath_expressions is None:
-                jmespath_expressions = []
-                for e, (exp, expected_value) in enumerate(value):
-                    try:
-                        jmespath_expressions.append(
-                            (jmespath.compile(exp), expected_value)
-                        )
-                    except jmespath.exceptions.ParseError as exc:
-                        yield InterruptingError, {
-                            "message": (
-                                f"Invalid JMESPath expression {pprint.pformat(exp)}."
-                                f" Expected to return {pprint.pformat(expected_value)}, raised"
-                                f" JMESPath parsing error: {exc.__str__()}"
-                            ),
-                            "definition": f".JMESPathsMatch[{e}][0]",
-                            "file": fpath,
-                        }
+                continue
 
-            instance = tree.decode_file(fpath, fcontent)
-            if "update" in fpath:
-                import json
+            instance = tree.serialize_file(fpath, fcontent)
 
-                print(json.dumps(instance))
-
-            for e, (exp, expected_value) in enumerate(jmespath_expressions):
+            for e, (expression, expected_value) in enumerate(value):
                 try:
-                    expression_result = exp.search(
-                        instance,
-                        options=jmespath_options,
+                    compiled_expression = _compile_JMESPath(
+                        expression,
+                        expected_value,
                     )
-                except jmespath.exceptions.JMESPathTypeError as exc:
-                    print(exp.expression)
-                    yield Error, {
-                        "message": (
-                            f"Invalid JMESPath {pprint.pformat(exp.expression)} in context."
-                            f" Expected to return {pprint.pformat(expected_value)}, raised"
-                            f" JMESPath type error: {exc.__str__()}"
-                        ),
-                        "definition": f".JMESPathsMatch[{e}]",
+                except JMESPathError as exc:
+                    yield InterruptingError, {
+                        "message": exc.message,
+                        "definition": f".JMESPathsMatch[{e}][0]",
                         "file": fpath,
                     }
                     continue
-                except jmespath.exceptions.JMESPathError as exc:
+
+                try:
+                    expression_result = _evaluate_JMESPath(
+                        compiled_expression,
+                        expected_value,
+                        instance,
+                    )
+                except JMESPathError as exc:
                     yield Error, {
-                        "message": (
-                            f"Invalid JMESPath {pprint.pformat(exp.expression)}."
-                            f" Expected to return {pprint.pformat(expected_value)}, raised"
-                            f" JMESPath error: {exc.__str__()}"
-                        ),
+                        "message": exc.message,
                         "definition": f".JMESPathsMatch[{e}]",
                         "file": fpath,
                     }
@@ -224,10 +275,129 @@ class JMESPathPlugin:
                 if expression_result != expected_value:
                     yield Error, {
                         "message": (
-                            f"JMESPath '{exp.expression}' does not match."
-                            f" Expected {pprint.pformat(expected_value)}, returned"
-                            f" {pprint.pformat(expression_result)}"
+                            f"JMESPath '{expression}' does not match."
+                            f" Expected {pprint.pformat(expected_value)},"
+                            f" returned {pprint.pformat(expression_result)}"
                         ),
                         "definition": f".JMESPathsMatch[{e}]",
                         "file": fpath,
                     }
+
+    @staticmethod
+    def ifJMESPathsMatch(
+        value: t.Dict[str, t.List[t.List[str]]],
+        tree: Tree,
+        rule: Rule,
+    ) -> Results:
+        """Compares a set of JMESPath expression against results.
+
+        JSON-serializes each file in the ``ifJMESPathsMatch`` property
+        of the rule and executes each expression given in the first item of the
+        tuples passed as value for each file. If a result don't match,
+        skips the rule.
+        """
+        if not isinstance(value, dict):
+            yield InterruptingError, {
+                "message": (
+                    "The files - JMES path match tuples must be"
+                    " of type object"
+                ),
+                "definition": ".ifJMESPathsMatch",
+            }
+            return
+        elif not value:
+            yield InterruptingError, {
+                "message": (
+                    "The files - JMES path match tuples must not be empty"
+                ),
+                "definition": ".ifJMESPathsMatch",
+            }
+            return
+        for fpath, jmespath_match_tuples in value.items():
+            if not isinstance(jmespath_match_tuples, list):
+                yield InterruptingError, {
+                    "message": (
+                        "The JMES path match tuples must be of type array"
+                    ),
+                    "definition": f".ifJMESPathsMatch[{fpath}]",
+                }
+                return
+            if not jmespath_match_tuples:
+                yield InterruptingError, {
+                    "message": ("The JMES path match tuples must not be empty"),
+                    "definition": f".ifJMESPathsMatch[{fpath}]",
+                }
+                return
+            for i, jmespath_match_tuple in enumerate(jmespath_match_tuples):
+                if not isinstance(jmespath_match_tuple, list):
+                    yield InterruptingError, {
+                        "message": (
+                            "The JMES path - match tuple must be"
+                            " of type array"
+                        ),
+                        "definition": f".ifJMESPathsMatch[{fpath}][{i}]",
+                    }
+                    return
+                if not len(jmespath_match_tuple) == 2:
+                    yield InterruptingError, {
+                        "message": (
+                            "The JMES path - match tuple must be of length 2"
+                        ),
+                        "definition": f".ifJMESPathsMatch[{fpath}][{i}]",
+                    }
+                    return
+                if not isinstance(jmespath_match_tuple[0], str):
+                    yield InterruptingError, {
+                        "message": "The JMES path must be of type string",
+                        "definition": f".ifJMESPathsMatch[{fpath}][{i}][0]",
+                    }
+                    return
+
+        for fpath, jmespath_match_tuples in value.items():
+            fcontent = tree.get_file_content(fpath)
+            if fcontent is None:
+                continue
+            elif not isinstance(fcontent, str):
+                yield InterruptingError, {
+                    "message": "You can't apply a JMESPath to a directory",
+                    "definition": f".ifJMESPathsMatch[{fpath}]",
+                    "file": f"{fpath}/",
+                }
+                continue
+
+            instance = tree.serialize_file(fpath, fcontent)
+
+            for e, (expression, expected_value) in enumerate(
+                jmespath_match_tuples,
+            ):
+                try:
+                    compiled_expression = _compile_JMESPath(
+                        expression,
+                        expected_value,
+                    )
+                except JMESPathError as exc:
+                    yield InterruptingError, {
+                        "message": exc.message,
+                        "definition": f".ifJMESPathsMatch[{fpath}][{e}][0]",
+                        "file": fpath,
+                    }
+                    continue
+
+                try:
+                    expression_result = _evaluate_JMESPath(
+                        compiled_expression,
+                        expected_value,
+                        instance,
+                    )
+                except JMESPathError as exc:
+                    yield InterruptingError, {
+                        "message": exc.message,
+                        "definition": f".ifJMESPathsMatch[{fpath}][{e}]",
+                        "file": fpath,
+                    }
+                    continue
+
+                if expression_result != expected_value:
+                    yield ResultValue, False
+
+        yield ResultValue, True

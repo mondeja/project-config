@@ -1,3 +1,5 @@
+"""Github files resources URIs fetcher."""
+
 import json
 import re
 import urllib.parse
@@ -5,7 +7,7 @@ import urllib.parse
 from project_config.utils import GET
 
 
-def get_default_branch_from_git_repo(repo_owner: str, repo_name: str) -> str:
+def _get_default_branch_from_git_repo(repo_owner: str, repo_name: str) -> str:
     # try from repository HTML
     result = GET(f"https://github.com/{repo_owner}/{repo_name}/branches")
     match = re.search(r'branch=["|\'](\w+)["|\']', result)
@@ -14,11 +16,11 @@ def get_default_branch_from_git_repo(repo_owner: str, repo_name: str) -> str:
 
     # try from API
     return json.loads(  # type: ignore
-        GET(f"https://api.github.com/repos/{repo_owner}/{repo_name}")
+        GET(f"https://api.github.com/repos/{repo_owner}/{repo_name}"),
     )["default_branch"]
 
 
-def build_raw_githubusercontent_url(
+def _build_raw_githubusercontent_url(
     repo_owner: str,
     repo_name: str,
     git_reference: str,
@@ -31,18 +33,22 @@ def build_raw_githubusercontent_url(
 
 
 def fetch(url_parts: urllib.parse.SplitResult) -> str:
+    """Fetch a resource through HTTPs protocol for a Github URI."""
     # extract project, filepath and git reference
-    project_maybe_with_gitref, fpath = url_parts.path.lstrip("/").split("/", maxsplit=1)
+    project_maybe_with_gitref, fpath = url_parts.path.lstrip("/").split(
+        "/",
+        maxsplit=1,
+    )
     if "@" in project_maybe_with_gitref:
         project, git_reference = project_maybe_with_gitref.split("@")
     else:
         project = project_maybe_with_gitref
-        git_reference = get_default_branch_from_git_repo(
+        git_reference = _get_default_branch_from_git_repo(
             url_parts.netloc,  # netloc is the repo owner here
             project,
         )
 
-    url = build_raw_githubusercontent_url(
+    url = _build_raw_githubusercontent_url(
         url_parts.netloc,
         project,
         git_reference,

@@ -1,11 +1,16 @@
+"""YAML reporters."""
+
 import typing as t
 
-from project_config.decoders.yaml import dumps as yaml_dumps
 from project_config.reporters.base import BaseColorReporter, BaseReporter
+from project_config.serializers.yaml import dumps as yaml_dumps
 
 
 class YamlReporter(BaseReporter):
+    """Black/white reporter in YAML format."""
+
     def generate_errors_report(self) -> str:
+        """Generate an errors report in black/white YAML format."""
         report = ""
         for line in yaml_dumps(self.errors).splitlines():
             if line.startswith(("- ", "  ")):
@@ -16,7 +21,10 @@ class YamlReporter(BaseReporter):
 
 
 class YamlColorReporter(BaseColorReporter):
+    """Color reporter in YAML format."""
+
     def generate_errors_report(self) -> t.Any:
+        """Generate an errors report in YAML format with colors."""
         report = ""
         for line in yaml_dumps(self.errors).splitlines():
             if line.startswith("- "):  # definition
@@ -35,6 +43,7 @@ class YamlColorReporter(BaseColorReporter):
                 )
             elif line:
                 report += (
-                    f"{self.format_file(line[:-1])}" f"{self.format_metachar(':')}\n"
+                    f"{self.format_file(line[:-1])}"
+                    f"{self.format_metachar(':')}\n"
                 )
         return report.rstrip("\n")

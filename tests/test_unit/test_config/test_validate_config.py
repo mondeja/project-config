@@ -12,21 +12,41 @@ from project_config.config.exceptions import ProjectConfigInvalidConfigSchema
 VALIDATE_CONFIG_STYLE_CASES = (
     pytest.param({}, ["style -> at least one is required"], id="no-style"),
     pytest.param({"style": "foo"}, [], id="string"),
-    pytest.param({"style": ""}, ["style -> must not be empty"], id="empty-string"),
-    pytest.param({"style": 1}, ["style -> must be of type string or array"], id="int"),
     pytest.param(
-        {"style": True}, ["style -> must be of type string or array"], id="bool"
+        {"style": ""},
+        ["style -> must not be empty"],
+        id="empty-string",
     ),
-    pytest.param({"style": []}, ["style -> at least one is required"], id="empty-list"),
+    pytest.param(
+        {"style": 1},
+        ["style -> must be of type string or array"],
+        id="int",
+    ),
+    pytest.param(
+        {"style": True},
+        ["style -> must be of type string or array"],
+        id="bool",
+    ),
+    pytest.param(
+        {"style": []},
+        ["style -> at least one is required"],
+        id="empty-list",
+    ),
     pytest.param({"style": ["foo"]}, [], id="list[string]"),
     pytest.param(
-        {"style": [""]}, ["style[0] -> must not be empty"], id="list[empty-string]"
+        {"style": [""]},
+        ["style[0] -> must not be empty"],
+        id="list[empty-string]",
     ),
     pytest.param(
-        {"style": [1]}, ["style[0] -> must be of type string"], id="list[int]"
+        {"style": [1]},
+        ["style[0] -> must be of type string"],
+        id="list[int]",
     ),
     pytest.param(
-        {"style": [True]}, ["style[0] -> must be of type string"], id="list[bool]"
+        {"style": [True]},
+        ["style[0] -> must be of type string"],
+        id="list[bool]",
     ),
     pytest.param(
         {"style": ["foo", True]},
@@ -38,7 +58,11 @@ VALIDATE_CONFIG_STYLE_CASES = (
 VALIDATE_CONFIG_CACHE_CASES = (
     pytest.param({}, [], id="no-cache"),
     pytest.param({"cache": 1}, ["cache -> must be of type string"], id="int"),
-    pytest.param({"cache": ""}, ["cache -> must not be empty"], id="empty-string"),
+    pytest.param(
+        {"cache": ""},
+        ["cache -> must not be empty"],
+        id="empty-string",
+    ),
     pytest.param(
         {"cache": "6557567 trillones de años"},
         [f"cache -> must match the regex {CONFIG_CACHE_REGEX}"],
@@ -54,7 +78,7 @@ for style_case in VALIDATE_CONFIG_STYLE_CASES:
                 {**style_case.values[0], **cache_case.values[0]},
                 [*style_case.values[1], *cache_case.values[1]],
                 id=f"style={style_case.id},cache={cache_case.id}",
-            )
+            ),
         )
 
 

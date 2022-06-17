@@ -1,10 +1,11 @@
+"""Configuration handler."""
+
 import os
 import re
 import typing as t
 from dataclasses import dataclass
 
-import tomlkit
-
+from project_config.compat import TypeAlias
 from project_config.config.exceptions import (
     ConfigurationFilesNotFound,
     CustomConfigFileNotFound,
@@ -12,18 +13,21 @@ from project_config.config.exceptions import (
     PyprojectTomlFoundButHasNoConfig,
 )
 from project_config.config.style import Style
+from project_config.fetchers import fetch
 
 
 CONFIG_CACHE_REGEX = r"^(\d+ (minutes?)|(hours?)|(days?)|(weeks?))|(never)$"
 
-
-def read_toml_file(fpath: str) -> tomlkit.toml_document.TOMLDocument:
-    with open(fpath, "rb") as f:
-        return tomlkit.load(f)
+ConfigType: TypeAlias = t.Dict[str, t.Union[str, t.List[str]]]
 
 
 def read_config_from_pyproject_toml() -> t.Optional[t.Any]:
-    pyproject_toml = read_toml_file("pyproject.toml")
+    """Read the configuration from the `pyproject.toml` file.
+
+    Returns:
+        object: ``None`` if not found, configuration data otherwise.
+    """
+    pyproject_toml = fetch("pyproject.toml")
     if "tool" in pyproject_toml and "project-config" in pyproject_toml["tool"]:
         return pyproject_toml["tool"]["project-config"]
     return None
@@ -31,11 +35,21 @@ def read_config_from_pyproject_toml() -> t.Optional[t.Any]:
 
 def read_config(
     custom_file_path: t.Optional[str] = None,
-) -> t.Tuple[str, t.Dict[str, t.Union[str, t.List[str]]]]:
+) -> t.Tuple[str, t.Any]:
+    """Read the configuration from a file.
+
+    Args:
+        custom_file_path (str): Custom configuration file path
+            or ``None`` if the configuration must be read from
+            one of the default configuration file paths.
+
+    Returns:
+        object: Configuration data.
+    """
     if custom_file_path:
         if not os.path.isfile(custom_file_path):
             raise CustomConfigFileNotFound(custom_file_path)
-        return custom_file_path, dict(read_toml_file(custom_file_path))
+        return custom_file_path, dict(fetch(custom_file_path))
 
     pyproject_toml_exists = os.path.isfile("pyproject.toml")
     config = None
@@ -47,7 +61,7 @@ def read_config(
     project_config_toml_exists = os.path.isfile(".project-config.toml")
     if project_config_toml_exists:
         return ".project-config.toml", dict(
-            read_toml_file(".project-config.toml"),
+            fetch(".project-config.toml"),
         )
 
     if pyproject_toml_exists:
@@ -56,6 +70,14 @@ def read_config(
 
 
 def validate_config_style(config: t.Any) -> t.List[str]:
+    """Validate the ``style`` field of a configuration object.
+
+    Args:
+        config (object): Configuration data to validate.
+
+    Returns:
+        list: Found error messages.
+    """
     error_messages = []
     if "style" not in config:
         error_messages.append("style -> at least one is required")
@@ -67,7 +89,9 @@ def validate_config_style(config: t.Any) -> t.List[str]:
         else:
             for i, style in enumerate(config["style"]):
                 if not isinstance(style, str):
-                    error_messages.append(f"style[{i}] -> must be of type string")
+                    error_messages.append(
+                        f"style[{i}] -> must be of type string",
+                    )
                 elif not style:
                     error_messages.append(f"style[{i}] -> must not be empty")
     elif not config["style"]:
@@ -76,6 +100,14 @@ def validate_config_style(config: t.Any) -> t.List[str]:
 
 
 def validate_config_cache(config: t.Any) -> t.List[str]:
+    """Validate the ``cache`` field of a configuration object.
+
+    Args:
+        config (object): Configuration data to validate.
+
+    Returns:
+        list: Found error messages.
+    """
     error_messages = []
     if "cache" in config:
         if not isinstance(config["cache"], str):
@@ -83,12 +115,23 @@ def validate_config_cache(config: t.Any) -> t.List[str]:
         elif not config["cache"]:
             error_messages.append("cache -> must not be empty")
         elif not re.match(CONFIG_CACHE_REGEX, config["cache"]):
-            error_messages.append(f"cache -> must match the regex {CONFIG_CACHE_REGEX}")
+            error_messages.append(
+                f"cache -> must match the regex {CONFIG_CACHE_REGEX}",
+            )
     return error_messages
 
 
 def validate_config(config_path: str, config: t.Any) -> None:
-    error_messages = [*validate_config_style(config), *validate_config_cache(config)]
+    """Validate a configuration.
+
+    Args:
+        config_path (str): Configuration file path.
+        config (object): Configuration data to validate.
+    """
+    error_messages = [
+        *validate_config_style(config),
+        *validate_config_cache(config),
+    ]
 
     if error_messages:
         raise ProjectConfigInvalidConfigSchema(
@@ -99,12 +142,19 @@ def validate_config(config_path: str, config: t.Any) -> None:
 
 @dataclass
 class Config:
+    """Configuration wrapper.
+
+    Args:
+        path (str): Path to the file from which the configuration
+            will be loaded.
+    """
+
     path: t.Optional[str]
 
     def __post_init__(self) -> None:
         self.path, config = read_config(self.path)
         validate_config(self.path, config)
-        self.dict_: t.Dict[str, t.Union[str, t.List[str]]] = config
+        self.dict_: ConfigType = config
         self.style = Style(self)
 
     def __getitem__(self, key: str) -> t.Any:

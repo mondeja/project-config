@@ -7,3 +7,4 @@ __pycache__/
 .coverage
 .vscode/
 htmlcov/
+docs/_build/

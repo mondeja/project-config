@@ -1,5 +1,3 @@
-import os
-
 import pytest
 
 from project_config import Error, InterruptingError, ResultValue
@@ -28,7 +26,7 @@ from project_config.plugins.include import IncludePlugin
                         "file": "foo.ext",
                         "message": "Expected line 'bar' not found",
                     },
-                )
+                ),
             ],
             id="file-one-line-no-match-one-line",
         ),
@@ -42,7 +40,12 @@ from project_config.plugins.include import IncludePlugin
     ),
 )
 def test_includeLines(
-    tmp_path, files, value, rule, expected_results, assert_plugin_action
+    tmp_path,
+    files,
+    value,
+    rule,
+    expected_results,
+    assert_plugin_action,
 ):
     assert_plugin_action(
         IncludePlugin.includeLines,
@@ -86,7 +89,7 @@ def test_includeLines(
                             " 'ifIncludeLines' not found"
                         ),
                     },
-                )
+                ),
             ],
             id="file-not-exists",
         ),

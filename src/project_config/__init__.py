@@ -1,3 +1,5 @@
+"""Reproducible configuration across projects."""
+
 import importlib
 import typing as t
 

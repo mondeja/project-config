@@ -1,9 +1,15 @@
+"""YAML to JSON converter."""
+
 import io
+import typing as t
 
 import ruamel.yaml
 
 
-def dumps(obj, *args, **kwargs):
+def dumps(
+    obj: t.Dict[str, t.Any], *args: t.Tuple[t.Any], **kwargs: t.Any
+) -> str:
+    """Deserializes a JSON object converting to string in YAML format."""
     f = io.StringIO()
     kws = {"default_flow_style": False, "width": 88888}
     kws.update(kwargs)

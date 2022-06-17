@@ -1,3 +1,5 @@
+"""Default reporters."""
+
 import pprint
 import typing as t
 
@@ -9,39 +11,62 @@ from project_config.reporters.base import (
 
 
 class DefaultBaseReporter(BaseFormattedReporter):
+    """Base reporter for default reporters."""
+
     def generate_errors_report(self) -> str:
+        """Generate errors report in custom project-config format."""
         report = ""
         for file, errors in self.errors.items():
             report += f"{self.format_file(file)}\n"
             for error in errors:
+                error_message = self.format_error_message(
+                    error["message"].rstrip("."),
+                )
                 report += (
-                    f"  {self.format_error_message(error['message'].rstrip('.'))}"
+                    f"  {error_message}"
                     f" {self.format_definition(error['definition'])}\n"
                 )
         return report.rstrip("\n")
 
-    def generate_data_report(self, data_key: str, data: t.Dict[str, t.Any]) -> str:
+    def generate_data_report(
+        self,
+        data_key: str,
+        data: t.Dict[str, t.Any],
+    ) -> str:
+        """Generate data report in custom project-config format."""
         report = ""
 
         if data_key == "config":
             for key, value in data.items():
-                report += f'{self.format_config_key(key)}{self.format_metachar(":")}'
+                report += (
+                    f'{self.format_config_key(key)}{self.format_metachar(":")}'
+                )
                 if isinstance(value, list):
                     report += "\n"
                     for value_item in value:
-                        report += f'  {self.format_metachar("-")} {self.format_config_value(value_item)}\n'
+                        report += (
+                            f'  {self.format_metachar("-")}'
+                            f" {self.format_config_value(value_item)}\n"
+                        )
                 else:
                     report += f" {self.format_config_value(value)}\n"
         else:
             plugins = data.pop("plugins", [])
             if plugins:
                 report += (
-                    f'{self.format_config_key("plugins")}{self.format_metachar(":")}\n'
+                    f'{self.format_config_key("plugins")}'
+                    f'{self.format_metachar(":")}\n'
                 )
                 for plugin in plugins:
-                    report += f'  {self.format_metachar("-")} {self.format_config_value(plugin)}\n'
+                    report += (
+                        f'  {self.format_metachar("-")}'
+                        f" {self.format_config_value(plugin)}\n"
+                    )
 
-            report += f'{self.format_config_key("rules")}{self.format_metachar(":")}\n'
+            report += (
+                f'{self.format_config_key("rules")}'
+                f'{self.format_metachar(":")}\n'
+            )
             for rule in data.pop("rules"):
                 report += (
                     f'  {self.format_metachar("-")} {self.format_key("files")}'
@@ -52,20 +77,31 @@ class DefaultBaseReporter(BaseFormattedReporter):
 
                 for key, value in rule.items():
                     report += (
-                        f'    {self.format_key(key)}{self.format_metachar(":")} '
-                        f"{self.format_config_value(pprint.pformat(value))}\n"
+                        f"    {self.format_key(key)}"
+                        f'{self.format_metachar(":")}'
+                        f" {self.format_config_value(pprint.pformat(value))}\n"
                     )
 
         return report
 
 
 class DefaultReporter(BaseNoopFormattedReporter, DefaultBaseReporter):
+    """Default black/white reporter."""
+
     def format_error_message(self, error_message: str) -> str:
+        """Format an error message prepending ``- `` to it."""
         return f"- {error_message}"
 
 
 class DefaultColorReporter(BaseColorReporter, DefaultBaseReporter):
+    """Default color reporter."""
+
     def format_error_message(self, error_message: str) -> str:
+        """Formatter for default reporter colorized error messages.
+
+        Format an error message prepending a colorized ``- `` meta characters
+        string to them preserving the original color of the error message.
+        """
         return (
             f"{super().format_metachar('-')}"
             f" {super().format_error_message(error_message)}"

@@ -1,3 +1,5 @@
+"""Table reporters."""
+
 import typing as t
 
 from tabulate import tabulate
@@ -22,14 +24,14 @@ def _common_generate_rows(
                     format_file(file) if i == 0 else "",
                     format_error_message(error["message"]),
                     format_definition(error["definition"]),
-                ]
+                ],
             )
     return rows
 
 
 def _common_generate_errors_report(
     errors: t.Dict[str, t.List[t.Dict[str, str]]],
-    format: str,
+    fmt: str,
     format_key: t.Callable[[str], str],
     format_file: t.Callable[[str], str],
     format_error_message: t.Callable[[str], str],
@@ -47,12 +49,15 @@ def _common_generate_errors_report(
             format_key("message"),
             format_key("definition"),
         ],
-        tablefmt=format,
+        tablefmt=fmt,
     )
 
 
 class TableReporter(BaseNoopFormattedReporter):
+    """Black/white reporter in table formats."""
+
     def generate_errors_report(self) -> str:
+        """Generate an errors report in black/white table format."""
         return _common_generate_errors_report(
             self.errors,
             t.cast(str, self.format),
@@ -64,7 +69,10 @@ class TableReporter(BaseNoopFormattedReporter):
 
 
 class TableColorReporter(BaseColorReporter):
+    """Color reporter in table formats."""
+
     def generate_errors_report(self) -> str:
+        """Generate an errors report in table format with colors."""
         return _common_generate_errors_report(
             self.errors,
             t.cast(str, self.format),
