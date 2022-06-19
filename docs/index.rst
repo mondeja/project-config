@@ -1,20 +1,21 @@
-.. project-config documentation master file, created by
-   sphinx-quickstart on Thu Jun 16 19:11:16 2022.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+##############################
+project-config's documentation
+##############################
 
-Welcome to project-config's documentation!
-==========================================
+Project configuration linter. Enforce the same set of settings between
+multiple projects.
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: Quickstart
 
+   install
+   basic-usage
+   examples
 
+.. toctree::
+   :maxdepth: 3
+   :caption: Reference
 
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+   reference/config
+   reference/styling

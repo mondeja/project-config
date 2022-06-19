@@ -1,0 +1,23 @@
+{
+  rules: [
+    {
+      files: [".project-config.toml"],
+      JMESPathsMatch: [
+        // `style` must be defined in the file
+        ["contains(keys(@), 'style')", true],
+        // `style` must be an array
+        ["type(style)", "array"],
+        // at least one style configured
+        ["op(length(style), '>', `0`)", true],
+
+        // configure cache explicitly
+        ["contains(keys(@), 'cache')", true],
+        // cache must have a valid value
+        [
+          "regex_match('^(\\d+ (minutes?)|(hours?)|(days?)|(weeks?))|(never)', cache)",
+          true,
+        ],
+      ],
+    },
+  ],
+}

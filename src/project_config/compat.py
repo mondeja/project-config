@@ -15,8 +15,11 @@ else:
     cached_function = functools.cache
 
 if sys.version_info < (3, 10):
+    import importlib_metadata
+
     from typing_extensions import TypeAlias
 else:
+    import importlib.metadata as importlib_metadata
     from typing import TypeAlias
 
 if sys.version_info < (3, 11):
@@ -30,4 +33,5 @@ __all__ = (
     "TypeAlias",
     "cached_function",
     "tomllib_package_name",
+    "importlib_metadata",
 )

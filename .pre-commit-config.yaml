@@ -65,6 +65,8 @@ repos:
         types_or:
           - toml
           - css
+          - json
+          - json5
         additional_dependencies:
           - prettier
           - prettier-plugin-toml

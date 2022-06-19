@@ -1,0 +1,76 @@
+********
+Examples
+********
+
+Basic usage
+===========
+
+.. tabs::
+
+   .. tab:: .project-config.toml
+
+      .. code-block:: toml
+
+         style = "style.json"
+
+   .. tab:: style.json
+
+      .. code-block:: json
+
+         {
+           "rules": [
+             {
+               "files": [".gitignore"],
+               "includeLines": ["/dist/"]
+             }
+           ]
+         }
+
+   .. tab:: .gitignore
+
+      .. code-block:: text
+
+         /dist/
+
+Project config self configuration
+=================================
+
+Asserts that project config is defining a valid configuration,
+forcing the definition of ``styles`` as an array for styles.
+
+.. tabs::
+
+   .. tab:: .project-config.toml
+
+      .. code-block:: toml
+
+         style = ["style.json5"]
+         cache = "5 minutes"
+
+   .. tab:: style.json5
+
+      .. code-block:: js
+
+         {
+           rules: [
+             {
+               files: [".project-config.toml"],
+               JMESPathsMatch: [
+                 // `style` must be defined in the file
+                 ["contains(keys(@), 'style')", true],
+                 // `style` must be an array
+                 ['type(tool."project-config".style)', "array"],
+                 // at least one style configured
+                 ["op(length(style), '>', `0`)", true],
+
+                 // configure cache explicitly
+                 ["contains(keys(@), 'cache')", true],
+                 // cache must have a valid value
+                 [
+                   "regex_match('^(\\d+ (minutes?)|(hours?)|(days?)|(weeks?))|(never)', cache)",
+                   true,
+                 ],
+               ]
+             }
+           ]
+         }

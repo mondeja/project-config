@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "project-config"
-version = "0.1.0"
+version = "0.1.1"
 description = "Reproducible configuration across projects."
 authors = ["Álvaro Mondéjar Rubio <mondejar1994@gmail.com>"]
 license = "BSD-3-License"
@@ -33,6 +33,8 @@ typing-extensions = { version = "^4", python = "<3.10" }
 jmespath = "^1"
 identify = "^2"
 "ruamel.yaml" = "~0.17"
+appdirs = "^1"
+diskcache = "^5"
 
 [tool.poetry.group.dev.dependencies]
 mondeja-bump = "*"
@@ -45,26 +47,33 @@ pre-commit = "^2.9"
 contextlib-chdir = "^1"
 
 [tool.poetry.group.doc.dependencies]
-Sphinx = "^5"
+Sphinx = "^4"
 importlib-metadata = { version = "*", python = "<3.10" }
 sphinx-rtd-theme = "^1"
+sphinx-tabs = "~3.3"
 
 [tool.poetry.scripts]
 project-config = "project_config.__main__:main"
 
-[tool.poetry.plugins."project-config.plugins"]
+[tool.poetry.plugins."project_config.plugins"]
 include = "project_config.plugins.include:IncludePlugin"
 jmespath = "project_config.plugins.jmespath:JMESPathPlugin"
 
+[tool.bump]
+targets = [
+  { file = "pyproject.toml", regex = "(version = [\"'])(\\d+\\.\\d+\\.\\d+)([\"'])" },
+  { file = "docs/install.rst", regex = "(v)(\\d+\\.\\d+\\.\\d+)" },
+]
+
 [tool.project-config]
 style = [
-  "../project-config-styles/python/base.json5",
-  "../project-config-styles/python/version/min-37.json5",
-  "../project-config-styles/python/double-quotes.json5",
-  "../project-config-styles/python/line-length-80.json5",
-  "../project-config-styles/python/sphinx.json5",
-  "../project-config-styles/python/google-docstrings.json5",
-  "../project-config-styles/python/readthedocs.json5",
+  "gh://mondeja/project-config-styles/python/base.json5",
+  "gh://mondeja/project-config-styles/python/version/min-37.json5",
+  "gh://mondeja/project-config-styles/python/double-quotes.json5",
+  "gh://mondeja/project-config-styles/python/line-length-80.json5",
+  "gh://mondeja/project-config-styles/python/sphinx.json5",
+  "gh://mondeja/project-config-styles/python/google-docstrings.json5",
+  "gh://mondeja/project-config-styles/python/readthedocs.json5",
 ]
 cache = "5 minutes"
 

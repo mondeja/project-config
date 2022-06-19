@@ -99,6 +99,21 @@ def validate_config_style(config: t.Any) -> t.List[str]:
     return error_messages
 
 
+def _cache_string_to_seconds(cache_string: str) -> int:
+    if "never" in cache_string:
+        return 0
+    cache_number = int(cache_string.split(" ", maxsplit=1)[0])
+
+    if "minute" in cache_string:
+        return cache_number * 60
+    elif "hour" in cache_string:
+        return cache_number * 60 * 60
+    elif "day" in cache_string:
+        return cache_number * 60 * 60 * 24
+    else:  # weeks
+        return cache_number * 60 * 60 * 24 * 7
+
+
 def validate_config_cache(config: t.Any) -> t.List[str]:
     """Validate the ``cache`` field of a configuration object.
 
@@ -118,6 +133,11 @@ def validate_config_cache(config: t.Any) -> t.List[str]:
             error_messages.append(
                 f"cache -> must match the regex {CONFIG_CACHE_REGEX}",
             )
+    else:
+        # 5 minutes as default cache
+        config["cache"] = "5 minutes"
+    config["_cache"] = config["cache"]
+    config["cache"] = _cache_string_to_seconds(config["cache"])
     return error_messages
 
 

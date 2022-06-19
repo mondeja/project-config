@@ -9,17 +9,12 @@ import inspect
 import re
 import typing as t
 
+from project_config.compat import importlib_metadata
 from project_config.exceptions import ProjectConfigException
 
 
 class InvalidPluginFunction(ProjectConfigException):
     """Exception raised when a method of a plugin class is not valid."""
-
-
-try:
-    import importlib_metadata
-except ImportError:  # Python > 3.9
-    import importlib.metadata as importlib_metadata
 
 
 class Plugins:
@@ -125,7 +120,7 @@ class Plugins:
 
     def _prepare_default_plugins_cache(self) -> None:
         for plugin in importlib_metadata.entry_points(
-            group="project-config.plugins",
+            group="project_config.plugins",
         ):
             if not plugin.value.startswith("project_config.plugins."):
                 continue
@@ -141,7 +136,7 @@ class Plugins:
             plugin_name (str): Name of the entry point of the plugin.
         """
         for plugin in importlib_metadata.entry_points(
-            group="project-config.plugins",
+            group="project_config.plugins",
             name=plugin_name,
         ):
             # Allow third party plugins to avorride default plugins

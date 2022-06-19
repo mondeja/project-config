@@ -32,7 +32,8 @@ class SchemeProtocolNotImplementedError(ProjectConfigNotImplementedError):
 
 schemes_to_modnames = {
     "gh": "github",
-    # TODO: add nitpick fetchers
+    # TODO: add Python library fetcher, see:
+    #   https://nitpick.readthedocs.io/en/latest/configuration.html#style-inside-python-package
 }
 
 

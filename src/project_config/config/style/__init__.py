@@ -131,7 +131,7 @@ class Style:
                         partial_style.get("rules", []),
                         partial_style.get("plugins", []),
                     )
-            yield style
+        yield style
 
     def _extend_partial_style(
         self,

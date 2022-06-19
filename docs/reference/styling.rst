@@ -1,0 +1,80 @@
+#######
+Styling
+#######
+
+Styles can be defined ideally in any JSON-serializable file format.
+Currently support the next formats:
+
+* YAML v1.2
+* JSON
+* JSON5
+* TOML
+* INI
+* Namespaces in Python files (discorauged)
+
+We recommend to use YAML or JSON5 because are the most readable, flexible
+and allows comments, which are really useful writing styles.
+
+Each style must be an object with the following keys:
+
+* ``rules`` (optional if ``extends`` is specified)
+* ``extends`` (optional if ``rules`` is specified)
+* ``plugins`` (optional)
+
+At least one rule or extension is required to be a valid style.
+
+**********************
+``rules`` (`object[]`)
+**********************
+
+Define the actions to execute against files. It must be an array of objects
+with at least one object.
+
+``files`` (`string[]` or `object{not{}}`)
+=========================================
+
+Unique mandatory field for all rules. It specifies the subject of the rule,
+that is, the files for which the verbs will be applied.
+
+It must be either an array of strings or an object with an unique key ``not``.----
+
+Defining ``files`` as an array of strings enforce the existence of these files.
+If they don't exist, no actions will be executed. The existence of these files
+is mandatory for execute the rest of the logic of the rule.
+
+Enforce files absence
+---------------------
+
+Defining ``files`` as an object, it must be an unique key ``not``. The value
+of ``not`` must be either:
+
+* An object whose keys are the files that must not exist and a message for each value indicating a reason that explain why this file must be absent.
+* An array of strings with the paths to the files that must not exist.
+
+When enforcing absence of files no other actions can be defined in the rule,
+as this has no sense. The attempt will raise an error validating the style.
+
+File syntax convention
+----------------------
+
+* Files are defined relative to the root directory of the project, which will be the current working directory if no other is passed in `--rootdir` CLI argument.
+* Paths terminated with `/` will be treated as directories using the Unix separator, even in Windows systems.
+
+************************
+``extends`` (`string[]`)
+************************
+
+Array of strings to define other styles from which the current will extend.
+Can be defined with the same syntax of styles in configuration, from a local
+file, a URI resource...
+
+Extended rules will be executed before the rules of the current style.
+
+TODO: explain relative path discovering in remote URIs.
+
+************************
+``plugins`` (`string[]`)
+************************
+
+Additional third party plugin names on which the rules of the style depend.
+Built-in plugins don't need to be defined here, as are loaded by default.

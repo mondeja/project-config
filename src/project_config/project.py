@@ -7,6 +7,7 @@ import typing as t
 from dataclasses import dataclass
 
 from project_config import Error, InterruptingError, ResultValue
+from project_config.cache import Cache
 from project_config.config import Config
 from project_config.plugins import InvalidPluginFunction
 from project_config.reporters import ReporterNotImplementedError, get_reporter
@@ -54,6 +55,13 @@ class Project:
 
     def __post_init__(self) -> None:
         self.config = Config(self.config_path)
+
+        # set the cache expiration time globally
+        Cache.set(
+            Cache.Keys.expiration,
+            self.config["cache"],
+            expire=None,
+        )
         self.tree = Tree(self.rootdir)
         self.reporter, self.reporter_name, self.reporter_format = get_reporter(
             self.reporter_name,
@@ -263,6 +271,8 @@ class Project:
         if args.data == "config":
             data.pop("style")
             data["style"] = data.pop("_style")
+            data.pop("cache")
+            data["cache"] = data.pop("_cache")
         else:
             data = data.pop("style")
 
