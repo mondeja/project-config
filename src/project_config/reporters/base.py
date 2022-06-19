@@ -17,11 +17,10 @@ class BaseReporter(abc.ABC):
     def __init__(
         self,
         rootdir: str,
-        errors: t.Dict[str, t.List[t.Dict[str, str]]] = {},
         fmt: t.Optional[str] = None,
     ):
         self.rootdir = rootdir
-        self.errors = errors
+        self.errors: t.Dict[str, t.List[t.Dict[str, str]]] = {}
         self.format = fmt
 
         # configuration, styles...

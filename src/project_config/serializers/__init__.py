@@ -170,7 +170,8 @@ def serialize_for_url(url: str, string: str) -> SerializerResult:
         if package_name in (  # Examples:
             "json",  # json.serializer.JSONDecodeError
             "pyjson5",  # pyjson5.Json5IllegalCharacter
-            "tomlkit",  # tomlkit.exceptions.UnexpectedEofError
+            "tomli",  # tomli.TOMLDecodeError
+            # "tomlkit",  # tomlkit.exceptions.UnexpectedEofError
         ):
             raise SerializerError(
                 _file_can_not_be_serialized_as_json_error(
@@ -178,8 +179,8 @@ def serialize_for_url(url: str, string: str) -> SerializerResult:
                     f" {exc.args[0]}",  # type: ignore
                 ),
             )
-        elif package_name == "yaml":
-            # Example: yaml.scanner.ScannerError
+        elif package_name == "ruamel":
+            # Example: ruamel.yaml.scanner.ScannerError
             raise SerializerError(
                 _file_can_not_be_serialized_as_json_error(
                     url,

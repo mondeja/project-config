@@ -11,9 +11,9 @@ from project_config.config.exceptions import (
 def test_read_config_from_custom_file(tmp_path, minimal_valid_config):
     input_path = tmp_path / "custom-file.toml"
     input_path.write_text(minimal_valid_config.string)
-    output_path, config = read_config(input_path)
+    output_path, config = read_config(input_path.as_posix())
 
-    assert output_path == input_path
+    assert output_path == input_path.as_posix()
     minimal_valid_config.asserts(config)
 
 
@@ -27,7 +27,7 @@ def test_read_config_from_empty_custom_file(tmp_path):
     """Succeeds because config files are validated later."""
     input_path = tmp_path / "custom-file.toml"
     input_path.write_text("")
-    read_config(input_path)
+    read_config(input_path.as_posix())
 
 
 def test_read_config_from_project_config_toml(

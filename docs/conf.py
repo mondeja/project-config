@@ -82,7 +82,7 @@ def _parse_example_readme(readme_filepath):
                 result["body"] += line
         else:
             if line.startswith("   "):
-                if line.startswith("   Name:"):
+                if line.lower().startswith("   name:"):
                     result["name"] = line.split(":", maxsplit=1)[-1].strip()
             else:
                 _inside_metadata = False
@@ -139,6 +139,9 @@ def _create_examples_page():
     examples_dir = os.path.join(rootdir, "examples")
     examples_data, error_messages = [], []
     for example_dirname in sorted(os.listdir(examples_dir)):
+        # ignore private examples (used mainly for acceptance tests)
+        if example_dirname.startswith("_"):
+            continue
         example_dir = os.path.join(examples_dir, example_dirname)
         example_data = _parse_example_directory(example_dir)
 

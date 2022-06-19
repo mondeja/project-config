@@ -17,4 +17,7 @@ def dumps(
     return f.getvalue()
 
 
-loads = ruamel.yaml.safe_load
+def loads(string: str, *args: t.Any, **kwargs: t.Any) -> t.Any:
+    """Deserializes a YAML string to a dictionary."""
+    yaml = ruamel.yaml.YAML(typ="safe", pure=True)
+    return yaml.load(string, *args, **kwargs)

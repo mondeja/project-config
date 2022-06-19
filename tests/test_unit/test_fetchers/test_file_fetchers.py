@@ -2,7 +2,8 @@ import re
 
 import pytest
 
-from project_config.fetchers import FetchError, fetch
+from project_config.fetchers import fetch
+from project_config.serializers import SerializerError
 
 
 @pytest.mark.parametrize(
@@ -129,9 +130,13 @@ from project_config.fetchers import FetchError, fetch
             (
                 "'foo.yaml' can't be serialized as a valid JSON file:\n"
                 "while scanning a simple key\n"
-                '  in "<unicode string>", line 2, column 1\n'
+                '  in "<unicode string>", line 2, column 1:\n'
+                "    2\n"
+                "    ^ (line: 2)\n"
                 "could not find expected ':'\n"
-                '  in "<unicode string>", line 3, column 1'
+                '  in "<unicode string>", line 3, column 1:\n'
+                "    3'foo\n"
+                "    ^ (line: 3)"
             ),
             id=".yaml (invalid JSON)",
         ),
@@ -158,7 +163,7 @@ from project_config.fetchers import FetchError, fetch
             None,
             (
                 "'foo.toml' can't be serialized as a valid JSON file:"
-                " Unexpected end of file at line 1 col 10"
+                ' Expected "\'" (at end of document)'
             ),
             id=".toml (invalid JSON)",
         ),
@@ -190,7 +195,7 @@ def test_fetch_file(
     with chdir(tmp_path):
         if expected_error_message:
             with pytest.raises(
-                FetchError,
+                SerializerError,
                 match=re.escape(expected_error_message),
             ):
                 fetch(url)

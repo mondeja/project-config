@@ -1,9 +1,15 @@
 import os
+import sys
 
 import pytest
 from contextlib_chdir import chdir as chdir_ctx
 
 from project_config import Tree
+
+
+testsdir = os.path.abspath(os.path.dirname(__file__))
+if testsdir not in sys.path:
+    sys.path.insert(0, testsdir)
 
 
 @pytest.fixture

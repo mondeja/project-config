@@ -20,7 +20,7 @@ def test_Config___getitem__(
 
     with chdir(tmp_path):
         config = Config(None)
-    assert config["style"] == "foo"
+    assert config["style"] == {"rules": [{"files": ["foo"]}]}
     assert isinstance(config.dict_, dict)
 
 

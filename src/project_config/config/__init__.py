@@ -136,8 +136,6 @@ def validate_config_cache(config: t.Any) -> t.List[str]:
     else:
         # 5 minutes as default cache
         config["cache"] = "5 minutes"
-    config["_cache"] = config["cache"]
-    config["cache"] = _cache_string_to_seconds(config["cache"])
     return error_messages
 
 
@@ -174,6 +172,8 @@ class Config:
     def __post_init__(self) -> None:
         self.path, config = read_config(self.path)
         validate_config(self.path, config)
+        config["_cache"] = config["cache"]
+        config["cache"] = _cache_string_to_seconds(config["cache"])
         self.dict_: ConfigType = config
         self.style = Style(self)
 
