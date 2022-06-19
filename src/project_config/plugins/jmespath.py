@@ -113,9 +113,9 @@ class JMESPathProjectConfigFunctions(
         return [match.group(0)] if not match.groups() else list(match.groups())
 
     @jmespath.functions.signature(  # type: ignore
-        {"types": ["number", "string", "array", "object"]},
+        {"types": ["number", "string", "array", "object", "boolean"]},
         {"types": ["string"]},
-        {"types": ["number", "string", "array", "object"]},
+        {"types": ["number", "string", "array", "object", "boolean"]},
     )
     def _func_op(self, a: float, operator: str, b: float) -> bool:
         try:

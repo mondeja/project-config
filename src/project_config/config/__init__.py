@@ -5,6 +5,7 @@ import re
 import typing as t
 from dataclasses import dataclass
 
+from project_config.cache import Cache
 from project_config.compat import TypeAlias
 from project_config.config.exceptions import (
     ConfigurationFilesNotFound,
@@ -16,7 +17,9 @@ from project_config.config.style import Style
 from project_config.fetchers import fetch
 
 
-CONFIG_CACHE_REGEX = r"^(\d+ (minutes?)|(hours?)|(days?)|(weeks?))|(never)$"
+CONFIG_CACHE_REGEX = (
+    r"^(\d+ ((seconds?)|(minutes?)|(hours?)|(days?)|(weeks?)))|(never)$"
+)
 
 ConfigType: TypeAlias = t.Dict[str, t.Union[str, t.List[str]]]
 
@@ -110,8 +113,11 @@ def _cache_string_to_seconds(cache_string: str) -> int:
         return cache_number * 60 * 60
     elif "day" in cache_string:
         return cache_number * 60 * 60 * 24
-    else:  # weeks
+    elif "second" in cache_string:
+        return cache_number
+    elif "week" in cache_string:
         return cache_number * 60 * 60 * 24 * 7
+    raise ValueError(cache_string)
 
 
 def validate_config_cache(config: t.Any) -> t.List[str]:
@@ -174,6 +180,12 @@ class Config:
         validate_config(self.path, config)
         config["_cache"] = config["cache"]
         config["cache"] = _cache_string_to_seconds(config["cache"])
+        # set the cache expiration time globally
+        Cache.set(
+            Cache.Keys.expiration,
+            config["cache"],
+            expire=None,
+        )
         self.dict_: ConfigType = config
         self.style = Style(self)
 

@@ -59,7 +59,7 @@ forcing the definition of ``styles`` as an array for styles.
                  // `style` must be defined in the file
                  ["contains(keys(@), 'style')", true],
                  // `style` must be an array
-                 ['type(tool."project-config".style)', "array"],
+                 ["type(style)", "array"],
                  // at least one style configured
                  ["op(length(style), '>', `0`)", true],
 
@@ -67,10 +67,10 @@ forcing the definition of ``styles`` as an array for styles.
                  ["contains(keys(@), 'cache')", true],
                  // cache must have a valid value
                  [
-                   "regex_match('^(\\d+ (minutes?)|(hours?)|(days?)|(weeks?))|(never)', cache)",
+                   "regex_match('^(\\d+ ((seconds?)|(minutes?)|(hours?)|(days?)|(weeks?)))|(never)', cache)",
                    true,
                  ],
-               ]
-             }
-           ]
+               ],
+             },
+           ],
          }

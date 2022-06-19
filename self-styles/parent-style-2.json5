@@ -1,9 +1,0 @@
-{
-    // this is the parent style
-    rules: [
-        {
-            "files": ["tests/conftest.py"],
-            "includeAllLines": ["    // this is the parent style", "hello"],
-        }
-    ]
-}

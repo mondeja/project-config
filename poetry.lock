@@ -388,6 +388,19 @@ pytest = ">=4.6"
 testing = ["fields", "hunter", "process-tests", "six", "pytest-xdist", "virtualenv"]
 
 [[package]]
+name = "pytest-maybe-raises"
+version = "0.1.1"
+description = "Pytest fixture for optional exception testing."
+category = "dev"
+optional = false
+python-versions = ">=3.6"
+
+[package.extras]
+dev = ["black (==22.3.0)", "bump2version (==1.0.1)", "flake8 (==4.0.1)", "flake8-implicit-str-concat (==0.3.0)", "flake8-print (==5.0.0)", "isort (==5.10.1)", "pre-commit (==2.19.0)", "pytest", "yamllint (==1.26.3)"]
+lint = ["black (==22.3.0)", "flake8 (==4.0.1)", "flake8-implicit-str-concat (==0.3.0)", "flake8-print (==5.0.0)", "isort (==5.10.1)", "yamllint (==1.26.3)"]
+test = ["pytest"]
+
+[[package]]
 name = "pytz"
 version = "2022.1"
 description = "World timezone definitions, modern and historical"
@@ -677,7 +690,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "80665de583af2f5b900f981ae9cfc26000f21d8e8acad0d725b2580675adff54"
+content-hash = "da17e17c000f9dee26c89842f2b9a7f3e9130d5b01a82eb46a1629a51ddde6dc"
 
 [metadata.files]
 alabaster = [
@@ -973,6 +986,10 @@ pytest = [
 pytest-cov = [
     {file = "pytest-cov-3.0.0.tar.gz", hash = "sha256:e7f0f5b1617d2210a2cabc266dfe2f4c75a8d32fb89eafb7ad9d06f6d076d470"},
     {file = "pytest_cov-3.0.0-py3-none-any.whl", hash = "sha256:578d5d15ac4a25e5f961c938b85a05b09fdaae9deef3bb6de9a6e766622ca7a6"},
+]
+pytest-maybe-raises = [
+    {file = "pytest_maybe_raises-0.1.1-py3-none-any.whl", hash = "sha256:11be1f64b965d9c2159a2169c9bf43d2573b9c66003478626702a988f5253b87"},
+    {file = "pytest_maybe_raises-0.1.1.tar.gz", hash = "sha256:e3ba96bc1a09b4d55066f6f337e1039ed12580e38cc79f49c947932a7021b5ce"},
 ]
 pytz = [
     {file = "pytz-2022.1-py2.py3-none-any.whl", hash = "sha256:e68985985296d9a66a881eb3193b0906246245294a881e7c8afe623866ac6a5c"},

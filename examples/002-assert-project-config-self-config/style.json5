@@ -14,7 +14,7 @@
         ["contains(keys(@), 'cache')", true],
         // cache must have a valid value
         [
-          "regex_match('^(\\d+ (minutes?)|(hours?)|(days?)|(weeks?))|(never)', cache)",
+          "regex_match('^(\\d+ ((seconds?)|(minutes?)|(hours?)|(days?)|(weeks?)))|(never)', cache)",
           true,
         ],
       ],

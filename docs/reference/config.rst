@@ -34,6 +34,7 @@ Cache expiration time for all online resources fetched. Default value is
 ``"5 minutes"``. Must follow the format ``cache = "<integer> <time-unit>"``.
 Time unit can be one of these (plural or singular, it doesn’t matter):
 
+* ``seconds / second``
 * ``minutes / minute``
 * ``hours / hour``
 * ``days / day``

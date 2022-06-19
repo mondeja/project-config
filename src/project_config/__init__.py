@@ -18,7 +18,7 @@ modules_objects = {
 def __getattr__(name: str) -> t.Any:
     try:
         module_dotpath = modules_objects[name]
-    except KeyError:
+    except KeyError:  # pragma: no cover
         raise ImportError(
             f"cannot import name '{name}' from 'project_config' ({__file__})",
             name=name,

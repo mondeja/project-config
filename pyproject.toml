@@ -45,6 +45,7 @@ pytest = "^7"
 pytest-cov = "^3"
 pre-commit = "^2.9"
 contextlib-chdir = "^1"
+pytest-maybe-raises = "^0.1.1"
 
 [tool.poetry.group.doc.dependencies]
 Sphinx = "^4"
@@ -67,10 +68,17 @@ targets = [
 
 [tool.project-config]
 style = [
+  # Basic Python styles: use poetry
   "gh://mondeja/project-config-styles/python/base.json5",
+  # Minimum Python version
   "gh://mondeja/project-config-styles/python/version/min-37.json5",
+  # Double quotes: formatting with Black
   "gh://mondeja/project-config-styles/python/double-quotes.json5",
+  # Maximum line length
   "gh://mondeja/project-config-styles/python/line-length-80.json5",
+  # Testing styles: use pytest
+  "../project-config-styles/python/tests.json5",
+  # Documentation styles: use Sphinx with Readthedocs theme
   "gh://mondeja/project-config-styles/python/sphinx.json5",
   "gh://mondeja/project-config-styles/python/google-docstrings.json5",
   "gh://mondeja/project-config-styles/python/readthedocs.json5",
@@ -93,6 +101,9 @@ lint = "pre-commit run -a"
 
 [tool.pytest.ini_options]
 addopts = "-s --cov=src --cov-report=html"
+
+[tool.coverage.report]
+exclude_lines = ["pragma: no cover", "if __name__ == [\"']__main__[\"']:"]
 
 [tool.mypy]
 python_version = "3.7"

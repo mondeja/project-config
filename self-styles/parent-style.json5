@@ -1,9 +1,0 @@
-{
-    // this is the parent style
-    rules: [
-        {
-            "files": [".pre-commit-config.yaml"],
-            "includeAllLines": ["    // this is the parent style", "hello"],
-        }
-    ]
-}
