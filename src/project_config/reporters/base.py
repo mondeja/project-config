@@ -185,7 +185,7 @@ class BaseColorReporter(BaseFormattedReporter):
         return bold_color(metachar, "grey_37")
 
     def format_config_key(self, config_key: str) -> str:  # noqa: D102
-        return self.format_definition(config_key)
+        return bold_color(config_key, "blue")
 
     def format_config_value(self, config_value: str) -> str:  # noqa: D102
-        return self.format_error_message(config_value)
+        return bold_color(config_value, "yellow")

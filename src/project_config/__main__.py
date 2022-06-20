@@ -46,6 +46,20 @@ def _add_show_command_parser(
     )
 
 
+def _add_clean_command_parser(
+    subparsers: "argparse._SubParsersAction[argparse.ArgumentParser]",
+) -> None:
+    parser = subparsers.add_parser("clean", help="Cleaning commands.")
+    parser.add_argument(
+        "data",
+        choices=["cache"],
+        help=(
+            "Indicate which data must be cleaned. Currently, only"
+            " 'cache' is the possible data to clean."
+        ),
+    )
+
+
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description=(
@@ -119,6 +133,7 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     _add_check_command_parser(subparsers)
     _add_show_command_parser(subparsers)
+    _add_clean_command_parser(subparsers)
     return parser
 
 

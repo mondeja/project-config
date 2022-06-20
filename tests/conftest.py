@@ -1,15 +1,24 @@
+import multiprocessing
 import os
 import sys
+import time
 
 import pytest
 from contextlib_chdir import chdir as chdir_ctx
 
 from project_config import Tree
+from project_config.utils import GET, HTTPError
 
 
 testsdir = os.path.abspath(os.path.dirname(__file__))
 if testsdir not in sys.path:
     sys.path.insert(0, testsdir)
+
+
+from testing_helpers import (  # noqa: E402
+    TEST_SERVER_URL,
+    testing_server_process,
+)
 
 
 @pytest.fixture
@@ -63,6 +72,8 @@ def minimal_valid_style():
 
 def _create_files(files, rootdir):
     for fpath, content in files.items():
+        if content is False:
+            continue
         full_path = rootdir / fpath
         if content is None:
             full_path.mkdir()
@@ -121,3 +132,27 @@ def _assert_plugin_action(
 @pytest.fixture
 def assert_plugin_action():
     return _assert_plugin_action
+
+
+def on_start():
+    proc = multiprocessing.Process(target=testing_server_process, args=())
+    proc.start()
+    return proc
+
+
+@pytest.fixture(autouse=True, scope="session")
+def _session_fixture():
+    proc = on_start()
+    start, timeout = time.time(), 10
+    end = start + timeout
+    while time.time() < end:
+        try:
+            result = GET(f"{TEST_SERVER_URL}/ping", use_cache=False)
+        except HTTPError:
+            time.sleep(0.2)
+        else:
+            if result == "pong":
+                break
+            time.sleep(0.2)
+    yield
+    proc.terminate()

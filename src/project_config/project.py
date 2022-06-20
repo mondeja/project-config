@@ -2,6 +2,7 @@
 
 import argparse
 import os
+import shutil
 import sys
 import typing as t
 from dataclasses import dataclass
@@ -277,3 +278,15 @@ class Project:
                 args.command,
             )
         sys.stdout.write(report)
+
+    def clean(self, args: argparse.Namespace) -> None:
+        """Cleaning command."""
+        from project_config.cache import _directory
+
+        cache_directory = _directory()
+        try:
+            shutil.rmtree(cache_directory)
+        except FileNotFoundError:
+            pass
+        finally:
+            sys.stdout.write("Cache removed successfully!\n")

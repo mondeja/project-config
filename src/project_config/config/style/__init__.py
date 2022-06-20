@@ -1,7 +1,6 @@
 """Style loader, blender and checker."""
 
 import typing as t
-from dataclasses import dataclass
 
 from project_config.config.exceptions import ProjectConfigInvalidConfigSchema
 from project_config.fetchers import (
@@ -25,7 +24,6 @@ StyleType = t.Dict[str, t.List[t.Any]]
 StyleLoderIterator = t.Iterator[t.Union[StyleType, str]]
 
 
-@dataclass
 class Style:
     """Wrapper for style loader, blender and checker.
 
@@ -33,19 +31,16 @@ class Style:
         config (dict): Configuration for the project.
     """
 
-    config: t.Any
-
-    def __post_init__(self) -> None:
+    def __init__(self) -> None:
         self.plugins = Plugins()
 
-        self._load_styles_or_raise_if_invalid()
+    @classmethod
+    def from_config(cls, config: t.Any) -> "Style":
+        """Loads styles to the configuration passed as argument."""
+        style = cls()
 
-    def __getitem__(self, key: str) -> t.Any:
-        return self.config["style"].__getitem__(key)
-
-    def _load_styles_or_raise_if_invalid(self) -> None:
-        style_gen = self._load_styles()
-        error_messages = []
+        style_gen = style._load_styles_from_config(config)
+        error_messages: t.List[str] = []
         while True:
             try:
                 style_or_error = next(style_gen)
@@ -55,25 +50,32 @@ class Style:
                 if isinstance(style_or_error, dict):
                     # after collecting the full style, at least one rule
                     # must be defined, otherwise raise an error
-                    if not style_or_error["rules"]:
-                        error_messages.append(
-                            "[styles]: .rules -> must not be empty",
-                        )
+                    if not style_or_error.get("rules", []):
+                        if (
+                            not error_messages
+                        ):  # don't repeat errors, is confusing
+                            error_messages.append(
+                                "[styles]: .rules -> must not be empty"
+                                " after extending styles",
+                            )
+                        break
                     else:
-                        self.config["style"] = style_or_error
+                        config["style"] = style_or_error
                 else:
                     error_messages.append(style_or_error)
         if error_messages:
-            raise ProjectConfigInvalidStyle(self.config.path, error_messages)
+            raise ProjectConfigInvalidStyle(config.path, error_messages)
 
-    def _load_styles(self) -> StyleLoderIterator:
+        return style
+
+    def _load_styles_from_config(self, config: t.Any) -> StyleLoderIterator:
         """Load styles yielding error messages if found.
 
         Error messages are of type string and style is of type dict.
         If the first yielded value is a dict, we have a style without errors.
         """
-        self.config["_style"] = self.config["style"]
-        style_urls = self.config["style"]
+        config["_style"] = config["style"]
+        style_urls = config["style"]
         if isinstance(style_urls, str):
             try:
                 style = fetch(style_urls)
@@ -93,9 +95,11 @@ class Style:
                     else:
                         _partial_style_is_valid = False
 
-                if _partial_style_is_valid and "extends" in style:
-                    # extend the style
-                    yield from self._extend_partial_style(style_urls, style)
+                if _partial_style_is_valid:
+                    if "extends" in style:
+                        # extend the style
+                        yield from self._extend_partial_style(style_urls, style)
+                    yield style
         elif isinstance(style_urls, list):
             style = {"rules": [], "plugins": []}
             for s, partial_style_url in enumerate(style_urls):
@@ -131,14 +135,14 @@ class Style:
                         partial_style.get("rules", []),
                         partial_style.get("plugins", []),
                     )
-        yield style
+            yield style
 
     def _extend_partial_style(
         self,
         parent_style_url: str,
         style: StyleType,
     ) -> StyleLoderIterator:
-        for s, extend_url in enumerate(style["extends"]):
+        for s, extend_url in enumerate(style.pop("extends")):
             try:
                 partial_style = fetch(extend_url)
             except FetchError as exc:
@@ -204,6 +208,8 @@ class Style:
         if "extends" in style:
             if not isinstance(style["extends"], list):
                 yield f"{style_url}: .extends -> must be of type array"
+            elif not style["extends"]:
+                yield f"{style_url}: .extends -> must not be empty"
             else:
                 for u, url in enumerate(style["extends"]):
                     if not isinstance(url, str):
@@ -224,6 +230,8 @@ class Style:
         if "plugins" in style:
             if not isinstance(style["plugins"], list):
                 yield f"{style_url}: .plugins -> must be of type array"
+            elif not style["plugins"]:
+                yield f"{style_url}: .plugins -> must not be empty"
             else:
                 for p, plugin_name in enumerate(style["plugins"]):
                     if not isinstance(plugin_name, str):
@@ -251,7 +259,10 @@ class Style:
             yield f"{style_url}: .rules -> at least one rule is required"
         else:
             for r, rule in enumerate(style["rules"]):
-                if "files" not in rule:
+                if not isinstance(rule, dict):
+                    yield f"{style_url}: .rules[{r}] -> must be of type object"
+                    continue
+                elif "files" not in rule:
                     yield f"{style_url}: .rules[{r}].files -> is required"
                 elif not isinstance(rule["files"], (list, dict)):
                     yield (
@@ -308,7 +319,7 @@ class Style:
                                     elif not fpath:
                                         yield (
                                             f"{style_url}: .rules[{r}].files"
-                                            f".not[{fpath}] -> file path must"
+                                            f".not[''] -> file path must"
                                             " not be empty"
                                         )
                             else:
@@ -354,8 +365,8 @@ class Style:
                     # the action must be prepared
                     if not action:
                         yield (
-                            f"{style_url}: .rules[{r}].{action}"
-                            " -> must not be empty"
+                            f"{style_url}: .rules[{r}].''"
+                            " -> action must not be empty"
                         )
                     elif not self.plugins.is_valid_action(action):
                         yield (

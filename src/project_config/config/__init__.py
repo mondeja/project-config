@@ -3,7 +3,6 @@
 import os
 import re
 import typing as t
-from dataclasses import dataclass
 
 from project_config.cache import Cache
 from project_config.compat import TypeAlias
@@ -164,7 +163,6 @@ def validate_config(config_path: str, config: t.Any) -> None:
         )
 
 
-@dataclass
 class Config:
     """Configuration wrapper.
 
@@ -173,10 +171,8 @@ class Config:
             will be loaded.
     """
 
-    path: t.Optional[str]
-
-    def __post_init__(self) -> None:
-        self.path, config = read_config(self.path)
+    def __init__(self, path: t.Optional[str]) -> None:
+        self.path, config = read_config(path)
         validate_config(self.path, config)
         config["_cache"] = config["cache"]
         config["cache"] = _cache_string_to_seconds(config["cache"])
@@ -187,7 +183,7 @@ class Config:
             expire=None,
         )
         self.dict_: ConfigType = config
-        self.style = Style(self)
+        self.style = Style.from_config(self)
 
     def __getitem__(self, key: str) -> t.Any:
         return self.dict_.__getitem__(key)

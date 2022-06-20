@@ -32,6 +32,7 @@ class SchemeProtocolNotImplementedError(ProjectConfigNotImplementedError):
 
 schemes_to_modnames = {
     "gh": "github",
+    "http": "https",
     # TODO: add Python library fetcher, see:
     #   https://nitpick.readthedocs.io/en/latest/configuration.html#style-inside-python-package
 }
@@ -80,9 +81,7 @@ def resolve_maybe_relative_url(url: str, parent_url: str) -> str:
                 return url
 
             parent_dirpath = os.path.split(parent_url_parts.path)[0]
-            return os.path.abspath(
-                os.path.join(parent_dirpath, os.path.expanduser(url)),
-            )
+            return os.path.relpath(os.path.expanduser(url), parent_dirpath)
         elif parent_url_parts.scheme in ("gh", "github"):
             project, parent_path = parent_url_parts.path.lstrip("/").split(
                 "/",

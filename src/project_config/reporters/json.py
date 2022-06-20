@@ -82,3 +82,147 @@ class JsonColorReporter(BaseColorReporter):
                 report += f'{self.format_metachar(", ")}{newline2}'
 
         return f"{report}{newline0}{self.format_metachar('}')}"
+
+    def generate_data_report(
+        self,
+        data_key: str,
+        data: t.Dict[str, t.Any],
+    ) -> str:
+        """Generate data report in JSON format with colors."""
+        if not self.format:
+            newline0 = newline2 = newline4 = newline6 = ""
+        else:
+            space = " " if self.format == "pretty" else "  "
+            newline0 = "\n"
+            newline2 = "\n" + space * 2
+            newline4 = "\n" + space * 4
+            newline6 = "\n" + space * 6
+            newline8 = "\n" + space * 8
+            newline10 = "\n" + space * 10
+
+        report = f"{self.format_metachar('{')}{newline2}"
+        if data_key == "config":
+            for d, (key, value) in enumerate(data.items()):
+                report += (
+                    f"{self.format_config_key(json.dumps(key))}"
+                    f'{self.format_metachar(":")}'
+                )
+                if isinstance(value, list):
+                    report += f' {self.format_metachar("[")}{newline4}'
+                    for i, value_item in enumerate(value):
+                        report += self.format_config_value(
+                            json.dumps(value_item),
+                        )
+                        if i < len(value) - 1:
+                            report += f'{self.format_metachar(",")}{newline4}'
+                        else:
+                            report += f'{newline2}{self.format_metachar("]")}'
+                else:
+                    report += f" {self.format_config_value(json.dumps(value))}"
+
+                if d < len(data) - 1:
+                    report += f'{self.format_metachar(",")}{newline2}'
+            report += f'{newline0}{self.format_metachar("}")}'
+        else:
+            plugins = data.pop("plugins", [])
+            if plugins:
+                report += (
+                    f'{self.format_config_key(json.dumps("plugins"))}'
+                    f'{self.format_metachar(": [")}{newline4}'
+                )
+                for p, plugin in enumerate(plugins):
+                    report += f"{self.format_config_value(json.dumps(plugin))}"
+                    if p < len(plugins) - 1:
+                        report += f'{self.format_metachar(",")}{newline4}'
+                report += f'{newline2}{self.format_metachar("],")}{newline2}'
+            report += (
+                f'{self.format_config_key(json.dumps("rules"))}'
+                f'{self.format_metachar(": [")}{newline4}'
+            )
+            rules = data.pop("rules")
+            for r, rule in enumerate(rules):
+                report += (
+                    f'{self.format_metachar("{")}{newline6}'
+                    f'{self.format_key(json.dumps("files"))}'
+                    f'{self.format_metachar(": ")}'
+                )
+                files = rule.pop("files")
+                if "not" in files and len(files) == 1:
+                    report += (
+                        f"{self.format_metachar('{')}{newline8}"
+                        f"{self.format_key(json.dumps('not'))}"
+                        f"{self.format_metachar(':')} "
+                    )
+                    if isinstance(files["not"], list):
+                        #  [...files...]
+                        report += f'{self.format_metachar("[")} {newline10}'
+                        for f, file in enumerate(files["not"]):
+                            report += f"{self.format_file(json.dumps(file))}"
+                            if f < len(files["not"]) - 1:
+                                report += (
+                                    f'{self.format_metachar(",")}{newline10}'
+                                )
+                            else:
+                                report += (
+                                    f'{newline8}{self.format_metachar("]")}'
+                                )
+                        report += f'{newline6}{self.format_metachar("}")}'
+                    else:
+                        # {file: reason}
+                        report += f'{self.format_metachar("{")} {newline10}'
+                        for f, (file, reason) in enumerate(
+                            files["not"].items(),
+                        ):
+                            formatted_reason = self.format_config_value(
+                                json.dumps(reason),
+                            )
+                            report += (
+                                f"{self.format_file(json.dumps(file))}"
+                                f'{self.format_metachar(":")}'
+                                f" {formatted_reason}"
+                            )
+                            if f < len(files["not"]) - 1:
+                                report += (
+                                    f'{self.format_metachar(",")}{newline10}'
+                                )
+                            else:
+                                report += newline8
+                        report += (
+                            f'{self.format_metachar("}")} {newline6}'
+                            f'{self.format_metachar("}")}'
+                        )
+                else:
+                    report += f"{self.format_metachar('[')}{newline8}"
+                    for f, file in enumerate(files):
+                        report += f"{self.format_file(json.dumps(file))}"
+                        if f < len(files) - 1:
+                            report += f'{self.format_metachar(",")}{newline8}'
+                        else:
+                            report += f'{newline6}{self.format_metachar("]")}'
+
+                for r, (key, value) in enumerate(rule.items()):
+                    if r == 0:
+                        report += f'{self.format_metachar(",")}{newline6}'
+                    indented_value = "\n".join(
+                        ((space * 6 + line) if line_index > 0 else line)
+                        for line_index, line in enumerate(
+                            json.dumps(value, indent=space * 2).splitlines(),
+                        )
+                    )
+                    report += (
+                        f"{self.format_key(json.dumps(key))}"
+                        f'{self.format_metachar(":")}'
+                        f" {self.format_config_value(indented_value)}"
+                    )
+                    if r < len(rule) - 1:
+                        report += f'{self.format_metachar(",")}{newline6}'
+
+                report += f'{newline4}{self.format_metachar("}")}'
+                if r < len(rules) - 1:
+                    report += f'{self.format_metachar(",")}{newline4}'
+            report += (
+                f'{newline2}{self.format_metachar("]")}'
+                f'{newline0}{self.format_metachar("}")}'
+            )
+
+        return report + "\n"

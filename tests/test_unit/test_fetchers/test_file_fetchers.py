@@ -2,7 +2,7 @@ import re
 
 import pytest
 
-from project_config.fetchers import fetch
+from project_config.fetchers import FetchError, fetch
 from project_config.serializers import SerializerError
 
 
@@ -177,7 +177,7 @@ from project_config.serializers import SerializerError
         ),
     ),
 )
-def test_fetch_file(
+def test_fetch_existing_file(
     tmp_path,
     chdir,
     path,
@@ -202,3 +202,18 @@ def test_fetch_file(
         else:
             result = fetch(url)
             assert result == expected_result
+
+
+@pytest.mark.parametrize(
+    ("url", "expected_error_message"),
+    (("foo/bar", "'foo/bar' file not found"),),
+)
+def test_fetch_not_existing_file(
+    tmp_path,
+    chdir,
+    url,
+    expected_error_message,
+):
+    with chdir(tmp_path):
+        with pytest.raises(FetchError, match=expected_error_message):
+            fetch(url)

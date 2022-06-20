@@ -37,6 +37,32 @@ from project_config.plugins.include import IncludePlugin
             [],
             id="file-two-lines-match-two-lines",
         ),
+        pytest.param(
+            {"foo": None},
+            ["foo", "baz"],
+            None,
+            [
+                (
+                    InterruptingError,
+                    {
+                        "definition": ".files[0]",
+                        "file": "foo/",
+                        "message": (
+                            "Directory found but the verb 'includeLines'"
+                            " does not accepts directories as inputs"
+                        ),
+                    },
+                ),
+            ],
+            id="directory",
+        ),
+        pytest.param(
+            {"foo": False},
+            ["foo", "baz"],
+            None,
+            [],
+            id="file-not-exists",
+        ),
     ),
 )
 def test_includeLines(

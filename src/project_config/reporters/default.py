@@ -1,6 +1,6 @@
 """Default reporters."""
 
-import pprint
+import json
 import typing as t
 
 from project_config.reporters.base import (
@@ -73,13 +73,18 @@ class DefaultBaseReporter(BaseFormattedReporter):
                     f'{self.format_metachar(":")}\n'
                 )
                 for file in rule.pop("files"):
+                    # TODO: not -> {file: reason}
                     report += f"      {self.format_file(file)}\n"
 
                 for key, value in rule.items():
+                    indented_value = "\n".join(
+                        " " * 6 + line
+                        for line in json.dumps(value, indent=2).splitlines()
+                    )
                     report += (
                         f"    {self.format_key(key)}"
                         f'{self.format_metachar(":")}'
-                        f" {self.format_config_value(pprint.pformat(value))}\n"
+                        f"\n{self.format_config_value(indented_value)}\n"
                     )
 
         return report

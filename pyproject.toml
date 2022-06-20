@@ -46,6 +46,7 @@ pytest-cov = "^3"
 pre-commit = "^2.9"
 contextlib-chdir = "^1"
 pytest-maybe-raises = "^0.1.1"
+flask = "^2"
 
 [tool.poetry.group.doc.dependencies]
 Sphinx = "^4"
@@ -83,7 +84,7 @@ style = [
   "gh://mondeja/project-config-styles/python/google-docstrings.json5",
   "gh://mondeja/project-config-styles/python/readthedocs.json5",
 ]
-cache = "5 minutes"
+cache = "1 hour"
 
 [tool.poetry-exec-plugin.commands]
 t = "pytest"
