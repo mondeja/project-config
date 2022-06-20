@@ -1,27 +1,29 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema",
-    "type": "object",
-    "required": ["style"],
-    "additionalProperties": false,
-    "properties": {
-        "style": {
-            "oneOf": [
-                {
-                    "type": "string"
-                },
-                {
-                    "type": "array",
-                    "minItems": 1,
-                    "items": {
-                        "type": "string"
-                    }
-                }
-            ]
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "type": "object",
+  "required": ["style"],
+  "additionalProperties": false,
+  "properties": {
+    "style": {
+      "oneOf": [
+        {
+          "type": "string",
+          "format": "uri"
         },
-        "cache": {
+        {
+          "type": "array",
+          "minItems": 1,
+          "items": {
             "type": "string",
-            "pattern": "^(\\d+ (minutes?)|(hours?)|(days?)|(weeks?))|(never)",
-            "default": "5 minutes"
+            "format": "uri"
+          }
         }
+      ]
+    },
+    "cache": {
+      "type": "string",
+      "pattern": "^(\\d+ ((seconds?)|(minutes?)|(hours?)|(days?)|(weeks?)))|(never)",
+      "default": "5 minutes"
     }
+  }
 }

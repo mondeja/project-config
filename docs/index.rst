@@ -19,3 +19,5 @@ multiple projects.
 
    reference/config
    reference/styling
+   reference/plugins
+   reference/cli

@@ -68,21 +68,7 @@ class InvalidOperator(jmespath.exceptions.JMESPathError):  # type: ignore
 class JMESPathProjectConfigFunctions(
     jmespath.functions.Functions,  # type: ignore
 ):
-    """JMESPath class to include custom functions.
-
-    Custom functions added:
-
-    - ``regex_match('<regex>', '<string>') -> boolean``: Match a Python regular
-      expression against a string.
-    - ``regex_matchall('<regex>', <container>) -> boolean``: Match a Python
-      regular expression against all items in a container.
-    - ``regex_search('<regex>', '<string>') -> array[string]``: Search with
-      Python regular expression against a JMESPath result. It returns
-      an array with all groups, if groups are defined inside the regular
-      expression or an array with the full match otherwise.
-    - ``op(<source>, '<operator>', <target>)``: Compare two values using an
-      operator.
-    """
+    """JMESPath class to include custom functions."""
 
     @jmespath.functions.signature(  # type: ignore
         {"types": ["string"]},
@@ -187,12 +173,6 @@ class JMESPathPlugin:
         tree: Tree,
         rule: Rule,
     ) -> Results:
-        """Compares a set of JMESPath expression against results.
-
-        JSON-serializes each file in the ``files`` property of the rule
-        and executes each expression given in the first item of the
-        tuples passed as value. If a result don't match, report an error.
-        """
         if not isinstance(value, list):
             yield InterruptingError, {
                 "message": (
@@ -289,13 +269,6 @@ class JMESPathPlugin:
         tree: Tree,
         rule: Rule,
     ) -> Results:
-        """Compares a set of JMESPath expression against results.
-
-        JSON-serializes each file in the ``ifJMESPathsMatch`` property
-        of the rule and executes each expression given in the first item of the
-        tuples passed as value for each file. If a result don't match,
-        skips the rule.
-        """
         if not isinstance(value, dict):
             yield InterruptingError, {
                 "message": (

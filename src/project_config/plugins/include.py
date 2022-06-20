@@ -36,15 +36,6 @@ class IncludePlugin:
         tree: Tree,
         rule: Rule,
     ) -> Results:
-        """Check that the files includes all lines passed as parameter.
-
-        If the files don't include all lines specified as parameter,
-        it will raise a checking error. Newlines are ignored, so they
-        can't be specified.
-
-        Args:
-            value (list): Lines to check for inclusion.
-        """
         expected_lines = [line.strip("\r\n") for line in value]
 
         for f, (fpath, fcontent) in enumerate(tree.files):
@@ -78,15 +69,6 @@ class IncludePlugin:
         tree: Tree,
         rule: Rule,
     ) -> Results:
-        """Conditional to exclude rule only if some files include some lines.
-
-        If one file don't include all lines passed as parameter,
-        the rule will be ignored.
-
-        Args:
-            value (dict): Mapping of files to the lines that must include
-                each one.
-        """
         for fpath, expected_lines in value.items():
             fcontent = tree.get_file_content(fpath)
 

@@ -21,7 +21,8 @@ Each style must be an object with the following keys:
 * ``extends`` (optional if ``rules`` is specified)
 * ``plugins`` (optional)
 
-At least one rule or extension is required to be a valid style.
+At least one rule or extension is required to be a valid style. At least one
+rule must be collected after styles extension to be a collected valid style.
 
 **********************
 ``rules`` (`object[]`)
@@ -30,8 +31,8 @@ At least one rule or extension is required to be a valid style.
 Define the actions to execute against files. It must be an array of objects
 with at least one object.
 
-``files`` (`string[]` or `object{not{}}`)
-=========================================
+``files`` (`string[]` or `object{not{} | not[]}`)
+=================================================
 
 Unique mandatory field for all rules. It specifies the subject of the rule,
 that is, the files for which the verbs will be applied.
@@ -40,7 +41,7 @@ It must be either an array of strings or an object with an unique key ``not``.--
 
 Defining ``files`` as an array of strings enforce the existence of these files.
 If they don't exist, no actions will be executed. The existence of these files
-is mandatory for execute the rest of the logic of the rule.
+is mandatory for execute the rest of actions of the rule.
 
 Enforce files absence
 ---------------------
@@ -58,19 +59,22 @@ File syntax convention
 ----------------------
 
 * Files are defined relative to the root directory of the project, which will be the current working directory if no other is passed in `--rootdir` CLI argument.
-* Paths terminated with `/` will be treated as directories using the Unix separator, even in Windows systems.
+* Paths terminated with ``/`` will be treated as directories using the Unix separator, even in Windows systems.
 
 ************************
 ``extends`` (`string[]`)
 ************************
 
 Array of strings to define other styles from which the current will extend.
-Can be defined with the same syntax of styles in configuration, from a local
-file, a URI resource...
-
 Extended rules will be executed before the rules of the current style.
 
-TODO: explain relative path discovering in remote URIs.
+Can be defined with the same syntax of styles in configuration, from a local
+file, a URI resource... Resources fetched can be defined with relative URIs
+to their fetchers locations. So giving a style located at
+``gh://author/project/path/to/file.json5`` we can reference with
+``extends`` to a resource located at ``gh://author/project/path/other/file.json5``
+using ``extends: ["../other/file.json5"]`` inside the style
+``gh://author/project/path/to/file.json5``.
 
 ************************
 ``plugins`` (`string[]`)
