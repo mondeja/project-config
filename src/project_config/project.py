@@ -100,7 +100,9 @@ class Project:
                     self.reporter.report_error(
                         {
                             "message": message,
-                            "file": fpath,
+                            "file": f"{fpath}/"
+                            if ftype == "directory"
+                            else fpath,
                             "definition": (
                                 f"rules[{rule_index}].files.not[{fpath}]"
                             ),

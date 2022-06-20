@@ -81,7 +81,7 @@ style = [
   # Maximum line length
   "gh://mondeja/project-config-styles/python/line-length-80.json5",
   # Testing styles: use pytest
-  "../project-config-styles/python/tests.json5",
+  "gh://mondeja/project-config-styles/python/tests.json5",
   # Documentation styles: use Sphinx with Readthedocs theme
   "gh://mondeja/project-config-styles/python/sphinx.json5",
   "gh://mondeja/project-config-styles/python/google-docstrings.json5",

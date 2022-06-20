@@ -1,3 +1,5 @@
+import os
+
 import pytest
 
 from project_config.config import Config
@@ -26,7 +28,12 @@ from project_config.config.style import ProjectConfigInvalidStyle
                 ".project-config.toml": 'style = ["style.json5"]',
                 "style.json5": '{ extends: ["bar.json"] }',
             },
-            ["style.json5: .extends[0] -> 'bar.json' file not found"],
+            [
+                (
+                    "style.json5: .extends[0]"
+                    f" -> '{{rootdir}}{os.sep}bar.json' file not found"
+                ),
+            ],
             id="fetch-extend-styles-error",
         ),
         pytest.param(
@@ -66,7 +73,11 @@ from project_config.config.style import ProjectConfigInvalidStyle
                 "bar.json5": "{ rules: [] }",
             },
             [
-                "bar.json5: .rules -> at least one rule is required",
+                (
+                    # FIXME: show paths relative to rootdir, not absolute
+                    f"{{rootdir}}{os.sep}bar.json5: .rules"
+                    " -> at least one rule is required"
+                ),
             ],
             id="extend-partial-style-empty-rules",
         ),
@@ -78,7 +89,10 @@ from project_config.config.style import ProjectConfigInvalidStyle
                 "baz.json5": "{ rules: [] }",
             },
             [
-                "baz.json5: .rules -> at least one rule is required",
+                (
+                    f"{{rootdir}}{os.sep}baz.json5: .rules"
+                    " -> at least one rule is required"
+                ),
             ],
             id="multiple-extends",
         ),
@@ -386,6 +400,10 @@ def test_load_style(tmp_path, create_files, chdir, files, expected_result):
     with chdir(tmp_path):
 
         if isinstance(expected_result, list):
+            expected_result = [
+                message.replace("{rootdir}", tmp_path.as_posix())
+                for message in expected_result
+            ]
             with pytest.raises(ProjectConfigInvalidStyle) as exc:
                 Config(None)
             assert exc.value.args[0] == (

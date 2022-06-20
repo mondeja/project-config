@@ -76,7 +76,9 @@ class BaseReporter(abc.ABC):
         """  # TODO: improve ``error`` type
         file = error.pop("file") or "[CONFIGURATION]"
         if file:
-            file = os.path.relpath(file, self.rootdir)
+            file = os.path.relpath(file, self.rootdir) + (
+                "/" if file.endswith("/") else ""
+            )
         if file not in self.errors:
             self.errors[file] = []
 

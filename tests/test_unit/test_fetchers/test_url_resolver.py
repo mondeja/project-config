@@ -8,7 +8,12 @@ from project_config.fetchers import resolve_maybe_relative_url
 @pytest.mark.parametrize(
     ("url", "parent_url", "expected_url"),
     (
-        pytest.param("foo", "", "foo", id="path-path"),
+        pytest.param(
+            "foo",
+            "",
+            os.path.join(os.getcwd(), "foo"),
+            id="path-path",
+        ),
         pytest.param(
             os.path.abspath("foo"),
             os.getcwd(),

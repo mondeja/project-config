@@ -36,6 +36,4 @@ class Cache:
 
     @classmethod
     def get(cls, *args: t.Any, **kwargs: t.Any) -> t.Any:  # noqa: D102
-
-        result = cls._get_cache().get(*args, **kwargs)
-        return result
+        return cls._get_cache().get(*args, **kwargs)
