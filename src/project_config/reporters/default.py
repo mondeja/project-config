@@ -72,20 +72,40 @@ class DefaultBaseReporter(BaseFormattedReporter):
                     f'  {self.format_metachar("-")} {self.format_key("files")}'
                     f'{self.format_metachar(":")}\n'
                 )
-                for file in rule.pop("files"):
-                    # TODO: not -> {file: reason}
-                    report += f"      {self.format_file(file)}\n"
+                files = rule.pop("files")
+                if "not" in files and len(files) == 1:
+                    report += f'      {self.format_key("not")}\n'
+                    if isinstance(files["not"], dict):
+                        for file, reason in files["not"].items():
+                            report += (
+                                "        "
+                                f"{self.format_file(file)}"
+                                f"{self.format_metachar(':')}"
+                                f" {self.format_config_value(reason)}\n"
+                            )
+                    else:
+                        for file in files["not"]:
+                            report += (
+                                f"        {self.format_metachar('-')}"
+                                f" {self.format_file(file)}\n"
+                            )
+                else:
+                    for file in files:
+                        report += (
+                            f"      {self.format_metachar('-')}"
+                            f" {self.format_file(file)}\n"
+                        )
 
-                for key, value in rule.items():
-                    indented_value = "\n".join(
-                        " " * 6 + line
-                        for line in json.dumps(value, indent=2).splitlines()
-                    )
-                    report += (
-                        f"    {self.format_key(key)}"
-                        f'{self.format_metachar(":")}'
-                        f"\n{self.format_config_value(indented_value)}\n"
-                    )
+                    for key, value in rule.items():
+                        indented_value = "\n".join(
+                            " " * 6 + line
+                            for line in json.dumps(value, indent=2).splitlines()
+                        )
+                        report += (
+                            f"    {self.format_key(key)}"
+                            f'{self.format_metachar(":")}'
+                            f"\n{self.format_config_value(indented_value)}\n"
+                        )
 
         return report
 

@@ -26,6 +26,7 @@ python = "^3.7"
 importlib-metadata = { version = "*", python = "<3.10" }
 importlib-metadata-argparse-version = "*"
 tomli = { version = "^2", python = "<3.11" }
+tomli-w = "^1"
 pyjson5 = "*"
 colored = "*"
 tabulate = "^0.8"

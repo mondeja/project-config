@@ -90,7 +90,9 @@ class JsonColorReporter(BaseColorReporter):
     ) -> str:
         """Generate data report in JSON format with colors."""
         if not self.format:
-            newline0 = newline2 = newline4 = newline6 = ""
+            space = ""
+            newline0 = newline2 = newline4 = newline6 = newline8 = ""
+            newline10 = ""
         else:
             space = " " if self.format == "pretty" else "  "
             newline0 = "\n"
@@ -114,21 +116,22 @@ class JsonColorReporter(BaseColorReporter):
                             json.dumps(value_item),
                         )
                         if i < len(value) - 1:
-                            report += f'{self.format_metachar(",")}{newline4}'
+                            report += f'{self.format_metachar(",")} {newline4}'
                         else:
                             report += f'{newline2}{self.format_metachar("]")}'
                 else:
                     report += f" {self.format_config_value(json.dumps(value))}"
 
                 if d < len(data) - 1:
-                    report += f'{self.format_metachar(",")}{newline2}'
+                    report += f'{self.format_metachar(",")} {newline2}'
             report += f'{newline0}{self.format_metachar("}")}'
         else:
             plugins = data.pop("plugins", [])
             if plugins:
                 report += (
                     f'{self.format_config_key(json.dumps("plugins"))}'
-                    f'{self.format_metachar(": [")}{newline4}'
+                    f'{self.format_metachar(":")}'
+                    f'{space}{self.format_metachar("[")}{newline4}'
                 )
                 for p, plugin in enumerate(plugins):
                     report += f"{self.format_config_value(json.dumps(plugin))}"
@@ -137,21 +140,22 @@ class JsonColorReporter(BaseColorReporter):
                 report += f'{newline2}{self.format_metachar("],")}{newline2}'
             report += (
                 f'{self.format_config_key(json.dumps("rules"))}'
-                f'{self.format_metachar(": [")}{newline4}'
+                f'{self.format_metachar(":")}'
+                f'{space}{self.format_metachar("[")}{newline4}'
             )
             rules = data.pop("rules")
             for r, rule in enumerate(rules):
                 report += (
                     f'{self.format_metachar("{")}{newline6}'
                     f'{self.format_key(json.dumps("files"))}'
-                    f'{self.format_metachar(": ")}'
+                    f'{self.format_metachar(":")}{space}'
                 )
                 files = rule.pop("files")
                 if "not" in files and len(files) == 1:
                     report += (
                         f"{self.format_metachar('{')}{newline8}"
                         f"{self.format_key(json.dumps('not'))}"
-                        f"{self.format_metachar(':')} "
+                        f"{self.format_metachar(':')}{space}"
                     )
                     if isinstance(files["not"], list):
                         #  [...files...]
@@ -179,7 +183,7 @@ class JsonColorReporter(BaseColorReporter):
                             report += (
                                 f"{self.format_file(json.dumps(file))}"
                                 f'{self.format_metachar(":")}'
-                                f" {formatted_reason}"
+                                f"{space}{formatted_reason}"
                             )
                             if f < len(files["not"]) - 1:
                                 report += (
@@ -188,7 +192,7 @@ class JsonColorReporter(BaseColorReporter):
                             else:
                                 report += newline8
                         report += (
-                            f'{self.format_metachar("}")} {newline6}'
+                            f'{self.format_metachar("}")}{space}{newline6}'
                             f'{self.format_metachar("}")}'
                         )
                 else:
@@ -200,21 +204,25 @@ class JsonColorReporter(BaseColorReporter):
                         else:
                             report += f'{newline6}{self.format_metachar("]")}'
 
-                for r, (key, value) in enumerate(rule.items()):
-                    if r == 0:
+                for rule_item_index, (key, value) in enumerate(rule.items()):
+                    if rule_item_index == 0:
                         report += f'{self.format_metachar(",")}{newline6}'
                     indented_value = "\n".join(
                         ((space * 6 + line) if line_index > 0 else line)
                         for line_index, line in enumerate(
-                            json.dumps(value, indent=space * 2).splitlines(),
+                            json.dumps(
+                                value,
+                                indent=None if not space else space * 2,
+                            ).splitlines(),
                         )
                     )
                     report += (
                         f"{self.format_key(json.dumps(key))}"
                         f'{self.format_metachar(":")}'
-                        f" {self.format_config_value(indented_value)}"
+                        f"{space}"
+                        f"{self.format_config_value(indented_value)}"
                     )
-                    if r < len(rule) - 1:
+                    if rule_item_index < len(rule) - 1:
                         report += f'{self.format_metachar(",")}{newline6}'
 
                 report += f'{newline4}{self.format_metachar("}")}'
