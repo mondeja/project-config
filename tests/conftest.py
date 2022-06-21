@@ -145,14 +145,21 @@ def _session_fixture():
     proc = on_start()
     start, timeout = time.time(), 10
     end = start + timeout
+    started = False
     while time.time() < end:
         try:
             result = GET(f"{TEST_SERVER_URL}/ping", use_cache=False)
         except HTTPError:
-            time.sleep(0.2)
+            time.sleep(0.05)
         else:
             if result == "pong":
+                started = True
                 break
-            time.sleep(0.2)
+            time.sleep(0.05)
+    if not started:
+        raise TimeoutError(
+            f"Testing server has not started after {timeout} seconds",
+        )
+
     yield
     proc.terminate()

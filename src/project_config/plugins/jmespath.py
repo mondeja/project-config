@@ -19,6 +19,8 @@ from project_config.compat import cached_function
 from project_config.exceptions import ProjectConfigException
 
 
+ALL_JMESPATH_FUNCTION_TYPES = list(jmespath.functions.REVERSE_TYPES_MAP.keys())
+
 OPERATORS_FUNCTIONS = {
     "<": operator.lt,
     "<=": operator.le,
@@ -92,16 +94,16 @@ class JMESPathProjectConfigFunctions(
         self,
         regex: str,
         value: str,
-    ) -> t.Optional[t.List[str]]:
+    ) -> t.List[str]:
         match = re.search(regex, value)
         if not match:
-            return None
+            return []
         return [match.group(0)] if not match.groups() else list(match.groups())
 
     @jmespath.functions.signature(  # type: ignore
-        {"types": ["number", "string", "array", "object", "boolean"]},
+        {"types": ALL_JMESPATH_FUNCTION_TYPES},
         {"types": ["string"]},
-        {"types": ["number", "string", "array", "object", "boolean"]},
+        {"types": ALL_JMESPATH_FUNCTION_TYPES},
     )
     def _func_op(self, a: float, operator: str, b: float) -> bool:
         try:
@@ -183,7 +185,7 @@ class JMESPathPlugin:
             return
         if not value:
             yield InterruptingError, {
-                "message": ("The JMES path - match tuples must not be empty"),
+                "message": "The JMES path - match tuples must not be empty",
                 "definition": ".JMESPathsMatch",
             }
             return
@@ -206,7 +208,9 @@ class JMESPathPlugin:
                 return
             if not isinstance(jmespath_match_tuple[0], str):
                 yield InterruptingError, {
-                    "message": "The JMES path must be of type string",
+                    "message": (
+                        "The JMES path expression must be of type string"
+                    ),
                     "definition": f".JMESPathsMatch[{i}][0]",
                 }
                 return
@@ -216,9 +220,11 @@ class JMESPathPlugin:
                 continue
             elif not isinstance(fcontent, str):
                 yield InterruptingError, {
-                    "message": "You can't apply a JMESPath to a directory",
+                    "message": (
+                        "A JMES path can not be applied to a directory"
+                    ),
                     "definition": f".files[{f}]",
-                    "file": f"{fpath}/",
+                    "file": fpath,
                 }
                 continue
 
@@ -326,15 +332,16 @@ class JMESPathPlugin:
                     }
                     return
 
+        error_happened = False
         for fpath, jmespath_match_tuples in value.items():
             fcontent = tree.get_file_content(fpath)
             if fcontent is None:
                 continue
             elif not isinstance(fcontent, str):
                 yield InterruptingError, {
-                    "message": "You can't apply a JMESPath to a directory",
+                    "message": "A JMES path can not be applied to a directory",
                     "definition": f".ifJMESPathsMatch[{fpath}]",
-                    "file": f"{fpath}/",
+                    "file": fpath,
                 }
                 continue
 
@@ -354,6 +361,7 @@ class JMESPathPlugin:
                         "definition": f".ifJMESPathsMatch[{fpath}][{e}][0]",
                         "file": fpath,
                     }
+                    error_happened = True
                     continue
 
                 try:
@@ -363,14 +371,17 @@ class JMESPathPlugin:
                         instance,
                     )
                 except JMESPathError as exc:
-                    yield InterruptingError, {
+                    yield Error, {
                         "message": exc.message,
                         "definition": f".ifJMESPathsMatch[{fpath}][{e}]",
                         "file": fpath,
                     }
+                    error_happened = True
                     continue
 
                 if expression_result != expected_value:
                     yield ResultValue, False
+                    return
 
-        yield ResultValue, True
+        if not error_happened:
+            yield ResultValue, True

@@ -37,10 +37,12 @@ error indicating the abcense of `.gitignore`:
    .gitignore
      - Expected existing file does not exists rules[0].files[0]
 
-If you create keeping it empty, the second time it will warns indicating
-that the file does not include the line:
+If you create a `.gitignore` keeping it empty, the second time it will
+warns indicating that the file does not include the line:
 
 .. code-block:: yaml
 
    .gitignore
      - Expected line '/dist/' not found rules[0].includeLines[0]
+
+If you include the line, it will not warn exiting with 0 code.

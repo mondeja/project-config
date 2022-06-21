@@ -85,7 +85,7 @@ class Tree:
         """Cache a set of files given their paths.
 
         Args:
-            fpaths (list, iter): Paths to the files to store in cache.
+            fpaths (list): Paths to the files to store in cache.
         """
         self.files = list(self._generator(fpaths))
 

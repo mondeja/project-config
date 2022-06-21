@@ -75,8 +75,9 @@ jmespath
 
 JMES paths manipulation against files.
 
-The actions of this plugin operates against JSON serialized versions of files,
-so only files that can be serialized to JSON can be targetted.
+The actions of this plugin operates against object-serialized versions
+of files, so only files that can be serialized can be targetted (see
+:ref:`in-depth/serialization:Objects serialization`).
 
 You can use in expressions all `JMESPath builtin functions`_ plus a set of
 convenient functions defined by the plugin internally:
@@ -100,7 +101,7 @@ convenient functions defined by the plugin internally:
    Search using a regular expression against a string using the Python's
    built-in :py:func:`re.search` function. Returns all found groups in an
    array or an array with the full match as the unique item if no groups
-   are defined. If no results are found, returns `null`.
+   are defined. If no results are found, returns an empty array.
 
    .. versionadded:: 0.1.0
 

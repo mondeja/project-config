@@ -114,7 +114,7 @@ class DefaultReporter(BaseNoopFormattedReporter, DefaultBaseReporter):
     """Default black/white reporter."""
 
     def format_error_message(self, error_message: str) -> str:
-        """Format an error message prepending ``- `` to it."""
+        """Default reporter error messages formatter."""
         return f"- {error_message}"
 
 
@@ -122,11 +122,7 @@ class DefaultColorReporter(BaseColorReporter, DefaultBaseReporter):
     """Default color reporter."""
 
     def format_error_message(self, error_message: str) -> str:
-        """Formatter for default reporter colorized error messages.
-
-        Format an error message prepending a colorized ``- `` meta characters
-        string to them preserving the original color of the error message.
-        """
+        """Default reporter colorized error messages formatter."""
         return (
             f"{super().format_metachar('-')}"
             f" {super().format_error_message(error_message)}"

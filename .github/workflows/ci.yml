@@ -47,9 +47,32 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           COVERALLS_SERVICE_NAME: github
 
+  test-docs:
+    name: Test documentation build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install poetry
+        run: |
+          pip install -U pip poetry==1.2.0b1 poetry-exec-plugin
+          pip list
+      - name: Set up Python v3
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.x
+          cache: poetry
+      - name: Install dependencies
+        run: |
+          poetry install --with doc
+          poetry show
+      - name: Build documentation
+        run: poetry exec doc
+
   build-dist:
     if: startsWith(github.ref, 'refs/tags/')
-    needs: test
+    needs:
+      - test
+      - test-docs
     name: Build source distribution
     runs-on: ubuntu-latest
     steps:

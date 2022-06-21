@@ -66,11 +66,11 @@ from project_config.plugins.include import IncludePlugin
     ),
 )
 def test_includeLines(
-    tmp_path,
     files,
     value,
     rule,
     expected_results,
+    tmp_path,
     assert_plugin_action,
 ):
     assert_plugin_action(
@@ -190,11 +190,11 @@ def test_includeLines(
     ),
 )
 def test_ifIncludeLines(
-    tmp_path,
     files,
     value,
     rule,
     expected_results,
+    tmp_path,
     assert_plugin_action,
 ):
     assert_plugin_action(

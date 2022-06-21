@@ -1,7 +1,3 @@
-###
-CLI
-###
-
 .. sphinx_argparse_cli::
    :module: project_config.__main__
    :func: _build_main_parser

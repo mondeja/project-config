@@ -13,6 +13,10 @@ TEST_SERVER_HOST, TEST_SERVER_PORT = urllib.parse.urlsplit(
 
 
 def build_testing_server():
+    # do not show Flask server banner
+    flask.cli.show_server_banner = lambda *args: None
+
+    # create server
     test_server = flask.Flask("http-request-codegen_tests")
 
     @test_server.route("/ping", methods=["GET"])

@@ -1,6 +1,7 @@
 """Configuration file for the Sphinx documentation builder."""
 import os
 import re
+import subprocess
 import sys
 
 import pygments.lexers
@@ -11,6 +12,9 @@ try:
 except ImportError:
     # Python < 3.8 with `pip install imporpoetry exec doctlib_metadata`
     import importlib_metadata
+
+
+SPHINX_IS_RUNNING = "sphinx" in sys.modules
 
 
 # -- Path setup --------------------------------------------------------------
@@ -37,7 +41,10 @@ version = ".".join(release.split(".")[:2])
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    "sphinx.ext.autosectionlabel",
+    "sphinx.ext.autodoc",
     "sphinx.ext.intersphinx",
+    "sphinx.ext.napoleon",
     "sphinx_tabs.tabs",
     "chios.bolditalic",
     "sphinx_argparse_cli",
@@ -50,6 +57,16 @@ templates_path = ["_templates"]
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
+
+# See: https://stackoverflow.com/a/30624034/9167585
+# https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-nitpick_ignore
+nitpick_ignore = [
+    ("py:class", "argparse._SubParsersAction"),
+    ("py:class", "importlib_metadata.EntryPoint"),  # Python <= 3.9
+    ("py:class", "jmespath.exceptions.JMESPathError"),
+    ("py:class", "jmespath.functions.Functions"),
+    ("py:class", "jmespath.parser.ParsedResult"),
+]
 
 
 # -- Options for HTML output -------------------------------------------------
@@ -67,13 +84,22 @@ html_css_files = [
     os.path.join("css", "override-styles.css"),
 ]
 
+# -- Options for `sphinx.ext.autosectionlabel` -------------------------------
+
+# Make sure the target is unique
+autosectionlabel_prefix_document = True
+
 # -- Options for `sphinx.ext.intersphinx` ------------------------------------
 
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3", None),
+    "diskcache": ("https://grantjenks.com/docs/diskcache", None),
+    "pyjson5": ("https://pyjson5.readthedocs.io/en/latest/", None),
 }
 
 # ----------------------------------------------------------------------------
+
+# --- Examples page creation ---
 
 # Some Pygments lexers are not available yet, so we use fallbacks
 PYGMENTS_LEXERS_FALLBACKS = {
@@ -193,3 +219,23 @@ Examples
 
 
 _create_examples_page()
+
+# ---------------------------------------------------------
+
+# --- sphinx-apidoc ---
+
+if SPHINX_IS_RUNNING:
+    subprocess.run(
+        [
+            "sphinx-apidoc",
+            "-o",
+            os.path.join(rootdir, "docs/dev/reference"),
+            "-H",
+            "Reference",
+            "-ePMf",
+            os.path.join(rootdir, "src/project_config"),
+        ],
+        check=True,
+    )
+
+# ---------------------------------------------------------

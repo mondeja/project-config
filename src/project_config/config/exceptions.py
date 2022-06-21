@@ -50,7 +50,7 @@ class CustomConfigFileNotFound(ProjectConfigInvalidConfig):
 
 
 class PyprojectTomlFoundButHasNoConfig(ProjectConfigInvalidConfig):
-    """A pyproject.toml file has been found but has no configuration."""
+    """A `pyproject.toml` file has been found but has no configuration."""
 
     def __init__(self) -> None:
         super().__init__(

@@ -8,3 +8,4 @@ __pycache__/
 .vscode/
 htmlcov/
 docs/_build/
+docs/dev/reference/

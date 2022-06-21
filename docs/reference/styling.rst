@@ -2,15 +2,8 @@
 Styling
 #######
 
-Styles can be defined ideally in any JSON-serializable file format.
-Currently support the next formats:
-
-* YAML v1.2
-* JSON
-* JSON5
-* TOML
-* INI
-* Namespaces in Python files (discorauged)
+Styles can be defined in any object-serializable file format (see
+:ref:`in-depth/serialization:Objects serialization`).
 
 We recommend to use YAML or JSON5 because are the most readable, flexible
 and allows comments, which are really useful writing styles.
@@ -22,7 +15,7 @@ Each style must be an object with the following keys:
 * ``plugins`` (optional)
 
 At least one rule or extension is required to be a valid style. At least one
-rule must be collected after styles extension to be a collected valid style.
+rule must be collected after styles extensions to be a valid merged style.
 
 **********************
 ``rules`` (`object[]`)

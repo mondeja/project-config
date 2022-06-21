@@ -77,7 +77,7 @@ class Plugins:
             action (str): Action name whose function will be returned.
 
         Returns:
-            function: Function that process the action.
+            type: Function that process the action.
         """
         if action not in self.actions_static_methods:
             plugin_name = self.actions_plugin_names[action]
