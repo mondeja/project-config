@@ -6,7 +6,7 @@ import time
 import pytest
 from contextlib_chdir import chdir as chdir_ctx
 
-from project_config import Tree
+from project_config.tree import Tree
 from project_config.utils import GET, HTTPError
 
 

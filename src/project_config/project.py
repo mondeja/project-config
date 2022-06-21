@@ -7,11 +7,12 @@ import sys
 import typing as t
 from dataclasses import dataclass
 
-from project_config import Error, InterruptingError, ResultValue, Rule
 from project_config.config import Config
+from project_config.constants import Error, InterruptingError, ResultValue
 from project_config.plugins import InvalidPluginFunction
 from project_config.reporters import ReporterNotImplementedError, get_reporter
 from project_config.tree import Tree, TreeNodeFiles
+from project_config.types import Rule
 
 
 class InterruptCheck(Exception):
@@ -145,12 +146,14 @@ class Project:
                     {
                         "message": exc.message,
                         "definition": f"rules[{rule_index}].{conditional}",
-                        "file": None,
                     },
                 )
                 raise InterruptCheck()
             for breakage_type, breakage_value in action_function(
-                rule[conditional],
+                # typed dict with dinamic key, this type must be ignored
+                # until some literal quirk comes, see:
+                # https://stackoverflow.com/a/59583427/9167585
+                rule[conditional],  # type: ignore
                 tree,
                 rule,
             ):
@@ -215,7 +218,6 @@ class Project:
                         {
                             "message": exc.message,
                             "definition": f"rules[{r}].{verb}",
-                            "file": None,
                         },
                     )
                     raise InterruptCheck()

@@ -9,15 +9,14 @@ from project_config.fetchers import (
     resolve_maybe_relative_url,
 )
 from project_config.plugins import Plugins
+from project_config.types import RuleType
 
 
 class ProjectConfigInvalidStyle(ProjectConfigInvalidConfigSchema):
     """Invalid style error."""
 
 
-RuleType = t.Any
-ExtendType = t.Any
-PluginType = t.Any
+PluginType = type
 # TODO: improve style type with TypedDict?
 # https://docs.python.org/3/library/typing.html#typing.TypedDict
 StyleType = t.Dict[str, t.List[t.Any]]
@@ -248,7 +247,6 @@ class Style:
         # validate rules
         if "rules" not in style:
             if "extends" not in style:
-                # TODO: after loading all styles raise error if no rules found
                 yield (
                     f"{style_url}: .rules or .extends"
                     " -> one of both is required"

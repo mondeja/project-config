@@ -8,7 +8,13 @@ import typing as t
 
 from identify import identify
 
-from project_config.compat import Protocol, tomllib_package_name
+from project_config.compat import (
+    NotRequired,
+    Protocol,
+    TypeAlias,
+    TypedDict,
+    tomllib_package_name,
+)
 from project_config.exceptions import ProjectConfigException
 
 
@@ -30,8 +36,23 @@ class SerializerError(ProjectConfigException):
     """Error happened serializing content as JSON."""
 
 
-# TODO: improve type to take into account optional fields
-serializers: t.Dict[str, t.List[t.Dict[str, t.Any]]] = {
+SerializerFunctionKwargs: TypeAlias = t.Dict[str, t.Any]
+
+
+class SerializerDefinitionType(TypedDict):
+    """Serializer definition type."""
+
+    module: str
+
+    function: NotRequired[str]
+    function_kwargs_from_url: NotRequired[
+        t.Callable[[str], SerializerFunctionKwargs]
+    ]
+
+
+SerializerDefinitionsType: TypeAlias = t.List[SerializerDefinitionType]
+
+serializers: t.Dict[str, SerializerDefinitionsType] = {
     ".json": [{"module": "json"}],
     ".json5": [{"module": "pyjson5"}, {"module": "json5"}],
     ".yaml": [
@@ -77,50 +98,53 @@ serializers: t.Dict[str, t.List[t.Dict[str, t.Any]]] = {
 }
 
 
-def _get_serializer(url: str) -> t.Any:  # TODO: improve this type
+def _identify_serializer(filename: str) -> SerializerDefinitionsType:
+    serializer = None
+    for tag in identify.tags_from_filename(filename):
+        if f".{tag}" in serializers:
+            serializer = serializers[f".{tag}"]
+            break
+    return serializer if serializer is not None else serializers[".json"]
+
+
+def _get_serializer(url: str) -> SerializerFunction:
     ext = os.path.splitext(url)[-1]
     try:
-        serializer_implementations = serializers[ext]
+        serializer = serializers[ext]
     except KeyError:
         # try to guess the file type with identify
-        serializer_implementations = None
-        for tag in identify.tags_from_filename(os.path.basename(url)):
-            if f".{tag}" in serializers:
-                serializer_implementations = serializers[f".{tag}"]
-                break
-        if serializer_implementations is None:
-            serializer_implementations = serializers[
-                ".json"
-            ]  # JSON as fallback
+        serializer = _identify_serializer(os.path.basename(url))
 
     # prepare serializer function
-    serializer, module = None, None
-    for i, serializer_implementation in enumerate(
-        serializer_implementations,  # type: ignore
-    ):
+    serializer_definition, module = None, None
+    for i, serializer_def in enumerate(serializer):
         try:
-            module = importlib.import_module(
-                serializer_implementation["module"],
-            )
+            module = importlib.import_module(serializer_def["module"])
         except ImportError:
             # if module for implementation is not importable, try next maybe
-            if i > len(serializer) - 1:  # type: ignore
+            if i > len(serializer) - 1:
                 raise
         else:
-            serializer = serializer_implementation
+            serializer_definition = serializer_def
             break
+    serializer_definition = t.cast(
+        SerializerDefinitionType,
+        serializer_definition,
+    )
 
     loader_function: SerializerFunction = getattr(
         module,
-        serializer.get("function", "loads"),  # type: ignore
+        serializer_definition.get("function", "loads"),
     )
 
-    function_kwargs: t.Dict[str, t.Any] = {}
-    if "function_kwargs" in serializer:  # type: ignore
+    function_kwargs: SerializerFunctionKwargs = {}
+
+    """
+    if "function_kwargs" in serializer:
         function_kwargs = {}
         for kwarg_name, kwarg_values in serializer[
             "function_kwargs"
-        ].items():  # type: ignore
+        ].items():
             mod = importlib.import_module(kwarg_values["module"])
             try:
                 obj = getattr(mod, kwarg_values["object"])
@@ -132,10 +156,11 @@ def _get_serializer(url: str) -> t.Any:  # TODO: improve this type
                 else:
                     raise
             function_kwargs[kwarg_name] = obj
+    """
 
-    if "function_kwargs_from_url" in serializer:  # type: ignore
+    if "function_kwargs_from_url" in serializer_definition:
         function_kwargs.update(
-            serializer["function_kwargs_from_url"](url),  # type: ignore
+            serializer_definition["function_kwargs_from_url"](url),
         )
 
     return functools.partial(loader_function, **function_kwargs)
@@ -153,13 +178,14 @@ def serialize_for_url(url: str, string: str) -> SerializerResult:
 
     Args:
         url (str): URI of the file, used to detect the type of the file,
-            either using the extension or through ``identify``.
+            either using the extension or through `identify`_.
         string (str): File content to serialize.
 
     Returns:
         dict: Result of the JSON serialization.
+
+    .. _identify: https://github.com/pre-commit/identify
     """
-    # TODO: intersphinx for identify in documentation
     try:
         # serialize
         result = _get_serializer(url)(string)
@@ -188,4 +214,4 @@ def serialize_for_url(url: str, string: str) -> SerializerResult:
                 ),
             )
         raise
-    return result  # type: ignore
+    return result

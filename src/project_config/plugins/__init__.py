@@ -9,8 +9,13 @@ import inspect
 import re
 import typing as t
 
-from project_config.compat import importlib_metadata
+from project_config.compat import TypeAlias, importlib_metadata
 from project_config.exceptions import ProjectConfigException
+from project_config.tree import Tree
+from project_config.types import Results, Rule
+
+
+PluginMethod: TypeAlias = t.Callable[[t.Any, Tree, Rule], Results]
 
 
 class InvalidPluginFunction(ProjectConfigException):
@@ -38,10 +43,7 @@ class Plugins:
         self.actions_plugin_names: t.Dict[str, str] = {}
 
         # map from actions to static methods
-        self.actions_static_methods: t.Dict[
-            str,
-            t.Any,
-        ] = {}  # TODO: improve type
+        self.actions_static_methods: t.Dict[str, PluginMethod] = {}
 
         # prepare default plugins cache, third party ones will be loaded
         # on demand at style validation time
@@ -70,7 +72,7 @@ class Plugins:
     def get_function_for_action(
         self,
         action: str,
-    ) -> t.Any:  # TODO: improve this type
+    ) -> PluginMethod:
         """Get the function that performs an action given her name.
 
         Args:
@@ -105,7 +107,7 @@ class Plugins:
             self.actions_static_methods[action] = method
         else:
             method = self.actions_static_methods[action]
-        return method
+        return method  # type: ignore
 
     def is_valid_action(self, action: str) -> bool:
         """Return if an action exists in available plugins.

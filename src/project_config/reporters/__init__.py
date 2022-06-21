@@ -6,6 +6,7 @@ import typing as t
 from tabulate import tabulate_formats
 
 from project_config.exceptions import ProjectConfigNotImplementedError
+from project_config.reporters.base import BaseReporter
 
 
 class ReporterNotImplementedError(ProjectConfigNotImplementedError):
@@ -50,7 +51,7 @@ def get_reporter(
     color: t.Optional[bool],
     rootdir: str,
     command: str,
-) -> t.Any:  # TODO: improve type?
+) -> t.Tuple[BaseReporter, str, t.Optional[str]]:
     """Reporters factory.
 
     Args:

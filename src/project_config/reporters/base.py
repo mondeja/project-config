@@ -6,7 +6,12 @@ import typing as t
 
 import colored
 
+from project_config.compat import TypeAlias
 from project_config.exceptions import ProjectConfigCheckFailedBase
+from project_config.types import ErrorDict
+
+
+FilesErrors: TypeAlias = t.Dict[str, t.List[ErrorDict]]
 
 
 class BaseReporter(abc.ABC):
@@ -20,7 +25,7 @@ class BaseReporter(abc.ABC):
         fmt: t.Optional[str] = None,
     ):
         self.rootdir = rootdir
-        self.errors: t.Dict[str, t.List[t.Dict[str, str]]] = {}
+        self.errors: FilesErrors = {}
         self.format = fmt
 
         # configuration, styles...
@@ -68,17 +73,19 @@ class BaseReporter(abc.ABC):
         if not self.success:
             raise self.exception_class(self.generate_errors_report())
 
-    def report_error(self, error: t.Dict[str, str]) -> None:
+    def report_error(self, error: ErrorDict) -> None:
         """Report an error.
 
         Args:
             error (dict): Error to report.
-        """  # TODO: improve ``error`` type
-        file = error.pop("file") or "[CONFIGURATION]"
-        if file:
-            file = os.path.relpath(file, self.rootdir) + (
-                "/" if file.endswith("/") else ""
+        """
+        if "file" in error:
+            file = os.path.relpath(error["file"], self.rootdir) + (
+                "/" if error["file"].endswith("/") else ""
             )
+        else:
+            file = "[CONFIGURATION]"
+
         if file not in self.errors:
             self.errors[file] = []
 
@@ -153,7 +160,9 @@ class BaseNoopFormattedReporter(BaseFormattedReporter):
 
 
 def bold_color(value: str, color: str) -> str:
-    """Colorize a string with bold formatting using ``colored`` library.
+    """Colorize a string with bold formatting using `colored`_ library.
+
+    .. _colored: https://gitlab.com/dslackw/colored
 
     Args:
         value (str): Value to colorize.
@@ -161,7 +170,7 @@ def bold_color(value: str, color: str) -> str:
 
     Returns:
         str: Colorized string.
-    """  # TODO: intersphinx extension in Sphinx documentation for ``colored``
+    """
     return colored.stylize(  # type: ignore
         value,
         colored.fg(color) + colored.attr("bold"),

@@ -7,11 +7,12 @@ from tabulate import tabulate
 from project_config.reporters.base import (
     BaseColorReporter,
     BaseNoopFormattedReporter,
+    FilesErrors,
 )
 
 
 def _common_generate_rows(
-    errors: t.Dict[str, t.List[t.Dict[str, str]]],
+    errors: FilesErrors,
     format_file: t.Callable[[str], str],
     format_error_message: t.Callable[[str], str],
     format_definition: t.Callable[[str], str],
@@ -30,7 +31,7 @@ def _common_generate_rows(
 
 
 def _common_generate_errors_report(
-    errors: t.Dict[str, t.List[t.Dict[str, str]]],
+    errors: FilesErrors,
     fmt: str,
     format_key: t.Callable[[str], str],
     format_file: t.Callable[[str], str],

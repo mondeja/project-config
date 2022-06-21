@@ -56,7 +56,7 @@ def _collect_examples():
 def test_examples_check(example_dir, expected_exitcode, expected_stderr, chdir):
     stderr_stream = io.StringIO()
     with chdir(example_dir), contextlib.redirect_stderr(stderr_stream):
-        exitcode = run(["check"])
+        exitcode = run(["--nocolor", "check"])
         stderr = stderr_stream.getvalue()
         assert exitcode == expected_exitcode, stderr
         assert stderr == expected_stderr
