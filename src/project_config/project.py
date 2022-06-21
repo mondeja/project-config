@@ -7,7 +7,7 @@ import sys
 import typing as t
 from dataclasses import dataclass
 
-from project_config import Error, InterruptingError, ResultValue
+from project_config import Error, InterruptingError, ResultValue, RuleType
 from project_config.config import Config
 from project_config.plugins import InvalidPluginFunction
 from project_config.reporters import ReporterNotImplementedError, get_reporter
@@ -130,7 +130,7 @@ class Project:
         self,
         conditionals: t.List[str],
         tree: Tree,
-        rule: t.Any,  # TODO: improve this type
+        rule: RuleType,
         rule_index: int,
     ) -> None:
         for conditional in conditionals:
