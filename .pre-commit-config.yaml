@@ -79,6 +79,12 @@ repos:
         additional_dependencies:
           - types-PyYAML
           - types-tabulate
+  - repo: https://github.com/Lucas-C/pre-commit-hooks
+    rev: v1.2.0
+    hooks:
+      - id: remove-crlf
+        files: \.bat$
+        name: '*.bat end of lines'
   - repo: https://github.com/editorconfig-checker/editorconfig-checker.python
     rev: 2.4.0
     hooks:
