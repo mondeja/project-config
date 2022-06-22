@@ -22,6 +22,7 @@ Test
 
    poetry exec test
    # or just `poetry exec t`
+   # or `poetry exec test:show` if you want to see coverage HTML report
 
 Lint
 ====

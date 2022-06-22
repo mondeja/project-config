@@ -21,6 +21,10 @@ from testing_helpers import (  # noqa: E402
 )
 
 
+# disable project-config cache
+os.environ["PROJECT_CONFIG_USE_CACHE"] = "false"
+
+
 @pytest.fixture
 def chdir():
     return chdir_ctx

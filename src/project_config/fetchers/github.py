@@ -2,22 +2,50 @@
 
 import json
 import re
+import typing as t
 import urllib.parse
 
 from project_config.utils import GET
 
 
-def _get_default_branch_from_git_repo(repo_owner: str, repo_name: str) -> str:
+def _get_default_branch_from_repo_branches_html(
+    repo_owner: str,
+    repo_name: str,
+) -> t.Optional[str]:
     # try from repository HTML
     result = GET(f"https://github.com/{repo_owner}/{repo_name}/branches")
     match = re.search(r'branch=["|\'](\w+)["|\']', result)
-    if match:
-        return match.group(1)
+    return match.group(1) if match else None
 
+
+def _get_default_branch_from_repo_github_api(
+    repo_owner: str,
+    repo_name: str,
+) -> str:  # pragma: no cover
     # try from API
-    return json.loads(  # type: ignore
-        GET(f"https://api.github.com/repos/{repo_owner}/{repo_name}"),
-    )["default_branch"]
+    #
+    # note that this function is not covered by the tests because
+    # the previous function that retrieves the default branch from the
+    # HTML of the repo must be the one that works, this only acts as
+    # a fallback, though could reach the limit of usage of the API
+    #
+    # if the previous becomes problematic we should improve the management
+    # of the API rate limit with a Github token
+    result = GET(f"https://api.github.com/repos/{repo_owner}/{repo_name}")
+    return json.loads(result)["default_branch"]  # type: ignore
+
+
+def _get_default_branch_from_git_repo(
+    repo_owner: str,
+    repo_name: str,
+) -> str:  # pragma: no cover
+    return _get_default_branch_from_repo_branches_html(
+        repo_owner,
+        repo_name,
+    ) or _get_default_branch_from_repo_github_api(
+        repo_owner,
+        repo_name,
+    )
 
 
 def _build_raw_githubusercontent_url(
