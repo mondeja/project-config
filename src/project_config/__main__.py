@@ -43,7 +43,7 @@ def _add_show_command_parser(
     )
     parser.add_argument(
         "data",
-        choices=["config", "style"],
+        choices=["config", "style", "cache"],
         help=(
             "Indicate which data must be shown, discovered configuration"
             " or extended style."
