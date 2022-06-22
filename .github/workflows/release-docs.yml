@@ -3,7 +3,7 @@ name: Deploy documentation
 on:
   release:
     types:
-      - published
+      - created
 
 jobs:
   test-docs:
