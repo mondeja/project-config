@@ -1,0 +1,36 @@
+project\_config package
+=======================
+
+.. automodule:: project_config
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   project_config.config
+   project_config.fetchers
+   project_config.plugins
+   project_config.reporters
+   project_config.serializers
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   project_config.__main__
+   project_config.cache
+   project_config.compat
+   project_config.constants
+   project_config.exceptions
+   project_config.project
+   project_config.tree
+   project_config.types
+   project_config.utils

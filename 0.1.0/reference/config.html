@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Configuration &mdash; project-config 0.1.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/tabs.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/bolditalic.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/override-styles.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Styling" href="styling.html" />
+    <link rel="prev" title="Examples" href="../examples.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> project-config
+          </a>
+              <div class="version">
+                0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Quickstart</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basic-usage.html">Basic usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#style-string-or-string"><code class="docutils literal notranslate"><span class="pre">style</span></code> (<cite>string</cite> or <cite>string[]</cite>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cache-string"><code class="docutils literal notranslate"><span class="pre">cache</span></code> (<cite>string</cite>)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="styling.html">Styling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins.html">Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">project-config - CLI interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">In depth</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../in-depth/serialization.html">Objects serialization</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For developers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../dev/reference/modules.html">Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">project-config</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Configuration</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/reference/config.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="configuration">
+<h1>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline"></a></h1>
+<p>Configuration must be defined in <a class="reference external" href="https://toml.io/en/">TOML</a> format in one of the next files:</p>
+<ul class="simple">
+<li><p><cite>.project-config.toml</cite></p></li>
+<li><p><cite>pyproject.toml</cite> (inside a <code class="docutils literal notranslate"><span class="pre">[tool.project-config]</span></code> table)</p></li>
+<li><p>A custom file passing <code class="docutils literal notranslate"><span class="pre">-c</span></code>/<code class="docutils literal notranslate"><span class="pre">--config</span></code> argument in the command line.</p></li>
+</ul>
+<section id="style-string-or-string">
+<h2><code class="docutils literal notranslate"><span class="pre">style</span></code> (<cite>string</cite> or <cite>string[]</cite>)<a class="headerlink" href="#style-string-or-string" title="Permalink to this headline"></a></h2>
+<p>It is the unique mandatory field. At least one style with one rule must
+be specified to run <code class="docutils literal notranslate"><span class="pre">project-config</span></code>.</p>
+<p>It can be a string or an array of strings, always pointing existent resources.
+Valid resource types are:</p>
+<ul class="simple">
+<li><p>Local files with relative paths like <cite>foo.json5</cite> or <cite>./bar.yaml</cite>.</p></li>
+<li><p>Github schema URIs in the form <cite>gh://&lt;user&gt;/&lt;project&gt;(&#64;tag)?/&lt;path/to/file.ext&gt;</cite>
+like <cite>gh://mondeja/project-config-styles/python/version/min-37.json5</cite>. The
+<code class="docutils literal notranslate"><span class="pre">&#64;</span></code> syntax is used to pin a GIT reference (commit, tag, branch) and is optional,
+if is not specified the main branch of the repository will be used.</p></li>
+<li><p>Raw URLs like
+<code class="docutils literal notranslate"><span class="pre">https://raw.githubusercontent.com/mondeja/project-config-styles/master/python/version/min-37.json5</span></code>.</p></li>
+</ul>
+<p>The rules of the styles are applied in the same order that they are defined.</p>
+</section>
+<section id="cache-string">
+<h2><code class="docutils literal notranslate"><span class="pre">cache</span></code> (<cite>string</cite>)<a class="headerlink" href="#cache-string" title="Permalink to this headline"></a></h2>
+<p>Cache expiration time for all online resources fetched. Default value is
+<code class="docutils literal notranslate"><span class="pre">&quot;5</span> <span class="pre">minutes&quot;</span></code>. Must follow the format <code class="docutils literal notranslate"><span class="pre">cache</span> <span class="pre">=</span> <span class="pre">&quot;&lt;integer&gt;</span> <span class="pre">&lt;time-unit&gt;&quot;</span></code>.
+Time unit can be one of these (plural or singular, it doesn’t matter):</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">seconds</span> <span class="pre">/</span> <span class="pre">second</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">minutes</span> <span class="pre">/</span> <span class="pre">minute</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">hours</span> <span class="pre">/</span> <span class="pre">hour</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">days</span> <span class="pre">/</span> <span class="pre">day</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">weeks</span> <span class="pre">/</span> <span class="pre">week</span></code></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../examples.html" class="btn btn-neutral float-left" title="Examples" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="styling.html" class="btn btn-neutral float-right" title="Styling" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Álvaro Mondéjar Rubio.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

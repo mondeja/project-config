@@ -1,0 +1,8 @@
+project\_config.constants module
+================================
+
+.. automodule:: project_config.constants
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
