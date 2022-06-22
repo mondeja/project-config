@@ -15,7 +15,7 @@ from project_config.tree import Tree
 from project_config.types import Results, Rule
 
 
-PROJECT_CONFIG_ENTRYPOINTS_GROUP = "project_config.plugins"
+PROJECT_CONFIG_PLUGINS_ENTRYPOINTS_GROUP = "project_config.plugins"
 
 PluginMethod: TypeAlias = t.Callable[[t.Any, Tree, Rule], Results]
 
@@ -109,10 +109,10 @@ class Plugins:
 
     def _prepare_default_plugins_cache(self) -> None:
         for plugin in importlib_metadata.entry_points(
-            group=PROJECT_CONFIG_ENTRYPOINTS_GROUP,
+            group=PROJECT_CONFIG_PLUGINS_ENTRYPOINTS_GROUP,
         ):
             if not plugin.value.startswith(
-                f"{PROJECT_CONFIG_ENTRYPOINTS_GROUP}.",
+                f"{PROJECT_CONFIG_PLUGINS_ENTRYPOINTS_GROUP}.",
             ):
                 continue
 
@@ -127,11 +127,13 @@ class Plugins:
             plugin_name (str): Name of the entry point of the plugin.
         """
         for plugin in importlib_metadata.entry_points(
-            group=PROJECT_CONFIG_ENTRYPOINTS_GROUP,
+            group=PROJECT_CONFIG_PLUGINS_ENTRYPOINTS_GROUP,
             name=plugin_name,
         ):
             # Allow third party plugins to override default plugins
-            if plugin.value.startswith(f"{PROJECT_CONFIG_ENTRYPOINTS_GROUP}."):
+            if plugin.value.startswith(
+                f"{PROJECT_CONFIG_PLUGINS_ENTRYPOINTS_GROUP}.",
+            ):
                 continue
 
             self._add_plugin_to_cache(plugin)

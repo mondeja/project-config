@@ -68,6 +68,9 @@ project-config = "project_config.__main__:main"
 include = "project_config.plugins.include:IncludePlugin"
 jmespath = "project_config.plugins.jmespath:JMESPathPlugin"
 
+[tool.poetry.plugins."project_config.reporters"]
+my_reporter = "project_config.reporters.my_reporter"
+
 [tool.bump]
 targets = [
   { file = "pyproject.toml", regex = "(version = [\"'])(\\d+\\.\\d+\\.\\d+)([\"'])" },
@@ -171,6 +174,7 @@ flake8-docstrings = [
   "-D101",
   "-D102",
   "-D103",
+  "-D104",
   "-D107",
   "-D205",
   "-D415"

@@ -9,7 +9,7 @@ from importlib_metadata_argparse_version import ImportlibMetadataVersionAction
 
 from project_config.exceptions import ProjectConfigException
 from project_config.project import Project
-from project_config.reporters import reporters
+from project_config.reporters import ThirdPartyReporters, reporters
 
 
 def _controlled_error(
@@ -125,16 +125,14 @@ def _build_main_parser() -> argparse.ArgumentParser:
         "--reporter",
         dest="reporter",
         default="default",
-        choices=list(reporters),
+        choices=list(reporters) + ThirdPartyReporters().ids,
         help="Style of generated report when failed.",
     )
     parser.add_argument(
         "--no-color",
         "--nocolor",
         dest="color",
-        action="store_const",
-        const=False,
-        default=None,
+        action="store_false",
         help=(
             "Disable colored output. You can also set a value in"
             " the environment variable NO_COLOR."
@@ -162,7 +160,6 @@ def run(argv: t.List[str] = []) -> int:  # noqa: D103
 
     try:
         project = Project(
-            args.command,
             args.config,
             args.rootdir,
             args.reporter,
