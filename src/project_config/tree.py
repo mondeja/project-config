@@ -90,11 +90,11 @@ class Tree:
         self.files = list(self._generator(fpaths))
 
     def serialize_file(self, fpath: str, fcontent: str) -> t.Any:
-        """Returns the JSON-serialized version of a file.
+        """Returns the object-serialized version of a file.
 
         This method is a convenient cache wrapper for
         :py:func:`project_config.serializers.serialize_for_url`.
-        Is used by plugin actions which need a JSON-serialized
+        Is used by plugin actions which need an object-serialized
         version of files to perform operations against them, like
         the ``jmespath`` one.
 

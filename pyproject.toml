@@ -43,7 +43,6 @@ diskcache = "^5"
 
 [tool.poetry.group.dev.dependencies]
 mondeja-bump = "*"
-pre-commit = "*"
 
 [tool.poetry.group.test.dependencies]
 pytest = "^7"
