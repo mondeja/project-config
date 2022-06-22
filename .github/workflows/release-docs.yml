@@ -6,7 +6,7 @@ on:
       - created
 
 jobs:
-  test-docs:
+  deploy-docs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -27,16 +27,16 @@ jobs:
         run: poetry exec doc
       - name: Get version
         id: get-version
-        run: echo "::set-output name=version::$(project-config --version)"
+        run: echo "::set-output name=version::$(poetry run project-config --version)"
       - name: Deploy documentation
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./docs/build/html
-          destination_dir: ./${{ steps.get-version.outputs.version }}
+          destination_dir: ${{ steps.get-version.outputs.version }}
       - name: Deploy documentation
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./docs/build/html
-          destination_dir: ./latest
+          destination_dir: latest
