@@ -1,0 +1,36 @@
+name: Deploy documentation
+
+on:
+  release:
+    types:
+      - published
+
+jobs:
+  test-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install poetry
+        run: |
+          pip install -U pip poetry==1.2.0b1 poetry-exec-plugin
+          pip list
+      - name: Set up Python v3
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.x
+          cache: poetry
+      - name: Install dependencies
+        run: |
+          poetry install --with doc
+          poetry show
+      - name: Build documentation
+        run: poetry exec doc
+      - name: Get version
+        id: get-version
+        run: echo "::set-output name=version::$(project-config --version)"
+      - name: Deploy documentation
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs/build/html
+          destination_dir: ${{ steps.get-version.outputs.version }}
