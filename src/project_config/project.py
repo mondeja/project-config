@@ -264,23 +264,29 @@ class Project:
 
         It will depend in the ``args.data`` property.
         """
-        data = t.cast(t.Any, self.config.dict_)
-        if args.data == "config":
-            data.pop("style")
-            data["style"] = data.pop("_style")
-            data.pop("cache")
-            data["cache"] = data.pop("_cache")
-        else:
-            data = data.pop("style")
+        if args.data == "cache":
+            from project_config.cache import _directory
 
-        try:
-            report = self.reporter.generate_data_report(args.data, data)
-        except NotImplementedError:
-            raise ReporterNotImplementedError.factory(
-                self.reporter_name,
-                self.reporter_format,
-                args.command,
-            )
+            report = f"{_directory()}\n"
+        else:
+            data = t.cast(t.Any, self.config.dict_)
+            if args.data == "config":
+                data.pop("style")
+                data["style"] = data.pop("_style")
+                data.pop("cache")
+                data["cache"] = data.pop("_cache")
+            else:
+                data = data.pop("style")
+
+            try:
+                report = self.reporter.generate_data_report(args.data, data)
+            except NotImplementedError:
+                raise ReporterNotImplementedError.factory(
+                    self.reporter_name,
+                    self.reporter_format,
+                    args.command,
+                )
+
         sys.stdout.write(report)
 
     def clean(self, args: argparse.Namespace) -> None:
