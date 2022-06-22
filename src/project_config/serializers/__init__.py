@@ -28,7 +28,7 @@ class SerializerFunction(Protocol):
         self,
         string: str,
         **kwargs: t.Any,
-    ) -> SerializerResult:
+    ) -> SerializerResult:  # pragma: no cover
         ...
 
 
@@ -120,7 +120,7 @@ def _get_serializer(url: str) -> SerializerFunction:
     for i, serializer_def in enumerate(serializer):
         try:
             module = importlib.import_module(serializer_def["module"])
-        except ImportError:
+        except ImportError:  # pragma: no cover
             # if module for implementation is not importable, try next maybe
             if i > len(serializer) - 1:
                 raise
@@ -213,5 +213,5 @@ def serialize_for_url(url: str, string: str) -> SerializerResult:
                     f"\n{exc.__str__()}",
                 ),
             )
-        raise
+        raise  # pragma: no cover
     return result

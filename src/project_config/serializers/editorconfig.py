@@ -3,7 +3,6 @@
 Based on https://github.com/editorconfig/editorconfig-core-py/blob/master/editorconfig/ini.py
 """  # noqa: E501
 
-import configparser
 import re
 import typing as t
 
@@ -12,18 +11,6 @@ from project_config.compat import TypeAlias
 
 EditorConfigConfigType: TypeAlias = t.Dict[str, t.Dict[str, t.Union[str, int]]]
 
-
-class EditorConfigError(Exception):
-    """Parent class of all exceptions raised by EditorConfig."""
-
-
-class ParsingError(configparser.ParsingError, EditorConfigError):
-    """Error raised if an EditorConfig file can not be parsed."""
-
-
-MAX_SECTION_LENGTH = 4096e731
-MAX_PROPERTY_LENGTH = 50
-MAX_VALUE_LENGTH = 255
 
 SECTCRE = re.compile(
     r"""
@@ -66,11 +53,12 @@ def loads(string: str) -> EditorConfigConfigType:
     """
     result: EditorConfigConfigType = {}
 
-    sectname, error = None, None
+    sectname = None
 
-    for i, line in enumerate(string.replace("\r\n", "\n").split("\n")):
-        if i == 0 and line.startswith("\ufeff"):
-            line = line[1:]  # Strip UTF-8 BOM
+    # Strip UTF-8 BOM if present and convert to lines
+    string_lines = string.lstrip("\ufeff").splitlines()
+
+    for i, line in enumerate(string_lines):
         # comment or blank line?
         if line.strip() == "" or line[0] in "#;":
             continue
@@ -79,8 +67,6 @@ def loads(string: str) -> EditorConfigConfigType:
         mo = SECTCRE.match(line)
         if mo:
             sectname = mo.group("header")
-            if len(sectname) > MAX_SECTION_LENGTH:
-                continue
             result[sectname] = {}
             continue
 
@@ -98,11 +84,6 @@ def loads(string: str) -> EditorConfigConfigType:
             if optval == '""':
                 optval = ""
             optname = optname.lower().rstrip()
-            if (
-                len(optname) > MAX_PROPERTY_LENGTH
-                or len(optval) > MAX_VALUE_LENGTH
-            ):
-                continue
             if sectname:
                 result[sectname][optname] = (
                     int(optval)
@@ -120,14 +101,4 @@ def loads(string: str) -> EditorConfigConfigType:
                 result[""][optname] = optval.lower() == "true"
             continue
 
-        # a non-fatal parsing error occurred.  set up the
-        # exception but keep going. the exception will be
-        # raised at the end of the file and will contain a
-        # list of all bogus lines
-        if not error:
-            error = ParsingError("")
-        error.append(i, line)
-
-    if error:
-        raise error
     return result
