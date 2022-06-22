@@ -4,6 +4,7 @@
 [![Python versions][pypi-pyversions-badge-link]][pypi-link]
 [![License][license-image]][license-link]
 [![Tests][tests-image]][tests-link]
+[![Coverage][coverage-image]][coverage-link]
 [![Downloads][pypi-downloads-image]][pypi-downloads-link]
 
 ## [Documentation](https://mondeja.github.io/project-config/latest/)
@@ -17,3 +18,5 @@
 [tests-link]: https://github.com/mondeja/project-config/actions?query=workflow%3ACI
 [pypi-downloads-image]: https://img.shields.io/pypi/dm/project-config?logo=pypi&logoColor=white
 [pypi-downloads-link]: https://pypistats.org/packages/project-config
+[coverage-image]: https://img.shields.io/coveralls/github/mondeja/project-config?logo=coveralls
+[coverage-link]: https://coveralls.io/github/mondeja/project-config

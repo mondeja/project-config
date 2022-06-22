@@ -41,3 +41,8 @@ Time unit can be one of these (plural or singular, it doesn’t matter):
 * ``weeks / week``
 
 .. _TOML: https://toml.io/en/
+
+.. tip:: Disabling cache with environment variable
+
+   You can also disable the cache setting the ``PROJECT_CONFIG_USE_CACHE``
+   environment variable to ``"false"``.
