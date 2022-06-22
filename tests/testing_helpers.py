@@ -51,3 +51,20 @@ def testing_server_process():
         debug=True,
         use_reloader=False,
     )
+
+
+class FakePlugin:
+    def ifFoo(self):  # method not static
+        pass
+
+    @staticmethod
+    def ifBar():  # static method
+        pass
+
+    @staticmethod
+    def foo():
+        pass
+
+    @classmethod
+    def bar(cls):
+        pass

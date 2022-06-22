@@ -242,7 +242,7 @@ class Style:
                         yield f"{style_url}: .plugins[{p}] -> must not be empty"
                     else:
                         # cache plugins on demand
-                        self.plugins.prepare_third_party_plugin(plugin_name)
+                        self.plugins.prepare_3rd_party_plugin(plugin_name)
 
         # validate rules
         if "rules" not in style:

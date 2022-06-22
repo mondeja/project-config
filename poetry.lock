@@ -453,6 +453,20 @@ lint = ["black (==22.3.0)", "flake8 (==4.0.1)", "flake8-implicit-str-concat (==0
 test = ["pytest"]
 
 [[package]]
+name = "pytest-mock"
+version = "3.7.0"
+description = "Thin-wrapper around the mock package for easier use with pytest"
+category = "dev"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+pytest = ">=5.0"
+
+[package.extras]
+dev = ["pre-commit", "tox", "pytest-asyncio"]
+
+[[package]]
 name = "pytz"
 version = "2022.1"
 description = "World timezone definitions, modern and historical"
@@ -775,7 +789,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "c6a66343717ac510f24704f55ad8cdcfb3c1823baa6699dc95012c0329163e3f"
+content-hash = "4c5a5b9d5500ac9b41d1155d82cce264e3fd297156b596fff859df1e40934768"
 
 [metadata.files]
 alabaster = [
@@ -1091,6 +1105,10 @@ pytest-cov = [
 pytest-maybe-raises = [
     {file = "pytest_maybe_raises-0.1.1-py3-none-any.whl", hash = "sha256:11be1f64b965d9c2159a2169c9bf43d2573b9c66003478626702a988f5253b87"},
     {file = "pytest_maybe_raises-0.1.1.tar.gz", hash = "sha256:e3ba96bc1a09b4d55066f6f337e1039ed12580e38cc79f49c947932a7021b5ce"},
+]
+pytest-mock = [
+    {file = "pytest-mock-3.7.0.tar.gz", hash = "sha256:5112bd92cc9f186ee96e1a92efc84969ea494939c3aead39c50f421c4cc69534"},
+    {file = "pytest_mock-3.7.0-py3-none-any.whl", hash = "sha256:6cff27cec936bf81dc5ee87f07132b807bcda51106b5ec4b90a04331cba76231"},
 ]
 pytz = [
     {file = "pytz-2022.1-py2.py3-none-any.whl", hash = "sha256:e68985985296d9a66a881eb3193b0906246245294a881e7c8afe623866ac6a5c"},

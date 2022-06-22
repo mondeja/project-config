@@ -15,6 +15,8 @@ from project_config.tree import Tree
 from project_config.types import Results, Rule
 
 
+PROJECT_CONFIG_ENTRYPOINTS_GROUP = "project_config.plugins"
+
 PluginMethod: TypeAlias = t.Callable[[t.Any, Tree, Rule], Results]
 
 
@@ -50,24 +52,9 @@ class Plugins:
         self._prepare_default_plugins_cache()
 
     @property
-    def plugin_names_actions(self) -> t.Dict[str, t.List[str]]:
-        """Map from plugin names to their allowed actions."""
-        result: t.Dict[str, t.List[str]] = {}
-        for action, plugin_name in self.actions_plugin_names.items():
-            if plugin_name not in result:
-                result[plugin_name] = []
-            result[plugin_name].append(action)
-        return result
-
-    @property
     def plugin_names(self) -> t.List[str]:
         """List of available plugin names."""
         return list(self.plugin_names_loaders)
-
-    @property
-    def loaded_plugin_names(self) -> t.List[str]:
-        """List of loaded plugin names."""
-        return list(self.loaded_plugin_names)
 
     def get_function_for_action(
         self,
@@ -122,14 +109,16 @@ class Plugins:
 
     def _prepare_default_plugins_cache(self) -> None:
         for plugin in importlib_metadata.entry_points(
-            group="project_config.plugins",
+            group=PROJECT_CONFIG_ENTRYPOINTS_GROUP,
         ):
-            if not plugin.value.startswith("project_config.plugins."):
+            if not plugin.value.startswith(
+                f"{PROJECT_CONFIG_ENTRYPOINTS_GROUP}.",
+            ):
                 continue
 
             self._add_plugin_to_cache(plugin)
 
-    def prepare_third_party_plugin(self, plugin_name: str) -> None:
+    def prepare_3rd_party_plugin(self, plugin_name: str) -> None:
         """Prepare cache for third party plugins.
 
         After that a plugin has been prepared can be load on demand.
@@ -138,11 +127,11 @@ class Plugins:
             plugin_name (str): Name of the entry point of the plugin.
         """
         for plugin in importlib_metadata.entry_points(
-            group="project_config.plugins",
+            group=PROJECT_CONFIG_ENTRYPOINTS_GROUP,
             name=plugin_name,
         ):
-            # Allow third party plugins to avorride default plugins
-            if plugin.value.startswith("project_config.plugins."):
+            # Allow third party plugins to override default plugins
+            if plugin.value.startswith(f"{PROJECT_CONFIG_ENTRYPOINTS_GROUP}."):
                 continue
 
             self._add_plugin_to_cache(plugin)
