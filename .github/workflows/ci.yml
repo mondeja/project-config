@@ -134,7 +134,7 @@ jobs:
           draft: false
           prerelease: false
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.CREATE_RELEASE_TOKEN }}
       - uses: actions/download-artifact@v3
         name: Download builds
         with:
