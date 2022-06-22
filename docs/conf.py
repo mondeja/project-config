@@ -201,10 +201,10 @@ if SPHINX_IS_RUNNING:
             raise SystemExit(1)
 
         examples_page_content = """********
-    Examples
-    ********
+Examples
+********
 
-    """
+"""
 
         for example_data in examples_data:
             examples_page_content += (
