@@ -34,7 +34,7 @@ tomli-w = "^1"
 pyjson5 = "*"
 colored = "*"
 tabulate = "^0.8"
-typing-extensions = { version = "^4", python = "<3.10" }
+typing-extensions = "^4"
 jmespath = "^1"
 identify = "^2"
 "ruamel.yaml" = "~0.17"
