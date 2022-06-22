@@ -172,7 +172,8 @@ if SPHINX_IS_RUNNING:
                 f"      .. code-block:: {code_block_language}\n\n"
             )
             indented_content = "\n".join(
-                " " * 9 + line for line in content.splitlines()
+                (" " * 9 + line) if line.strip() else ""
+                for line in content.splitlines()
             )
             tabs_content += f"{indented_content}\n\n"
         return tabs_content
@@ -215,6 +216,17 @@ Examples
             examples_page_content += _generate_example_tabs(
                 example_data["files"],
             )
+
+        examples_page_content += """.. raw:: html
+
+   <hr>
+
+.. tip::
+
+   For more complex examples check my own styles at `mondeja/project-config-styles`_.
+
+   .. _mondeja/project-config-styles: https://github.com/mondeja/project-config-styles
+"""  # noqa: E501
 
         examples_page_path = os.path.join(rootdir, "docs", "examples.rst")
         with open(examples_page_path, "w") as f:
