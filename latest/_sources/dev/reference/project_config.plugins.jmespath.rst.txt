@@ -1,0 +1,8 @@
+project\_config.plugins.jmespath module
+=======================================
+
+.. automodule:: project_config.plugins.jmespath
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:

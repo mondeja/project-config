@@ -1,0 +1,8 @@
+project\_config.utils module
+============================
+
+.. automodule:: project_config.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:

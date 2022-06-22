@@ -1,0 +1,21 @@
+project\_config.reporters package
+=================================
+
+.. automodule:: project_config.reporters
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   project_config.reporters.base
+   project_config.reporters.default
+   project_config.reporters.json
+   project_config.reporters.table
+   project_config.reporters.toml
+   project_config.reporters.yaml
