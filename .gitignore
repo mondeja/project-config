@@ -10,3 +10,4 @@ htmlcov/
 docs/_build/
 docs/dev/reference/
 *.egg-info/
+docs/examples.rst
