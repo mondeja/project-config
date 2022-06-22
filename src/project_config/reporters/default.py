@@ -20,7 +20,7 @@ class DefaultBaseReporter(BaseFormattedReporter):
             report += f"{self.format_file(file)}\n"
             for error in errors:
                 error_message = self.format_error_message(
-                    error["message"].rstrip("."),
+                    error["message"],
                 )
                 report += (
                     f"  {error_message}"
@@ -96,16 +96,16 @@ class DefaultBaseReporter(BaseFormattedReporter):
                             f" {self.format_file(file)}\n"
                         )
 
-                    for key, value in rule.items():
-                        indented_value = "\n".join(
-                            " " * 6 + line
-                            for line in json.dumps(value, indent=2).splitlines()
-                        )
-                        report += (
-                            f"    {self.format_key(key)}"
-                            f'{self.format_metachar(":")}'
-                            f"\n{self.format_config_value(indented_value)}\n"
-                        )
+                for key, value in rule.items():
+                    indented_value = "\n".join(
+                        " " * 6 + line
+                        for line in json.dumps(value, indent=2).splitlines()
+                    )
+                    report += (
+                        f"    {self.format_key(key)}"
+                        f'{self.format_metachar(":")}'
+                        f"\n{self.format_config_value(indented_value)}\n"
+                    )
 
         return report
 

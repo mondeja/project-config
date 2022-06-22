@@ -93,7 +93,7 @@ style = [
   #"../project-config-styles/python/mypy.json5",
 
 ]
-cache = "1 hour"
+cache = "2 days"
 
 [tool.poetry-exec-plugin.commands]
 t = "pytest"
