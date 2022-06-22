@@ -13,7 +13,7 @@ class ErrorDict(TypedDict):
     definition: str
 
 
-class RuleType(TypedDict, total=False):
+class Rule(TypedDict, total=False):
     """Style rule."""
 
     files: t.List[str]
@@ -26,7 +26,6 @@ ResultType: TypeAlias = t.Tuple[str, t.Any]
 ResultsType: TypeAlias = t.Iterator[ResultType]
 
 Results = ResultsType
-Rule = RuleType
 
 __all__ = (
     "Rule",

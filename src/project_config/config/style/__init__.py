@@ -9,7 +9,7 @@ from project_config.fetchers import (
     resolve_maybe_relative_url,
 )
 from project_config.plugins import Plugins
-from project_config.types import RuleType
+from project_config.types import Rule
 
 
 class ProjectConfigInvalidStyle(ProjectConfigInvalidConfigSchema):
@@ -180,7 +180,7 @@ class Style:
     def _add_new_rules_plugins_to_style(
         self,
         style: StyleType,
-        new_rules: t.List[RuleType],
+        new_rules: t.List[Rule],
         new_plugins: t.List[PluginType],
         prepend: bool = False,
     ) -> None:

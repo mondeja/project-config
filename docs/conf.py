@@ -67,6 +67,11 @@ nitpick_ignore = [
     ("py:class", "jmespath.functions.Functions"),
     ("py:class", "jmespath.parser.ParsedResult"),
 ]
+nitpick_ignore_regex = [
+    ("py:class", r"^t.[A-Z]\w+$"),
+    ("py:class", r"^[A-Za-z]+$"),  # internal references
+    ("py:class", r"^typing_extensions\.\w+$"),
+]
 
 
 # -- Options for HTML output -------------------------------------------------
