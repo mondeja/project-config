@@ -45,8 +45,9 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx.ext.viewcode",
     "sphinx_tabs.tabs",
-    "chios.bolditalic",
+    "sphinx_github_changelog",
     "sphinx_argparse_cli",
+    "chios.bolditalic",
 ]
 
 # Add any paths that contain templates here, relative to this directory.

@@ -1,5 +1,5 @@
 """Constants."""
 
-Error = "error"
-InterruptingError = "int_error"
-ResultValue = "result"
+Error = "E"
+InterruptingError = "I"
+ResultValue = "R"

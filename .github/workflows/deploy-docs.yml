@@ -29,6 +29,8 @@ jobs:
           poetry show
       - name: Build documentation
         run: poetry exec doc
+        env:
+          SPHINX_GITHUB_CHANGELOG_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Get version
         id: get-version
         run: echo "::set-output name=version::$(poetry run project-config --version)"

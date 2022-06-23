@@ -586,6 +586,20 @@ sphinx = ">=3"
 test = ["pytest (>=6)", "pytest-cov (>=3)"]
 
 [[package]]
+name = "sphinx-github-changelog"
+version = "1.2.0"
+description = "Build a sphinx changelog from GitHub Releases"
+category = "dev"
+optional = false
+python-versions = ">=3.7,<4.0"
+
+[package.dependencies]
+docutils = "*"
+importlib-metadata = {version = "*", markers = "python_version < \"3.8\""}
+requests = "*"
+Sphinx = "*"
+
+[[package]]
 name = "sphinx-rtd-theme"
 version = "1.0.0"
 description = "Read the Docs theme for Sphinx"
@@ -789,7 +803,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "4c5a5b9d5500ac9b41d1155d82cce264e3fd297156b596fff859df1e40934768"
+content-hash = "638487590f7e6d07e95b4666cf47d2ac2affcdf31b0d7fd80244f6a6e8c78af5"
 
 [metadata.files]
 alabaster = [
@@ -1199,6 +1213,10 @@ sphinx = [
 sphinx-argparse-cli = [
     {file = "sphinx_argparse_cli-1.8.3-py3-none-any.whl", hash = "sha256:794d492e92f407f5e6ed0f2af29e5170a3caa532fd043cee930aeeaeddbc6c6d"},
     {file = "sphinx_argparse_cli-1.8.3.tar.gz", hash = "sha256:3b1042ec3ed5c148f90c2872424528e4335f849a972fd0e3972d31fa9777f2eb"},
+]
+sphinx-github-changelog = [
+    {file = "sphinx-github-changelog-1.2.0.tar.gz", hash = "sha256:1104d66fcb1849e46637e9b2e9385ed4323e3576b99f89890affbf569e16afde"},
+    {file = "sphinx_github_changelog-1.2.0-py3-none-any.whl", hash = "sha256:07befeceab0b60047bd9aab09df8893d1feb5bd9c5f611541feb71dd5b98672c"},
 ]
 sphinx-rtd-theme = [
     {file = "sphinx_rtd_theme-1.0.0-py2.py3-none-any.whl", hash = "sha256:4d35a56f4508cfee4c4fb604373ede6feae2a306731d533f409ef5c3496fdbd8"},
