@@ -401,7 +401,7 @@ def test_load_style(tmp_path, create_files, chdir, files, expected_result):
 
         if isinstance(expected_result, list):
             expected_result = [
-                message.replace("{rootdir}", tmp_path.as_posix())
+                message.replace("{rootdir}", str(tmp_path))
                 for message in expected_result
             ]
             with pytest.raises(ProjectConfigInvalidStyle) as exc:
