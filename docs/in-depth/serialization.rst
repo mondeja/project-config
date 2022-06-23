@@ -3,15 +3,19 @@ Objects serialization
 #####################
 
 Some plugins like :ref:`reference/plugins:jmespath` apply their
-actions against object-serialized version of files. This is really
-convenient for configuration files because the most common
-files formats like JSON, TOML or YAML can be converted into a
+actions against object-serialized version of files. Also, the style
+files itself parsed by **project-config** to execute the rules are
+serialized to objects.
+
+This is really convenient for configuration files because the most
+common files formats like JSON, TOML or YAML can be converted into a
 map (dictionary in Python, object in Javascript) to perform operations
 against the structured nodes.
 
-Serialization converts strings to a Python dictionary using loader
-functions depending on the passed format. The format is discovered,
-based mostly on file names, using `identify`_.
+The serialization process of **project-config** converts strings to
+Python dictionaries using loader functions depending on the format
+of the files. The format is discovered, based mostly on file names,
+using `identify`_.
 
 .. _identify: https://github.com/pre-commit/identify
 
