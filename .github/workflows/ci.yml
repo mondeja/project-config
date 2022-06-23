@@ -49,6 +49,8 @@ jobs:
           poetry show
       - name: Run tests
         run: poetry run pytest
+        env:
+          PROJECT_CONFIG_TESTS_E2E: true
       - name: Coveralls
         run: |
           pip install coveralls coverage[toml]

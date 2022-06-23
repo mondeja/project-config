@@ -2,6 +2,7 @@ import os
 import urllib.parse
 
 import flask
+import pytest
 
 
 rootdir = os.path.abspath(
@@ -12,6 +13,12 @@ TEST_SERVER_URL = "http://127.0.0.1:9997"
 TEST_SERVER_HOST, TEST_SERVER_PORT = urllib.parse.urlsplit(
     TEST_SERVER_URL,
 ).netloc.split(":")
+
+
+mark_end2end = pytest.mark.skipif(
+    not os.environ.get("PROJECT_CONFIG_TESTS_E2E"),
+    reason="The environment variable PROJECT_CONFIG_TESTS_E2E is not set",
+)
 
 
 def build_testing_server():
