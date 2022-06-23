@@ -53,7 +53,6 @@ class IncludePlugin:
                 )
                 continue
 
-            # Normalize newlines
             fcontent_lines = fcontent.splitlines()
             for line_index, expected_line in enumerate(expected_lines):
                 if expected_line not in fcontent_lines:
@@ -101,3 +100,35 @@ class IncludePlugin:
                     yield ResultValue, False
                     return
         yield ResultValue, True
+
+    @staticmethod
+    def excludeContent(
+        value: t.List[str],
+        tree: Tree,
+        rule: Rule,
+    ) -> Results:
+        for f, (fpath, fcontent) in enumerate(tree.files):
+            if fcontent is None:
+                continue
+            elif not isinstance(fcontent, str):
+                yield (
+                    InterruptingError,
+                    _directories_not_accepted_as_inputs_error(
+                        "verb",
+                        "excludeContent",
+                        fpath,
+                        f".files[{f}]",
+                    ),
+                )
+                continue
+
+            # Normalize newlines
+            for content_index, content in enumerate(value):
+                if content in fcontent:
+                    yield Error, {
+                        "message": (
+                            f"Found expected content to exclude '{content}'"
+                        ),
+                        "file": fpath,
+                        "definition": f".excludeContent[{content_index}]",
+                    }

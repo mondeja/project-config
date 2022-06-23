@@ -70,7 +70,7 @@ include = "project_config.plugins.include:IncludePlugin"
 jmespath = "project_config.plugins.jmespath:JMESPathPlugin"
 
 [tool.poetry.plugins."pytest11"]
-project-config-tester = "project_config.tests.pytest_plugin"
+project-config-tester = "project_config.tests.pytest_plugin.plugin"
 
 [tool.bump]
 targets = [

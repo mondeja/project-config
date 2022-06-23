@@ -69,6 +69,16 @@ must correspont:
 
 .. versionadded:: 0.1.0
 
+excludeContent
+==============
+
+Check that the files do not include certain content.
+
+The specified partial contents can match multiple lines
+and line ending characters.
+
+
+
 ********
 jmespath
 ********

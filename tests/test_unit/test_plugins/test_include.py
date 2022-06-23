@@ -207,3 +207,76 @@ def test_ifIncludeLines(
         rule,
         expected_results,
     )
+
+
+@pytest.mark.parametrize(
+    ("files", "value", "rule", "expected_results"),
+    (
+        pytest.param(
+            {"foo.ext": False},
+            ["foo"],
+            None,
+            [],
+            id="unexistent-file",
+        ),
+        pytest.param(
+            {"foo": None},
+            ["foo"],
+            None,
+            [
+                (
+                    InterruptingError,
+                    {
+                        "definition": ".files[0]",
+                        "file": "foo/",
+                        "message": (
+                            "Directory found but the verb 'excludeContent'"
+                            " does not accepts directories as inputs"
+                        ),
+                    },
+                ),
+            ],
+            id="apply-to-directory",
+        ),
+        pytest.param(
+            {"foo.ext": "foo bar\nbaz"},
+            ["foo"],
+            None,
+            [
+                (
+                    Error,
+                    {
+                        "definition": ".excludeContent[0]",
+                        "file": "foo.ext",
+                        "message": "Found expected content to exclude 'foo'",
+                    },
+                ),
+            ],
+            id="content-included",
+        ),
+        pytest.param(
+            {"foo.ext": "foo bar\nbaz"},
+            ["qux"],
+            None,
+            [],
+            id="content-excluded",
+        ),
+    ),
+)
+def test_excludeContent(
+    files,
+    value,
+    rule,
+    expected_results,
+    tmp_path,
+    assert_project_config_plugin_action,
+):
+    assert_project_config_plugin_action(
+        IncludePlugin,
+        "excludeContent",
+        tmp_path,
+        files,
+        value,
+        rule,
+        expected_results,
+    )
