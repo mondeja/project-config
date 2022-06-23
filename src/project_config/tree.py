@@ -37,24 +37,25 @@ class Tree:
                 for nested_fpath, nested_fcontent in fcontent.files:
                     ...
 
-    If you want the serialialized version of the file you can use
-    the method :py:meth:`project_config.tree.Tree.serialize_file`:
+    If you want to get the serialialized version of the file you can
+    use the method :py:meth:`project_config.tree.Tree.serialize_file`:
 
     .. code-block:: python
 
-       instance = tree.serialize_file(fpath, fcontent)
+       instance = tree.serialize_file(fpath)
 
     If you are not inside a context were you have the content
     of the files (a common scenario for conditional actions)
-    # you get them calling the method
-    # :py:meth:`project_config.tree.Tree.get_file_content`:
+    you can get them calling the method
+    :py:meth:`project_config.tree.Tree.get_file_content`:
 
     .. code-block:: python
 
        fcontent = tree.get_file_content(fpath)
 
-    This class caches the files and their serialized versions,
-    so subsequent access to the same files are fast.
+    This class caches the files contents along with their
+    serialized versions, so subsequent access to the same
+    files in the project tree are fast.
 
     Args:
         rootdir (str): Root directory of the project.
@@ -127,25 +128,25 @@ class Tree:
         """
         self.files = list(self._generator(fpaths))
 
-    def serialize_file(self, fpath: str, fcontent: str) -> t.Any:
+    def serialize_file(self, fpath: str) -> t.Any:
         """Returns the object-serialized version of a file.
 
         This method is a convenient cache wrapper for
         :py:func:`project_config.serializers.serialize_for_url`.
         Is used by plugin actions which need an object-serialized
         version of files to perform operations against them, like
-        the ``jmespath`` one.
+        the :ref:`reference/plugins:jmespath` one.
 
         Args:
             fpath (str): Path to the file to serialize.
-            fcontent (str): Content of the file to serialize as a string.
         """
-        # TODO: don't need to pass the file content as second parameter,
-        #   retrieve from the plain files cache
         normalized_fpath = os.path.join(self.rootdir, fpath)
         try:
             result = self.serialized_files_cache[normalized_fpath]
         except KeyError:
-            result = serialize_for_url(fpath, fcontent)  # type: ignore
+            result = serialize_for_url(
+                fpath,
+                self.get_file_content(fpath),  # type: ignore
+            )
             self.serialized_files_cache[normalized_fpath] = result
         return result

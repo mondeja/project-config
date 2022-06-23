@@ -37,7 +37,7 @@ so the first thing is to add the entrypoint to the group:
              ],
          }
 
-The name name of the entrypoint (``my_plugin`` in the previous example)
+The name of the entrypoint (``my_plugin`` in the previous example)
 is the name of the plugin, the one that must be defined in :ref:`style-plugins`
 if the style need it.
 
