@@ -33,7 +33,7 @@ def test_Tree_generator(tmp_path):
     assert isinstance(files, types.GeneratorType)
 
     assert next(files) == (path.name, expected_content)
-    assert tree.files_cache == {path.as_posix(): expected_content}
+    assert tree.files_cache == {str(path): expected_content}
 
     with pytest.raises(StopIteration):
         next(files)
