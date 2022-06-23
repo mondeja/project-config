@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>project_config.project &mdash; project-config 0.2.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/tabs.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/bolditalic.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/override-styles.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/tabs.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> project-config
+          </a>
+              <div class="version">
+                0.2
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Quickstart</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../basic-usage.html">Basic usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/cli.html">project-config CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/config.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/styling.html">Styling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/plugins.html">Plugins</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">In depth</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../in-depth/rationale.html">Rationale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../in-depth/serialization.html">Objects serialization</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For developers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/plugins.html">Writing third party plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/reporters.html">Writing third party reporters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/reference/modules.html">Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">project-config</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      <li>project_config.project</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for project_config.project</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;High level logic for checking a project.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">typing</span> <span class="k">as</span> <span class="nn">t</span>
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+
+<span class="kn">from</span> <span class="nn">project_config.config</span> <span class="kn">import</span> <span class="n">Config</span>
+<span class="kn">from</span> <span class="nn">project_config.constants</span> <span class="kn">import</span> <span class="n">Error</span><span class="p">,</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="n">ResultValue</span>
+<span class="kn">from</span> <span class="nn">project_config.plugins</span> <span class="kn">import</span> <span class="n">InvalidPluginFunction</span>
+<span class="kn">from</span> <span class="nn">project_config.reporters</span> <span class="kn">import</span> <span class="n">get_reporter</span>
+<span class="kn">from</span> <span class="nn">project_config.tree</span> <span class="kn">import</span> <span class="n">Tree</span><span class="p">,</span> <span class="n">TreeNodeFiles</span>
+<span class="kn">from</span> <span class="nn">project_config.types</span> <span class="kn">import</span> <span class="n">Rule</span>
+
+
+<div class="viewcode-block" id="InterruptCheck"><a class="viewcode-back" href="../../dev/reference/project_config.project.html#project_config.project.InterruptCheck">[docs]</a><span class="k">class</span> <span class="nc">InterruptCheck</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;An action has reported an invalid context for a rule.</span>
+
+<span class="sd">    This exceptions prevents to continue executing subsecuents rules.</span>
+<span class="sd">    &quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="ConditionalsFalseResult"><a class="viewcode-back" href="../../dev/reference/project_config.project.html#project_config.project.ConditionalsFalseResult">[docs]</a><span class="k">class</span> <span class="nc">ConditionalsFalseResult</span><span class="p">(</span><span class="n">InterruptCheck</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A conditional must skip a rule.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="Project"><a class="viewcode-back" href="../../dev/reference/project_config.project.html#project_config.project.Project">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">Project</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Wrapper for a single project.</span>
+
+<span class="sd">    This class encapsulates all the high level logic to execute all</span>
+<span class="sd">    CLI commands against a project.</span>
+
+<span class="sd">    Its public method expose the commands that can be executed through</span>
+<span class="sd">    the CLI.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        config_path (str): Custom configuration file path.</span>
+<span class="sd">        rootdir (str): Root directory of the project.</span>
+<span class="sd">        reporter_id (str): Reporter to use.</span>
+<span class="sd">        color (bool): Colorized output in reporters.</span>
+<span class="sd">        reporter_format (str): Additional format for reporter.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">config_path</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">rootdir</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">reporter_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">color</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="n">reporter_format</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rootdir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_path</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tree</span> <span class="o">=</span> <span class="n">Tree</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rootdir</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reporter</span> <span class="o">=</span> <span class="n">get_reporter</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reporter_id</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rootdir</span><span class="p">,</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="Project._check_files_existence"><a class="viewcode-back" href="../../dev/reference/project_config.project.html#project_config.project.Project._check_files_existence">[docs]</a>    <span class="k">def</span> <span class="nf">_check_files_existence</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">files</span><span class="p">:</span> <span class="n">TreeNodeFiles</span><span class="p">,</span>
+        <span class="n">rule_index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">f</span><span class="p">,</span> <span class="p">(</span><span class="n">fpath</span><span class="p">,</span> <span class="n">fcontent</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">files</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">fcontent</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># file or directory does not exist</span>
+                <span class="n">ftype</span> <span class="o">=</span> <span class="s2">&quot;directory&quot;</span> <span class="k">if</span> <span class="n">fpath</span><span class="o">.</span><span class="n">endswith</span><span class="p">((</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">))</span> <span class="k">else</span> <span class="s2">&quot;file&quot;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">reporter</span><span class="o">.</span><span class="n">report_error</span><span class="p">(</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Expected existing </span><span class="si">{</span><span class="n">ftype</span><span class="si">}</span><span class="s2"> does not exists&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="n">fpath</span><span class="p">,</span>
+                        <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;rules[</span><span class="si">{</span><span class="n">rule_index</span><span class="si">}</span><span class="s2">].files[</span><span class="si">{</span><span class="n">f</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+                    <span class="p">},</span>
+                <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Project._check_files_absence"><a class="viewcode-back" href="../../dev/reference/project_config.project.html#project_config.project.Project._check_files_absence">[docs]</a>    <span class="k">def</span> <span class="nf">_check_files_absence</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">files</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span>
+        <span class="n">rule_index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">files</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">fpath</span><span class="p">,</span> <span class="n">reason</span> <span class="ow">in</span> <span class="n">files</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">normalized_fpath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rootdir</span><span class="p">,</span> <span class="n">fpath</span><span class="p">)</span>
+                <span class="n">ftype</span> <span class="o">=</span> <span class="s2">&quot;directory&quot;</span> <span class="k">if</span> <span class="n">fpath</span><span class="o">.</span><span class="n">endswith</span><span class="p">((</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">))</span> <span class="k">else</span> <span class="s2">&quot;file&quot;</span>
+                <span class="n">exists</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">normalized_fpath</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">ftype</span> <span class="o">==</span> <span class="s2">&quot;directory&quot;</span>
+                    <span class="k">else</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">normalized_fpath</span><span class="p">)</span>
+                <span class="p">)</span>
+                <span class="k">if</span> <span class="n">exists</span><span class="p">:</span>
+                    <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Expected absent </span><span class="si">{</span><span class="n">ftype</span><span class="si">}</span><span class="s2"> exists&quot;</span>
+                    <span class="k">if</span> <span class="n">reason</span><span class="p">:</span>
+                        <span class="n">message</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;. </span><span class="si">{</span><span class="n">reason</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">reporter</span><span class="o">.</span><span class="n">report_error</span><span class="p">(</span>
+                        <span class="p">{</span>
+                            <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">message</span><span class="p">,</span>
+                            <span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">fpath</span><span class="si">}</span><span class="s2">/&quot;</span>
+                            <span class="k">if</span> <span class="n">ftype</span> <span class="o">==</span> <span class="s2">&quot;directory&quot;</span>
+                            <span class="k">else</span> <span class="n">fpath</span><span class="p">,</span>
+                            <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="p">(</span>
+                                <span class="sa">f</span><span class="s2">&quot;rules[</span><span class="si">{</span><span class="n">rule_index</span><span class="si">}</span><span class="s2">].files.not[</span><span class="si">{</span><span class="n">fpath</span><span class="si">}</span><span class="s2">]&quot;</span>
+                            <span class="p">),</span>
+                        <span class="p">},</span>
+                    <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">f</span><span class="p">,</span> <span class="n">fpath</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">files</span><span class="p">):</span>
+                <span class="n">normalized_fpath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rootdir</span><span class="p">,</span> <span class="n">fpath</span><span class="p">)</span>
+                <span class="n">ftype</span> <span class="o">=</span> <span class="s2">&quot;directory&quot;</span> <span class="k">if</span> <span class="n">fpath</span><span class="o">.</span><span class="n">endswith</span><span class="p">((</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">))</span> <span class="k">else</span> <span class="s2">&quot;file&quot;</span>
+                <span class="n">exists</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">normalized_fpath</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">ftype</span> <span class="o">==</span> <span class="s2">&quot;directory&quot;</span>
+                    <span class="k">else</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">normalized_fpath</span><span class="p">)</span>
+                <span class="p">)</span>
+                <span class="k">if</span> <span class="n">exists</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">reporter</span><span class="o">.</span><span class="n">report_error</span><span class="p">(</span>
+                        <span class="p">{</span>
+                            <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Expected absent </span><span class="si">{</span><span class="n">ftype</span><span class="si">}</span><span class="s2"> exists&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="n">fpath</span><span class="p">,</span>
+                            <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;rules[</span><span class="si">{</span><span class="n">rule_index</span><span class="si">}</span><span class="s2">].files.not[</span><span class="si">{</span><span class="n">f</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+                        <span class="p">},</span>
+                    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Project._process_conditionals_for_rule"><a class="viewcode-back" href="../../dev/reference/project_config.project.html#project_config.project.Project._process_conditionals_for_rule">[docs]</a>    <span class="k">def</span> <span class="nf">_process_conditionals_for_rule</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">conditionals</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">tree</span><span class="p">:</span> <span class="n">Tree</span><span class="p">,</span>
+        <span class="n">rule</span><span class="p">:</span> <span class="n">Rule</span><span class="p">,</span>
+        <span class="n">rule_index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">conditional</span> <span class="ow">in</span> <span class="n">conditionals</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">action_function</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">plugins</span><span class="o">.</span><span class="n">get_function_for_action</span><span class="p">(</span>
+                        <span class="n">conditional</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+            <span class="k">except</span> <span class="n">InvalidPluginFunction</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">reporter</span><span class="o">.</span><span class="n">report_error</span><span class="p">(</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">exc</span><span class="o">.</span><span class="n">message</span><span class="p">,</span>
+                        <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;rules[</span><span class="si">{</span><span class="n">rule_index</span><span class="si">}</span><span class="s2">].</span><span class="si">{</span><span class="n">conditional</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="p">},</span>
+                <span class="p">)</span>
+                <span class="k">raise</span> <span class="n">InterruptCheck</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">breakage_type</span><span class="p">,</span> <span class="n">breakage_value</span> <span class="ow">in</span> <span class="n">action_function</span><span class="p">(</span>
+                <span class="c1"># typed dict with dinamic key, this type must be ignored</span>
+                <span class="c1"># until some literal quirk comes, see:</span>
+                <span class="c1"># https://stackoverflow.com/a/59583427/9167585</span>
+                <span class="n">rule</span><span class="p">[</span><span class="n">conditional</span><span class="p">],</span>  <span class="c1"># type: ignore</span>
+                <span class="n">tree</span><span class="p">,</span>
+                <span class="n">rule</span><span class="p">,</span>
+            <span class="p">):</span>
+                <span class="k">if</span> <span class="n">breakage_type</span> <span class="o">==</span> <span class="n">InterruptingError</span><span class="p">:</span>
+                    <span class="n">breakage_value</span><span class="p">[</span><span class="s2">&quot;definition&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;rules[</span><span class="si">{</span><span class="n">rule_index</span><span class="si">}</span><span class="s2">]&quot;</span> <span class="o">+</span> <span class="n">breakage_value</span><span class="p">[</span><span class="s2">&quot;definition&quot;</span><span class="p">]</span>
+                    <span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">reporter</span><span class="o">.</span><span class="n">report_error</span><span class="p">(</span><span class="n">breakage_value</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="n">InterruptCheck</span><span class="p">()</span>
+                <span class="k">elif</span> <span class="n">breakage_type</span> <span class="o">==</span> <span class="n">ResultValue</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">breakage_value</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="n">ConditionalsFalseResult</span><span class="p">()</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">break</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Breakage type &#39;</span><span class="si">{</span><span class="n">breakage_type</span><span class="si">}</span><span class="s2">&#39; is not implemented&quot;</span>
+                        <span class="s2">&quot; for conditionals checking&quot;</span><span class="p">,</span>
+                    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Project._run_check"><a class="viewcode-back" href="../../dev/reference/project_config.project.html#project_config.project.Project._run_check">[docs]</a>    <span class="k">def</span> <span class="nf">_run_check</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">r</span><span class="p">,</span> <span class="n">rule</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;style&quot;</span><span class="p">][</span><span class="s2">&quot;rules&quot;</span><span class="p">]):</span>
+            <span class="n">files</span> <span class="o">=</span> <span class="n">rule</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;files&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">files</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">cache_files</span><span class="p">(</span><span class="n">files</span><span class="p">)</span>
+                <span class="c1"># check if files exists</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_check_files_existence</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">files</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># requiring absent of files</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_check_files_absence</span><span class="p">(</span><span class="n">files</span><span class="p">[</span><span class="s2">&quot;not&quot;</span><span class="p">],</span> <span class="n">r</span><span class="p">)</span>
+                <span class="k">continue</span>  <span class="c1"># any other verb can be used in the rule</span>
+
+            <span class="n">verbs</span><span class="p">,</span> <span class="n">conditionals</span> <span class="o">=</span> <span class="p">([],</span> <span class="p">[])</span>
+            <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="n">rule</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">action</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;if&quot;</span><span class="p">):</span>
+                    <span class="n">conditionals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">verbs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+
+            <span class="c1"># handle conditionals</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_process_conditionals_for_rule</span><span class="p">(</span>
+                    <span class="n">conditionals</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="p">,</span>
+                    <span class="n">rule</span><span class="p">,</span>
+                    <span class="n">r</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="k">except</span> <span class="n">ConditionalsFalseResult</span><span class="p">:</span>
+                <span class="c1"># conditionals skipping the rule, next...</span>
+                <span class="k">continue</span>
+
+            <span class="c1"># handle verbs</span>
+            <span class="k">for</span> <span class="n">verb</span> <span class="ow">in</span> <span class="n">verbs</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">action_function</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">plugins</span><span class="o">.</span><span class="n">get_function_for_action</span><span class="p">(</span>
+                            <span class="n">verb</span><span class="p">,</span>
+                        <span class="p">)</span>
+                    <span class="p">)</span>
+                <span class="k">except</span> <span class="n">InvalidPluginFunction</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">reporter</span><span class="o">.</span><span class="n">report_error</span><span class="p">(</span>
+                        <span class="p">{</span>
+                            <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">exc</span><span class="o">.</span><span class="n">message</span><span class="p">,</span>
+                            <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;rules[</span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s2">].</span><span class="si">{</span><span class="n">verb</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                        <span class="p">},</span>
+                    <span class="p">)</span>
+                    <span class="k">raise</span> <span class="n">InterruptCheck</span><span class="p">()</span>
+                    <span class="c1"># TODO: show &#39;INTERRUPTED&#39; in report</span>
+                <span class="k">for</span> <span class="n">breakage_type</span><span class="p">,</span> <span class="n">breakage_value</span> <span class="ow">in</span> <span class="n">action_function</span><span class="p">(</span>
+                    <span class="n">rule</span><span class="p">[</span><span class="n">verb</span><span class="p">],</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="p">,</span>
+                    <span class="n">rule</span><span class="p">,</span>
+                <span class="p">):</span>
+                    <span class="k">if</span> <span class="n">breakage_type</span> <span class="o">==</span> <span class="n">Error</span><span class="p">:</span>
+                        <span class="c1"># prepend rule index to definition, so plugins do not</span>
+                        <span class="c1"># need to specify them</span>
+                        <span class="n">breakage_value</span><span class="p">[</span><span class="s2">&quot;definition&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;rules[</span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s2">]&quot;</span> <span class="o">+</span> <span class="n">breakage_value</span><span class="p">[</span><span class="s2">&quot;definition&quot;</span><span class="p">]</span>
+                        <span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">reporter</span><span class="o">.</span><span class="n">report_error</span><span class="p">(</span><span class="n">breakage_value</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">breakage_type</span> <span class="o">==</span> <span class="n">InterruptingError</span><span class="p">:</span>
+                        <span class="n">breakage_value</span><span class="p">[</span><span class="s2">&quot;definition&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;rules[</span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s2">]&quot;</span> <span class="o">+</span> <span class="n">breakage_value</span><span class="p">[</span><span class="s2">&quot;definition&quot;</span><span class="p">]</span>
+                        <span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">reporter</span><span class="o">.</span><span class="n">report_error</span><span class="p">(</span><span class="n">breakage_value</span><span class="p">)</span>
+                        <span class="k">raise</span> <span class="n">InterruptCheck</span><span class="p">()</span>
+                        <span class="c1"># TODO: show &#39;INTERRUPTED&#39; in report</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;Breakage type &#39;</span><span class="si">{</span><span class="n">breakage_type</span><span class="si">}</span><span class="s2">&#39; is not&quot;</span>
+                            <span class="s2">&quot; implemented for verbal checking&quot;</span><span class="p">,</span>
+                        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Project.check"><a class="viewcode-back" href="../../dev/reference/project_config.project.html#project_config.project.Project.check">[docs]</a>    <span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Checks that the styles configured for a project match.</span>
+
+<span class="sd">        Raises an error if report errors.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_run_check</span><span class="p">()</span>
+        <span class="k">except</span> <span class="n">InterruptCheck</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reporter</span><span class="o">.</span><span class="n">raise_errors</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Project.show"><a class="viewcode-back" href="../../dev/reference/project_config.project.html#project_config.project.Project.show">[docs]</a>    <span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Show configuration or fetched style for a project.</span>
+
+<span class="sd">        It will depend in the ``args.data`` property.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">data</span> <span class="o">==</span> <span class="s2">&quot;cache&quot;</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">project_config.cache</span> <span class="kn">import</span> <span class="n">_directory</span>
+
+            <span class="n">report</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">_directory</span><span class="p">()</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">dict_</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">data</span> <span class="o">==</span> <span class="s2">&quot;config&quot;</span><span class="p">:</span>
+                <span class="n">data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;style&quot;</span><span class="p">)</span>
+                <span class="n">data</span><span class="p">[</span><span class="s2">&quot;style&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;_style&quot;</span><span class="p">)</span>
+                <span class="n">data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;cache&quot;</span><span class="p">)</span>
+                <span class="n">data</span><span class="p">[</span><span class="s2">&quot;cache&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;_cache&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;style&quot;</span><span class="p">)</span>
+
+            <span class="n">report</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reporter</span><span class="o">.</span><span class="n">generate_data_report</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+
+        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">report</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Project.clean"><a class="viewcode-back" href="../../dev/reference/project_config.project.html#project_config.project.Project.clean">[docs]</a>    <span class="k">def</span> <span class="nf">clean</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Cleaning command.&quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">project_config.cache</span> <span class="kn">import</span> <span class="n">_directory</span>
+
+        <span class="n">cache_directory</span> <span class="o">=</span> <span class="n">_directory</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">cache_directory</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Cache removed successfully!</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Álvaro Mondéjar Rubio.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

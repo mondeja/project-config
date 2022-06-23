@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Styling &mdash; project-config 0.1.0 documentation</title>
+  <title>Styling &mdash; project-config 0.2.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -34,7 +34,7 @@
             <a href="../index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.1
+                0.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -52,6 +52,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="cli.html">project-config CLI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="config.html">Configuration</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Styling</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#rules-object"><code class="docutils literal notranslate"><span class="pre">rules</span></code> (<cite>object[]</cite>)</a><ul>
@@ -67,14 +68,17 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="plugins.html">Plugins</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cli.html">project-config - CLI interface</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">In depth</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../in-depth/rationale.html">Rationale</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../in-depth/serialization.html">Objects serialization</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">For developers</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../dev/plugins.html">Writing third party plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev/reporters.html">Writing third party reporters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev/contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../dev/reference/modules.html">Reference</a></li>
 </ul>
 
@@ -161,9 +165,13 @@ using <code class="docutils literal notranslate"><span class="pre">extends:</spa
 <code class="docutils literal notranslate"><span class="pre">gh://author/project/path/to/file.json5</span></code>.</p>
 </section>
 <section id="plugins-string">
-<h2><code class="docutils literal notranslate"><span class="pre">plugins</span></code> (<cite>string[]</cite>)<a class="headerlink" href="#plugins-string" title="Permalink to this headline"></a></h2>
+<span id="style-plugins"></span><h2><code class="docutils literal notranslate"><span class="pre">plugins</span></code> (<cite>string[]</cite>)<a class="headerlink" href="#plugins-string" title="Permalink to this headline"></a></h2>
 <p>Additional third party plugin names on which the rules of the style depend.
 Built-in plugins don’t need to be defined here, as are loaded by default.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="../dev/plugins.html"><span class="doc">Writing third party plugins</span></a></p>
+</div>
 </section>
 </section>
 

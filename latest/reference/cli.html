@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project-config - CLI interface &mdash; project-config 0.1.0 documentation</title>
+  <title>project-config CLI &mdash; project-config 0.2.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -22,8 +22,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Objects serialization" href="../in-depth/serialization.html" />
-    <link rel="prev" title="Plugins" href="plugins.html" /> 
+    <link rel="next" title="Configuration" href="config.html" />
+    <link rel="prev" title="Examples" href="../examples.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -34,7 +34,7 @@
             <a href="../index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.1
+                0.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -52,20 +52,24 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">project-config CLI</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#reporting">Reporting</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="config.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="styling.html">Styling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="plugins.html">Plugins</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">project-config - CLI interface</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#project-config-optional-arguments">project-config optional arguments</a></li>
-</ul>
-</li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">In depth</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../in-depth/rationale.html">Rationale</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../in-depth/serialization.html">Objects serialization</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">For developers</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../dev/plugins.html">Writing third party plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev/reporters.html">Writing third party reporters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev/contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../dev/reference/modules.html">Reference</a></li>
 </ul>
 
@@ -83,7 +87,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>project-config - CLI interface</li>
+      <li>project-config CLI</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/reference/cli.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -93,9 +97,9 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="project-config---CLI-interface">
-<h1>project-config - CLI interface<a class="headerlink" href="#project-config---CLI-interface" title="Permalink to this headline"></a></h1>
-<p>Validate the configuration of your project against the configured styles.</p>
+  <section id="project-config-cli">
+<h1>project-config CLI<a class="headerlink" href="#project-config-cli" title="Permalink to this headline"></a></h1>
+<p><p>Validate the configuration of your project against the configured styles.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">project</span><span class="o">-</span><span class="n">config</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">T</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">c</span> <span class="n">CONFIG</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">root</span> <span class="n">ROOTDIR</span><span class="p">]</span>
                <span class="p">[</span><span class="o">-</span><span class="n">r</span> <span class="p">{</span><span class="n">default</span><span class="p">,</span><span class="n">json</span><span class="p">,</span><span class="n">json</span><span class="p">:</span><span class="n">pretty</span><span class="p">,</span><span class="n">json</span><span class="p">:</span><span class="n">pretty4</span><span class="p">,</span><span class="n">toml</span><span class="p">,</span><span class="n">yaml</span><span class="p">,</span><span class="n">table</span><span class="p">:</span><span class="n">fancy_grid</span><span class="p">,</span><span class="n">table</span><span class="p">:</span><span class="n">fancy_outline</span><span class="p">,</span><span class="n">table</span><span class="p">:</span><span class="n">github</span><span class="p">,</span><span class="n">table</span><span class="p">:</span><span class="n">grid</span><span class="p">,</span><span class="n">table</span><span class="p">:</span><span class="n">html</span><span class="p">,</span><span class="n">table</span><span class="p">:</span><span class="n">jira</span><span class="p">,</span><span class="n">table</span><span class="p">:</span><span class="n">latex</span><span class="p">,</span><span class="n">table</span><span class="p">:</span><span class="n">latex_booktabs</span><span class="p">,</span><span class="n">table</span><span class="p">:</span><span class="n">latex_longtable</span><span class="p">,</span><span class="n">table</span><span class="p">:</span><span class="n">latex_raw</span><span class="p">,</span><span class="n">table</span><span class="p">:</span><span class="n">mediawiki</span><span class="p">,</span><span class="n">table</span><span class="p">:</span><span class="n">moinmoin</span><span class="p">,</span><span class="n">table</span><span class="p">:</span><span class="n">orgtbl</span><span class="p">,</span><span class="n">table</span><span class="p">:</span><span class="n">pipe</span><span class="p">,</span><span class="n">table</span><span class="p">:</span><span class="n">plain</span><span class="p">,</span><span class="n">table</span><span class="p">:</span><span class="n">presto</span><span class="p">,</span><span class="n">table</span><span class="p">:</span><span class="n">pretty</span><span class="p">,</span><span class="n">table</span><span class="p">:</span><span class="n">psql</span><span class="p">,</span><span class="n">table</span><span class="p">:</span><span class="n">rst</span><span class="p">,</span><span class="n">table</span><span class="p">:</span><span class="n">simple</span><span class="p">,</span><span class="n">table</span><span class="p">:</span><span class="n">textile</span><span class="p">,</span><span class="n">table</span><span class="p">:</span><span class="n">tsv</span><span class="p">,</span><span class="n">table</span><span class="p">:</span><span class="n">unsafehtml</span><span class="p">,</span><span class="n">table</span><span class="p">:</span><span class="n">youtrack</span><span class="p">}]</span>
                <span class="p">[</span><span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">color</span><span class="p">]</span>
@@ -110,24 +114,54 @@
 <li><p id="project-config--c"><span id="project-config---config"></span><a class="reference internal" href="#project-config--c" title="project-config -c"><strong><code class="docutils literal notranslate"><span class="pre">-c</span></code></strong></a> <code class="docutils literal notranslate"><span class="pre">CONFIG</span></code>, <a class="reference internal" href="#project-config---config" title="project-config --config"><strong><code class="docutils literal notranslate"><span class="pre">--config</span></code></strong></a> <code class="docutils literal notranslate"><span class="pre">CONFIG</span></code> - Custom configuration file path. (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)</p></li>
 <li><p id="project-config---root"><span id="project-config---rootdir"></span><a class="reference internal" href="#project-config---root" title="project-config --root"><strong><code class="docutils literal notranslate"><span class="pre">--root</span></code></strong></a> <code class="docutils literal notranslate"><span class="pre">ROOTDIR</span></code>, <a class="reference internal" href="#project-config---rootdir" title="project-config --rootdir"><strong><code class="docutils literal notranslate"><span class="pre">--rootdir</span></code></strong></a> <code class="docutils literal notranslate"><span class="pre">ROOTDIR</span></code> - Root directory of the project. Useful if you want to execute project-config for another project rather than the current working directory. (default: <code class="docutils literal notranslate"><span class="pre">{cwd}</span></code>)</p></li>
 <li><p id="project-config--r"><span id="project-config---reporter"></span><a class="reference internal" href="#project-config--r" title="project-config -r"><strong><code class="docutils literal notranslate"><span class="pre">-r</span></code></strong></a> <code class="docutils literal notranslate"><span class="pre">REPORTER</span></code>, <a class="reference internal" href="#project-config---reporter" title="project-config --reporter"><strong><code class="docutils literal notranslate"><span class="pre">--reporter</span></code></strong></a> <code class="docutils literal notranslate"><span class="pre">REPORTER</span></code> - Style of generated report when failed. (default: <code class="docutils literal notranslate"><span class="pre">default</span></code>)</p></li>
-<li><p id="project-config---no-color"><span id="project-config---nocolor"></span><a class="reference internal" href="#project-config---no-color" title="project-config --no-color"><strong><code class="docutils literal notranslate"><span class="pre">--no-color</span></code></strong></a>, <a class="reference internal" href="#project-config---nocolor" title="project-config --nocolor"><strong><code class="docutils literal notranslate"><span class="pre">--nocolor</span></code></strong></a> - Disable colored output. You can also set a value in the environment variable NO_COLOR. (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)</p></li>
+<li><p id="project-config---no-color"><span id="project-config---nocolor"></span><a class="reference internal" href="#project-config---no-color" title="project-config --no-color"><strong><code class="docutils literal notranslate"><span class="pre">--no-color</span></code></strong></a>, <a class="reference internal" href="#project-config---nocolor" title="project-config --nocolor"><strong><code class="docutils literal notranslate"><span class="pre">--nocolor</span></code></strong></a> - Disable colored output. You can also set a value in the environment variable NO_COLOR.</p></li>
 </ul>
 </section>
-</section>
+</p>
 <p class="rubric">Commands</p>
 <ul class="simple">
-<li><p><strong>project-config check</strong>: Check the styles of the current project.</p></li>
-<li><p><strong>project-config show config</strong>: Show the configuration.</p></li>
-<li><p><strong>project-config show style</strong>: Show the collected styles merged into the final one.</p></li>
-<li><p><strong>project-config clean cache</strong>: Clean the persistent cache of remote collected sources.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">project-config</span> <span class="pre">check</span></code> - Check the styles of the current project.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">project-config</span> <span class="pre">show</span> <span class="pre">config</span></code> - Show the configuration.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">project-config</span> <span class="pre">show</span> <span class="pre">style</span></code> - Show the collected styles merged into the final one.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">project-config</span> <span class="pre">show</span> <span class="pre">cache</span></code> - Show cache directory location.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">project-config</span> <span class="pre">clean</span> <span class="pre">cache</span></code> - Clean the persistent cache of remote collected sources.</p></li>
 </ul>
+<section id="reporting">
+<h2>Reporting<a class="headerlink" href="#reporting" title="Permalink to this headline"></a></h2>
+<p><strong>project-config</strong> supports multiple formats for reporting. Currently,
+the following reporters are supported:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">default</span></code> - The default reporter, based on YAML but simplified.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">yaml</span></code> - YAML reporter with flow style format.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">json</span></code> - JSON reporter.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">toml</span></code> - TOML reporter.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">table</span></code> - Table reporters using <a class="reference external" href="https://github.com/astanin/python-tabulate">tabulate</a>.</p></li>
+</ul>
+<p>When you pass a reporter with the <code class="docutils literal notranslate"><span class="pre">-r</span></code> / <code class="docutils literal notranslate"><span class="pre">--reporter</span></code> option, you can
+specify the variant of the format with <code class="docutils literal notranslate"><span class="pre">reporter:format</span></code>  syntax, for example
+<code class="docutils literal notranslate"><span class="pre">table:html</span></code> will output the errors in an HTML table.</p>
+<p>The reporter output affects the output of the next commands:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">project-config</span> <span class="pre">check</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">project-config</span> <span class="pre">show</span> <span class="pre">config</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">project-config</span> <span class="pre">show</span> <span class="pre">style</span></code></p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Colorized output can’t be serialized, so if you want to postprocess the report
+in the command line use always the <code class="docutils literal notranslate"><span class="pre">--no-color</span></code> flag.</p>
+</div>
+<p>Additional third party reporters can be implemented as plugins,
+see <a class="reference internal" href="../dev/reporters.html#writing-third-party-reporters"><span class="std std-ref">Writing third party reporters</span></a> for more information.</p>
+</section>
+</section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="plugins.html" class="btn btn-neutral float-left" title="Plugins" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../in-depth/serialization.html" class="btn btn-neutral float-right" title="Objects serialization" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../examples.html" class="btn btn-neutral float-left" title="Examples" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="config.html" class="btn btn-neutral float-right" title="Configuration" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

@@ -69,9 +69,15 @@ to their fetchers locations. So giving a style located at
 using ``extends: ["../other/file.json5"]`` inside the style
 ``gh://author/project/path/to/file.json5``.
 
+.. _style-plugins:
+
 ************************
 ``plugins`` (`string[]`)
 ************************
 
 Additional third party plugin names on which the rules of the style depend.
 Built-in plugins don't need to be defined here, as are loaded by default.
+
+.. seealso::
+
+    :doc:`../dev/plugins`

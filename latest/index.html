@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project-config’s documentation &mdash; project-config 0.1.0 documentation</title>
+  <title>project-config’s documentation &mdash; project-config 0.2.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -33,7 +33,7 @@
             <a href="#" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.1
+                0.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -51,17 +51,21 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="reference/cli.html">project-config CLI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reference/config.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reference/styling.html">Styling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reference/plugins.html">Plugins</a></li>
-<li class="toctree-l1"><a class="reference internal" href="reference/cli.html">project-config - CLI interface</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">In depth</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="in-depth/rationale.html">Rationale</a></li>
 <li class="toctree-l1"><a class="reference internal" href="in-depth/serialization.html">Objects serialization</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">For developers</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="dev/plugins.html">Writing third party plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev/reporters.html">Writing third party reporters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev/contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dev/reference/modules.html">Reference</a></li>
 </ul>
 
@@ -108,6 +112,10 @@ multiple projects.</p>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="reference/cli.html">project-config CLI</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reference/cli.html#reporting">Reporting</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="reference/config.html">Configuration</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="reference/config.html#style-string-or-string"><code class="docutils literal notranslate"><span class="pre">style</span></code> (<cite>string</cite> or <cite>string[]</cite>)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reference/config.html#cache-string"><code class="docutils literal notranslate"><span class="pre">cache</span></code> (<cite>string</cite>)</a></li>
@@ -135,15 +143,15 @@ multiple projects.</p>
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="reference/cli.html">project-config - CLI interface</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="reference/cli.html#project-config-optional-arguments">project-config optional arguments</a></li>
-</ul>
-</li>
 </ul>
 </div>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">In depth</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="in-depth/rationale.html">Rationale</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="in-depth/rationale.html#alternatives">Alternatives</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="in-depth/serialization.html">Objects serialization</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="in-depth/serialization.html#json">JSON</a></li>
 <li class="toctree-l2"><a class="reference internal" href="in-depth/serialization.html#json5">JSON5</a></li>
@@ -159,30 +167,25 @@ multiple projects.</p>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">For developers</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="dev/plugins.html">Writing third party plugins</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="dev/plugins.html#plugin-class">Plugin class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dev/plugins.html#testing-plugins">Testing plugins</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="dev/reporters.html">Writing third party reporters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="dev/reporters.html#reporters-module">Reporters module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="dev/contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="dev/contributing.html#development-install">Development install</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dev/contributing.html#test">Test</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dev/contributing.html#lint">Lint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dev/contributing.html#build-documentation">Build documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dev/contributing.html#release">Release</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="dev/reference/modules.html">Reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="dev/reference/project_config.html">project_config package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="dev/reference/project_config.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="dev/reference/project_config.config.html">project_config.config package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="dev/reference/project_config.fetchers.html">project_config.fetchers package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="dev/reference/project_config.plugins.html">project_config.plugins package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="dev/reference/project_config.reporters.html">project_config.reporters package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="dev/reference/project_config.serializers.html">project_config.serializers package</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="dev/reference/project_config.html#submodules">Submodules</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="dev/reference/project_config.__main__.html">project_config.__main__ module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="dev/reference/project_config.cache.html">project_config.cache module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="dev/reference/project_config.compat.html">project_config.compat module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="dev/reference/project_config.constants.html">project_config.constants module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="dev/reference/project_config.exceptions.html">project_config.exceptions module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="dev/reference/project_config.project.html">project_config.project module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="dev/reference/project_config.tree.html">project_config.tree module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="dev/reference/project_config.types.html">project_config.types module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="dev/reference/project_config.utils.html">project_config.utils module</a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="dev/reference/project_config.html">project_config package</a></li>
 </ul>
 </li>
 </ul>

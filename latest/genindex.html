@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Index &mdash; project-config 0.1.0 documentation</title>
+  <title>Index &mdash; project-config 0.2.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -32,7 +32,7 @@
             <a href="index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.1
+                0.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -50,17 +50,21 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="reference/cli.html">project-config CLI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reference/config.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reference/styling.html">Styling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reference/plugins.html">Plugins</a></li>
-<li class="toctree-l1"><a class="reference internal" href="reference/cli.html">project-config - CLI interface</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">In depth</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="in-depth/rationale.html">Rationale</a></li>
 <li class="toctree-l1"><a class="reference internal" href="in-depth/serialization.html">Objects serialization</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">For developers</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="dev/plugins.html">Writing third party plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev/reporters.html">Writing third party reporters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev/contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dev/reference/modules.html">Reference</a></li>
 </ul>
 
@@ -92,6 +96,7 @@
 
 <div class="genindex-jumpbox">
  <a href="#_"><strong>_</strong></a>
+ | <a href="#A"><strong>A</strong></a>
  | <a href="#B"><strong>B</strong></a>
  | <a href="#C"><strong>C</strong></a>
  | <a href="#D"><strong>D</strong></a>
@@ -179,17 +184,21 @@
 </li>
       <li><a href="dev/reference/project_config.project.html#project_config.project.Project._check_files_existence">_check_files_existence() (project_config.project.Project method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="dev/reference/project_config.reporters.table.html#project_config.reporters.table._common_generate_errors_report">_common_generate_errors_report() (in module project_config.reporters.table)</a>
 </li>
       <li><a href="dev/reference/project_config.reporters.table.html#project_config.reporters.table._common_generate_rows">_common_generate_rows() (in module project_config.reporters.table)</a>
 </li>
       <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath._compile_JMESPath">_compile_JMESPath() (in module project_config.plugins.jmespath)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath._compile_JMESPath_expression">_compile_JMESPath_expression() (in module project_config.plugins.jmespath)</a>
 </li>
       <li><a href="dev/reference/project_config.__main__.html#project_config.__main__._controlled_error">_controlled_error() (in module project_config.__main__)</a>
+</li>
+      <li><a href="dev/reference/project_config.tests.pytest_plugin.html#project_config.tests.pytest_plugin._create_files">_create_files() (in module project_config.tests.pytest_plugin)</a>
+</li>
+      <li><a href="dev/reference/project_config.tests.pytest_plugin.html#project_config.tests.pytest_plugin._create_tree">_create_tree() (in module project_config.tests.pytest_plugin)</a>
 </li>
       <li><a href="dev/reference/project_config.plugins.include.html#project_config.plugins.include._directories_not_accepted_as_inputs_error">_directories_not_accepted_as_inputs_error() (in module project_config.plugins.include)</a>
 </li>
@@ -223,6 +232,12 @@
 </li>
       <li><a href="dev/reference/project_config.fetchers.github.html#project_config.fetchers.github._get_default_branch_from_git_repo">_get_default_branch_from_git_repo() (in module project_config.fetchers.github)</a>
 </li>
+      <li><a href="dev/reference/project_config.fetchers.github.html#project_config.fetchers.github._get_default_branch_from_repo_branches_html">_get_default_branch_from_repo_branches_html() (in module project_config.fetchers.github)</a>
+</li>
+      <li><a href="dev/reference/project_config.fetchers.github.html#project_config.fetchers.github._get_default_branch_from_repo_github_api">_get_default_branch_from_repo_github_api() (in module project_config.fetchers.github)</a>
+</li>
+      <li><a href="dev/reference/project_config.fetchers.html#project_config.fetchers._get_scheme_from_urlparts">_get_scheme_from_urlparts() (in module project_config.fetchers)</a>
+</li>
       <li><a href="dev/reference/project_config.serializers.html#project_config.serializers._get_serializer">_get_serializer() (in module project_config.serializers)</a>
 </li>
       <li><a href="dev/reference/project_config.serializers.html#project_config.serializers._identify_serializer">_identify_serializer() (in module project_config.serializers)</a>
@@ -239,6 +254,8 @@
 </li>
       <li><a href="dev/reference/project_config.plugins.html#project_config.plugins.Plugins._prepare_default_plugins_cache">_prepare_default_plugins_cache() (project_config.plugins.Plugins method)</a>
 </li>
+      <li><a href="dev/reference/project_config.reporters.html#project_config.reporters.ThirdPartyReporters._prepare_third_party_reporters">_prepare_third_party_reporters() (project_config.reporters.ThirdPartyReporters method)</a>
+</li>
       <li><a href="dev/reference/project_config.project.html#project_config.project.Project._process_conditionals_for_rule">_process_conditionals_for_rule() (project_config.project.Project method)</a>
 </li>
       <li><a href="dev/reference/project_config.project.html#project_config.project.Project._run_check">_run_check() (project_config.project.Project method)</a>
@@ -246,6 +263,23 @@
       <li><a href="dev/reference/project_config.reporters.toml.html#project_config.reporters.toml._toml_dump_flow_style">_toml_dump_flow_style() (in module project_config.reporters.toml)</a>
 </li>
       <li><a href="dev/reference/project_config.config.style.html#project_config.config.style.Style._validate_style_preparing_new_plugins">_validate_style_preparing_new_plugins() (project_config.config.style.Style method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="A">A</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    action()
+
+      <ul>
+        <li><a href="dev/plugins.html#action">built-in function</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="dev/reference/project_config.tests.pytest_plugin.html#project_config.tests.pytest_plugin.assert_project_config_plugin_action">assert_project_config_plugin_action() (in module project_config.tests.pytest_plugin)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -269,6 +303,8 @@
     built-in function
 
       <ul>
+        <li><a href="dev/plugins.html#action">action()</a>
+</li>
         <li><a href="reference/plugins.html#op">op()</a>
 </li>
         <li><a href="reference/plugins.html#regex_match">regex_match()</a>
@@ -298,13 +334,11 @@
 </li>
       <li><a href="dev/reference/project_config.project.html#project_config.project.Project.check">check() (project_config.project.Project method)</a>
 </li>
-      <li><a href="dev/reference/project_config.project.html#project_config.project.Project.clean">clean() (project_config.project.Project method)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="dev/reference/project_config.project.html#project_config.project.Project.color">color (project_config.project.Project attribute)</a>
+      <li><a href="dev/reference/project_config.project.html#project_config.project.Project.clean">clean() (project_config.project.Project method)</a>
 </li>
-      <li><a href="dev/reference/project_config.project.html#project_config.project.Project.command">command (project_config.project.Project attribute)</a>
+      <li><a href="dev/reference/project_config.project.html#project_config.project.Project.color">color (project_config.project.Project attribute)</a>
 </li>
       <li><a href="dev/reference/project_config.project.html#project_config.project.ConditionalsFalseResult">ConditionalsFalseResult</a>
 </li>
@@ -366,8 +400,6 @@
 <h2 id="E">E</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="dev/reference/project_config.serializers.editorconfig.html#project_config.serializers.editorconfig.EditorConfigError">EditorConfigError</a>
-</li>
       <li><a href="dev/reference/project_config.types.html#project_config.types.ErrorDict">ErrorDict (class in project_config.types)</a>
 </li>
       <li><a href="dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseNoopFormattedReporter.errors">errors (project_config.reporters.base.BaseNoopFormattedReporter attribute)</a>
@@ -408,8 +440,6 @@
 <h2 id="F">F</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="dev/reference/project_config.reporters.html#project_config.reporters.ReporterNotImplementedError.factory">factory() (project_config.reporters.ReporterNotImplementedError class method)</a>
-</li>
       <li><a href="dev/reference/project_config.fetchers.html#project_config.fetchers.fetch">fetch() (in module project_config.fetchers)</a>
 
       <ul>
@@ -572,6 +602,8 @@
 <h2 id="I">I</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="dev/reference/project_config.reporters.html#project_config.reporters.ThirdPartyReporters.ids">ids (project_config.reporters.ThirdPartyReporters property)</a>
+</li>
       <li><a href="dev/reference/project_config.plugins.include.html#project_config.plugins.include.IncludePlugin.ifIncludeLines">ifIncludeLines() (project_config.plugins.include.IncludePlugin static method)</a>
 </li>
       <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathPlugin.ifJMESPathsMatch">ifJMESPathsMatch() (project_config.plugins.jmespath.JMESPathPlugin static method)</a>
@@ -580,13 +612,19 @@
 </li>
       <li><a href="dev/reference/project_config.plugins.include.html#project_config.plugins.include.IncludePlugin">IncludePlugin (class in project_config.plugins.include)</a>
 </li>
+      <li><a href="dev/reference/project_config.reporters.html#project_config.reporters.ThirdPartyReporters.instance">instance (project_config.reporters.ThirdPartyReporters attribute)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="dev/reference/project_config.project.html#project_config.project.InterruptCheck">InterruptCheck</a>
 </li>
+      <li><a href="dev/reference/project_config.reporters.html#project_config.reporters.InvalidNotBasedThirdPartyReporter">InvalidNotBasedThirdPartyReporter</a>
+</li>
       <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.InvalidOperator">InvalidOperator</a>
 </li>
       <li><a href="dev/reference/project_config.plugins.html#project_config.plugins.InvalidPluginFunction">InvalidPluginFunction</a>
+</li>
+      <li><a href="dev/reference/project_config.reporters.html#project_config.reporters.InvalidThirdPartyReportersModule">InvalidThirdPartyReportersModule</a>
 </li>
       <li><a href="dev/reference/project_config.plugins.html#project_config.plugins.Plugins.is_valid_action">is_valid_action() (project_config.plugins.Plugins method)</a>
 </li>
@@ -616,7 +654,7 @@
 <h2 id="L">L</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="dev/reference/project_config.plugins.html#project_config.plugins.Plugins.loaded_plugin_names">loaded_plugin_names (project_config.plugins.Plugins property)</a>
+      <li><a href="dev/reference/project_config.reporters.html#project_config.reporters.ThirdPartyReporters.load">load() (project_config.reporters.ThirdPartyReporters method)</a>
 </li>
       <li><a href="dev/reference/project_config.serializers.editorconfig.html#project_config.serializers.editorconfig.loads">loads() (in module project_config.serializers.editorconfig)</a>
 
@@ -663,7 +701,9 @@
 </li>
         <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathError.message">(project_config.plugins.jmespath.JMESPathError attribute)</a>
 </li>
-        <li><a href="dev/reference/project_config.reporters.html#project_config.reporters.ReporterNotImplementedError.message">(project_config.reporters.ReporterNotImplementedError attribute)</a>
+        <li><a href="dev/reference/project_config.reporters.html#project_config.reporters.InvalidNotBasedThirdPartyReporter.message">(project_config.reporters.InvalidNotBasedThirdPartyReporter attribute)</a>
+</li>
+        <li><a href="dev/reference/project_config.reporters.html#project_config.reporters.InvalidThirdPartyReportersModule.message">(project_config.reporters.InvalidThirdPartyReportersModule attribute)</a>
 </li>
         <li><a href="dev/reference/project_config.serializers.html#project_config.serializers.SerializerError.message">(project_config.serializers.SerializerError attribute)</a>
 </li>
@@ -734,6 +774,10 @@
 </li>
         <li><a href="dev/reference/project_config.serializers.yaml.html#module-project_config.serializers.yaml">project_config.serializers.yaml</a>
 </li>
+        <li><a href="dev/reference/project_config.tests.html#module-project_config.tests">project_config.tests</a>
+</li>
+        <li><a href="dev/reference/project_config.tests.pytest_plugin.html#module-project_config.tests.pytest_plugin">project_config.tests.pytest_plugin</a>
+</li>
         <li><a href="dev/reference/project_config.tree.html#module-project_config.tree">project_config.tree</a>
 </li>
         <li><a href="dev/reference/project_config.types.html#module-project_config.types">project_config.types</a>
@@ -764,15 +808,11 @@
 <h2 id="P">P</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="dev/reference/project_config.serializers.editorconfig.html#project_config.serializers.editorconfig.ParsingError">ParsingError</a>
-</li>
       <li><a href="dev/reference/project_config.plugins.html#project_config.plugins.Plugins.plugin_names">plugin_names (project_config.plugins.Plugins property)</a>
-</li>
-      <li><a href="dev/reference/project_config.plugins.html#project_config.plugins.Plugins.plugin_names_actions">plugin_names_actions (project_config.plugins.Plugins property)</a>
 </li>
       <li><a href="dev/reference/project_config.plugins.html#project_config.plugins.Plugins">Plugins (class in project_config.plugins)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.html#project_config.plugins.Plugins.prepare_third_party_plugin">prepare_third_party_plugin() (project_config.plugins.Plugins method)</a>
+      <li><a href="dev/reference/project_config.plugins.html#project_config.plugins.Plugins.prepare_3rd_party_plugin">prepare_3rd_party_plugin() (project_config.plugins.Plugins method)</a>
 </li>
       <li><a href="dev/reference/project_config.project.html#project_config.project.Project">Project (class in project_config.project)</a>
 </li>
@@ -895,8 +935,6 @@
         <li><a href="dev/reference/project_config.project.html#module-project_config.project">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     project_config.reporters
 
@@ -904,6 +942,8 @@
         <li><a href="dev/reference/project_config.reporters.html#module-project_config.reporters">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     project_config.reporters.base
 
@@ -982,6 +1022,20 @@
 </li>
       </ul></li>
       <li>
+    project_config.tests
+
+      <ul>
+        <li><a href="dev/reference/project_config.tests.html#module-project_config.tests">module</a>
+</li>
+      </ul></li>
+      <li>
+    project_config.tests.pytest_plugin
+
+      <ul>
+        <li><a href="dev/reference/project_config.tests.pytest_plugin.html#module-project_config.tests.pytest_plugin">module</a>
+</li>
+      </ul></li>
+      <li>
     project_config.tree
 
       <ul>
@@ -1002,6 +1056,8 @@
         <li><a href="dev/reference/project_config.utils.html#module-project_config.utils">module</a>
 </li>
       </ul></li>
+      <li><a href="dev/reference/project_config.tests.pytest_plugin.html#project_config.tests.pytest_plugin.project_config_plugin_action_asserter">project_config_plugin_action_asserter() (in module project_config.tests.pytest_plugin)</a>
+</li>
       <li><a href="dev/reference/project_config.exceptions.html#project_config.exceptions.ProjectConfigCheckFailedBase">ProjectConfigCheckFailedBase</a>
 </li>
       <li><a href="dev/reference/project_config.exceptions.html#project_config.exceptions.ProjectConfigException">ProjectConfigException</a>
@@ -1051,15 +1107,13 @@
         <li><a href="reference/plugins.html#regex_search">built-in function</a>
 </li>
       </ul></li>
-      <li><a href="dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseReporter.report_error">report_error() (project_config.reporters.base.BaseReporter method)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseReporter.report_error">report_error() (project_config.reporters.base.BaseReporter method)</a>
+</li>
       <li><a href="dev/reference/project_config.project.html#project_config.project.Project.reporter_format">reporter_format (project_config.project.Project attribute)</a>
 </li>
-      <li><a href="dev/reference/project_config.project.html#project_config.project.Project.reporter_name">reporter_name (project_config.project.Project attribute)</a>
-</li>
-      <li><a href="dev/reference/project_config.reporters.html#project_config.reporters.ReporterNotImplementedError">ReporterNotImplementedError</a>
+      <li><a href="dev/reference/project_config.project.html#project_config.project.Project.reporter_id">reporter_id (project_config.project.Project attribute)</a>
 </li>
       <li><a href="dev/reference/project_config.fetchers.html#project_config.fetchers.resolve_maybe_relative_url">resolve_maybe_relative_url() (in module project_config.fetchers)</a>
 </li>
@@ -1123,6 +1177,8 @@
 </li>
       <li><a href="dev/reference/project_config.reporters.table.html#project_config.reporters.table.TableReporter">TableReporter (class in project_config.reporters.table)</a>
 </li>
+      <li><a href="dev/reference/project_config.reporters.html#project_config.reporters.ThirdPartyReporters">ThirdPartyReporters (class in project_config.reporters)</a>
+</li>
       <li><a href="dev/reference/project_config.reporters.toml.html#project_config.reporters.toml.TomlColorReporter">TomlColorReporter (class in project_config.reporters.toml)</a>
 </li>
   </ul></td>
@@ -1145,11 +1201,15 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="dev/reference/project_config.config.html#project_config.config.validate_config">validate_config() (in module project_config.config)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="dev/reference/project_config.config.html#project_config.config.validate_config_cache">validate_config_cache() (in module project_config.config)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="dev/reference/project_config.config.html#project_config.config.validate_config_style">validate_config_style() (in module project_config.config)</a>
+</li>
+      <li><a href="dev/reference/project_config.reporters.html#project_config.reporters.ThirdPartyReporters.validate_reporter_class">validate_reporter_class() (project_config.reporters.ThirdPartyReporters method)</a>
+</li>
+      <li><a href="dev/reference/project_config.reporters.html#project_config.reporters.ThirdPartyReporters.validate_reporter_module">validate_reporter_module() (project_config.reporters.ThirdPartyReporters method)</a>
 </li>
   </ul></td>
 </tr></table>

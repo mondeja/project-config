@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Objects serialization &mdash; project-config 0.1.0 documentation</title>
+  <title>Objects serialization &mdash; project-config 0.2.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -23,8 +23,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Reference" href="../dev/reference/modules.html" />
-    <link rel="prev" title="project-config - CLI interface" href="../reference/cli.html" /> 
+    <link rel="next" title="Writing third party plugins" href="../dev/plugins.html" />
+    <link rel="prev" title="Rationale" href="rationale.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -35,7 +35,7 @@
             <a href="../index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.1
+                0.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -53,13 +53,14 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../reference/cli.html">project-config CLI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reference/config.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reference/styling.html">Styling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reference/plugins.html">Plugins</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../reference/cli.html">project-config - CLI interface</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">In depth</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="rationale.html">Rationale</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Objects serialization</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#json">JSON</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#json5">JSON5</a></li>
@@ -73,6 +74,9 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">For developers</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../dev/plugins.html">Writing third party plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev/reporters.html">Writing third party reporters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev/contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../dev/reference/modules.html">Reference</a></li>
 </ul>
 
@@ -103,14 +107,17 @@
   <section id="objects-serialization">
 <h1>Objects serialization<a class="headerlink" href="#objects-serialization" title="Permalink to this headline"></a></h1>
 <p>Some plugins like <a class="reference internal" href="../reference/plugins.html#jmespath"><span class="std std-ref">jmespath</span></a> apply their
-actions against object-serialized version of files. This is really
-convenient for configuration files because the most common
-files formats like JSON, TOML or YAML can be converted into a
+actions against object-serialized version of files. Also, the style
+files itself parsed by <strong>project-config</strong> to execute the rules are
+serialized to objects.</p>
+<p>This is really convenient for configuration files because the most
+common files formats like JSON, TOML or YAML can be converted into a
 map (dictionary in Python, object in Javascript) to perform operations
 against the structured nodes.</p>
-<p>Serialization converts strings to a Python dictionary using loader
-functions depending on the passed format. The format is discovered,
-based mostly on file names, using <a class="reference external" href="https://github.com/pre-commit/identify">identify</a>.</p>
+<p>The serialization process of <strong>project-config</strong> converts strings to
+Python dictionaries using loader functions depending on the format
+of the files. The format is discovered, based mostly on file names,
+using <a class="reference external" href="https://github.com/pre-commit/identify">identify</a>.</p>
 <p>The next formats are currently supported:</p>
 <section id="json">
 <h2>JSON<a class="headerlink" href="#json" title="Permalink to this headline"></a></h2>
@@ -183,9 +190,7 @@ executing them.</p>
 <li><p>Loader: <a class="reference external" href="https://docs.python.org/3/library/functions.html#exec" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">exec()</span></code></a></p></li>
 </ul>
 <div class="sphinx-tabs docutils container">
-<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-1-1-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-1-1-0" name="1-0" role="tab" tabindex="0">foo.py</button><button aria-controls="panel-1-1-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-1-1-1" name="1-1" role="tab" tabindex="-1">object</button></div><div aria-labelledby="tab-1-1-0" class="sphinx-tabs-panel" id="panel-1-1-0" name="1-0" role="tabpanel" tabindex="0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;Example Python file.&quot;&quot;&quot;</span>
-
-<span class="n">bar</span> <span class="o">=</span> <span class="s2">&quot;baz&quot;</span>
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-1-1-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-1-1-0" name="1-0" role="tab" tabindex="0">foo.py</button><button aria-controls="panel-1-1-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-1-1-1" name="1-1" role="tab" tabindex="-1">object</button></div><div aria-labelledby="tab-1-1-0" class="sphinx-tabs-panel" id="panel-1-1-0" name="1-0" role="tabpanel" tabindex="0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">bar</span> <span class="o">=</span> <span class="s2">&quot;baz&quot;</span>
 </pre></div>
 </div>
 </div><div aria-labelledby="tab-1-1-1" class="sphinx-tabs-panel" hidden="true" id="panel-1-1-1" name="1-1" role="tabpanel" tabindex="0"><div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
@@ -201,8 +206,8 @@ executing them.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="../reference/cli.html" class="btn btn-neutral float-left" title="project-config - CLI interface" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../dev/reference/modules.html" class="btn btn-neutral float-right" title="Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="rationale.html" class="btn btn-neutral float-left" title="Rationale" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../dev/plugins.html" class="btn btn-neutral float-right" title="Writing third party plugins" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

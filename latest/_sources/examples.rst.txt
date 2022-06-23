@@ -62,7 +62,7 @@ forcing the definition of ``styles`` as an array for styles.
                  ["type(style)", "array"],
                  // at least one style configured
                  ["op(length(style), '>', `0`)", true],
-         
+
                  // configure cache explicitly
                  ["contains(keys(@), 'cache')", true],
                  // cache must have a valid value
@@ -75,3 +75,12 @@ forcing the definition of ``styles`` as an array for styles.
            ],
          }
 
+.. raw:: html
+
+   <hr>
+
+.. tip::
+
+   For more complex examples check my own styles at `mondeja/project-config-styles`_.
+
+   .. _mondeja/project-config-styles: https://github.com/mondeja/project-config-styles
