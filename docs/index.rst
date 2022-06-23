@@ -33,6 +33,7 @@ multiple projects.
    :maxdepth: 2
    :caption: For developers
 
-   dev/contributing
+   dev/plugins
    dev/reporters
+   dev/contributing
    dev/reference/modules

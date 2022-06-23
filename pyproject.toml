@@ -68,6 +68,9 @@ project-config = "project_config.__main__:main"
 include = "project_config.plugins.include:IncludePlugin"
 jmespath = "project_config.plugins.jmespath:JMESPathPlugin"
 
+[tool.poetry.plugins."pytest11"]
+project-config-tester = "project_config.tests.pytest_plugin"
+
 [tool.bump]
 targets = [
   { file = "pyproject.toml", regex = "(version = [\"'])(\\d+\\.\\d+\\.\\d+)([\"'])" },
@@ -178,7 +181,7 @@ flake8-docstrings = [
 ]
 
 [tool.flakeheaven.exceptions."docs/**/*.rst"]
-flake8-docstrings = ["-D100"]
+flake8-docstrings = ["-D100", "-D101", "-D102"]
 flake8-print = ["-T201"]
 
 [tool.flakeheaven.exceptions."src/project_config/plugins/**"]
@@ -190,4 +193,10 @@ flake8-docstrings = [
   "-D102",
   # Plugins must not document all arguments because are always repeated
   "-D417",
+]
+
+[tool.flakeheaven.exceptions."docs/dev/plugins.rst"]
+pyflakes = [
+  # Imported some constants in an example without using them
+  "-F401",
 ]

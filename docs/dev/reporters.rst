@@ -1,7 +1,12 @@
+*****************************
 Writing third party reporters
-=============================
+*****************************
 
-**project-config** discover third party reporters from plugins
+.. seealso::
+
+   :ref:`reference/cli:Reporting`
+
+**project-config** discover third party reporters from plugin entrypoints
 looking for modules in the entrypoints group ``project_config.reporters``,
 so the first thing is to add the entrypoint to the group:
 
@@ -32,7 +37,14 @@ so the first thing is to add the entrypoint to the group:
              ],
          }
 
-A valid reporter module is made of two public classes which inherit from
+The name of the entrypoint (`my_reporter` in the previous example)
+is the name of the reporter that you must pass in the CLI option
+``-r`` / ``--reporter`` to use it.
+
+Reporters module
+================
+
+A valid reporters module is made of two public classes which inherit from
 :py:class:`project_config.reporters.base.BaseReporter`, one with ``ColorReporter``
 (the colorized version of the reporter) as part of the name of the class
 and other with ``Reporter``. If the user pass to the CLI ``--no-color``, the

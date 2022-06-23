@@ -228,7 +228,7 @@ class JMESPathPlugin:
                 }
                 continue
 
-            instance = tree.serialize_file(fpath, fcontent)
+            instance = tree.serialize_file(fpath)
 
             for e, (expression, expected_value) in enumerate(value):
                 try:
@@ -345,7 +345,7 @@ class JMESPathPlugin:
                 }
                 continue
 
-            instance = tree.serialize_file(fpath, fcontent)
+            instance = tree.serialize_file(fpath)
 
             for e, (expression, expected_value) in enumerate(
                 jmespath_match_tuples,

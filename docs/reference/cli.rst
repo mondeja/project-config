@@ -40,8 +40,8 @@ project-config CLI
       * ``project-config show cache`` Show cache directory location.
       * ``project-config clean cache`` Clean the persistent cache of remote collected sources.
 
-Reporting errors
-================
+Reporting
+=========
 
 **project-config** supports multiple formats for reporting. Currently,
 the following reporters are supported:

@@ -71,10 +71,11 @@ def test_includeLines(
     rule,
     expected_results,
     tmp_path,
-    assert_plugin_action,
+    assert_project_config_plugin_action,
 ):
-    assert_plugin_action(
-        IncludePlugin.includeLines,
+    assert_project_config_plugin_action(
+        IncludePlugin,
+        "includeLines",
         tmp_path,
         files,
         value,
@@ -195,10 +196,11 @@ def test_ifIncludeLines(
     rule,
     expected_results,
     tmp_path,
-    assert_plugin_action,
+    assert_project_config_plugin_action,
 ):
-    assert_plugin_action(
-        IncludePlugin.ifIncludeLines,
+    assert_project_config_plugin_action(
+        IncludePlugin,
+        "ifIncludeLines",
         tmp_path,
         files,
         value,
