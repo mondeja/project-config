@@ -64,11 +64,10 @@ The reporter output affects the output of the next commands:
 * ``project-config show config``
 * ``project-config show style``
 
-.. tip::
+.. note::
 
-   Note that colorized output can't be serialized, so if you want to
-   postprocess the report in the command line use always the ``--no-color``
-   flag.
+   Colorized output can't be serialized, so if you want to postprocess the report
+   in the command line use always the ``--no-color`` flag.
 
 Additional third party reporters can be implemented as plugins,
 see :ref:`dev/reporters:Writing third party reporters` for more information.

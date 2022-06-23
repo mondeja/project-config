@@ -17,10 +17,10 @@ multiple projects.
    :maxdepth: 3
    :caption: Reference
 
+   reference/cli
    reference/config
    reference/styling
    reference/plugins
-   reference/cli
 
 .. toctree::
    :maxdepth: 3
