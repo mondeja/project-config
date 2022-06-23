@@ -8,6 +8,7 @@ from tabulate import tabulate_formats
 
 from project_config.compat import importlib_metadata
 from project_config.exceptions import ProjectConfigException
+from project_config.reporters.base import BaseReporter
 
 
 PROJECT_CONFIG_REPORTERS_ENTRYPOINTS_GROUP = "project_config.reporters"
@@ -75,7 +76,15 @@ def get_reporter(
         ) = third_party_reporters.validate_reporter_module(
             reporter_module,
         )
+        # validate both reporters in the class
+        for class_name in (color_class_name, bw_class_name):
+            third_party_reporters.validate_reporter_class(
+                getattr(reporter_module, class_name),
+            )
+
         reporter_class_name = color_class_name if color else bw_class_name
+        Reporter = getattr(reporter_module, reporter_class_name)
+        third_party_reporters.validate_reporter_class(Reporter)
     else:
         reporter_module = importlib.import_module(
             f"project_config.reporters.{reporter_name}",
@@ -85,8 +94,9 @@ def get_reporter(
                 "Reporter",
                 "ColorReporter",
             )
+        Reporter = getattr(reporter_module, reporter_class_name)
 
-    return getattr(reporter_module, reporter_class_name)(rootdir, fmt=fmt)
+    return Reporter(rootdir, fmt=fmt)
 
 
 class ThirdPartyReporters:
@@ -155,7 +165,7 @@ class ThirdPartyReporters:
                     color_reporter_class_name = object_name
                 else:
                     raise InvalidThirdPartyReportersModule(
-                        "Multiple public colors reporters found in module"
+                        "Multiple public color reporters found in module"
                         f" '{reporter_module.__name__}'",
                     )
             elif "Reporter" in object_name:
@@ -177,3 +187,15 @@ class ThirdPartyReporters:
                 f" '{reporter_module.__name__}'",
             )
         return color_reporter_class_name, bw_reporter_class_name
+
+    def validate_reporter_class(self, reporter_class: t.Any) -> None:
+        """Validate a reporter class.
+
+        Args:
+            reporter_class (type): Reporter class to validate.
+        """
+        if not issubclass(reporter_class, BaseReporter):
+            raise InvalidNotBasedThirdPartyReporter(
+                f"Reporter class '{reporter_class.__name__}' is not"
+                " a subclass of BaseReporter",
+            )

@@ -33,4 +33,5 @@ multiple projects.
    :caption: For developers
 
    dev/contributing
+   dev/reporters
    dev/reference/modules
