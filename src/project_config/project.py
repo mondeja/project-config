@@ -129,8 +129,8 @@ class Project:
         rule: Rule,
         rule_index: int,
     ) -> None:
+        conditional_failed = False
         for conditional in conditionals:
-            conditional_failed = False
             try:
                 action_function = (
                     self.config.style.plugins.get_function_for_action(
@@ -169,8 +169,8 @@ class Project:
                         f"Breakage type '{breakage_type}' is not implemented"
                         " for conditionals checking",
                     )
-            if conditional_failed:
-                raise InterruptCheck()
+        if conditional_failed:
+            raise InterruptCheck()
 
     def _run_check(self) -> None:
         for r, rule in enumerate(self.config["style"]["rules"]):
