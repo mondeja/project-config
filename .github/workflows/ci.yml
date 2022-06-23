@@ -18,34 +18,31 @@ jobs:
       matrix:
         include:
           - platform: ubuntu-latest
-            pytest-version: 3.7
+            python-version: 3.7
           - platform: ubuntu-latest
-            pytest-version: 3.8
+            python-version: 3.8
           - platform: ubuntu-latest
-            pytest-version: 3.9
+            python-version: 3.9
           - platform: ubuntu-latest
-            pytest-version: 3.10
-          - platform: ubuntu-latest
-            pytest-version: 3.11-dev
+            python-version: '3.10'
           - platform: macos-latest
-            pytest-version: 3.7
+            python-version: 3.7
           - platform: macos-latest
-            pytest-version: 3.10
+            python-version: '3.10'
           - platform: windows-latest
-            pytest-version: 3.7
+            python-version: 3.7
           - platform: windows-latest
-            pytest-version: 3.10
+            python-version: '3.10'
     steps:
       - uses: actions/checkout@v3
-      - name: Install poetry
-        run: |
-          pip install -U pip poetry==1.2.0b1
-          pip list
       - name: Set up Python v${{ matrix.python-version }}
         uses: actions/setup-python@v3
         with:
           python-version: ${{ matrix.python-version }}
-          cache: poetry
+      - name: Install poetry
+        run: |
+          pip install -U pip poetry==1.2.0b1
+          pip list
       - name: Install dependencies
         run: |
           poetry install --with test

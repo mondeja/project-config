@@ -9,6 +9,7 @@ if sys.version_info < (3, 8):
 else:
     from typing import Protocol, TypedDict
 
+
 if sys.version_info < (3, 9):
     cached_function = functools.lru_cache(maxsize=None)
 else:
