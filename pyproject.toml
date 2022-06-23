@@ -179,6 +179,7 @@ flake8-docstrings = [
 
 [tool.flakeheaven.exceptions."docs/**/*.rst"]
 flake8-docstrings = ["-D100"]
+flake8-print = ["-T201"]
 
 [tool.flakeheaven.exceptions."src/project_config/plugins/**"]
 flake8-docstrings = [
