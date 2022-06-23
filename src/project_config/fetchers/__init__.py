@@ -118,8 +118,8 @@ def resolve_maybe_relative_url(url: str, parent_url: str, rootdir: str) -> str:
                 "/",
                 maxsplit=1,
             )
-            os.path.split(parent_path)[0]
             return (
+                # here `urljoin` does the relative resolvement
                 f"{parent_url_parts.scheme}://{parent_url_parts.netloc}/"
                 f"{project}/{urllib.parse.urljoin(parent_path, url)}"
             )
