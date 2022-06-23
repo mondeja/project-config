@@ -19,11 +19,11 @@ def test_Config___getitem__(
     )
 
     with chdir(tmp_path):
-        config = Config(None)
+        config = Config(str(tmp_path), None)
     assert config["style"] == {"rules": [{"files": ["foo"]}]}
     assert isinstance(config.dict_, dict)
 
 
 def test_Config_fails(tmp_path, chdir):
     with chdir(tmp_path), pytest.raises(ConfigurationFilesNotFound):
-        Config(None)
+        Config(str(tmp_path), None)

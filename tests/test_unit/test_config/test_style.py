@@ -1,5 +1,3 @@
-import os
-
 import pytest
 
 from project_config.config import Config
@@ -29,10 +27,7 @@ from project_config.config.style import ProjectConfigInvalidStyle
                 "style.json5": '{ extends: ["bar.json"] }',
             },
             [
-                (
-                    "style.json5: .extends[0]"
-                    f" -> '{{rootdir}}{os.sep}bar.json' file not found"
-                ),
+                "style.json5: .extends[0] -> 'bar.json' file not found",
             ],
             id="fetch-extend-styles-error",
         ),
@@ -73,11 +68,7 @@ from project_config.config.style import ProjectConfigInvalidStyle
                 "bar.json5": "{ rules: [] }",
             },
             [
-                (
-                    # FIXME: show paths relative to rootdir, not absolute
-                    f"{{rootdir}}{os.sep}bar.json5: .rules"
-                    " -> at least one rule is required"
-                ),
+                "bar.json5: .rules -> at least one rule is required",
             ],
             id="extend-partial-style-empty-rules",
         ),
@@ -89,10 +80,7 @@ from project_config.config.style import ProjectConfigInvalidStyle
                 "baz.json5": "{ rules: [] }",
             },
             [
-                (
-                    f"{{rootdir}}{os.sep}baz.json5: .rules"
-                    " -> at least one rule is required"
-                ),
+                "baz.json5: .rules -> at least one rule is required",
             ],
             id="multiple-extends",
         ),
@@ -401,11 +389,11 @@ def test_load_style(tmp_path, create_files, chdir, files, expected_result):
 
         if isinstance(expected_result, list):
             expected_result = [
-                message.replace("{rootdir}", tmp_path.as_posix())
+                message.replace("{rootdir}", str(tmp_path))
                 for message in expected_result
             ]
             with pytest.raises(ProjectConfigInvalidStyle) as exc:
-                Config(None)
+                Config(str(tmp_path), None)
             assert exc.value.args[0] == (
                 ".project-config.toml"
                 if ".project-config.toml" in files
@@ -413,5 +401,5 @@ def test_load_style(tmp_path, create_files, chdir, files, expected_result):
             ), exc.value
             assert exc.value.args[1] == expected_result
         else:
-            config = Config(None)
+            config = Config(str(tmp_path), None)
             assert config.dict_["style"] == expected_result

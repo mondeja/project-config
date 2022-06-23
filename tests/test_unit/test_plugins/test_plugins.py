@@ -117,31 +117,24 @@ def test_prepare_3rd_party_plugin(mocker):
     #
     # DeprecationWarning: Accessing entry points by index is deprecated.
     # Cast to tuple if needed.
-    default_plugin_entrypoints_tuple = tuple(default_plugin_entrypoints)
+    default_plugin_entrypoints_tuple = tuple(
+        default_plugin_entrypoints,
+    )
 
     # assert that default plugins have been prepared
     for i in range(NUMBER_OF_DEFAULT_PLUGINS):
-        assert (
-            add_plugin_to_cache_spy.mock_calls[i].args[1].name
-            == default_plugin_entrypoints_tuple[i].name
-        )
-        assert (
-            add_plugin_to_cache_spy.mock_calls[i].args[1].value
-            == default_plugin_entrypoints_tuple[i].value
-        )
+        _, args, _ = add_plugin_to_cache_spy.mock_calls[i]
+        assert args[1].name == default_plugin_entrypoints_tuple[i].name
+        assert args[1].value == default_plugin_entrypoints_tuple[i].value
 
     # prepare third party plugin that overrides default
     plugins.prepare_3rd_party_plugin(plugin_that_overrides_default_plugin)
 
     # assert that the 3rd party plugin cache has been prepared
-    assert (
-        add_plugin_to_cache_spy.mock_calls[2].args[1].name
-        == plugin_that_overrides_default_plugin.name
-    )
-    assert (
-        add_plugin_to_cache_spy.mock_calls[2].args[1].value
-        == plugin_that_overrides_default_plugin.value
-    )
+    _, args, _ = add_plugin_to_cache_spy.mock_calls[2]
+    assert args[1].name == plugin_that_overrides_default_plugin.name
+    assert args[1].value == plugin_that_overrides_default_plugin.value
+
     # assert that the 3rd party plugin takes precedence
     with pytest.raises(
         ModuleNotFoundError,

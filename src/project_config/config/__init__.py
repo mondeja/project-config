@@ -167,11 +167,13 @@ class Config:
     """Configuration wrapper.
 
     Args:
+        rootdir (str): Project root directory.
         path (str): Path to the file from which the configuration
             will be loaded.
     """
 
-    def __init__(self, path: t.Optional[str]) -> None:
+    def __init__(self, rootdir: str, path: t.Optional[str]) -> None:
+        self.rootdir = rootdir
         self.path, config = read_config(path)
         validate_config(self.path, config)
         config["_cache"] = config["cache"]

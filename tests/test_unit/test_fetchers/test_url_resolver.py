@@ -10,13 +10,19 @@ from project_config.fetchers import resolve_maybe_relative_url
     (
         pytest.param(
             "foo",
-            "",
-            os.path.join(os.getcwd(), "foo"),
+            "{tmp_path}",
+            "foo",
             id="path-path",
         ),
         pytest.param(
+            os.path.join("..", "qux.ext"),
+            os.path.join("foo", "bar", "baz.ext"),
+            os.path.join("foo", "qux.ext"),
+            id="relative-outside-rootdir",
+        ),
+        pytest.param(
             os.path.abspath("foo"),
-            os.getcwd(),
+            "",
             os.path.abspath("foo"),
             id="abspath-path",
         ),
@@ -46,5 +52,12 @@ from project_config.fetchers import resolve_maybe_relative_url
         ),
     ),
 )
-def test_resolve_maybe_relative_url(url, parent_url, expected_url):
-    assert resolve_maybe_relative_url(url, parent_url) == expected_url
+def test_resolve_maybe_relative_url(url, parent_url, expected_url, tmp_path):
+    assert (
+        resolve_maybe_relative_url(
+            url.replace("{tmp_path}", str(tmp_path)),
+            parent_url.replace("{tmp_path}", str(tmp_path)),
+            str(tmp_path),
+        )
+        == expected_url
+    )
