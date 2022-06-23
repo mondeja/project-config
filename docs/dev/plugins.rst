@@ -16,7 +16,7 @@ so the first thing is to add the entrypoint to the group:
 
       .. code-block:: toml
 
-         [tool.poetry.plugins."project_config.reporters"]
+         [tool.poetry.plugins."project_config.plugins"]
          my_plugin = "package.subpackage.my_plugin_module:PluginClass"
 
    .. tab:: setup.cfg
@@ -24,7 +24,7 @@ so the first thing is to add the entrypoint to the group:
       .. code-block:: ini
 
          [options.entry_points]
-         project_config.reporters =
+         project_config.plugins =
              my_plugin = package.subpackage.my_plugin_module:PluginClass
 
    .. tab:: setup.py
@@ -32,7 +32,7 @@ so the first thing is to add the entrypoint to the group:
       .. code-block:: python
 
          entry_points = {
-             "project_config.reporters": [
+             "project_config.plugins": [
                  "my_plugin = package.subpackage.my_plugin_module:PluginClass",
              ],
          }
