@@ -112,7 +112,7 @@ def test_file_symlink(tmp_path):
     tree = Tree(tmp_path)
     tree.files_cache = TreeFilesCacheListenerMock()
 
-    generator = tree._generator([target_link_path, source_link_path])
+    generator = tree._generator([str(target_link_path), str(source_link_path)])
 
     target_fpath, target_fcontent = next(generator)
     assert str(target_fpath) == str(target_link_path)
@@ -124,3 +124,67 @@ def test_file_symlink(tmp_path):
 
     with pytest.raises(StopIteration):
         next(generator)
+
+
+def test_glob(tmp_path, chdir):
+    """Globbing works."""
+    with chdir(tmp_path):  # globbing only works from rootdir
+        dir_path = tmp_path / "foo"
+        dir_path.mkdir()
+
+        bar_path = dir_path / "bar"
+        bar_path.write_text("bar")
+        baz_path = dir_path / "baz"
+        baz_path.write_text("baz")
+
+        tree = Tree(tmp_path)
+        tree.files_cache = TreeFilesCacheListenerMock()
+
+        generator = tree._generator(["**/*"])
+        assert isinstance(generator, types.GeneratorType)
+
+        fpath, fcontent = next(generator)
+
+        assert str(fpath) == str(bar_path.relative_to(tmp_path))
+        assert fcontent == "bar"
+        assert tree.files_cache.setitem_calls == 1
+
+        fpath, fcontent = next(generator)
+        assert str(fpath) == str(baz_path.relative_to(tmp_path))
+        assert fcontent == "baz"
+        assert tree.files_cache.setitem_calls == 2
+
+        with pytest.raises(StopIteration):
+            next(generator)
+
+
+def test_glob_with_symlink(tmp_path, chdir):
+    """Globbing works with symlinks."""
+    with chdir(tmp_path):
+        source_link_path = tmp_path / "source"
+        target_link_path = tmp_path / "target"
+
+        target_link_path.write_text("target")
+
+        source_link_path.symlink_to(target_link_path)
+        assert source_link_path.read_text() == "target"
+
+        tree = Tree(tmp_path)
+        tree.files_cache = TreeFilesCacheListenerMock()
+
+        generator = tree._generator(["*"])
+        assert isinstance(generator, types.GeneratorType)
+
+        fpath, fcontent = next(generator)
+
+        assert str(fpath) == str(source_link_path.relative_to(tmp_path))
+        assert fcontent == "target"
+        assert tree.files_cache.setitem_calls == 1
+
+        fpath, fcontent = next(generator)
+        assert str(fpath) == str(target_link_path.relative_to(tmp_path))
+        assert fcontent == "target"
+        assert tree.files_cache.setitem_calls == 2
+
+        with pytest.raises(StopIteration):
+            next(generator)

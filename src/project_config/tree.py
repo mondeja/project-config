@@ -1,5 +1,6 @@
 """Cached files tree used by the linter when using checker commands."""
 
+import glob
 import os
 import typing as t
 from dataclasses import dataclass
@@ -105,8 +106,22 @@ class Tree:
         return normalized_fpath
 
     def _generator(self, fpaths: FilePathsArgument) -> TreeNodeFilesIterator:
-        for fpath in fpaths:
-            yield fpath, self.files_cache[self._cache_file(fpath)]
+        for fpath_or_glob in fpaths:
+            # try to get all existing files from glob
+            #
+            # note that when a glob does not match any files,
+            # is because the file does not exist, so the generator
+            # will yield it as is, which would lead to a unexistent
+            # file error when an user specifies a glob that do not
+            # match any files
+            fpaths_from_glob = glob.glob(fpath_or_glob)
+            if fpaths_from_glob:
+                for fpath in fpaths_from_glob:
+                    yield fpath, self.files_cache[self._cache_file(fpath)]
+            else:
+                yield fpath_or_glob, self.files_cache[
+                    self._cache_file(fpath_or_glob)
+                ]
 
     def get_file_content(self, fpath: str) -> TreeNode:
         """Returns the content of a file given his relative path.
