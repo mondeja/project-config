@@ -30,15 +30,16 @@ class Style:
         config (dict): Configuration for the project.
     """
 
-    def __init__(self) -> None:
+    def __init__(self, config: t.Any) -> None:
         self.plugins = Plugins()
+        self.config = config
 
     @classmethod
     def from_config(cls, config: t.Any) -> "Style":
         """Loads styles to the configuration passed as argument."""
-        style = cls()
+        style = cls(config)
 
-        style_gen = style._load_styles_from_config(config)
+        style_gen = style._load_styles_from_config()
         error_messages: t.List[str] = []
         while True:
             try:
@@ -59,22 +60,22 @@ class Style:
                             )
                         break
                     else:
-                        config["style"] = style_or_error
+                        style.config["style"] = style_or_error
                 else:
                     error_messages.append(style_or_error)
         if error_messages:
-            raise ProjectConfigInvalidStyle(config.path, error_messages)
+            raise ProjectConfigInvalidStyle(style.config.path, error_messages)
 
         return style
 
-    def _load_styles_from_config(self, config: t.Any) -> StyleLoderIterator:
+    def _load_styles_from_config(self) -> StyleLoderIterator:
         """Load styles yielding error messages if found.
 
         Error messages are of type string and style is of type dict.
         If the first yielded value is a dict, we have a style without errors.
         """
-        config["_style"] = config["style"]
-        style_urls = config["style"]
+        self.config["_style"] = self.config["style"]
+        style_urls = self.config["style"]
         if isinstance(style_urls, str):
             try:
                 style = fetch(style_urls)
@@ -223,6 +224,7 @@ class Style:
                         style["extends"][u] = resolve_maybe_relative_url(
                             url,
                             style_url,
+                            self.config.rootdir,
                         )
 
         # validate plugins data consistency

@@ -51,7 +51,7 @@ class Project:
     reporter_format: t.Optional[str] = None
 
     def __post_init__(self) -> None:
-        self.config = Config(self.config_path)
+        self.config = Config(self.rootdir, self.config_path)
         self.tree = Tree(self.rootdir)
         self.reporter = get_reporter(
             self.reporter_id,

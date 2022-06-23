@@ -74,7 +74,7 @@ def fetch(url: str) -> FetchResult:
     return serialize_for_url(url, string)
 
 
-def resolve_maybe_relative_url(url: str, parent_url: str) -> str:
+def resolve_maybe_relative_url(url: str, parent_url: str, rootdir: str) -> str:
     """Relative URL resolver.
 
     Args:
@@ -97,17 +97,28 @@ def resolve_maybe_relative_url(url: str, parent_url: str) -> str:
             if os.path.isabs(url):
                 return url
 
-            parent_dirpath = os.path.split(parent_url_parts.path)[0]
-            return os.path.abspath(
-                os.path.join(parent_dirpath, os.path.expanduser(url)),
+            abs_parent_url = (
+                parent_url
+                if os.path.isabs(parent_url)
+                else os.path.join(rootdir, parent_url)
             )
+            abs_parent_dir_url = (
+                os.path.split(abs_parent_url)[0]
+                if not os.path.isdir(abs_parent_url)
+                else abs_parent_url
+            )
+            resolved_url = os.path.abspath(
+                os.path.join(abs_parent_dir_url, url),
+            )
+
+            return os.path.relpath(resolved_url, rootdir)
 
         elif parent_url_scheme in ("gh", "github"):
             project, parent_path = parent_url_parts.path.lstrip("/").split(
                 "/",
                 maxsplit=1,
             )
-            parent_dirpath = os.path.split(parent_path)[0]
+            os.path.split(parent_path)[0]
             return (
                 f"{parent_url_parts.scheme}://{parent_url_parts.netloc}/"
                 f"{project}/{urllib.parse.urljoin(parent_path, url)}"
