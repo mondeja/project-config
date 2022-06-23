@@ -38,6 +38,25 @@ schemes_to_modnames = {
 }
 
 
+def _get_scheme_from_urlparts(url_parts: urllib.parse.SplitResult) -> str:
+    return (
+        "file"
+        if not url_parts.scheme
+        else (
+            schemes_to_modnames.get(
+                url_parts.scheme,
+                # in Windows, schemes could be confused with drive letters,
+                # as in "C:\foo\bar.txt" so in case that the scheme has only
+                # length 1 we assume it is a drive letter. Note that in Windows
+                # drive letters are of length 1 (to support more drives
+                # mounted paths must be used) and that network schemes don't
+                # have a length larger than 1:
+                (url_parts.scheme if len(url_parts.scheme) > 1 else "file"),
+            )
+        )
+    )
+
+
 def fetch(url: str) -> FetchResult:
     """Fetch a result given an URI.
 
@@ -45,11 +64,7 @@ def fetch(url: str) -> FetchResult:
         url (str): The URL of the resource to fetch.
     """
     url_parts = urllib.parse.urlsplit(url)
-    scheme = (
-        "file"
-        if not url_parts.scheme
-        else (schemes_to_modnames.get(url_parts.scheme, url_parts.scheme))
-    )
+    scheme = _get_scheme_from_urlparts(url_parts)
     try:
         mod = importlib.import_module(f"project_config.fetchers.{scheme}")
     except ImportError:
@@ -71,11 +86,13 @@ def resolve_maybe_relative_url(url: str, parent_url: str) -> str:
         str: Absolute URI for the children resource.
     """
     url_parts = urllib.parse.urlsplit(url)
+    url_scheme = _get_scheme_from_urlparts(url_parts)
 
-    if url_parts.scheme in ("", "file"):  # is a file
+    if url_scheme == "file":  # child url is a file
         parent_url_parts = urllib.parse.urlsplit(parent_url)
+        parent_url_scheme = _get_scheme_from_urlparts(parent_url_parts)
 
-        if parent_url_parts.scheme in ("", "file"):  # parent url is file also
+        if parent_url_scheme == "file":  # parent url is file also
             # we are offline, doing just path manipulation
             if os.path.isabs(url):
                 return url
@@ -85,7 +102,7 @@ def resolve_maybe_relative_url(url: str, parent_url: str) -> str:
                 os.path.join(parent_dirpath, os.path.expanduser(url)),
             )
 
-        elif parent_url_parts.scheme in ("gh", "github"):
+        elif parent_url_scheme in ("gh", "github"):
             project, parent_path = parent_url_parts.path.lstrip("/").split(
                 "/",
                 maxsplit=1,
