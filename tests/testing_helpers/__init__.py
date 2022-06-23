@@ -4,7 +4,9 @@ import urllib.parse
 import flask
 
 
-rootdir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+rootdir = os.path.abspath(
+    os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
+)
 
 TEST_SERVER_URL = "http://127.0.0.1:9997"
 TEST_SERVER_HOST, TEST_SERVER_PORT = urllib.parse.urlsplit(

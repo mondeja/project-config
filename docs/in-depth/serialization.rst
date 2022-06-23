@@ -111,8 +111,6 @@ executing them.
 
       .. code-block:: python
 
-         """Example Python file."""
-
          bar = "baz"
 
    .. tab:: object

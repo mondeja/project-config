@@ -6,7 +6,7 @@ from testing_helpers import FakePlugin, rootdir
 
 from project_config.compat import importlib_metadata
 from project_config.plugins import (
-    PROJECT_CONFIG_ENTRYPOINTS_GROUP,
+    PROJECT_CONFIG_PLUGINS_ENTRYPOINTS_GROUP,
     InvalidPluginFunction,
     Plugins,
 )
@@ -64,10 +64,10 @@ def test__prepare_default_plugins_cache_ignore_3rd_party_plugin(mocker):
             importlib_metadata.EntryPoint(
                 "foo-plugin",
                 "foo_plugin",
-                PROJECT_CONFIG_ENTRYPOINTS_GROUP,
+                PROJECT_CONFIG_PLUGINS_ENTRYPOINTS_GROUP,
             ),
             *importlib_metadata.entry_points(
-                group=PROJECT_CONFIG_ENTRYPOINTS_GROUP,
+                group=PROJECT_CONFIG_PLUGINS_ENTRYPOINTS_GROUP,
             ),
         ],
     )
@@ -93,10 +93,10 @@ def test_prepare_3rd_party_plugin(mocker):
     plugin_that_overrides_default_plugin = importlib_metadata.EntryPoint(
         "include",
         "custom_include",
-        PROJECT_CONFIG_ENTRYPOINTS_GROUP,
+        PROJECT_CONFIG_PLUGINS_ENTRYPOINTS_GROUP,
     )
     default_plugin_entrypoints = importlib_metadata.entry_points(
-        group=PROJECT_CONFIG_ENTRYPOINTS_GROUP,
+        group=PROJECT_CONFIG_PLUGINS_ENTRYPOINTS_GROUP,
     )
     mocker.patch(
         f"{importlib_metadata.__name__}.entry_points",
@@ -157,7 +157,7 @@ def test_get_function_for_action():
 
     IncludePlugin = tuple(
         importlib_metadata.entry_points(
-            group=PROJECT_CONFIG_ENTRYPOINTS_GROUP,
+            group=PROJECT_CONFIG_PLUGINS_ENTRYPOINTS_GROUP,
         ),
     )[0].load()
     includeLines_function = getattr(IncludePlugin, "includeLines")
@@ -186,11 +186,11 @@ def test_invalid_plugin_function_type(mocker):
     foo_plugin = importlib_metadata.EntryPoint(
         "fake-plugin",
         "testing_helpers:FakePlugin",
-        PROJECT_CONFIG_ENTRYPOINTS_GROUP,
+        PROJECT_CONFIG_PLUGINS_ENTRYPOINTS_GROUP,
     )
 
     default_plugin_entrypoints = importlib_metadata.entry_points(
-        group=PROJECT_CONFIG_ENTRYPOINTS_GROUP,
+        group=PROJECT_CONFIG_PLUGINS_ENTRYPOINTS_GROUP,
     )
     mocker.patch(
         f"{importlib_metadata.__name__}.entry_points",

@@ -10,7 +10,7 @@ from dataclasses import dataclass
 from project_config.config import Config
 from project_config.constants import Error, InterruptingError, ResultValue
 from project_config.plugins import InvalidPluginFunction
-from project_config.reporters import ReporterNotImplementedError, get_reporter
+from project_config.reporters import get_reporter
 from project_config.tree import Tree, TreeNodeFiles
 from project_config.types import Rule
 
@@ -37,31 +37,26 @@ class Project:
     the CLI.
 
     Args:
-        command (str): Command that will be executed, used by the reporters.
         config_path (str): Custom configuration file path.
         rootdir (str): Root directory of the project.
-        reporter_name (str): Reporter to use.
+        reporter_id (str): Reporter to use.
         color (bool): Colorized output in reporters.
         reporter_format (str): Additional format for reporter.
     """
 
-    # TODO: don't pass command to reporters
-    # TODO: refactor ``reporter_name`` -> ``reporter_id``
-    command: str
     config_path: str
     rootdir: str
-    reporter_name: str
+    reporter_id: str
     color: bool
     reporter_format: t.Optional[str] = None
 
     def __post_init__(self) -> None:
         self.config = Config(self.config_path)
         self.tree = Tree(self.rootdir)
-        self.reporter, self.reporter_name, self.reporter_format = get_reporter(
-            self.reporter_name,
+        self.reporter = get_reporter(
+            self.reporter_id,
             self.color,
             self.rootdir,
-            self.command,
         )
 
     def _check_files_existence(
@@ -278,14 +273,7 @@ class Project:
             else:
                 data = data.pop("style")
 
-            try:
-                report = self.reporter.generate_data_report(args.data, data)
-            except NotImplementedError:
-                raise ReporterNotImplementedError.factory(
-                    self.reporter_name,
-                    self.reporter_format,
-                    args.command,
-                )
+            report = self.reporter.generate_data_report(args.data, data)
 
         sys.stdout.write(report)
 
