@@ -18,6 +18,44 @@ FilePathsArgument = t.Union[t.Iterator[str], t.List[str]]
 class Tree:
     """Files cache used by the linter in checking processes.
 
+    It represents the tree of files and directories starting
+    at the root directory of the project.
+
+    Instances of :py:class:`project_config.tree.Tree` can be
+    iterated with:
+
+    .. code-block:: python
+
+       for fpath, fcontent in tree.files:
+           if fcontent is None:
+                # file does not exist
+                ...
+           elif not isinstance(fcontent, str):
+                # file is a directory
+                #
+                # so `fcontent` is another Tree instance here
+                for nested_fpath, nested_fcontent in fcontent.files:
+                    ...
+
+    If you want the serialialized version of the file you can use
+    the method :py:meth:`project_config.tree.Tree.serialize_file`:
+
+    .. code-block:: python
+
+       instance = tree.serialize_file(fpath, fcontent)
+
+    If you are not inside a context were you have the content
+    of the files (a common scenario for conditional actions)
+    # you get them calling the method
+    # :py:meth:`project_config.tree.Tree.get_file_content`:
+
+    .. code-block:: python
+
+       fcontent = tree.get_file_content(fpath)
+
+    This class caches the files and their serialized versions,
+    so subsequent access to the same files are fast.
+
     Args:
         rootdir (str): Root directory of the project.
     """

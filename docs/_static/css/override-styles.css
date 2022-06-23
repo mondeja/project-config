@@ -3,3 +3,7 @@
   margin-top: 0 !important;
   margin-bottom: 0 !important;
 }
+
+.sphinx-tabs-panel > div {
+  margin-bottom: 5px !important;
+}

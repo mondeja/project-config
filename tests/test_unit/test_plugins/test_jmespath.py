@@ -220,10 +220,11 @@ def test_JMESPathsMatch(
     rule,
     expected_results,
     tmp_path,
-    assert_plugin_action,
+    assert_project_config_plugin_action,
 ):
-    assert_plugin_action(
-        JMESPathPlugin.JMESPathsMatch,
+    assert_project_config_plugin_action(
+        JMESPathPlugin,
+        "JMESPathsMatch",
         tmp_path,
         files,
         value,
@@ -358,10 +359,11 @@ def test_JMESPath_custom_functions(
     rule,
     expected_results,
     tmp_path,
-    assert_plugin_action,
+    assert_project_config_plugin_action,
 ):
-    assert_plugin_action(
-        JMESPathPlugin.JMESPathsMatch,
+    assert_project_config_plugin_action(
+        JMESPathPlugin,
+        "JMESPathsMatch",
         tmp_path,
         files,
         value,
@@ -609,10 +611,11 @@ def test_ifJMESPathsMatch(
     rule,
     expected_results,
     tmp_path,
-    assert_plugin_action,
+    assert_project_config_plugin_action,
 ):
-    assert_plugin_action(
-        JMESPathPlugin.ifJMESPathsMatch,
+    assert_project_config_plugin_action(
+        JMESPathPlugin,
+        "ifJMESPathsMatch",
         tmp_path,
         files,
         value,

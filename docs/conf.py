@@ -43,6 +43,7 @@ extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.intersphinx",
     "sphinx.ext.napoleon",
+    "sphinx.ext.viewcode",
     "sphinx_tabs.tabs",
     "chios.bolditalic",
     "sphinx_argparse_cli",
@@ -64,6 +65,7 @@ nitpick_ignore = [
     ("py:class", "jmespath.exceptions.JMESPathError"),
     ("py:class", "jmespath.functions.Functions"),
     ("py:class", "jmespath.parser.ParsedResult"),
+    ("py:class", "project_config.types.Results"),
 ]
 nitpick_ignore_regex = [
     ("py:class", r"^t.[A-Z]\w+$"),

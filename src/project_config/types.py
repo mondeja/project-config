@@ -19,13 +19,13 @@ class Rule(TypedDict, total=False):
     files: t.List[str]
 
 
+StrictResultType: TypeAlias = t.Tuple[str, t.Union[bool, ErrorDict]]
+
 # Note that the real second item in the tuple would be
 # `t.Union[bool, ErrorDict]`, but mypy does not like multiple types.
 # TODO: investigate a generic type here?
-ResultType: TypeAlias = t.Tuple[str, t.Any]
-ResultsType: TypeAlias = t.Iterator[ResultType]
-
-Results = ResultsType
+LazyGenericResultType: TypeAlias = t.Tuple[str, t.Any]
+Results: TypeAlias = t.Iterator[LazyGenericResultType]
 
 __all__ = (
     "Rule",
