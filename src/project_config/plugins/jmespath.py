@@ -332,7 +332,6 @@ class JMESPathPlugin:
                     }
                     return
 
-        error_happened = False
         for fpath, jmespath_match_tuples in value.items():
             fcontent = tree.get_file_content(fpath)
             if fcontent is None:
@@ -361,7 +360,6 @@ class JMESPathPlugin:
                         "definition": f".ifJMESPathsMatch[{fpath}][{e}][0]",
                         "file": fpath,
                     }
-                    error_happened = True
                     continue
 
                 try:
@@ -376,12 +374,10 @@ class JMESPathPlugin:
                         "definition": f".ifJMESPathsMatch[{fpath}][{e}]",
                         "file": fpath,
                     }
-                    error_happened = True
                     continue
 
                 if expression_result != expected_value:
                     yield ResultValue, False
                     return
 
-        if not error_happened:
-            yield ResultValue, True
+        yield ResultValue, True

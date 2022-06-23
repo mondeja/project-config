@@ -113,6 +113,7 @@ python -c 'import webbrowser as w;w.open("http://127.0.0.1:8080")' &&
 python -m http.server 8080 -b localhost -d docs/_build/html"""
 lint = "pre-commit run -a"
 self = "project-config check"
+"clean:cache" = "project-config clean cache"
 
 [tool.pytest.ini_options]
 addopts = "-s --cov=src --cov-report=html"

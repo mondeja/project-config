@@ -130,6 +130,7 @@ class Project:
         rule_index: int,
     ) -> None:
         for conditional in conditionals:
+            conditional_failed = False
             try:
                 action_function = (
                     self.config.style.plugins.get_function_for_action(
@@ -152,12 +153,12 @@ class Project:
                 tree,
                 rule,
             ):
-                if breakage_type == InterruptingError:
+                if breakage_type in (InterruptingError, Error):
                     breakage_value["definition"] = (
                         f"rules[{rule_index}]" + breakage_value["definition"]
                     )
                     self.reporter.report_error(breakage_value)
-                    raise InterruptCheck()
+                    conditional_failed = True
                 elif breakage_type == ResultValue:
                     if breakage_value is False:
                         raise ConditionalsFalseResult()
@@ -168,6 +169,8 @@ class Project:
                         f"Breakage type '{breakage_type}' is not implemented"
                         " for conditionals checking",
                     )
+            if conditional_failed:
+                raise InterruptCheck()
 
     def _run_check(self) -> None:
         for r, rule in enumerate(self.config["style"]["rules"]):
