@@ -17,7 +17,7 @@ from project_config.fetchers import resolve_maybe_relative_url
         pytest.param(
             os.path.join("..", "qux.ext"),
             os.path.join("foo", "bar", "baz.ext"),
-            "foo/qux.ext",
+            os.path.join("foo", "qux.ext"),
             id="relative-outside-rootdir",
         ),
         pytest.param(
