@@ -39,7 +39,7 @@ so the first thing is to add the entrypoint to the group:
 
 The name name of the entrypoint (``my_plugin`` in the previous example)
 is the name of the plugin, the one that must be defined in :ref:`style-plugins`
-if the style need them.
+if the style need it.
 
 Plugin class
 ============
@@ -89,16 +89,16 @@ Results
 Each action must yield results, which are tuples of two items,
 defined next as `result type` - `result value`:
 
-* ``Error`` - Checking error, as the value must return a dictionary (optionally but recommendably typed as :py:class:`project_config.types.ErrorDict`) which must contains the required keys ``message`` (error message shown in the report) and ``definition`` (definition in which the error has been thrown) and an optional key ``file`` (file for which the error has been thrown).
+* ``Error`` - Checking error, a dictionary (optionally but recommendably typed as :py:class:`project_config.types.ErrorDict`) which must contains the required keys ``message`` (error message shown in the report) and ``definition`` (definition in which the error has been thrown) and an optional key ``file`` (file for which the error has been thrown).
 * ``InterruptingError`` - The same as a checking error, but this type of error will stop the execution of the subsequent rules during the checking. Useful if the user has passed some unexpected value that could lead to an invalid context in some later rule.
 
 Additionally, conditionals can yield result values, which
 define if the verbs of the rule should be executed or not.
 
-* ``ResultValue`` - Their value is a boolean. When a conditional yields it, the execution of the conditional is terminated and, if the yielded value is ``False``, the execution of the verbs of the rule are skipped. If no result values are yielded by a conditional, the execution of the verbs of the rule is always executed.
+* ``ResultValue`` - A boolean. When a conditional yields it, the execution of the conditional is terminated and, if the yielded value is ``False``, the execution of the verbs of the rule are skipped. If no result values are yielded by a conditional, the verbs of the rule are always executed as if the conditional would returned ``True``.
 
-You must import this variables from ``project_config`` their
-value can change between versions:
+You must import thess variables from ``project_config`` because their
+values can change between versions:
 
 .. code-block:: python
 
@@ -116,8 +116,8 @@ value can change between versions:
 Testing plugins
 ===============
 
-**project-config** comes with a built-in `pytest`_ fixture to
+**project-config** comes with a built-in `pytest fixture`_ to
 easily test plugin actions. See
 :py:mod:`project_config.tests.pytest_plugin`.
 
-.. _pytest: https://docs.pytest.org/en/latest/
+.. _pytest fixture: https://docs.pytest.org/en/latest/explanation/fixtures.html
