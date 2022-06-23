@@ -26,6 +26,7 @@ multiple projects.
    :maxdepth: 3
    :caption: In depth
 
+   in-depth/rationale
    in-depth/serialization
 
 .. toctree::
