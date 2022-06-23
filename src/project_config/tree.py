@@ -91,7 +91,7 @@ class Tree:
         normalized_fpath = os.path.join(self.rootdir, fpath)
         if normalized_fpath not in self.files_cache:
             if os.path.isfile(normalized_fpath):
-                with open(normalized_fpath) as f:
+                with open(normalized_fpath, encoding="utf-8") as f:
                     self.files_cache[normalized_fpath] = f.read()
             elif os.path.isdir(normalized_fpath):
                 # recursive generation

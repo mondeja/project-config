@@ -1,6 +1,7 @@
 import urllib.parse
 
 import pytest
+from testing_helpers import mark_end2end
 
 from project_config.fetchers.github import (
     _get_default_branch_from_repo_branches_html,
@@ -8,6 +9,7 @@ from project_config.fetchers.github import (
 )
 
 
+@mark_end2end
 @pytest.mark.parametrize(
     ("repo_name", "repo_owner", "expected_branch"),
     (
@@ -29,6 +31,7 @@ def test__get_default_branch_from_repo_branches_html(
     )
 
 
+@mark_end2end
 @pytest.mark.parametrize(
     ("url", "expected_content"),
     (
