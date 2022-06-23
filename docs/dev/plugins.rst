@@ -97,7 +97,7 @@ define if the verbs of the rule should be executed or not.
 
 * ``ResultValue`` - A boolean. When a conditional yields it, the execution of the conditional is terminated and, if the yielded value is ``False``, the execution of the verbs of the rule are skipped. If no result values are yielded by a conditional, the verbs of the rule are always executed as if the conditional would returned ``True``.
 
-You must import thess variables from ``project_config`` because their
+You must import these variables from ``project_config`` because their
 values can change between versions:
 
 .. code-block:: python
