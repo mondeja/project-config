@@ -21,7 +21,7 @@ sys.path.insert(0, rootdir)
 
 # -- Project information -----------------------------------------------------
 metadata = importlib_metadata.distribution("project-config").metadata
-with open(os.path.join(rootdir, "LICENSE")) as f:
+with open(os.path.join(rootdir, "LICENSE"), encoding="utf-8") as f:
     license_years_range = re.search(
         r"Copyright \(c\) (\d+\-?\d*)",
         f.read(),
@@ -144,7 +144,7 @@ if SPHINX_IS_RUNNING:
             if filename == "README.rst":
                 example_data.update(_parse_example_readme(filepath))
             else:
-                with open(filepath) as f:
+                with open(filepath, encoding="utf-8") as f:
                     content = f.read()
                     # put configuration files first
                     if filename in (".project-config.toml", "pyproject.toml"):
