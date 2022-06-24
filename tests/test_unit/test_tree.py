@@ -176,13 +176,19 @@ def test_glob_with_symlink(tmp_path, chdir):
         assert isinstance(generator, types.GeneratorType)
 
         fpath, fcontent = next(generator)
-
-        assert str(fpath) == str(source_link_path.relative_to(tmp_path))
+        if "source" in str(fpath):
+            # source and target files order are not the same between platforms
+            assert str(fpath) == str(source_link_path.relative_to(tmp_path))
+        else:
+            assert str(fpath) == str(target_link_path.relative_to(tmp_path))
         assert fcontent == "target"
         assert tree.files_cache.setitem_calls == 1
 
         fpath, fcontent = next(generator)
-        assert str(fpath) == str(target_link_path.relative_to(tmp_path))
+        if "source" in str(fpath):
+            assert str(fpath) == str(source_link_path.relative_to(tmp_path))
+        else:
+            assert str(fpath) == str(target_link_path.relative_to(tmp_path))
         assert fcontent == "target"
         assert tree.files_cache.setitem_calls == 2
 
