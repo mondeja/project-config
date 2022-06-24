@@ -143,15 +143,20 @@ def test_glob(tmp_path, chdir):
         generator = tree._generator(["**/*"])
         assert isinstance(generator, types.GeneratorType)
 
-        fpath, fcontent = next(generator)
+        def assert_file(_fpath, _fcontent):
+            if _fcontent == "bar":
+                assert str(_fpath) == str(bar_path.relative_to(tmp_path))
+                assert _fcontent == "bar"
+            else:
+                assert str(_fpath) == str(baz_path.relative_to(tmp_path))
+                assert _fcontent == "baz"
 
-        assert str(fpath) == str(bar_path.relative_to(tmp_path))
-        assert fcontent == "bar"
+        fpath, fcontent = next(generator)
+        assert_file(fpath, fcontent)
         assert tree.files_cache.setitem_calls == 1
 
         fpath, fcontent = next(generator)
-        assert str(fpath) == str(baz_path.relative_to(tmp_path))
-        assert fcontent == "baz"
+        assert_file(fpath, fcontent)
         assert tree.files_cache.setitem_calls == 2
 
         with pytest.raises(StopIteration):

@@ -77,7 +77,16 @@ Check that the files do not include certain content.
 The specified partial contents can match multiple lines
 and line ending characters.
 
+.. code-block:: js
 
+   {
+     rules: [
+       files: ["docs/**/*.rst"],
+       excludeContent: [".. code-block:: bash"],
+     ]
+   }
+
+.. versionadded:: 0.3.0
 
 ********
 jmespath
