@@ -107,7 +107,7 @@ class BaseDefaultReporter(BaseFormattedReporter):
                         f"\n{self.format_config_value(indented_value)}\n"
                     )
 
-        return report
+        return report.rstrip("\n")
 
 
 class DefaultReporter(BaseNoopFormattedReporter, BaseDefaultReporter):

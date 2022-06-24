@@ -278,7 +278,7 @@ class Project:
 
             report = self.reporter.generate_data_report(args.data, data)
 
-        sys.stdout.write(report)
+        sys.stdout.write(f"{report}\n")
 
     def clean(self, args: argparse.Namespace) -> None:
         """Cleaning command."""

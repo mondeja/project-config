@@ -236,7 +236,7 @@ def project_config_errors_report_asserter(
     """  # noqa: D417
     BwReporter = get_reporter_class_from_module(reporter_module, color=False)
     bw_reporter = BwReporter(str(rootdir))
-    for error in errors:
+    for error in copy.deepcopy(errors):
         if "file" in error:
             error["file"] = str(rootdir / error["file"])
         bw_reporter.report_error(error)
@@ -244,7 +244,10 @@ def project_config_errors_report_asserter(
 
     ColorReporter = get_reporter_class_from_module(reporter_module, color=True)
     color_reporter = ColorReporter(str(rootdir))
-    color_reporter.errors = bw_reporter.errors
+    for error in copy.deepcopy(errors):
+        if "file" in error:
+            error["file"] = str(rootdir / error["file"])
+        color_reporter.report_error(error)
     monkeypatch.setenv("NO_COLOR", "true")  # disable color a moment
     assert color_reporter.generate_errors_report() == expected_result
 
