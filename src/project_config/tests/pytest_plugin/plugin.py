@@ -163,6 +163,7 @@ def project_config_errors_report_asserter(
     reporter_module: types.ModuleType,
     errors: t.List[ErrorDict],
     expected_result: str,
+    fmt: t.Optional[str] = None,
 ) -> None:
     r"""Asserts an error report from a reporter module.
 
@@ -237,7 +238,7 @@ def project_config_errors_report_asserter(
            assert_errors_report(default, errors, expected_result)
     """  # noqa: D417
     BwReporter = get_reporter_class_from_module(reporter_module, color=False)
-    bw_reporter = BwReporter(str(rootdir))
+    bw_reporter = BwReporter(str(rootdir), fmt=fmt)
     for error in copy.deepcopy(errors):
         if "file" in error:
             error["file"] = str(rootdir / error["file"])
@@ -245,7 +246,7 @@ def project_config_errors_report_asserter(
     assert bw_reporter.generate_errors_report() == expected_result
 
     ColorReporter = get_reporter_class_from_module(reporter_module, color=True)
-    color_reporter = ColorReporter(str(rootdir))
+    color_reporter = ColorReporter(str(rootdir), fmt=fmt)
     for error in copy.deepcopy(errors):
         if "file" in error:
             error["file"] = str(rootdir / error["file"])
@@ -279,6 +280,7 @@ def project_config_data_report_asserter(
     data_key: str,
     data: t.Any,
     expected_result: str,
+    fmt: t.Optional[str] = None,
 ) -> None:
     r"""Asserts a data report from a reporter module.
 
@@ -347,7 +349,7 @@ def project_config_data_report_asserter(
            )
     """  # noqa: D417
     BwReporter = get_reporter_class_from_module(reporter_module, color=False)
-    bw_reporter = BwReporter(str(rootdir))
+    bw_reporter = BwReporter(str(rootdir), fmt=fmt)
     assert (
         bw_reporter.generate_data_report(
             data_key,
@@ -357,7 +359,7 @@ def project_config_data_report_asserter(
     )
 
     ColorReporter = get_reporter_class_from_module(reporter_module, color=True)
-    color_reporter = ColorReporter(str(rootdir))
+    color_reporter = ColorReporter(str(rootdir), fmt=fmt)
     monkeypatch.setenv("NO_COLOR", "true")
     assert (
         color_reporter.generate_data_report(

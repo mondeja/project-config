@@ -40,15 +40,19 @@ class JsonColorReporter(BaseColorReporter):
         message_key = self.format_key('"message"')
         definition_key = self.format_key('"definition"')
 
-        # separators for pretty formatting
+        space = " "
         if not self.format:
+            # separators for pretty formatting
             newline0 = newline2 = newline4 = newline6 = ""
         else:
-            space = " " if self.format == "pretty" else "  "
+            mul = 1 if self.format == "pretty" else 2
             newline0 = "\n"
-            newline2 = "\n" + space * 2
-            newline4 = "\n" + space * 4
-            newline6 = "\n" + space * 6
+            newline2 = "\n" + space * 2 * mul
+            newline4 = "\n" + space * 4 * mul
+            newline6 = "\n" + space * 6 * mul
+
+        if not self.errors:
+            return "{}"
 
         report = f"{self.format_metachar('{')}{newline2}"
         for f, (file, errors) in enumerate(self.errors.items()):
@@ -67,16 +71,16 @@ class JsonColorReporter(BaseColorReporter):
                 report += (
                     f"{self.format_metachar('{')}{newline6}{message_key}:"
                     f" {error_message}"
-                    f'{self.format_metachar(", ")}{newline6}'
+                    f'{self.format_metachar(",")}{newline6 or space}'
                     f'{definition_key}{self.format_metachar(":")}'
                     f" {definition}"
                     f"{newline4}{self.format_metachar('}')}"
                 )
                 if e < len(errors) - 1:
-                    report += f'{self.format_metachar(", ")}{newline4}'
+                    report += f'{self.format_metachar(",")}{newline4 or space}'
             report += f"{newline2}{self.format_metachar(']')}"
             if f < len(self.errors) - 1:
-                report += f'{self.format_metachar(", ")}{newline2}'
+                report += f'{self.format_metachar(",")}{newline2 or space}'
 
         return f"{report}{newline0}{self.format_metachar('}')}"
 
@@ -108,20 +112,23 @@ class JsonColorReporter(BaseColorReporter):
                     f'{self.format_metachar(":")}'
                 )
                 if isinstance(value, list):
-                    report += f' {self.format_metachar("[")}{newline4}'
+                    report += f'{space}{self.format_metachar("[")}{newline4}'
                     for i, value_item in enumerate(value):
                         report += self.format_config_value(
                             json.dumps(value_item),
                         )
                         if i < len(value) - 1:
-                            report += f'{self.format_metachar(",")} {newline4}'
+                            report += (
+                                f'{self.format_metachar(",")}'
+                                f"{newline4 or space}"
+                            )
                         else:
                             report += f'{newline2}{self.format_metachar("]")}'
                 else:
                     report += f" {self.format_config_value(json.dumps(value))}"
 
                 if d < len(data) - 1:
-                    report += f'{self.format_metachar(",")} {newline2}'
+                    report += f'{self.format_metachar(",")}{newline2 or space}'
             report += f'{newline0}{self.format_metachar("}")}'
         else:
             plugins = data.pop("plugins", [])
