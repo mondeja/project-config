@@ -175,22 +175,24 @@ def test_glob_with_symlink(tmp_path, chdir):
         generator = tree._generator(["*"])
         assert isinstance(generator, types.GeneratorType)
 
-        fpath, fcontent = next(generator)
-        if "source" in str(fpath):
+        fpath1, fcontent = next(generator)
+        if "source" in str(fpath1):
             # source and target files order are not the same between platforms
-            assert str(fpath) == str(source_link_path.relative_to(tmp_path))
+            assert str(fpath1) == str(source_link_path.relative_to(tmp_path))
         else:
-            assert str(fpath) == str(target_link_path.relative_to(tmp_path))
+            assert str(fpath1) == str(target_link_path.relative_to(tmp_path))
         assert fcontent == "target"
         assert tree.files_cache.setitem_calls == 1
 
-        fpath, fcontent = next(generator)
-        if "source" in str(fpath):
-            assert str(fpath) == str(source_link_path.relative_to(tmp_path))
+        fpath2, fcontent = next(generator)
+        if "source" in str(fpath2):
+            assert str(fpath2) == str(source_link_path.relative_to(tmp_path))
         else:
-            assert str(fpath) == str(target_link_path.relative_to(tmp_path))
+            assert str(fpath2) == str(target_link_path.relative_to(tmp_path))
         assert fcontent == "target"
         assert tree.files_cache.setitem_calls == 2
+
+        assert fpath1 != fpath2  # globbing does not resolve symlink paths
 
         with pytest.raises(StopIteration):
             next(generator)
