@@ -77,12 +77,22 @@ Check that the files do not include certain content.
 The specified partial contents can match multiple lines
 and line ending characters.
 
+.. rubric:: Example
+
+Don't allow code blocks in RST documentation files:
+
+* Bash is not a POSIX compliant shell.
+* Pygments' JSON5 lexer is not implemented yet.
+
 .. code-block:: js
 
    {
      rules: [
        files: ["docs/**/*.rst"],
-       excludeContent: [".. code-block:: bash"],
+       excludeContent: [
+         ".. code-block:: bash",
+         ".. code-block:: json5",
+       ],
      ]
    }
 
@@ -92,7 +102,7 @@ and line ending characters.
 jmespath
 ********
 
-JMES paths manipulation against files.
+`JMES paths`_ manipulation against files.
 
 The actions of this plugin operates against object-serialized versions
 of files, so only files that can be serialized can be targetted (see
@@ -166,6 +176,7 @@ convenient functions defined by the plugin internally:
 
    .. versionadded:: 0.1.0
 
+.. _JMES paths: https://jmespath.org
 .. _JMESPath builtin functions: https://jmespath.org/proposals/functions.html#built-in-functions
 
 JMESPathsMatch
@@ -233,7 +244,9 @@ Black must be configured as the formatting tool in ``pyproject.toml``:
        {
          files: ["pyproject.toml"],
          ifJMESPathsMatch: {
-           "pyproject.toml": [["tool.flakeheaven.inline_quotes", "double"]],
+           "pyproject.toml": [
+              ["tool.flakeheaven.inline_quotes", "double"],
+            ],
          },
          JMESPathsMatch: [
            ["contains(keys(@), 'tool')", true],
