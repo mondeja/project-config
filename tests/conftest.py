@@ -6,7 +6,10 @@ import time
 import pytest
 from contextlib_chdir import chdir as chdir_ctx
 
-from project_config.tests.pytest_plugin import _create_files, _create_tree
+from project_config.tests.pytest_plugin.helpers import (
+    create_files as _create_files,
+    create_tree as _create_tree,
+)
 from project_config.utils import GET, HTTPError
 
 

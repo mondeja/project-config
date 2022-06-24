@@ -1,15 +1,8 @@
-import copy
-
 import pytest
-from testing_helpers import parametrize_color
 
-from project_config.reporters.default import (
-    DefaultColorReporter,
-    DefaultReporter,
-)
+from project_config.reporters import default
 
 
-@parametrize_color
 @pytest.mark.parametrize(
     ("errors", "expected_result"),
     (
@@ -56,27 +49,10 @@ bar.py
         ),
     ),
 )
-def test_default_errors_report(
-    color,
-    errors,
-    expected_result,
-    tmp_path,
-    monkeypatch,
-):
-    reporter = (DefaultColorReporter if color else DefaultReporter)(
-        str(tmp_path),
-    )
-    for error in errors:
-        if "file" in error:
-            error["file"] = str(tmp_path / error["file"])
-        reporter.report_error(error)
-
-    if color:
-        monkeypatch.setenv("NO_COLOR", "true")  # disable color a moment
-    assert reporter.generate_errors_report() == expected_result
+def test_default_errors_report(errors, expected_result, assert_errors_report):
+    assert_errors_report(default, errors, expected_result)
 
 
-@parametrize_color
 @pytest.mark.parametrize(
     ("data_key", "data", "expected_result"),
     (
@@ -209,23 +185,14 @@ rules:
     ),
 )
 def test_default_data_report(
-    color,
     data_key,
     data,
     expected_result,
-    tmp_path,
-    monkeypatch,
+    assert_data_report,
 ):
-    reporter = (DefaultColorReporter if color else DefaultReporter)(
-        str(tmp_path),
-    )
-
-    if color:
-        monkeypatch.setenv("NO_COLOR", "true")
-    assert (
-        reporter.generate_data_report(
-            data_key,
-            copy.deepcopy(data),  # data is manipulated inplace
-        )
-        == expected_result
+    assert_data_report(
+        default,
+        data_key,
+        data,
+        expected_result,
     )

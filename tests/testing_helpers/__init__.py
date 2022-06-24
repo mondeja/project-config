@@ -20,12 +20,6 @@ mark_end2end = pytest.mark.skipif(
     reason="The environment variable PROJECT_CONFIG_TESTS_E2E is not set",
 )
 
-parametrize_color = pytest.mark.parametrize(
-    "color",
-    (True, False),
-    ids=("color=True", "color=False"),
-)
-
 
 def build_testing_server():
     # do not show Flask server banner
