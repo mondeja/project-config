@@ -112,7 +112,7 @@ def test_file_symlink(tmp_path):
     tree = Tree(tmp_path)
     tree.files_cache = TreeFilesCacheListenerMock()
 
-    generator = tree._generator([target_link_path, source_link_path])
+    generator = tree._generator([str(target_link_path), str(source_link_path)])
 
     target_fpath, target_fcontent = next(generator)
     assert str(target_fpath) == str(target_link_path)
@@ -124,3 +124,80 @@ def test_file_symlink(tmp_path):
 
     with pytest.raises(StopIteration):
         next(generator)
+
+
+def test_glob(tmp_path, chdir):
+    """Globbing works."""
+    with chdir(tmp_path):  # globbing only works from rootdir
+        dir_path = tmp_path / "foo"
+        dir_path.mkdir()
+
+        bar_path = dir_path / "bar"
+        bar_path.write_text("bar")
+        baz_path = dir_path / "baz"
+        baz_path.write_text("baz")
+
+        tree = Tree(tmp_path)
+        tree.files_cache = TreeFilesCacheListenerMock()
+
+        generator = tree._generator(["**/*"])
+        assert isinstance(generator, types.GeneratorType)
+
+        def assert_file(_fpath, _fcontent):
+            if _fcontent == "bar":
+                assert str(_fpath) == str(bar_path.relative_to(tmp_path))
+                assert _fcontent == "bar"
+            else:
+                assert str(_fpath) == str(baz_path.relative_to(tmp_path))
+                assert _fcontent == "baz"
+
+        fpath, fcontent = next(generator)
+        assert_file(fpath, fcontent)
+        assert tree.files_cache.setitem_calls == 1
+
+        fpath, fcontent = next(generator)
+        assert_file(fpath, fcontent)
+        assert tree.files_cache.setitem_calls == 2
+
+        with pytest.raises(StopIteration):
+            next(generator)
+
+
+def test_glob_with_symlink(tmp_path, chdir):
+    """Globbing works with symlinks."""
+    with chdir(tmp_path):
+        source_link_path = tmp_path / "source"
+        target_link_path = tmp_path / "target"
+
+        target_link_path.write_text("target")
+
+        source_link_path.symlink_to(target_link_path)
+        assert source_link_path.read_text() == "target"
+
+        tree = Tree(tmp_path)
+        tree.files_cache = TreeFilesCacheListenerMock()
+
+        generator = tree._generator(["*"])
+        assert isinstance(generator, types.GeneratorType)
+
+        fpath1, fcontent = next(generator)
+        if "source" in str(fpath1):
+            # source and target files order are not the same between platforms
+            assert str(fpath1) == str(source_link_path.relative_to(tmp_path))
+        else:
+            assert str(fpath1) == str(target_link_path.relative_to(tmp_path))
+        assert fcontent == "target"
+        assert tree.files_cache.setitem_calls == 1
+
+        fpath2, fcontent = next(generator)
+        if "source" in str(fpath2):
+            assert str(fpath2) == str(source_link_path.relative_to(tmp_path))
+        else:
+            assert str(fpath2) == str(target_link_path.relative_to(tmp_path))
+        assert fcontent == "target"
+        assert tree.files_cache.setitem_calls == 2
+
+        assert fpath1 != fpath2  # globbing does not resolve symlink paths
+
+        with pytest.raises(StopIteration):
+            next(generator)
