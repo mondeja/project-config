@@ -265,7 +265,7 @@ class Project:
         if args.data == "cache":
             from project_config.cache import _directory
 
-            report = f"{_directory()}\n"
+            report = _directory()
         else:
             data = t.cast(t.Any, self.config.dict_)
             if args.data == "config":

@@ -7,13 +7,17 @@ import ruamel.yaml
 
 
 def dumps(
-    obj: t.Dict[str, t.Any], *args: t.Tuple[t.Any], **kwargs: t.Any
+    obj: t.Dict[str, t.Any],
+    *args: t.Tuple[t.Any],
+    **kwargs: t.Any,
 ) -> str:
-    """Deserializes a JSON object converting to string in YAML format."""
+    """Deserializes an object converting it to string in YAML format."""
     f = io.StringIO()
-    kws = {"default_flow_style": False, "width": 88888}
-    kws.update(kwargs)
-    ruamel.yaml.safe_dump(obj, f, *args, **kws)
+    yaml = ruamel.yaml.YAML(typ="safe", pure=True)
+    yaml.default_flow_style = False
+    yaml.width = 88888
+    yaml.indent(mapping=2, sequence=4, offset=2)
+    yaml.dump(obj, f, *args, **kwargs)
     return f.getvalue()
 
 
