@@ -120,6 +120,7 @@ addopts = "-s --cov=src --cov-report=html"
 
 [tool.coverage.report]
 exclude_lines = ["pragma: no cover", "if __name__ == [\"']__main__[\"']:"]
+omit = ["src/project_config/tests/*"]
 
 [tool.mypy]
 python_version = "3.7"

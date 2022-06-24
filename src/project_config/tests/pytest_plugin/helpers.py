@@ -13,7 +13,10 @@ FilesType: TypeAlias = t.Dict[str, t.Optional[t.Union[str, bool]]]
 RootdirType: TypeAlias = t.Union[str, pathlib.Path]
 
 
-def create_files(files: FilesType, rootdir: RootdirType) -> None:  # noqa: D103
+def create_files(  # noqa: D103
+    files: FilesType,
+    rootdir: RootdirType,
+) -> None:
     if isinstance(rootdir, pathlib.Path):
         rootdir = str(rootdir)
     for fpath, content in files.items():

@@ -146,7 +146,9 @@ def project_config_plugin_action_asserter(
 
 
 @pytest.fixture  # type: ignore
-def assert_project_config_plugin_action(tmp_path: pathlib.Path) -> t.Any:
+def assert_project_config_plugin_action(
+    tmp_path: pathlib.Path,
+) -> t.Any:
     """Pytest fixture to assert a plugin action.
 
     Returns a function that can be used to assert a plugin action.
