@@ -93,13 +93,11 @@ def project_config_plugin_action_asserter(
            value,
            rule,
            expected_results,
-           tmp_path,
            assert_project_config_plugin_action,
        ):
            assert_project_config_plugin_action(
                IncludePlugin,
                'includeLines',
-               tmp_path,
                files,
                value,
                rule,

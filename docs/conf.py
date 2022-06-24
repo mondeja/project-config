@@ -67,6 +67,8 @@ nitpick_ignore = [
     ("py:class", "jmespath.functions.Functions"),
     ("py:class", "jmespath.parser.ParsedResult"),
     ("py:class", "project_config.types.Results"),
+    ("py:class", "pytest.MonkeyPatch"),
+    ("py:class", "_pytest.monkeypatch.MonkeyPatch"),
 ]
 nitpick_ignore_regex = [
     ("py:class", r"^t.[A-Z]\w+$"),
