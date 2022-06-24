@@ -80,16 +80,16 @@ class BaseReporter(abc.ABC):
             error (dict): Error to report.
         """
         if "file" in error:
-            file = os.path.relpath(error["file"], self.rootdir) + (
+            error["file"] = os.path.relpath(error["file"], self.rootdir) + (
                 "/" if error["file"].endswith("/") else ""
             )
         else:
-            file = "[CONFIGURATION]"
+            error["file"] = "[CONFIGURATION]"
 
-        if file not in self.errors:
-            self.errors[file] = []
+        if error["file"] not in self.errors:
+            self.errors[error["file"]] = []
 
-        self.errors[file].append(error)
+        self.errors[error["file"]].append(error)
 
 
 class BaseFormattedReporter(BaseReporter, abc.ABC):
