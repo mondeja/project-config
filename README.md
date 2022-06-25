@@ -7,6 +7,13 @@
 [![Coverage][coverage-image]][coverage-link]
 [![Downloads][pypi-downloads-image]][pypi-downloads-link]
 
+
+> Note for developers: This project is under heavy development.
+The testing and reporter APIs may change without warning before the
+first stable release (v1), but configuration, CLI and plugins are
+guaranteed to be backwards compatible, so you can safely write
+styles now! :+1:
+
 ## [Documentation](https://mondeja.github.io/project-config/latest/)
 
 [pypi-link]: https://pypi.org/project/project-config
