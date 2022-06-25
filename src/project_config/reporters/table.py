@@ -67,7 +67,7 @@ class TableReporter(BaseNoopFormattedReporter):
             self.format_file,
             self.format_error_message,
             self.format_definition,
-        )
+        ).rstrip("\n")
 
 
 class TableColorReporter(BaseColorReporter):
@@ -82,4 +82,4 @@ class TableColorReporter(BaseColorReporter):
             self.format_file,
             self.format_error_message,
             self.format_definition,
-        )
+        ).rstrip("\n")
