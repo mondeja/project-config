@@ -49,7 +49,7 @@ bar.py
         ),
     ),
 )
-def test_default_errors_report(errors, expected_result, assert_errors_report):
+def test_errors_report(errors, expected_result, assert_errors_report):
     assert_errors_report(default, errors, expected_result)
 
 
@@ -179,7 +179,7 @@ rules:
         ),
     ),
 )
-def test_default_data_report(
+def test_data_report(
     data_key,
     data,
     expected_result,

@@ -163,7 +163,7 @@ def _expected_result_by_format(expected_result, fmt):
     ("errors", "expected_result"),
     ERROR_REPORTS_PARAMETERS,
 )
-def test_json_reporter(
+def test_errors_report(
     errors,
     expected_result,
     fmt,
@@ -182,7 +182,7 @@ def test_json_reporter(
     ("data_key", "data", "expected_result"),
     DATA_REPORTS_PARAMETERS,
 )
-def test_json_data_report(
+def test_data_report(
     data_key,
     data,
     expected_result,

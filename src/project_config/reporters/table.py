@@ -8,14 +8,15 @@ from project_config.reporters.base import (
     BaseColorReporter,
     BaseNoopFormattedReporter,
     FilesErrors,
+    FormatterDefinitionType,
 )
 
 
 def _common_generate_rows(
     errors: FilesErrors,
-    format_file: t.Callable[[str], str],
-    format_error_message: t.Callable[[str], str],
-    format_definition: t.Callable[[str], str],
+    format_file: FormatterDefinitionType,
+    format_error_message: FormatterDefinitionType,
+    format_definition: FormatterDefinitionType,
 ) -> t.List[t.List[str]]:
     rows = []
     for file, file_errors in errors.items():
@@ -33,10 +34,10 @@ def _common_generate_rows(
 def _common_generate_errors_report(
     errors: FilesErrors,
     fmt: str,
-    format_key: t.Callable[[str], str],
-    format_file: t.Callable[[str], str],
-    format_error_message: t.Callable[[str], str],
-    format_definition: t.Callable[[str], str],
+    format_key: FormatterDefinitionType,
+    format_file: FormatterDefinitionType,
+    format_error_message: FormatterDefinitionType,
+    format_definition: FormatterDefinitionType,
 ) -> str:
     return tabulate(
         _common_generate_rows(

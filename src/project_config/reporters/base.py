@@ -12,6 +12,7 @@ from project_config.types import ErrorDict
 
 
 FilesErrors: TypeAlias = t.Dict[str, t.List[ErrorDict]]
+FormatterDefinitionType: TypeAlias = t.Callable[[str], str]
 
 
 class BaseReporter(abc.ABC):
