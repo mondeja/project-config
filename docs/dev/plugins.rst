@@ -118,6 +118,6 @@ Testing plugins
 
 **project-config** comes with a built-in `pytest fixture`_ to
 easily test plugin actions. See
-:py:mod:`project_config.tests.pytest_plugin`.
+:py:mod:`project_config.tests.pytest_plugin.plugin`.
 
 .. _pytest fixture: https://docs.pytest.org/en/latest/explanation/fixtures.html

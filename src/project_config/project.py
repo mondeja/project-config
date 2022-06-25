@@ -265,7 +265,7 @@ class Project:
         if args.data == "cache":
             from project_config.cache import _directory
 
-            report = f"{_directory()}\n"
+            report = _directory()
         else:
             data = t.cast(t.Any, self.config.dict_)
             if args.data == "config":
@@ -278,7 +278,7 @@ class Project:
 
             report = self.reporter.generate_data_report(args.data, data)
 
-        sys.stdout.write(report)
+        sys.stdout.write(f"{report}\n")
 
     def clean(self, args: argparse.Namespace) -> None:
         """Cleaning command."""

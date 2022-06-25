@@ -10,7 +10,7 @@ from project_config.reporters.base import (
 )
 
 
-class DefaultBaseReporter(BaseFormattedReporter):
+class BaseDefaultReporter(BaseFormattedReporter):
     """Base reporter for default reporters."""
 
     def generate_errors_report(self) -> str:
@@ -107,10 +107,10 @@ class DefaultBaseReporter(BaseFormattedReporter):
                         f"\n{self.format_config_value(indented_value)}\n"
                     )
 
-        return report
+        return report.rstrip("\n")
 
 
-class DefaultReporter(BaseNoopFormattedReporter, DefaultBaseReporter):
+class DefaultReporter(BaseNoopFormattedReporter, BaseDefaultReporter):
     """Default black/white reporter."""
 
     def format_error_message(self, error_message: str) -> str:
@@ -118,7 +118,7 @@ class DefaultReporter(BaseNoopFormattedReporter, DefaultBaseReporter):
         return f"- {error_message}"
 
 
-class DefaultColorReporter(BaseColorReporter, DefaultBaseReporter):
+class DefaultColorReporter(BaseColorReporter, BaseDefaultReporter):
     """Default color reporter."""
 
     def format_error_message(self, error_message: str) -> str:

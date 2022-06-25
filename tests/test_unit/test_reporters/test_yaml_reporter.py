@@ -1,6 +1,6 @@
 import pytest
 
-from project_config.reporters import default
+from project_config.reporters import yaml
 
 
 @pytest.mark.parametrize(
@@ -19,7 +19,9 @@ from project_config.reporters import default
                     "definition": "definition",
                 },
             ],
-            "foo.py\n  - message definition",
+            """foo.py:
+  - definition: definition
+    message: message""",
             id="basic",
         ),
         pytest.param(
@@ -40,17 +42,28 @@ from project_config.reporters import default
                     "definition": "definition 3",
                 },
             ],
-            """foo.py
-  - message 1 definition 1
-  - message 2 definition 2
-bar.py
-  - message 3 definition 3""",
+            """bar.py:
+  - definition: definition 3
+    message: message 3
+foo.py:
+  - definition: definition 1
+    message: message 1
+  - definition: definition 2
+    message: message 2""",
             id="complex",
         ),
     ),
 )
-def test_errors_report(errors, expected_result, assert_errors_report):
-    assert_errors_report(default, errors, expected_result)
+def test_errors_report(
+    errors,
+    expected_result,
+    assert_errors_report,
+):
+    assert_errors_report(
+        yaml,
+        errors,
+        expected_result,
+    )
 
 
 @pytest.mark.parametrize(
@@ -62,8 +75,7 @@ def test_errors_report(errors, expected_result, assert_errors_report):
                 "cache": "5 minutes",
                 "style": "foo.json5",
             },
-            """cache: 5 minutes
-style: foo.json5""",
+            "cache: 5 minutes\nstyle: foo.json5",
             id="config-style-string",
         ),
         pytest.param(
@@ -96,6 +108,22 @@ style:
         pytest.param(
             "style",
             {
+                "plugins": [],
+                "rules": [
+                    {
+                        "files": ["foo.ext", "bar.ext"],
+                    },
+                ],
+            },
+            """rules:
+  - files:
+      - foo.ext
+      - bar.ext""",
+            id="style-empty-plugins",
+        ),
+        pytest.param(
+            "style",
+            {
                 "plugins": ["plugin_foo"],
                 "rules": [
                     {
@@ -117,10 +145,8 @@ rules:
       - foo.ext
       - bar.ext
     includeLines:
-      [
-        "line1",
-        "line2"
-      ]""",
+      - line1
+      - line2""",
             id="style-multiple-rules",
         ),
         pytest.param(
@@ -156,23 +182,18 @@ rules:
       - foo.ext
       - bar.ext
   - files:
-      not
-        foo.ext: foo reason
+      not:
         bar.ext: bar reason
-    includeLines:
-      [
-        "line1",
-        "line2"
-      ]
+        foo.ext: foo reason
     ifIncludeLines:
-      {
-        "if-inc-1.ext": [
-          "if-inc-line-1",
-          "if-inc-line-2"
-        ]
-      }
+      if-inc-1.ext:
+        - if-inc-line-1
+        - if-inc-line-2
+    includeLines:
+      - line1
+      - line2
   - files:
-      not
+      not:
         - foo.ext
         - foo.bar""",
             id="style-complex",
@@ -186,7 +207,7 @@ def test_data_report(
     assert_data_report,
 ):
     assert_data_report(
-        default,
+        yaml,
         data_key,
         data,
         expected_result,

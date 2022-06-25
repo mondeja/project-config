@@ -69,3 +69,12 @@ parts of the output.
 
 See the built-in reporters at :ref:`reporters submodules <dev/reference/project_config.reporters:Submodules>`
 and the :py:mod:`project_config.reporters.base` module for more information.
+
+Testing reporters
+=================
+
+**project-config** comes with built-in `pytest fixtures`_ to
+easily test reports generated from reporters. See
+:py:mod:`project_config.tests.pytest_plugin.plugin`.
+
+.. _pytest fixtures: https://docs.pytest.org/en/latest/explanation/fixtures.html

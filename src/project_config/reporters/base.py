@@ -12,6 +12,7 @@ from project_config.types import ErrorDict
 
 
 FilesErrors: TypeAlias = t.Dict[str, t.List[ErrorDict]]
+FormatterDefinitionType: TypeAlias = t.Callable[[str], str]
 
 
 class BaseReporter(abc.ABC):
@@ -80,8 +81,9 @@ class BaseReporter(abc.ABC):
             error (dict): Error to report.
         """
         if "file" in error:
-            file = os.path.relpath(error["file"], self.rootdir) + (
-                "/" if error["file"].endswith("/") else ""
+            file = error.pop("file")
+            file = os.path.relpath(file, self.rootdir) + (
+                "/" if file.endswith("/") else ""
             )
         else:
             file = "[CONFIGURATION]"
