@@ -39,6 +39,7 @@ class JsonColorReporter(BaseColorReporter):
         """Generate an errors report in JSON format with colors."""
         message_key = self.format_key('"message"')
         definition_key = self.format_key('"definition"')
+        hint_key = self.format_key('"hint"')
 
         space = " "
         if not self.format:
@@ -74,8 +75,15 @@ class JsonColorReporter(BaseColorReporter):
                     f'{self.format_metachar(",")}{newline6 or space}'
                     f'{definition_key}{self.format_metachar(":")}'
                     f" {definition}"
-                    f"{newline4}{self.format_metachar('}')}"
                 )
+                if "hint" in error:
+                    hint = self.format_hint(json.dumps(error["hint"]))
+                    report += (
+                        f'{self.format_metachar(",")}{newline6 or space}'
+                        f'{hint_key}{self.format_metachar(":")}'
+                        f" {hint}"
+                    )
+                report += f"{newline4}{self.format_metachar('}')}"
                 if e < len(errors) - 1:
                     report += f'{self.format_metachar(",")}{newline4 or space}'
             report += f"{newline2}{self.format_metachar(']')}"

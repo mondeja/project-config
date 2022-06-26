@@ -8,9 +8,10 @@ from project_config.compat import NotRequired, TypeAlias, TypedDict
 class ErrorDict(TypedDict):
     """Error data type."""
 
-    file: NotRequired[str]
     message: str
     definition: str
+    file: NotRequired[str]
+    hint: NotRequired[str]
 
 
 class Rule(TypedDict, total=False):

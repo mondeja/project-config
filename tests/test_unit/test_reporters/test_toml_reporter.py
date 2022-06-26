@@ -19,9 +19,9 @@ from project_config.reporters import toml
                     "definition": "definition",
                 },
             ],
-            """[[foo.py]]
+            '''[["foo.py"]]
 message = "message"
-definition = definition""",
+definition = "definition"''',
             id="basic",
         ),
         pytest.param(
@@ -35,6 +35,7 @@ definition = definition""",
                     "file": "foo.py",
                     "message": "message 2",
                     "definition": "definition 2",
+                    "hint": "a hint to solve it",
                 },
                 {
                     "file": "bar.py",
@@ -42,16 +43,17 @@ definition = definition""",
                     "definition": "definition 3",
                 },
             ],
-            """[[foo.py]]
+            '''[["foo.py"]]
 message = "message 1"
-definition = definition 1
+definition = "definition 1"
 
 message = "message 2"
-definition = definition 2
+definition = "definition 2"
+hint = "a hint to solve it"
 
-[[bar.py]]
+[["bar.py"]]
 message = "message 3"
-definition = definition 3""",
+definition = "definition 3"''',
             id="complex",
         ),
     ),

@@ -33,6 +33,7 @@ from project_config.reporters import default
                     "file": "foo.py",
                     "message": "message 2",
                     "definition": "definition 2",
+                    "hint": "a hint to solve it",
                 },
                 {
                     "file": "bar.py",
@@ -42,7 +43,7 @@ from project_config.reporters import default
             ],
             """foo.py
   - message 1 definition 1
-  - message 2 definition 2
+  - message 2 definition 2 a hint to solve it
 bar.py
   - message 3 definition 3""",
             id="complex",

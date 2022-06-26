@@ -107,6 +107,11 @@ def project_config_plugin_action_asserter(
     if additional_files is not None:
         create_files(additional_files, rootdir)
 
+    assert plugin_method_name not in ("files", "hint"), (
+        "Plugin action names can not be 'files' or 'hint' as they are reserved"
+        " as special properties for rules."
+    )
+
     plugin_method = getattr(plugin_class, plugin_method_name)
     results = list(
         plugin_method(
