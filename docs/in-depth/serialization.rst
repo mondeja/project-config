@@ -124,3 +124,9 @@ executing them.
          {
            "bar": "baz"
          }
+
+.. tip::
+
+   **project-config** CLI sets the environment variable ``PROJECT_CONFIG``
+   while is running, which is useful if you want to expose the global namespaces
+   of scripts only when the tool is running.

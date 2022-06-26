@@ -135,6 +135,7 @@ def _parse_command_args(
 
 
 def run(argv: t.List[str] = []) -> int:  # noqa: D103
+    os.environ["PROJECT_CONFIG"] = "true"
     parser = _build_main_parser()
     args, subcommand_args = parser.parse_known_args(argv)
     subargs, remaining = _parse_command_args(args.command, subcommand_args)
