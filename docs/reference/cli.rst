@@ -21,6 +21,11 @@ project-config CLI
 * ``project-config show cache`` - Show cache directory location.
 * ``project-config clean cache`` - Clean the persistent cache of remote collected sources.
 
+.. tip::
+
+   **project-config** CLI sets the environment variable ``PROJECT_CONFIG`` while
+   is running.
+
 ..
    .. sphinx_argparse_cli::
       :module: project_config.__main__
@@ -67,7 +72,8 @@ The reporter output affects the output of the next commands:
 .. note::
 
    Colorized output can't be serialized, so if you want to postprocess the report
-   in the command line use always the ``--no-color`` flag.
+   in the command line use always the ``--no-color`` / ``--nocolor`` flag or set
+   the environment variable ``NO_COLOR``.
 
 Additional third party reporters can be implemented as plugins,
 see :ref:`dev/reporters:Writing third party reporters` for more information.
