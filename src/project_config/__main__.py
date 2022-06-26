@@ -23,52 +23,6 @@ def _controlled_error(
     return 1
 
 
-def _add_check_command_parser(
-    subparsers: "argparse._SubParsersAction[argparse.ArgumentParser]",
-) -> None:
-    subparsers.add_parser(
-        "check",
-        help="Check the configuration of the project",
-        add_help=False,
-    )
-
-
-def _add_show_command_parser(
-    subparsers: "argparse._SubParsersAction[argparse.ArgumentParser]",
-) -> None:
-    parser = subparsers.add_parser(
-        "show",
-        help="Show configuration or style.",
-        add_help=False,
-    )
-    parser.add_argument(
-        "data",
-        choices=["config", "style", "cache"],
-        help=(
-            "Indicate which data must be shown, discovered configuration"
-            " or extended style."
-        ),
-    )
-
-
-def _add_clean_command_parser(
-    subparsers: "argparse._SubParsersAction[argparse.ArgumentParser]",
-) -> None:
-    parser = subparsers.add_parser(
-        "clean",
-        help="Cleaning commands.",
-        add_help=False,
-    )
-    parser.add_argument(
-        "data",
-        choices=["cache"],
-        help=(
-            "Indicate which data must be cleaned. Currently, only"
-            " 'cache' is the possible data to clean."
-        ),
-    )
-
-
 def _build_main_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description=(
@@ -138,25 +92,55 @@ def _build_main_parser() -> argparse.ArgumentParser:
             " the environment variable NO_COLOR."
         ),
     )
+    parser.add_argument(
+        "command",
+        choices=["check", "show", "clean"],
+        help="Command to execute.",
+    )
 
     return parser
 
 
-def _add_subparsers(parser: argparse.ArgumentParser) -> None:
-    subparsers = parser.add_subparsers(
-        title="commands",
-        dest="command",
-        required=True,
-    )
-    _add_check_command_parser(subparsers)
-    _add_show_command_parser(subparsers)
-    _add_clean_command_parser(subparsers)
+def _parse_command_args(
+    command: str,
+    subcommand_args: t.List[str],
+) -> t.Tuple[argparse.Namespace, t.List[str]]:
+    if command in ("show", "clean"):
+        if command == "show":
+            parser = argparse.ArgumentParser(prog="project-config show")
+            parser.add_argument(
+                "data",
+                choices=["config", "style", "cache"],
+                help=(
+                    "Indicate which data must be shown, discovered"
+                    " configuration, extended style or cache directory"
+                    " location."
+                ),
+            )
+        else:  # command == "clean"
+            parser = argparse.ArgumentParser(prog="project-config clean")
+            parser.add_argument(
+                "data",
+                choices=["cache"],
+                help=(
+                    "Indicate which data must be cleaned. Currently, only"
+                    " 'cache' is the possible data to clean."
+                ),
+            )
+        args, remaining = parser.parse_known_args(subcommand_args)
+    else:
+        args = argparse.Namespace()
+        remaining = subcommand_args
+    return args, remaining
 
 
 def run(argv: t.List[str] = []) -> int:  # noqa: D103
     parser = _build_main_parser()
-    _add_subparsers(parser)
-    args = parser.parse_args(argv)
+    args, subcommand_args = parser.parse_known_args(argv)
+    subargs, remaining = _parse_command_args(args.command, subcommand_args)
+    if remaining:
+        parser.print_help()
+        return 1
 
     try:
         project = Project(
@@ -165,7 +149,7 @@ def run(argv: t.List[str] = []) -> int:  # noqa: D103
             args.reporter,
             args.color,
         )
-        getattr(project, args.command)(args)
+        getattr(project, args.command)(subargs)
     except ProjectConfigException as exc:
         return _controlled_error(args.traceback, exc, exc.message)
     except FileNotFoundError as exc:
