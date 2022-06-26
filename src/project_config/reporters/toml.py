@@ -46,22 +46,33 @@ def _normalize_indentation_to_2_spaces(string: str) -> str:
 
 def _common_generate_errors_report(
     files_errors: FilesErrors,
+    format_metachar: FormatterDefinitionType,
     format_file: FormatterDefinitionType,
     format_key: FormatterDefinitionType,
     format_error_message: FormatterDefinitionType,
     format_definition: FormatterDefinitionType,
+    format_hint: FormatterDefinitionType,
 ) -> str:
     report = ""
     for file, errors in files_errors.items():
-        report += f"[[{format_file(file)}]]\n"
+        report += (
+            f"{format_metachar('[[')}{format_file(json.dumps(file))}"
+            f"{format_metachar(']]')}\n"
+        )
 
         for error in errors:
             report += (
                 f"{format_key('message')} ="
                 f" {format_error_message(json.dumps(error['message']))}\n"
                 f"{format_key('definition')} ="
-                f" {format_definition(error['definition'])}\n\n"
+                f" {format_definition(json.dumps(error['definition']))}\n"
             )
+            if "hint" in error:
+                report += (
+                    f"{format_key('hint')} ="
+                    f" {format_hint(json.dumps(error['hint']))}\n"
+                )
+            report += "\n"
     return report.rstrip("\n")
 
 
@@ -72,10 +83,12 @@ class TomlReporter(BaseNoopFormattedReporter):
         """Generate an errors report in black/white TOML format."""
         return _common_generate_errors_report(
             self.errors,
+            self.format_metachar,
             self.format_file,
             self.format_key,
             self.format_error_message,
             self.format_definition,
+            self.format_hint,
         )
 
     def generate_data_report(
@@ -104,10 +117,12 @@ class TomlColorReporter(BaseColorReporter):
         """Generate an errors report in TOML format with colors."""
         return _common_generate_errors_report(
             self.errors,
+            self.format_metachar,
             self.format_file,
             self.format_key,
             self.format_error_message,
             self.format_definition,
+            self.format_hint,
         )
 
     def generate_data_report(

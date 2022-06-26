@@ -41,12 +41,19 @@ class YamlColorReporter(BaseColorReporter):
                     f'{self.format_metachar(":")}'
                     f" {self.format_definition(line[16:])}\n"
                 )
-            elif line.startswith("    "):  # message
+            elif line.startswith("    message"):  # message
                 report += (
                     f"   "
                     f' {self.format_key("message")}'
                     f'{self.format_metachar(":")}'
                     f" {self.format_error_message(line[13:])}\n"
+                )
+            elif line.startswith("    hint"):  # hint
+                report += (
+                    f"   "
+                    f' {self.format_key("hint")}'
+                    f'{self.format_metachar(":")}'
+                    f" {self.format_hint(line[10:])}\n"
                 )
             elif line:
                 report += (

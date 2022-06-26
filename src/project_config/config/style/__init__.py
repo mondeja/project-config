@@ -359,7 +359,7 @@ class Style:
 
                 # Validate rules properties consistency against plugins
                 for action in rule:
-                    if action == "files":
+                    if action in ["files", "hint"]:
                         continue
 
                     # the action must be prepared

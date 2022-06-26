@@ -184,6 +184,8 @@ class Project:
                 self._check_files_absence(files["not"], r)
                 continue  # any other verb can be used in the rule
 
+            hint = rule.pop("hint", None)
+
             verbs, conditionals = ([], [])
             for action in rule:
                 if action.startswith("if"):
@@ -231,6 +233,9 @@ class Project:
                         breakage_value["definition"] = (
                             f"rules[{r}]" + breakage_value["definition"]
                         )
+                        # show hint if defined in the rule
+                        if hint:
+                            breakage_value["hint"] = hint
                         self.reporter.report_error(breakage_value)
                     elif breakage_type == InterruptingError:
                         breakage_value["definition"] = (

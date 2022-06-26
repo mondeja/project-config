@@ -8,8 +8,8 @@ from project_config.reporters import table
     (
         pytest.param(
             [],
-            """files    message    definition
--------  ---------  ------------""",
+            """files    message    definition    hint
+-------  ---------  ------------  ------""",
             id="ok",
         ),
         pytest.param(
@@ -20,8 +20,8 @@ from project_config.reporters import table
                     "definition": "definition",
                 },
             ],
-            """files    message    definition
--------  ---------  ------------
+            """files    message    definition    hint
+-------  ---------  ------------  ------
 foo.py   message    definition""",
             id="basic",
         ),
@@ -36,6 +36,7 @@ foo.py   message    definition""",
                     "file": "foo.py",
                     "message": "message 2",
                     "definition": "definition 2",
+                    "hint": "a hint to solve it",
                 },
                 {
                     "file": "bar.py",
@@ -43,10 +44,10 @@ foo.py   message    definition""",
                     "definition": "definition 3",
                 },
             ],
-            """files    message    definition
--------  ---------  ------------
+            """files    message    definition    hint
+-------  ---------  ------------  ------------------
 foo.py   message 1  definition 1
-         message 2  definition 2
+         message 2  definition 2  a hint to solve it
 bar.py   message 3  definition 3""",
             id="complex",
         ),

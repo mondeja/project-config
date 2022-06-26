@@ -58,6 +58,13 @@ File syntax convention
 * Files are defined relative to the root directory of the project, which will be the current working directory if no other is passed in `--rootdir` CLI argument.
 * Paths terminated with ``/`` will be treated as directories using the Unix separator, even in Windows systems.
 
+``hint`` (`string`)
+===================
+
+Optional field for all rules. It specifies a hint that will be displayed along
+the error message when a checking error occurred using the ``check`` command.
+It is specially useful for complex rules which could show abstract error messages.
+
 ************************
 ``extends`` (`string[]`)
 ************************

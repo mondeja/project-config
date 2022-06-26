@@ -113,6 +113,11 @@ class BaseFormattedReporter(BaseReporter, abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
+    def format_hint(self, hint: str) -> str:
+        """Hint formatter."""
+        raise NotImplementedError
+
+    @abc.abstractmethod
     def format_key(self, key: str) -> str:
         """Serialized key formatter."""
         raise NotImplementedError
@@ -147,6 +152,9 @@ class BaseNoopFormattedReporter(BaseFormattedReporter):
 
     def format_definition(self, definition: str) -> str:  # noqa: D102
         return definition
+
+    def format_hint(self, hint: str) -> str:  # noqa: D102
+        return hint
 
     def format_key(self, key: str) -> str:  # noqa: D102
         return key
@@ -191,8 +199,11 @@ class BaseColorReporter(BaseFormattedReporter):
     def format_definition(self, definition: str) -> str:  # noqa: D102
         return bold_color(definition, "blue")
 
+    def format_hint(self, hint: str) -> str:  # noqa: D102
+        return bold_color(hint, "green")
+
     def format_key(self, key: str) -> str:  # noqa: D102
-        return bold_color(key, "green")
+        return bold_color(key, "cyan")
 
     def format_metachar(self, metachar: str) -> str:  # noqa: D102
         return bold_color(metachar, "grey_37")

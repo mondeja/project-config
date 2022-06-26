@@ -24,8 +24,11 @@ class BaseDefaultReporter(BaseFormattedReporter):
                 )
                 report += (
                     f"  {error_message}"
-                    f" {self.format_definition(error['definition'])}\n"
+                    f" {self.format_definition(error['definition'])}"
                 )
+                if "hint" in error:
+                    report += f" {self.format_hint(error['hint'])}"
+                report += "\n"
         return report.rstrip("\n")
 
     def generate_data_report(

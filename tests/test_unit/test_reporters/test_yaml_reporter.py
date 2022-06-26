@@ -35,6 +35,7 @@ from project_config.reporters import yaml
                     "file": "foo.py",
                     "message": "message 2",
                     "definition": "definition 2",
+                    "hint": "a hint to solve it",
                 },
                 {
                     "file": "bar.py",
@@ -49,6 +50,7 @@ foo.py:
   - definition: definition 1
     message: message 1
   - definition: definition 2
+    hint: a hint to solve it
     message: message 2""",
             id="complex",
         ),

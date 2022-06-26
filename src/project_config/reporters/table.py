@@ -17,6 +17,7 @@ def _common_generate_rows(
     format_file: FormatterDefinitionType,
     format_error_message: FormatterDefinitionType,
     format_definition: FormatterDefinitionType,
+    format_hint: FormatterDefinitionType,
 ) -> t.List[t.List[str]]:
     rows = []
     for file, file_errors in errors.items():
@@ -26,6 +27,7 @@ def _common_generate_rows(
                     format_file(file) if i == 0 else "",
                     format_error_message(error["message"]),
                     format_definition(error["definition"]),
+                    format_hint(error.get("hint", "")),
                 ],
             )
     return rows
@@ -38,6 +40,7 @@ def _common_generate_errors_report(
     format_file: FormatterDefinitionType,
     format_error_message: FormatterDefinitionType,
     format_definition: FormatterDefinitionType,
+    format_hint: FormatterDefinitionType,
 ) -> str:
     return tabulate(
         _common_generate_rows(
@@ -45,11 +48,13 @@ def _common_generate_errors_report(
             format_file,
             format_error_message,
             format_definition,
+            format_hint,
         ),
         headers=[
             format_key("files"),
             format_key("message"),
             format_key("definition"),
+            format_key("hint"),
         ],
         tablefmt=fmt,
     )
@@ -67,6 +72,7 @@ class TableReporter(BaseNoopFormattedReporter):
             self.format_file,
             self.format_error_message,
             self.format_definition,
+            self.format_hint,
         ).rstrip("\n")
 
 
@@ -82,4 +88,5 @@ class TableColorReporter(BaseColorReporter):
             self.format_file,
             self.format_error_message,
             self.format_definition,
+            self.format_hint,
         ).rstrip("\n")

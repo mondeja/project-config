@@ -39,6 +39,7 @@ ERROR_REPORTS_PARAMETERS = (
                 "file": "foo.py",
                 "message": "message 2",
                 "definition": "definition 2",
+                "hint": "a hint to solve it",
             },
             {
                 "file": "bar.py",
@@ -48,10 +49,9 @@ ERROR_REPORTS_PARAMETERS = (
         ],
         (
             '{"foo.py": [{"message": "message 1", "definition":'
-            ' "definition 1"}, {"message": "message 2",'
-            ' "definition": "definition 2"}], "bar.py":'
-            ' [{"message": "message 3", "definition":'
-            ' "definition 3"}]}'
+            ' "definition 1"}, {"message": "message 2", "definition":'
+            ' "definition 2", "hint": "a hint to solve it"}], "bar.py":'
+            ' [{"message": "message 3", "definition": "definition 3"}]}'
         ),
         id="complex",
     ),

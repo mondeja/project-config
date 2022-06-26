@@ -6,6 +6,8 @@ import pytest
 from testing_helpers import rootdir
 
 from project_config.__main__ import run
+from project_config.exceptions import ProjectConfigException
+from project_config.project import Project
 
 
 def _parse_example_metadata(example_dir):
@@ -49,14 +51,35 @@ def _collect_examples():
     return examples
 
 
+@pytest.mark.parametrize("interface", ("CLI", "API"))
 @pytest.mark.parametrize(
     ("example_dir", "expected_exitcode", "expected_stderr"),
     _collect_examples(),
 )
-def test_examples_check(example_dir, expected_exitcode, expected_stderr, chdir):
-    stderr_stream = io.StringIO()
-    with chdir(example_dir), contextlib.redirect_stderr(stderr_stream):
-        exitcode = run(["--nocolor", "check"])
-        stderr = stderr_stream.getvalue()
-        assert exitcode == expected_exitcode, stderr
-        assert stderr == expected_stderr
+def test_examples_check(
+    example_dir,
+    expected_exitcode,
+    expected_stderr,
+    interface,
+    chdir,
+):
+    args = ["--nocolor", "check"]
+
+    # from command line
+    if interface == "CLI":
+        stderr_stream = io.StringIO()
+        with chdir(example_dir), contextlib.redirect_stderr(stderr_stream):
+            exitcode = run(args)
+            stderr = stderr_stream.getvalue()
+            assert exitcode == expected_exitcode, stderr
+            assert stderr == expected_stderr
+    else:
+        # from API
+        with chdir(example_dir):
+            project = Project(None, example_dir, "default", False)
+            if expected_stderr:
+                with pytest.raises(ProjectConfigException) as exc:
+                    project.check(args)
+                assert str(exc.value) == expected_stderr.rstrip("\n")
+            else:
+                project.check(args)
