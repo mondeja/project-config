@@ -104,7 +104,7 @@ def _build_main_parser() -> argparse.ArgumentParser:
 def _parse_command_args(
     command: str,
     subcommand_args: t.List[str],
-) -> argparse.Namespace:
+) -> t.Tuple[argparse.Namespace, t.List[str]]:
     if command in ("show", "clean"):
         if command == "show":
             parser = argparse.ArgumentParser(prog="project-config show")
@@ -127,14 +127,20 @@ def _parse_command_args(
                     " 'cache' is the possible data to clean."
                 ),
             )
-        return parser.parse_args(subcommand_args)
-    return argparse.Namespace()
+        args, remaining = parser.parse_known_args(subcommand_args)
+    else:
+        args = argparse.Namespace()
+        remaining = subcommand_args
+    return args, remaining
 
 
 def run(argv: t.List[str] = []) -> int:  # noqa: D103
     parser = _build_main_parser()
     args, subcommand_args = parser.parse_known_args(argv)
-    subargs = _parse_command_args(args.command, subcommand_args)
+    subargs, remaining = _parse_command_args(args.command, subcommand_args)
+    if remaining:
+        parser.print_help()
+        return 1
 
     try:
         project = Project(
