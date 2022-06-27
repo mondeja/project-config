@@ -10,7 +10,7 @@ from project_config.tests.pytest_plugin.helpers import (
     create_files as _create_files,
     create_tree as _create_tree,
 )
-from project_config.utils import GET, HTTPError
+from project_config.utils.http import GET, HTTPError
 
 
 testsdir = os.path.abspath(os.path.dirname(__file__))

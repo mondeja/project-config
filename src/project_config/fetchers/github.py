@@ -5,7 +5,7 @@ import re
 import typing as t
 import urllib.parse
 
-from project_config.utils import GET
+from project_config.utils.http import GET
 
 
 def _get_default_branch_from_repo_branches_html(
