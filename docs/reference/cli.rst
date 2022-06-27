@@ -96,8 +96,9 @@ color and making all requests to remote sources:
    project-config check -r toml --no-color --no-cache
 
 The installation of **project-config** from Python sources comes with
-`jmespath`_, which includes the CLI tool ``jp.py`` that can be used to
-apply JMESPath queries to the reports produced by **project-config**.
+the `jmespath Python library`_, which includes the CLI tool ``jp.py``
+that can be used to apply JMESPath queries to JSON reports produced by
+**project-config**.
 
 For example, to show the number of incorrect files detected by the
 ``check`` command (Unix only):
@@ -123,3 +124,5 @@ Show your styles after collecting all in YAML format:
 .. code-block:: sh
 
    project-config show style -r yaml
+
+.. _jmespath Python library: https://pypi.org/project/jmespath/
