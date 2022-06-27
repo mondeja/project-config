@@ -41,14 +41,16 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install poetry
         run: |
-          pip install -U pip poetry==1.2.0b1
-          pip list
+          curl -sSL https://install.python-poetry.org | python -
+          poetry self update --preview
+          poetry self add poetry-exec-plugin
+          poetry self show
       - name: Install dependencies
         run: |
           poetry install --with test
           poetry show
       - name: Run tests
-        run: poetry run pytest
+        run: poetry exec t
         env:
           PROJECT_CONFIG_TESTS_E2E: true
       - name: Coveralls
