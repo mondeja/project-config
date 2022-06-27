@@ -42,14 +42,14 @@ jobs:
       - name: Install poetry
         run: |
           curl -sSL https://install.python-poetry.org | python - --preview
-          poetry self add poetry-exec-plugin
-          poetry self show plugins
+          python -m poetry self add poetry-exec-plugin
+          python -m poetry self show plugins
       - name: Install dependencies
         run: |
-          poetry install --with test
-          poetry show
+          python -m poetry install --with test
+          python -m poetry poetry show
       - name: Run tests
-        run: poetry exec t
+        run: python -m poetry exec t
         env:
           PROJECT_CONFIG_TESTS_E2E: true
       - name: Coveralls
