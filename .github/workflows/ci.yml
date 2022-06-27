@@ -40,16 +40,24 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install poetry
+        id: poetry
+        shell: bash
         run: |
-          curl -sSL https://install.python-poetry.org | python - --preview
-          python -m poetry self add poetry-exec-plugin
-          python -m poetry self show plugins
+          curl -sSL https://install.python-poetry.org > __install_poetry.py
+          python __install_poetry.py --preview
+          poetry=$(python -c 'import __install_poetry as i;print(i.bin_dir())')
+          rm __install_poetry.py
+          echo "::set-output name=executable::$poetry"
+      - name: Install poetry plugins
+        run: |
+          ${{ steps.poetry.outputs.executable }} self add poetry-exec-plugin
+          ${{ steps.poetry.outputs.executable }} self show plugins
       - name: Install dependencies
         run: |
-          python -m poetry install --with test
-          python -m poetry poetry show
+          ${{ steps.poetry.outputs.executable }} install --with test
+          ${{ steps.poetry.outputs.executable }} show
       - name: Run tests
-        run: python -m poetry exec t
+        run: ${{ steps.poetry.outputs.executable }} exec t
         env:
           PROJECT_CONFIG_TESTS_E2E: true
       - name: Coveralls
