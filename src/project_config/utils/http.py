@@ -27,7 +27,11 @@ def _GET(url: str, timeout: int = 10, sleep: float = 1.0) -> str:
                 .read()
                 .decode("utf-8")
             )
-        except (urllib.error.URLError, urllib.error.HTTPError) as exc:
+        except (
+            urllib.error.URLError,
+            urllib.error.HTTPError,
+            urllib.error.ContentTooShortError,
+        ) as exc:
             err = exc.__str__()
             time.sleep(sleep)
 
