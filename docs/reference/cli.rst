@@ -69,6 +69,7 @@ The reporter output affects the output of the next commands:
 * ``project-config check``
 * ``project-config show config``
 * ``project-config show style``
+* ``project-config show plugins``
 
 .. note::
 
@@ -78,3 +79,47 @@ The reporter output affects the output of the next commands:
 
 Additional third party reporters can be implemented as plugins,
 see :ref:`dev/reporters:Writing third party reporters` for more information.
+
+.. note::
+
+   Keep in mind that errors shown by ``check`` command are redirected to
+   STDERR.
+
+Examples of usage
+=================
+
+Check the styles of the current project reporting in TOML format without
+color and making all requests to remote sources:
+
+.. code-block:: sh
+
+   project-config check -r toml --no-color --no-cache
+
+The installation of **project-config** from Python sources comes with
+`jmespath`_, which includes the CLI tool ``jp.py`` that can be used to
+apply JMESPath queries to the reports produced by **project-config**.
+
+For example, to show the number of incorrect files detected by the
+``check`` command (Unix only):
+
+.. code-block:: sh
+
+   project-config check -r json --no-color 2>&1 | jp.py 'length(keys(@))'
+
+Show the number of rules defined in your styles after collecting all:
+
+.. code-block:: sh
+
+   project-config show style -r json --no-color 2>&1 | jp.py 'length(rules)'
+
+Show the number of actions currently available:
+
+.. code-block:: sh
+
+   project-config show plugins -r json --no-color 2>&1 | jp.py 'length(*[])'
+
+Show your styles after collecting all in YAML format:
+
+.. code-block:: sh
+
+   project-config show style -r yaml

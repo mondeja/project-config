@@ -40,9 +40,14 @@ Time unit can be one of these (plural or singular, it doesn’t matter):
 * ``days / day``
 * ``weeks / week``
 
+Also accepts the next string to not use the cache at all.
+
+* ``never``
+
 .. _TOML: https://toml.io/en/
 
-.. tip:: Disabling cache with environment variable
+.. tip:: Temporally disabling cache
 
-   You can also disable the cache setting the ``PROJECT_CONFIG_USE_CACHE``
-   environment variable to ``"false"``.
+   You can also disable the cache passing the CLI option ``--no-cache`` /
+   ``--nocache`` or setting the ``PROJECT_CONFIG_USE_CACHE`` environment
+   variable to ``"false"``.
