@@ -22,7 +22,7 @@
     },
     "cache": {
       "type": "string",
-      "pattern": "^(\\d+ ((seconds?)|(minutes?)|(hours?)|(days?)|(weeks?)))|(never)",
+      "pattern": "^(\\d+ ((seconds?)|(minutes?)|(hours?)|(days?)|(weeks?)))|(never)$",
       "default": "5 minutes"
     }
   }

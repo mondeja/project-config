@@ -93,6 +93,17 @@ def _build_main_parser() -> argparse.ArgumentParser:
         ),
     )
     parser.add_argument(
+        "--no-cache",
+        "--nocache",
+        dest="cache",
+        action="store_false",
+        help=(
+            "Disable cache for the current execution. You can also set"
+            " the value 'false' in the environment variable"
+            " PROJECT_CONFIG_USE_CACHE."
+        ),
+    )
+    parser.add_argument(
         "command",
         choices=["check", "show", "clean"],
         help="Command to execute.",
@@ -142,6 +153,9 @@ def run(argv: t.List[str] = []) -> int:  # noqa: D103
     if remaining:
         parser.print_help()
         return 1
+
+    if args.cache is False:
+        os.environ["PROJECT_CONFIG_USE_CACHE"] = "false"
 
     try:
         project = Project(
