@@ -13,6 +13,11 @@ from project_config.project import Project
 from project_config.reporters import POSSIBLE_REPORTER_IDS, parse_reporter_id
 
 
+SPHINX_IS_RUNNING = "sphinx" in sys.modules
+OPEN_QUOTE_CHAR = "”" if SPHINX_IS_RUNNING else '"'
+CLOSE_QUOTE_CHAR = "”" if SPHINX_IS_RUNNING else '"'
+
+
 class ReporterAction(argparse.Action):
     """Custom argparse action for reporter CLI option."""
 
@@ -111,6 +116,10 @@ def _build_main_parser() -> argparse.ArgumentParser:
     possible_reporters_msg = ", ".join(
         [f"'{rep}'" for rep in POSSIBLE_REPORTER_IDS],
     )
+    example = (
+        f"{OPEN_QUOTE_CHAR}file{CLOSE_QUOTE_CHAR}:"
+        f"{OPEN_QUOTE_CHAR}blue{CLOSE_QUOTE_CHAR}"
+    )
     parser.add_argument(
         "-r",
         "--reporter",
@@ -123,8 +132,8 @@ def _build_main_parser() -> argparse.ArgumentParser:
             " passed to the reporter appending ';' to the end of the reporter"
             " id with the syntax '<OPTION>=<JSON VALUE>'. Console reporters can"
             " take an argument 'color' which accepts a JSON object to customize"
-            " the colors for parts of the report like files, for example"
-            ' \'table:simple;color={"file":"blue"}\'.'
+            " the colors for parts of the report like files, for example:"
+            " table:simple;color={%s}." % example
         ),
     )
     parser.add_argument(
