@@ -48,16 +48,12 @@ jobs:
           scripts_path=$(python -c 'import __install_poetry as i;print(i.bin_dir())')
           rm __install_poetry.py
           echo $scripts_path >> $GITHUB_PATH
-      - name: Install poetry plugins
-        run: |
-          poetry self add poetry-exec-plugin
-          poetry self show plugins
       - name: Install dependencies
         run: |
           poetry install --with test
           poetry show
       - name: Run tests
-        run: poetry exec t
+        run: poetry run pytest
         env:
           PROJECT_CONFIG_TESTS_E2E: true
       - name: Coveralls
