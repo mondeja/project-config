@@ -76,7 +76,7 @@ def test_examples_check(
     else:
         # from API
         with chdir(example_dir):
-            project = Project(None, example_dir, "default", False)
+            project = Project(None, example_dir, {"name": "default"}, False)
             if expected_stderr:
                 with pytest.raises(ProjectConfigException) as exc:
                     project.check(args)

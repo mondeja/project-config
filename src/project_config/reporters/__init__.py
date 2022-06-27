@@ -1,6 +1,7 @@
 """Error reporters."""
 
 import importlib
+import json
 import types
 import typing as t
 
@@ -41,8 +42,43 @@ reporters = {
 }
 
 
+def _parse_reporter_arguments(arguments_string: str) -> t.Dict[str, t.Any]:
+    result: t.Dict[str, str] = {}
+    for arg_value in arguments_string.split(";"):
+        key, value = arg_value.split("=", maxsplit=1)
+        result[key] = json.loads(value)
+    return result
+
+
+def parse_reporter_id(value: str) -> t.Tuple[str, t.Dict[str, t.Any]]:
+    """Parse a reporter identifier.
+
+    Returns the reporter name and the optional arguments for his class.
+
+    Args:
+        value (str): Reporter identifier.
+    """
+    if value.startswith(":"):
+        value = f"default:{value}"
+    elif ";" not in value:
+        value = f"default;{value}"
+
+    if ";" in value:
+        reporter_id, reporter_kwargs_string = value.split(";", maxsplit=1)
+    else:
+        reporter_id, reporter_kwargs_string = value, ""
+    if ":" in reporter_id:
+        reporter_name, fmt = reporter_id.split(":", maxsplit=1)
+    else:
+        reporter_name, fmt = reporter_id, None
+
+    reporter_kwargs = _parse_reporter_arguments(reporter_kwargs_string)
+    return reporter_name, {**reporter_kwargs, "fmt": fmt}
+
+
 def get_reporter(
     reporter_name: str,
+    reporter_kwargs: t.Dict[str, t.Any],
     color: t.Optional[bool],
     rootdir: str,
 ) -> t.Any:
@@ -50,22 +86,19 @@ def get_reporter(
 
     Args:
         reporter_name (str): Reporter identifier name.
+        reporter_kwargs (dict): Optional arguments for reporter class.
         color (bool): Return the colorized version of the reporter,
             if is implemented, using the black/white version as
             a fallback.
         rootdir (str): Root directory of the project.
     """
-    # if ':' in the reporter, is passing the kwarg 'format' with the value
-    if ":" in reporter_name:
-        reporter_name, fmt = reporter_name.split(":")
-    else:
-        fmt = None
-
     try:
         if reporter_name in reporters:
             reporter_class_name = reporters[reporter_name]
         else:
-            reporter_class_name = reporters[f"{reporter_name}:{fmt}"]
+            reporter_class_name = reporters[
+                f"{reporter_name}:{reporter_kwargs.get('fmt')}"
+            ]
     except KeyError:
         # 3rd party reporter
         third_party_reporters = ThirdPartyReporters()
@@ -96,7 +129,7 @@ def get_reporter(
             )
         Reporter = getattr(reporter_module, reporter_class_name)
 
-    return Reporter(rootdir, fmt=fmt)
+    return Reporter(rootdir, **reporter_kwargs)
 
 
 class ThirdPartyReporters:
@@ -199,3 +232,6 @@ class ThirdPartyReporters:
                 f"Reporter class '{reporter_class.__name__}' is not"
                 " a subclass of BaseReporter",
             )
+
+
+POSSIBLE_REPORTER_IDS = list(reporters) + ThirdPartyReporters().ids

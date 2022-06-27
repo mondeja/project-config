@@ -25,9 +25,16 @@ def test_get_reporter(reporter_id, reporter_class_name, color, tmp_path):
             "Reporter",
             "ColorReporter",
         )
+    if ":" in reporter_id:
+        reporter_id, fmt = reporter_id.split(":")
+        reporter_kwargs = {"fmt": fmt}
+    else:
+        reporter_kwargs = {}
+
     assert (
         get_reporter(
             reporter_id,
+            reporter_kwargs,
             color,
             str(tmp_path),
         ).__class__.__name__
@@ -131,6 +138,7 @@ def test_get_3rd_party_reporter(
     if expected_error_message is None:
         get_reporter(
             entrypoint_name,
+            {},
             color,
             str(tmp_path),
         )
@@ -141,6 +149,7 @@ def test_get_3rd_party_reporter(
         ):
             get_reporter(
                 entrypoint_name,
+                {},
                 color,
                 str(tmp_path),
             )
