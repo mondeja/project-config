@@ -9,7 +9,7 @@ from dataclasses import dataclass
 from project_config.config import Config
 from project_config.constants import Error, InterruptingError, ResultValue
 from project_config.plugins import InvalidPluginFunction, Plugins
-from project_config.reporters import get_reporter
+from project_config.reporters import DEFAULT_REPORTER, get_reporter
 from project_config.tree import Tree, TreeNodeFiles
 from project_config.types import Rule
 
@@ -40,37 +40,57 @@ class Project:
         rootdir (str): Root directory of the project.
         reporter_ (dict): Reporter to use.
         color (bool): Colorized output in reporters.
-        reporter_format (str): Additional format for reporter.
     """
 
     config_path: str
     rootdir: str
     reporter_: t.Dict[str, t.Any]
     color: bool
-    reporter_format: t.Optional[str] = None
 
     def _load(
         self,
-        config: bool = True,
-        config_styles: bool = True,
+        fetch_styles: bool = True,
         tree: bool = True,
-        reporter: bool = True,
     ) -> None:
-        if config:
-            self.config = Config(
-                self.rootdir,
-                self.config_path,
-                fetch_styles=config_styles,
-            )
+        self.config = Config(
+            self.rootdir,
+            self.config_path,
+            fetch_styles=fetch_styles,
+        )
+        self.reporter_["name"] = self.reporter_.get(
+            "name",
+            self.config.cli.get("reporter", DEFAULT_REPORTER),
+        )
+        self.color = (
+            self.config.cli.get("color")  # type: ignore
+            if self.color is True
+            else self.color
+        )
+        if self.color:
+            reporter_kwargs = self.reporter_.get("kwargs", {})
+
+            if "colors" in self.config.cli:
+                colors = reporter_kwargs.get("colors", {})
+                colors.update(self.config.cli["colors"])
+                reporter_kwargs["colors"] = colors
+            self.reporter_["kwargs"] = reporter_kwargs
+        else:
+            self.reporter_["kwargs"] = {}
+
+        if not self.rootdir:
+            self.rootdir = self.config.cli.get("rootdir", os.getcwd())
+        else:
+            self.rootdir = os.getcwd()
+
         if tree:
             self.tree = Tree(self.rootdir)
-        if reporter:
-            self.reporter = get_reporter(
-                self.reporter_["name"],
-                self.reporter_.get("kwargs", {}),
-                self.color,
-                self.rootdir,
-            )
+
+        self.reporter = get_reporter(
+            self.reporter_["name"],
+            self.reporter_["kwargs"],
+            self.color,
+            self.rootdir,
+        )
 
     def _check_files_existence(
         self,
@@ -287,12 +307,12 @@ class Project:
             report = Cache.get_directory()
         else:
             if args.data == "config":
-                self._load(config_styles=False, tree=False)
+                self._load(fetch_styles=False, tree=False)
                 data = self.config.dict_
                 data.pop("cache")
                 data["cache"] = data.pop("_cache")
             elif args.data == "plugins":
-                self._load(config=False, tree=False)
+                self._load(fetch_styles=False, tree=False)
                 data = Plugins(  # type: ignore
                     prepare_all=True,
                 ).plugin_action_names

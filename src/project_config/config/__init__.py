@@ -14,6 +14,7 @@ from project_config.config.exceptions import (
 )
 from project_config.config.style import Style
 from project_config.fetchers import fetch
+from project_config.reporters import POSSIBLE_REPORTER_IDS
 
 
 CONFIG_CACHE_REGEX = (
@@ -163,6 +164,52 @@ def validate_config(config_path: str, config: t.Any) -> None:
         )
 
 
+def validate_cli_config(
+    config_path: str,
+    config: t.Dict[str, t.Any],
+) -> t.Dict[str, t.Any]:
+    """Validates the CLI configuration.
+
+    Args:
+        config (dict): Raw CLI configuration.
+
+    Returns:
+        object: CLI configuration data.
+    """
+    errors: t.List[str] = []
+    if "reporter" in config:
+        if not isinstance(config["reporter"], str):
+            errors.append("cli.reporter -> must be of type string")
+        if not config["reporter"]:
+            errors.append("cli.reporter -> must not be empty")
+        if config["reporter"] not in POSSIBLE_REPORTER_IDS:
+            errors.append("cli.reporter -> must be one a valid reporter")
+
+    if "color" in config:
+        if not isinstance(config["color"], bool):
+            errors.append("cli.color -> must be of type boolean")
+
+    if "colors" in config:
+        if not isinstance(config["colors"], dict):
+            errors.append("cli.colors -> must be of type object")
+        if not config["colors"]:
+            errors.append("cli.colors -> must not be empty")
+
+        # colors are validated in the reporter
+
+    if "rootdir" in config:
+        if not isinstance(config["rootdir"], str):
+            errors.append("cli.rootdir -> must be of type string")
+        if not config["rootdir"]:
+            errors.append("cli.rootdir -> must not be empty")
+        elif not os.path.isdir(config["rootdir"]):
+            errors.append("cli.rootdir -> must be an existent directory")
+
+    if errors:
+        raise ProjectConfigInvalidConfigSchema(config_path, errors)
+    return config
+
+
 class Config:
     """Configuration wrapper.
 
@@ -170,6 +217,10 @@ class Config:
         rootdir (str): Project root directory.
         path (str): Path to the file from which the configuration
             will be loaded.
+        fetch_styles (bool): Whether to fetch the styles in the styles
+            loader.
+        validate_cli_config (bool): Whether to validate the CLI
+            configuration.
     """
 
     def __init__(
@@ -181,8 +232,11 @@ class Config:
         self.rootdir = rootdir
         self.path, config = read_config(path)
         validate_config(self.path, config)
+        self.cli = validate_cli_config(self.path, config.pop("cli", {}))
+
         config["_cache"] = config["cache"]
         config["cache"] = _cache_string_to_seconds(config["cache"])
+
         # set the cache expiration time globally
         Cache.set(
             Cache.Keys.expiration,
@@ -190,6 +244,7 @@ class Config:
             expire=None,
         )
         self.dict_: ConfigType = config
+
         if fetch_styles:
             self.style = Style.from_config(self)
 

@@ -60,9 +60,9 @@ the following reporters are supported:
 
 .. _tabulate: https://github.com/astanin/python-tabulate
 
-When you pass a reporter with the ``-r`` / ``--reporter`` option, you can
-specify the variant of the format with ``reporter:format``  syntax, for example
-``table:html`` will output the errors in an HTML table.
+When you pass a reporter with the :ref:`project-config---reporter` option, you
+can specify the variant of the format with ``reporter:format``  syntax, for
+example ``table:html`` will output the errors in an HTML table.
 
 Additional third party reporters can be implemented as plugins,
 see :ref:`dev/reporters:Writing third party reporters` for more information.
@@ -79,7 +79,7 @@ The reporter output affects the output of the next commands:
    Keep in mind that errors shown by ``check`` command are redirected to STDERR.
 
    Colorized output can't be serialized, so if you want to postprocess the report
-   in the command line use always the ``--no-color`` / ``--nocolor`` flag or set
+   in the command line use always the :ref:`project-config---no-color` flag or set
    the environment variable ``NO_COLOR``.
 
 Examples of usage

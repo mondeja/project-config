@@ -12,6 +12,7 @@ from project_config.exceptions import ProjectConfigException
 from project_config.reporters.base import BaseReporter
 
 
+DEFAULT_REPORTER = "default"
 PROJECT_CONFIG_REPORTERS_ENTRYPOINTS_GROUP = "project_config.reporters"
 
 

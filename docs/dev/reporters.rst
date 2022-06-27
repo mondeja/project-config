@@ -39,7 +39,7 @@ so the first thing is to add the entrypoint to the group:
 
 The name of the entrypoint (`my_reporter` in the previous example)
 is the name of the reporter that you must pass in the CLI option
-``-r`` / ``--reporter`` to use it.
+:ref:`project-config---reporter` to use it.
 
 Reporters module
 ================
