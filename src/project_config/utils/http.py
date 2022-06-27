@@ -1,6 +1,7 @@
 """HTTP/s utilities."""
 
 import time
+import typing as t
 import urllib.request
 
 from project_config.cache import Cache
@@ -15,7 +16,7 @@ class ProjectConfigTimeoutError(ProjectConfigHTTPError):
     """Timeout error."""
 
 
-def _GET(url: str, timeout: int = 30) -> str:
+def _GET(url: str, timeout: int = 10) -> str:
     start = time.time()
     end = start + timeout
     err = None
@@ -36,7 +37,7 @@ def _GET(url: str, timeout: int = 30) -> str:
     )
 
 
-def GET(url: str, use_cache: bool = True) -> str:
+def GET(url: str, use_cache: bool = True, **kwargs: t.Any) -> str:
     """Perform an HTTP/s GET request and return the result.
 
     Args:
@@ -47,8 +48,8 @@ def GET(url: str, use_cache: bool = True) -> str:
     if use_cache:
         result = Cache.get(url)
         if result is None:
-            result = _GET(url)
+            result = _GET(url, **kwargs)
             Cache.set(url, result)
     else:
-        result = _GET(url)
+        result = _GET(url, **kwargs)
     return result  # type: ignore

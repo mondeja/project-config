@@ -60,7 +60,7 @@ def _build_raw_githubusercontent_url(
     )
 
 
-def fetch(url_parts: urllib.parse.SplitResult) -> str:
+def fetch(url_parts: urllib.parse.SplitResult, **kwargs: t.Any) -> str:
     """Fetch a resource through HTTPs protocol for a Github URI."""
     # extract project, filepath and git reference
     project_maybe_with_gitref, fpath = url_parts.path.lstrip("/").split(
@@ -82,4 +82,4 @@ def fetch(url_parts: urllib.parse.SplitResult) -> str:
         git_reference,
         fpath,
     )
-    return GET(url)
+    return GET(url, **kwargs)
