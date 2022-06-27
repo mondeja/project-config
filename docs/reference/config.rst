@@ -51,3 +51,38 @@ Also accepts the next string to not use the cache at all.
    You can also disable the cache passing the CLI option ``--no-cache`` /
    ``--nocache`` or setting the ``PROJECT_CONFIG_USE_CACHE`` environment
    variable to ``"false"``.
+
+
+``cli`` (`object`)
+==================
+
+Configures the CLI execution. It avoids you to pass the same CLI arguments
+to the **project-config** command.
+
+.. seealso::
+
+   :doc:`./cli`
+
+``cli.rootdir`` (`string`)
+--------------------------
+
+Root directory of the project. Corresponds to the :ref:`project-config---rootdir`
+optional CLI argument.
+
+``cli.reporter`` (`string`)
+---------------------------
+
+Reporter to use. Corresponds to the ``NAME:FORMAT`` part of the
+:ref:`project-config---reporter` optional CLI argument.
+
+``cli.color`` (`boolean`)
+-------------------------
+
+Specifies if your want the output to be colored. Corresponds to the
+:ref:`project-config---no-color` optional CLI argument.
+
+``cli.colors`` (`object`)
+-------------------------
+
+Custom colors used in the output of the CLI. Corresponds to the ``color=``
+argument of the :ref:`project-config---reporter` optional CLI argument.

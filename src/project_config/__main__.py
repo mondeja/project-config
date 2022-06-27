@@ -38,17 +38,23 @@ class ReporterAction(argparse.Action):
         value: str,
         option_string: str,
     ) -> None:
-        try:
-            reporter_name, reporter_kwargs = parse_reporter_id(value)
-        except Exception:
-            self._raise_invalid_reporter_error(value)
-        reporter_id = reporter_name
-        if reporter_kwargs["fmt"]:
-            reporter_id += f':{reporter_kwargs["fmt"]}'
+        reporter: t.Dict[str, t.Any] = {}
+        if value:
 
-        if reporter_id not in POSSIBLE_REPORTER_IDS:
-            self._raise_invalid_reporter_error(reporter_id)
-        namespace.reporter = {"name": reporter_name, "kwargs": reporter_kwargs}
+            try:
+                reporter_name, reporter_kwargs = parse_reporter_id(value)
+            except Exception:
+                self._raise_invalid_reporter_error(value)
+            reporter_id = reporter_name
+            if reporter_kwargs["fmt"]:
+                reporter_id += f':{reporter_kwargs["fmt"]}'
+
+            if reporter_id not in POSSIBLE_REPORTER_IDS:
+                self._raise_invalid_reporter_error(reporter_id)
+            reporter["name"] = reporter_name
+            reporter["kwargs"] = reporter_kwargs
+
+        namespace.reporter = reporter
 
 
 def _controlled_error(
@@ -111,7 +117,7 @@ def _build_main_parser() -> argparse.ArgumentParser:
             " execute project-config for another project rather than the"
             " current working directory."
         ),
-        default=os.getcwd(),
+        default=None,
     )
     possible_reporters_msg = ", ".join(
         [f"'{rep}'" for rep in POSSIBLE_REPORTER_IDS],
@@ -123,7 +129,6 @@ def _build_main_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "-r",
         "--reporter",
-        default="default",
         action=ReporterAction,
         metavar="NAME[:FORMAT];OPTION=VALUE",
         help=(
@@ -208,9 +213,6 @@ def run(argv: t.List[str] = []) -> int:  # noqa: D103
         parser.print_help()
         return 1
 
-    if isinstance(args.reporter, str):
-        args.reporter = {"name": args.reporter}
-
     if args.cache is False:
         os.environ["PROJECT_CONFIG_USE_CACHE"] = "false"
 
@@ -218,7 +220,7 @@ def run(argv: t.List[str] = []) -> int:  # noqa: D103
         project = Project(
             args.config,
             args.rootdir,
-            args.reporter,
+            args.reporter or {},
             args.color,
         )
         getattr(project, args.command)(subargs)
