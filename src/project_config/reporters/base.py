@@ -7,12 +7,28 @@ import typing as t
 import colored
 
 from project_config.compat import TypeAlias
-from project_config.exceptions import ProjectConfigCheckFailedBase
+from project_config.exceptions import (
+    ProjectConfigCheckFailedBase,
+    ProjectConfigException,
+)
 from project_config.types import ErrorDict
 
 
 FilesErrors: TypeAlias = t.Dict[str, t.List[ErrorDict]]
 FormatterDefinitionType: TypeAlias = t.Callable[[str], str]
+
+
+class InvalidColors(ProjectConfigException):
+    """Invalid not supported colors in colored formatter."""
+
+    def __init__(self, errors: t.List[str]):
+        message = (
+            "Invalid colors or subjects in 'colors' configuration"
+            " for reporters:\n"
+        )
+        for error in errors:
+            message += f"  - {error}\n"
+        super().__init__(message)
 
 
 class BaseReporter(abc.ABC):
@@ -187,29 +203,78 @@ def bold_color(value: str, color: str) -> str:
     )
 
 
+def colored_color_exists(color: str) -> bool:
+    """Check if a color exists in the `colored`_ library.
+
+    .. _colored: https://gitlab.com/dslackw/colored
+
+    Args:
+        color (str): Color to check.
+
+    Returns:
+        bool: ``True`` if the color exists, ``False`` otherwise.
+    """
+    try:
+        colored.fg(color)
+    except KeyError:
+        return False
+    else:
+        return True
+
+
 class BaseColorReporter(BaseFormattedReporter):
     """Base reporter with colorized output."""
 
+    def __init__(
+        self, *args: t.Any, colors: t.Dict[str, str] = {}, **kwargs: t.Any
+    ) -> None:
+        self.colors = self._normalize_colors(colors)
+        super().__init__(*args, **kwargs)
+
+    def _normalize_colors(self, colors: t.Dict[str, str]) -> t.Dict[str, str]:
+        normalized_colors: t.Dict[str, str] = {}
+        errors: t.List[str] = []
+        for subject, color in colors.items():
+            normalized_subject = (
+                subject.lower().replace("-", "_").replace(" ", "_")
+            )
+            if not hasattr(self, f"format_{normalized_subject}"):
+                errors.append(
+                    f"Invalid subject '{normalized_subject}' to colorize",
+                )
+            if not colored_color_exists(color):
+                errors.append(f"Color '{color}' not supported")
+            normalized_colors[normalized_subject] = color
+        if errors:
+            raise InvalidColors(errors)
+        return normalized_colors
+
     def format_file(self, fname: str) -> str:  # noqa: D102
-        return bold_color(fname, "light_red")
+        return bold_color(fname, self.colors.get("file", "light_red"))
 
     def format_error_message(self, error_message: str) -> str:  # noqa: D102
-        return bold_color(error_message, "yellow")
+        return bold_color(
+            error_message,
+            self.colors.get("error_message", "yellow"),
+        )
 
     def format_definition(self, definition: str) -> str:  # noqa: D102
-        return bold_color(definition, "blue")
+        return bold_color(definition, self.colors.get("definition", "blue"))
 
     def format_hint(self, hint: str) -> str:  # noqa: D102
-        return bold_color(hint, "green")
+        return bold_color(hint, self.colors.get("hint", "green"))
 
     def format_key(self, key: str) -> str:  # noqa: D102
-        return bold_color(key, "cyan")
+        return bold_color(key, self.colors.get("key", "cyan"))
 
     def format_metachar(self, metachar: str) -> str:  # noqa: D102
-        return bold_color(metachar, "grey_37")
+        return bold_color(metachar, self.colors.get("metachar", "grey_37"))
 
     def format_config_key(self, config_key: str) -> str:  # noqa: D102
-        return bold_color(config_key, "blue")
+        return bold_color(config_key, self.colors.get("config_key", "blue"))
 
     def format_config_value(self, config_value: str) -> str:  # noqa: D102
-        return bold_color(config_value, "yellow")
+        return bold_color(
+            config_value,
+            self.colors.get("config_value", "yellow"),
+        )

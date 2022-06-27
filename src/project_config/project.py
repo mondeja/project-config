@@ -38,14 +38,14 @@ class Project:
     Args:
         config_path (str): Custom configuration file path.
         rootdir (str): Root directory of the project.
-        reporter_id (str): Reporter to use.
+        reporter_ (dict): Reporter to use.
         color (bool): Colorized output in reporters.
         reporter_format (str): Additional format for reporter.
     """
 
     config_path: str
     rootdir: str
-    reporter_id: str
+    reporter_: t.Dict[str, t.Any]
     color: bool
     reporter_format: t.Optional[str] = None
 
@@ -66,7 +66,8 @@ class Project:
             self.tree = Tree(self.rootdir)
         if reporter:
             self.reporter = get_reporter(
-                self.reporter_id,
+                self.reporter_["name"],
+                self.reporter_.get("kwargs", {}),
                 self.color,
                 self.rootdir,
             )

@@ -4,12 +4,46 @@ import argparse
 import os
 import sys
 import typing as t
+from gettext import gettext as _
 
 from importlib_metadata_argparse_version import ImportlibMetadataVersionAction
 
 from project_config.exceptions import ProjectConfigException
 from project_config.project import Project
-from project_config.reporters import ThirdPartyReporters, reporters
+from project_config.reporters import POSSIBLE_REPORTER_IDS, parse_reporter_id
+
+
+class ReporterAction(argparse.Action):
+    """Custom argparse action for reporter CLI option."""
+
+    def _raise_invalid_reporter_error(self, reporter_id: str) -> None:
+        raise argparse.ArgumentError(
+            self,
+            _("invalid choice: %(value)r (choose from %(choices)s)")
+            % {
+                "value": reporter_id,
+                "choices": ", ".join(POSSIBLE_REPORTER_IDS),
+            },
+        )
+
+    def __call__(  # type: ignore  # noqa: D102
+        self,
+        parser: argparse.ArgumentParser,
+        namespace: argparse.Namespace,
+        value: str,
+        option_string: str,
+    ) -> None:
+        try:
+            reporter_name, reporter_kwargs = parse_reporter_id(value)
+        except Exception:
+            self._raise_invalid_reporter_error(value)
+        reporter_id = reporter_name
+        if reporter_kwargs["fmt"]:
+            reporter_id += f':{reporter_kwargs["fmt"]}'
+
+        if reporter_id not in POSSIBLE_REPORTER_IDS:
+            self._raise_invalid_reporter_error(reporter_id)
+        namespace.reporter = {"name": reporter_name, "kwargs": reporter_kwargs}
 
 
 def _controlled_error(
@@ -74,13 +108,24 @@ def _build_main_parser() -> argparse.ArgumentParser:
         ),
         default=os.getcwd(),
     )
+    possible_reporters_msg = ", ".join(
+        [f"'{rep}'" for rep in POSSIBLE_REPORTER_IDS],
+    )
     parser.add_argument(
         "-r",
         "--reporter",
-        dest="reporter",
         default="default",
-        choices=list(reporters) + ThirdPartyReporters().ids,
-        help="Style of generated report when failed.",
+        action=ReporterAction,
+        metavar="NAME[:FORMAT];OPTION=VALUE",
+        help=(
+            "Reporter for generated output when failed. Possible values"
+            f" are {possible_reporters_msg}. Additionally, options can be"
+            " passed to the reporter appending ';' to the end of the reporter"
+            " id with the syntax '<OPTION>=<JSON VALUE>'. Console reporters can"
+            " take an argument 'color' which accepts a JSON object to customize"
+            " the colors for parts of the report like files, for example"
+            ' \'table:simple;color={"file":"blue"}\'.'
+        ),
     )
     parser.add_argument(
         "--no-color",
@@ -153,6 +198,9 @@ def run(argv: t.List[str] = []) -> int:  # noqa: D103
     if remaining:
         parser.print_help()
         return 1
+
+    if isinstance(args.reporter, str):
+        args.reporter = {"name": args.reporter}
 
     if args.cache is False:
         os.environ["PROJECT_CONFIG_USE_CACHE"] = "false"
