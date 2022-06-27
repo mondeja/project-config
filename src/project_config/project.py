@@ -2,7 +2,6 @@
 
 import argparse
 import os
-import shutil
 import sys
 import typing as t
 from dataclasses import dataclass
@@ -282,9 +281,9 @@ class Project:
         It will depend in the ``args.data`` property.
         """
         if args.data == "cache":
-            from project_config.cache import _directory
+            from project_config.cache import Cache
 
-            report = _directory()
+            report = Cache.get_directory()
         else:
             if args.data == "config":
                 self._load(config_styles=False, tree=False)
@@ -306,12 +305,7 @@ class Project:
 
     def clean(self, args: argparse.Namespace) -> None:
         """Cleaning command."""
-        from project_config.cache import _directory
+        from project_config.cache import Cache
 
-        cache_directory = _directory()
-        try:
-            shutil.rmtree(cache_directory)
-        except FileNotFoundError:
-            pass
-        finally:
+        if Cache.clean():
             sys.stdout.write("Cache removed successfully!\n")

@@ -10,7 +10,7 @@ from project_config.tests.pytest_plugin.helpers import (
     create_files as _create_files,
     create_tree as _create_tree,
 )
-from project_config.utils import GET, HTTPError
+from project_config.utils.http import GET, ProjectConfigHTTPError
 
 
 testsdir = os.path.abspath(os.path.dirname(__file__))
@@ -101,8 +101,13 @@ def _session_fixture():
     started = False
     while time.time() < end:
         try:
-            result = GET(f"{TEST_SERVER_URL}/ping", use_cache=False)
-        except HTTPError:
+            result = GET(
+                f"{TEST_SERVER_URL}/ping",
+                use_cache=False,
+                timeout=10,
+                sleep=0,
+            )
+        except ProjectConfigHTTPError:
             time.sleep(0.05)
         else:
             if result == "pong":

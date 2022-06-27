@@ -1,6 +1,8 @@
 """Persistent cache."""
 
+import contextlib
 import os
+import shutil
 import typing as t
 
 import appdirs
@@ -10,9 +12,9 @@ from project_config.compat import cached_function, importlib_metadata
 
 
 @cached_function
-def _directory() -> t.Any:
+def _directory() -> str:
     project_config_metadata = importlib_metadata.metadata("project_config")
-    return appdirs.user_data_dir(
+    return appdirs.user_data_dir(  # type: ignore
         appname=project_config_metadata["name"],
         appauthor=project_config_metadata["author"],
         version=project_config_metadata["version"],
@@ -40,3 +42,15 @@ class Cache:
         if os.environ.get("PROJECT_CONFIG_USE_CACHE") == "false":
             return None
         return cls._get_cache().get(*args, **kwargs)
+
+    @staticmethod
+    def clean() -> bool:
+        """Remove the cache directory."""
+        with contextlib.suppress(FileNotFoundError):
+            shutil.rmtree(_directory())
+        return True
+
+    @staticmethod
+    def get_directory() -> str:
+        """Return the cache directory."""
+        return _directory()

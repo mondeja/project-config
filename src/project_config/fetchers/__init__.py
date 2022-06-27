@@ -2,6 +2,7 @@
 
 import importlib
 import os
+import typing as t
 import urllib.parse
 
 from project_config.compat import TypeAlias
@@ -57,7 +58,7 @@ def _get_scheme_from_urlparts(url_parts: urllib.parse.SplitResult) -> str:
     )
 
 
-def fetch(url: str) -> FetchResult:
+def fetch(url: str, **kwargs: t.Any) -> FetchResult:
     """Fetch a result given an URI.
 
     Args:
@@ -70,7 +71,7 @@ def fetch(url: str) -> FetchResult:
     except ImportError:
         raise SchemeProtocolNotImplementedError(scheme)
 
-    string = getattr(mod, "fetch")(url_parts)
+    string = getattr(mod, "fetch")(url_parts, **kwargs)
     return serialize_for_url(url, string)
 
 

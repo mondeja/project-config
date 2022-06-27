@@ -8,6 +8,8 @@ Configuration must be defined in TOML_ format in one of the next files:
 * `pyproject.toml` (inside a ``[tool.project-config]`` table)
 * A custom file passing ``-c``/``--config`` argument in the command line.
 
+.. _TOML: https://toml.io/en/
+
 ``style`` (`string` or `string[]`)
 ==================================
 
@@ -44,9 +46,7 @@ Also accepts the next string to not use the cache at all.
 
 * ``never``
 
-.. _TOML: https://toml.io/en/
-
-.. tip:: Temporally disabling cache
+.. tip::
 
    You can also disable the cache passing the CLI option ``--no-cache`` /
    ``--nocache`` or setting the ``PROJECT_CONFIG_USE_CACHE`` environment

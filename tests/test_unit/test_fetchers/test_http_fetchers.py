@@ -60,7 +60,7 @@ def test_fetch_file(
             expected_result,
             match=re.escape(expected_error_message),
         ):
-            fetch(url)
+            fetch(url, timeout=0, sleep=0)
     else:
-        result = fetch(url)
+        result = fetch(url, timeout=0, sleep=0)
         assert result == expected_result
