@@ -52,7 +52,6 @@ Also accepts the next string to not use the cache at all.
    ``--nocache`` or setting the ``PROJECT_CONFIG_USE_CACHE`` environment
    variable to ``"false"``.
 
-
 ``cli`` (`object`)
 ==================
 

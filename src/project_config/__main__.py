@@ -117,7 +117,6 @@ def _build_main_parser() -> argparse.ArgumentParser:
             " execute project-config for another project rather than the"
             " current working directory."
         ),
-        default=None,
     )
     possible_reporters_msg = ", ".join(
         [f"'{rep}'" for rep in POSSIBLE_REPORTER_IDS],
