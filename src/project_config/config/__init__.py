@@ -172,7 +172,12 @@ class Config:
             will be loaded.
     """
 
-    def __init__(self, rootdir: str, path: t.Optional[str]) -> None:
+    def __init__(
+        self,
+        rootdir: str,
+        path: t.Optional[str],
+        fetch_styles: bool = True,
+    ) -> None:
         self.rootdir = rootdir
         self.path, config = read_config(path)
         validate_config(self.path, config)
@@ -185,7 +190,8 @@ class Config:
             expire=None,
         )
         self.dict_: ConfigType = config
-        self.style = Style.from_config(self)
+        if fetch_styles:
+            self.style = Style.from_config(self)
 
     def __getitem__(self, key: str) -> t.Any:
         return self.dict_.__getitem__(key)

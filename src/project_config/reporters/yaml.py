@@ -88,6 +88,8 @@ class YamlColorReporter(BaseColorReporter):
             report += "\n"
         return report.rstrip("\n")
 
+    _transform_plugins_data = _transform_config_data
+
     def _transform_style_data(self, value: str) -> str:
         report = ""
 
@@ -163,8 +165,5 @@ class YamlColorReporter(BaseColorReporter):
         """Generate a data report in color YAML format."""
         return yaml.dumps(
             data,
-            transform=getattr(
-                self,
-                f"_transform_{data_key}_data",
-            ),
+            transform=getattr(self, f"_transform_{data_key}_data"),
         )

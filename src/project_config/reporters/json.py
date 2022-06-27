@@ -113,32 +113,7 @@ class JsonColorReporter(BaseColorReporter):
             newline12 = "\n" + space * 10 * mul
 
         report = f"{self.format_metachar('{')}{newline2}"
-        if data_key == "config":
-            for d, (key, value) in enumerate(data.items()):
-                report += (
-                    f"{self.format_config_key(json.dumps(key))}"
-                    f'{self.format_metachar(":")}'
-                )
-                if isinstance(value, list):
-                    report += f'{space}{self.format_metachar("[")}{newline4}'
-                    for i, value_item in enumerate(value):
-                        report += self.format_config_value(
-                            json.dumps(value_item),
-                        )
-                        if i < len(value) - 1:
-                            report += (
-                                f'{self.format_metachar(",")}'
-                                f"{newline4 or space}"
-                            )
-                        else:
-                            report += f'{newline2}{self.format_metachar("]")}'
-                else:
-                    report += f" {self.format_config_value(json.dumps(value))}"
-
-                if d < len(data) - 1:
-                    report += f'{self.format_metachar(",")}{newline2 or space}'
-            report += f'{newline0}{self.format_metachar("}")}'
-        else:
+        if data_key == "style":
             plugins = data.pop("plugins", [])
             if plugins:
                 report += (
@@ -262,5 +237,30 @@ class JsonColorReporter(BaseColorReporter):
                 f'{newline2}{self.format_metachar("]")}'
                 f'{newline0}{self.format_metachar("}")}'
             )
+        else:
+            for d, (key, value) in enumerate(data.items()):
+                report += (
+                    f"{self.format_config_key(json.dumps(key))}"
+                    f'{self.format_metachar(":")}'
+                )
+                if isinstance(value, list):
+                    report += f'{space}{self.format_metachar("[")}{newline4}'
+                    for i, value_item in enumerate(value):
+                        report += self.format_config_value(
+                            json.dumps(value_item),
+                        )
+                        if i < len(value) - 1:
+                            report += (
+                                f'{self.format_metachar(",")}'
+                                f"{newline4 or space}"
+                            )
+                        else:
+                            report += f'{newline2}{self.format_metachar("]")}'
+                else:
+                    report += f" {self.format_config_value(json.dumps(value))}"
+
+                if d < len(data) - 1:
+                    report += f'{self.format_metachar(",")}{newline2 or space}'
+            report += f'{newline0}{self.format_metachar("}")}'
 
         return report

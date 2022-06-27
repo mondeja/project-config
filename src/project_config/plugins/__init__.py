@@ -34,7 +34,7 @@ class Plugins:
     demanding from rules.
     """
 
-    def __init__(self) -> None:
+    def __init__(self, prepare_all: bool = False) -> None:
         # map from plugin names to loaded classes
         self.loaded_plugins: t.Dict[str, type] = {}
 
@@ -47,14 +47,32 @@ class Plugins:
         # map from actions to static methods
         self.actions_static_methods: t.Dict[str, PluginMethod] = {}
 
-        # prepare default plugins cache, third party ones will be loaded
-        # on demand at style validation time
-        self._prepare_default_plugins_cache()
+        if prepare_all:
+            # prepare all plugins cache, default and third party,
+            # useful in tasks like plugins listing
+            self._prepare_all_plugins_cache()
+        else:
+            # prepare default plugins cache, third party ones will be loaded
+            # on demand at style validation time
+            self._prepare_default_plugins_cache()
 
     @property
     def plugin_names(self) -> t.List[str]:
         """List of available plugin names."""
         return list(self.plugin_names_loaders)
+
+    @property
+    def plugin_action_names(self) -> t.Dict[str, t.List[str]]:
+        """Mapping of plugin names to their actions."""
+        plugins_actions: t.Dict[str, t.List[str]] = {}
+        for action_name, plugin_name in self.actions_plugin_names.items():
+            if plugin_name not in plugins_actions:
+                plugins_actions[plugin_name] = []
+            if action_name.startswith("if"):
+                plugins_actions[plugin_name].append(action_name)
+            else:
+                plugins_actions[plugin_name].insert(0, action_name)
+        return plugins_actions
 
     def get_function_for_action(
         self,
@@ -116,6 +134,12 @@ class Plugins:
             ):
                 continue
 
+            self._add_plugin_to_cache(plugin)
+
+    def _prepare_all_plugins_cache(self) -> None:
+        for plugin in importlib_metadata.entry_points(
+            group=PROJECT_CONFIG_PLUGINS_ENTRYPOINTS_GROUP,
+        ):
             self._add_plugin_to_cache(plugin)
 
     def prepare_3rd_party_plugin(self, plugin_name: str) -> None:
