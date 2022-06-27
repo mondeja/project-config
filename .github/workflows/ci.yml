@@ -45,19 +45,19 @@ jobs:
         run: |
           curl -sSL https://install.python-poetry.org > __install_poetry.py
           python __install_poetry.py --preview
-          poetry=$(python -c 'import __install_poetry as i;print(i.bin_dir())')
+          scripts_path=$(python -c 'import __install_poetry as i;print(i.bin_dir())')
           rm __install_poetry.py
-          echo "::set-output name=executable::$poetry"
+          echo $scripts_path >> $GITHUB_PATH
       - name: Install poetry plugins
         run: |
-          ${{ steps.poetry.outputs.executable }} self add poetry-exec-plugin
-          ${{ steps.poetry.outputs.executable }} self show plugins
+          poetry self add poetry-exec-plugin
+          poetry self show plugins
       - name: Install dependencies
         run: |
-          ${{ steps.poetry.outputs.executable }} install --with test
-          ${{ steps.poetry.outputs.executable }} show
+          poetry install --with test
+          poetry show
       - name: Run tests
-        run: ${{ steps.poetry.outputs.executable }} exec t
+        run: poetry exec t
         env:
           PROJECT_CONFIG_TESTS_E2E: true
       - name: Coveralls
