@@ -16,9 +16,9 @@ class ProjectConfigTimeoutError(ProjectConfigHTTPError):
     """Timeout error."""
 
 
-def _GET(url: str, timeout: int = 10) -> str:
+def _GET(url: str, timeout: int = 10, sleep: float = 1.0) -> str:
     start = time.time()
-    end = start + timeout
+    end = start + (timeout or 0.01)
     err = None
     while time.time() < end:
         try:
@@ -29,7 +29,7 @@ def _GET(url: str, timeout: int = 10) -> str:
             )
         except (urllib.error.URLError, urllib.error.HTTPError) as exc:
             err = exc.__str__()
-            time.sleep(1)
+            time.sleep(sleep)
 
     error_reason = "" if not err else f" Possibly caused by: {err}"
     raise ProjectConfigTimeoutError(

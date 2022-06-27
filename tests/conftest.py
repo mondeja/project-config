@@ -101,7 +101,12 @@ def _session_fixture():
     started = False
     while time.time() < end:
         try:
-            result = GET(f"{TEST_SERVER_URL}/ping", use_cache=False, timeout=10)
+            result = GET(
+                f"{TEST_SERVER_URL}/ping",
+                use_cache=False,
+                timeout=10,
+                sleep=0,
+            )
         except ProjectConfigHTTPError:
             time.sleep(0.05)
         else:
