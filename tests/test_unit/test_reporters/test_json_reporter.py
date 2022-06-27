@@ -1,8 +1,10 @@
+import importlib
 import json
 
 import pytest
 
-from project_config.reporters import json as json_reporter_module
+
+json_reporter_module = importlib.import_module("project_config.reporters.json")
 
 
 parametrize_formats = pytest.mark.parametrize(
