@@ -132,30 +132,7 @@ class TomlColorReporter(BaseColorReporter):
     ) -> str:
         """Generate data report in TOML format with colors."""
         report = ""
-        if data_key == "config":
-            report += (
-                f'{self.format_config_key("cache")}'
-                f' {self.format_metachar("=")}'
-                f' {self.format_config_value(json.dumps(data["cache"]))}\n'
-            )
-
-            report += (
-                f"{self.format_config_key('style')}"
-                f" {self.format_metachar('=')}"
-            )
-            if isinstance(data["style"], list):
-                report += f' {self.format_metachar("[")}\n'
-                for i, style in enumerate(data["style"]):
-                    report += (
-                        f"  {self.format_config_value(json.dumps(style))}"
-                        f'{self.format_metachar(",")}\n'
-                    )
-                report += f'{self.format_metachar("]")}\n'
-            else:
-                report += (
-                    f' {self.format_config_value(json.dumps(data["style"]))}\n'
-                )
-        else:
+        if data_key == "style":
             plugins = data.pop("plugins", [])
             if plugins:
                 report += (
@@ -258,6 +235,24 @@ class TomlColorReporter(BaseColorReporter):
                     report += (
                         f"{' ' * indent}"
                         f"{self.format_config_value(line[indent:])}\n"
+                    )
+        else:
+            for key, value in data.items():
+                report += (
+                    f"{self.format_config_key(key)}"
+                    f' {self.format_metachar("=")}'
+                )
+                if isinstance(value, list):
+                    report += f' {self.format_metachar("[")}\n'
+                    for i, item in enumerate(value):
+                        report += (
+                            f"  {self.format_config_value(json.dumps(item))}"
+                            f'{self.format_metachar(",")}\n'
+                        )
+                    report += f'{self.format_metachar("]")}\n'
+                else:
+                    report += (
+                        f" {self.format_config_value(json.dumps(value))}\n"
                     )
 
         return _normalize_indentation_to_2_spaces(report)

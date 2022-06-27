@@ -39,21 +39,7 @@ class BaseDefaultReporter(BaseFormattedReporter):
         """Generate data report in custom project-config format."""
         report = ""
 
-        if data_key == "config":
-            for key, value in data.items():
-                report += (
-                    f'{self.format_config_key(key)}{self.format_metachar(":")}'
-                )
-                if isinstance(value, list):
-                    report += "\n"
-                    for value_item in value:
-                        report += (
-                            f'  {self.format_metachar("-")}'
-                            f" {self.format_config_value(value_item)}\n"
-                        )
-                else:
-                    report += f" {self.format_config_value(value)}\n"
-        else:
+        if data_key == "style":
             plugins = data.pop("plugins", [])
             if plugins:
                 report += (
@@ -109,6 +95,20 @@ class BaseDefaultReporter(BaseFormattedReporter):
                         f'{self.format_metachar(":")}'
                         f"\n{self.format_config_value(indented_value)}\n"
                     )
+        else:  # config and plugins
+            for key, value in data.items():
+                report += (
+                    f'{self.format_config_key(key)}{self.format_metachar(":")}'
+                )
+                if isinstance(value, list):
+                    report += "\n"
+                    for value_item in value:
+                        report += (
+                            f'  {self.format_metachar("-")}'
+                            f" {self.format_config_value(value_item)}\n"
+                        )
+                else:
+                    report += f" {self.format_config_value(value)}\n"
 
         return report.rstrip("\n")
 

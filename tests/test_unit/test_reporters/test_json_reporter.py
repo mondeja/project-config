@@ -144,6 +144,12 @@ DATA_REPORTS_PARAMETERS = (
         ),
         id="style-complex",
     ),
+    pytest.param(
+        "plugins",
+        {"foo": ["bar", "baz"], "rain": ["dirt", "sand"]},
+        '{"foo": ["bar", "baz"], "rain": ["dirt", "sand"]}',
+        id="plugins",
+    ),
 )
 
 

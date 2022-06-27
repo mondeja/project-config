@@ -110,7 +110,7 @@ def _parse_command_args(
             parser = argparse.ArgumentParser(prog="project-config show")
             parser.add_argument(
                 "data",
-                choices=["config", "style", "cache"],
+                choices=["config", "style", "cache", "plugins"],
                 help=(
                     "Indicate which data must be shown, discovered"
                     " configuration, extended style or cache directory"

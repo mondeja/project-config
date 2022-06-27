@@ -9,7 +9,7 @@ from dataclasses import dataclass
 
 from project_config.config import Config
 from project_config.constants import Error, InterruptingError, ResultValue
-from project_config.plugins import InvalidPluginFunction
+from project_config.plugins import InvalidPluginFunction, Plugins
 from project_config.reporters import get_reporter
 from project_config.tree import Tree, TreeNodeFiles
 from project_config.types import Rule
@@ -50,14 +50,27 @@ class Project:
     color: bool
     reporter_format: t.Optional[str] = None
 
-    def __post_init__(self) -> None:
-        self.config = Config(self.rootdir, self.config_path)
-        self.tree = Tree(self.rootdir)
-        self.reporter = get_reporter(
-            self.reporter_id,
-            self.color,
-            self.rootdir,
-        )
+    def _load(
+        self,
+        config: bool = True,
+        config_styles: bool = True,
+        tree: bool = True,
+        reporter: bool = True,
+    ) -> None:
+        if config:
+            self.config = Config(
+                self.rootdir,
+                self.config_path,
+                fetch_styles=config_styles,
+            )
+        if tree:
+            self.tree = Tree(self.rootdir)
+        if reporter:
+            self.reporter = get_reporter(
+                self.reporter_id,
+                self.color,
+                self.rootdir,
+            )
 
     def _check_files_existence(
         self,
@@ -255,6 +268,7 @@ class Project:
 
         Raises an error if report errors.
         """
+        self._load()
         try:
             self._run_check()
         except InterruptCheck:
@@ -272,14 +286,19 @@ class Project:
 
             report = _directory()
         else:
-            data = t.cast(t.Any, self.config.dict_)
             if args.data == "config":
-                data.pop("style")
-                data["style"] = data.pop("_style")
+                self._load(config_styles=False, tree=False)
+                data = self.config.dict_
                 data.pop("cache")
                 data["cache"] = data.pop("_cache")
-            else:
-                data = data.pop("style")
+            elif args.data == "plugins":
+                self._load(config=False, tree=False)
+                data = Plugins(  # type: ignore
+                    prepare_all=True,
+                ).plugin_action_names
+            else:  # style
+                self._load(tree=False)
+                data = self.config.dict_.pop("style")  # type: ignore
 
             report = self.reporter.generate_data_report(args.data, data)
 
