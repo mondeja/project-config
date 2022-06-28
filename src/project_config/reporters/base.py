@@ -114,42 +114,45 @@ class BaseFormattedReporter(BaseReporter, abc.ABC):
     """Reporter that requires formatted fields."""
 
     @abc.abstractmethod
-    def format_file(self, fname: str) -> str:
+    def format_file(self, fname: str) -> str:  # pragma: no cover
         """File name formatter."""
         raise NotImplementedError
 
     @abc.abstractmethod
-    def format_error_message(self, error_message: str) -> str:
+    def format_error_message(
+        self,
+        error_message: str,
+    ) -> str:  # pragma: no cover
         """Error message formatter."""
         raise NotImplementedError
 
     @abc.abstractmethod
-    def format_definition(self, definition: str) -> str:
+    def format_definition(self, definition: str) -> str:  # pragma: no cover
         """Definition formatter."""
         raise NotImplementedError
 
     @abc.abstractmethod
-    def format_hint(self, hint: str) -> str:
+    def format_hint(self, hint: str) -> str:  # pragma: no cover
         """Hint formatter."""
         raise NotImplementedError
 
     @abc.abstractmethod
-    def format_key(self, key: str) -> str:
+    def format_key(self, key: str) -> str:  # pragma: no cover
         """Serialized key formatter."""
         raise NotImplementedError
 
     @abc.abstractmethod
-    def format_metachar(self, metachar: str) -> str:
+    def format_metachar(self, metachar: str) -> str:  # pragma: no cover
         """Meta characters string formatter."""
         raise NotImplementedError
 
     @abc.abstractmethod
-    def format_config_key(self, config_key: str) -> str:
+    def format_config_key(self, config_key: str) -> str:  # pragma: no cover
         """Configuration data key formatter, for example 'style'."""
         raise NotImplementedError
 
     @abc.abstractmethod
-    def format_config_value(self, config_value: str) -> str:
+    def format_config_value(self, config_value: str) -> str:  # pragma: no cover
         """Configuration data value formatter, for example 'style' urls."""
         raise NotImplementedError
 
