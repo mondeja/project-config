@@ -103,13 +103,13 @@ t = "coverage run --source=src -m pytest"
 test = "coverage run --source=src -m pytest"
 "test:show" = """coverage run --source=src -m pytest &&
 coverage html &&
-python -c 'import webbrowser as w;w.open("http://127.0.0.1:8080")' &&
-python -m http.server 8080 -b localhost -d htmlcov
+python -c 'import webbrowser as w;w.open("http://127.0.0.1:8088")' &&
+python -m http.server 8088 -b localhost -d htmlcov
 """
 doc = "python -m sphinx -n -T -E -W docs docs/_build/html"
 "doc:show" = """python -m sphinx -n -T -E -W docs docs/_build/html &&
-python -c 'import webbrowser as w;w.open("http://127.0.0.1:8080")' &&
-python -m http.server 8080 -b localhost -d docs/_build/html"""
+python -c 'import webbrowser as w;w.open("http://127.0.0.1:8089")' &&
+python -m http.server 8089 -b localhost -d docs/_build/html"""
 lint = "pre-commit run -a"
 self = "project-config check"
 "clean:cache" = "project-config clean cache"
