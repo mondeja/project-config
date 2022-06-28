@@ -50,12 +50,10 @@ jobs:
           echo $scripts_path >> $GITHUB_PATH
       - name: Install dependencies
         run: |
-          poetry self add poetry-exec-plugin
-          poetry self show plugins
           poetry install --with test
           poetry show
       - name: Run tests
-        run: poetry exec test:ci
+        run: poetry run coverage run -m pytest
         env:
           PROJECT_CONFIG_TESTS_E2E: true
       - name: Coveralls

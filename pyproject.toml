@@ -102,7 +102,6 @@ cache = "2 days"
 [tool.poetry-exec-plugin.commands]
 t = "coverage run -m pytest"
 test = "coverage run -m pytest"
-"test:ci" = "poetry run poetry exec t" # workaround for Windows
 "test:show" = """coverage run -m pytest &&
 coverage html &&
 python -c 'import webbrowser as w;w.open("http://127.0.0.1:8088")' &&
