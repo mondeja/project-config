@@ -99,9 +99,10 @@ style = [
 cache = "2 days"
 
 [tool.poetry-exec-plugin.commands]
-t = "coverage run --source=src -m pytest"
-test = "coverage run --source=src -m pytest"
-"test:show" = """coverage run --source=src -m pytest &&
+t = "coverage run -m pytest"
+test = "coverage run -m pytest"
+"test:ci" = "poetry run poetry exec t" # workaround for Windows
+"test:show" = """coverage run -m pytest &&
 coverage html &&
 python -c 'import webbrowser as w;w.open("http://127.0.0.1:8088")' &&
 python -m http.server 8088 -b localhost -d htmlcov
@@ -120,6 +121,9 @@ addopts = "-s"
 [tool.coverage.report]
 exclude_lines = ["pragma: no cover", "if __name__ == [\"']__main__[\"']:"]
 omit = ["src/project_config/tests/*"]
+
+[tool.coverage.run]
+source = ["src"]
 
 [tool.mypy]
 python_version = "3.7"
