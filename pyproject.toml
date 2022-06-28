@@ -46,7 +46,6 @@ mondeja-bump = "*"
 
 [tool.poetry.group.test.dependencies]
 pytest = "^7"
-pytest-cov = "^3"
 pre-commit = "^2.9"
 contextlib-chdir = "^1"
 pytest-maybe-raises = "^0.1.1"
@@ -100,10 +99,10 @@ style = [
 cache = "2 days"
 
 [tool.poetry-exec-plugin.commands]
-t = "pytest"
-test = "pytest"
-"test:all" = "pytest"
-"test:show" = """pytest &&
+t = "coverage run --source=src -m pytest"
+test = "coverage run --source=src -m pytest"
+"test:show" = """coverage run --source=src -m pytest &&
+coverage html &&
 python -c 'import webbrowser as w;w.open("http://127.0.0.1:8080")' &&
 python -m http.server 8080 -b localhost -d htmlcov
 """
@@ -116,7 +115,7 @@ self = "project-config check"
 "clean:cache" = "project-config clean cache"
 
 [tool.pytest.ini_options]
-addopts = "-s --cov=src --cov-report=html"
+addopts = "-s"
 
 [tool.coverage.report]
 exclude_lines = ["pragma: no cover", "if __name__ == [\"']__main__[\"']:"]
