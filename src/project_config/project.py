@@ -62,7 +62,7 @@ class Project:
             self.color,
             self.reporter_,
             self.rootdir,
-        ) = self.config.update_from_cli_arguments(
+        ) = self.config.guess_from_cli_arguments(
             self.color,
             self.reporter_,
             self.rootdir,

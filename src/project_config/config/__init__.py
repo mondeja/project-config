@@ -208,10 +208,6 @@ def validate_cli_config(
                 os.path.expanduser(config["rootdir"]),
             )
 
-            # note that other root directory could be passed in the CLI:
-            # if not os.path.isdir(config["rootdir"]):
-            #    errors.append("cli.rootdir -> must be an existent directory")
-
     if errors:
         raise ProjectConfigInvalidConfigSchema(config_path, errors)
     return config
@@ -258,13 +254,13 @@ class Config:
         if fetch_styles:
             self.style = Style.from_config(self)
 
-    def update_from_cli_arguments(
+    def guess_from_cli_arguments(
         self,
         color: t.Optional[bool],
         reporter: t.Dict[str, t.Any],
         rootdir: str,
     ) -> t.Tuple[t.Any, t.Dict[str, t.Any], t.Any]:
-        """Update the configuration objects from CLI arguments."""
+        """Guess the final configuration merging file with CLI arguments."""
         # colorize output?
         color = self.cli.get("color") if color is True else color
 
