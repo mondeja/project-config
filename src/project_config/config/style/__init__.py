@@ -338,11 +338,14 @@ class Style:
 
                         # when requiring absence of files,
                         # no other action can be used
-                        if len(rule) != 1:
+                        if len(rule) != 1 and not (
+                            len(rule) == 2 and "hint" in rule
+                        ):
                             yield (
-                                f"{style_url}: .rules[{r}] -> when requiring"
-                                " absence of files with '.files.not', any"
-                                " other action can be used in the same rule"
+                                f"{style_url}: .rules[{r}] -> when"
+                                " requiring absence of files with"
+                                " '.files.not', no other actions can"
+                                " be used in the same rule"
                             )
                     else:
                         for f, file in enumerate(rule["files"]):

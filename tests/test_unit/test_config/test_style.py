@@ -344,7 +344,7 @@ from project_config.config.style import ProjectConfigInvalidStyle
             [
                 (
                     "foo.json5: .rules[0] -> when requiring absence of files"
-                    " with '.files.not', any other action can be used in the"
+                    " with '.files.not', no other actions can be used in the"
                     " same rule"
                 ),
             ],

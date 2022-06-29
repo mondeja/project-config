@@ -157,6 +157,10 @@ if SPHINX_IS_RUNNING:
 
     def _generate_example_tabs(files):
         tabs_content = ".. tabs::\n\n"
+
+        # put empty files at the end
+        files = sorted(files, key=lambda x: not len(x[1]))
+
         for filename, content in files:
             # check if pygments has a lexer for the code block because
             # if we add a code block without available lexer, Sphinx will
