@@ -165,26 +165,17 @@ def validate_config(config_path: str, config: t.Any) -> None:
         )
 
 
-def validate_cli_config(
-    config_path: str,
-    config: t.Dict[str, t.Any],
-) -> t.Dict[str, t.Any]:
-    """Validates the CLI configuration.
-
-    Args:
-        config (dict): Raw CLI configuration.
-
-    Returns:
-        object: CLI configuration data.
-    """
+def _validate_cli_config(config: t.Dict[str, t.Any]) -> t.List[str]:
     errors: t.List[str] = []
     if "reporter" in config:
         if not isinstance(config["reporter"], str):
             errors.append("cli.reporter -> must be of type string")
-        if not config["reporter"]:
+        elif not config["reporter"]:
             errors.append("cli.reporter -> must not be empty")
-        if config["reporter"] not in POSSIBLE_REPORTER_IDS:
-            errors.append("cli.reporter -> must be one a valid reporter")
+        elif config["reporter"] not in POSSIBLE_REPORTER_IDS:
+            errors.append(
+                "cli.reporter -> must be one of the available reporters",
+            )
 
     if "color" in config:
         if not isinstance(config["color"], bool):
@@ -193,7 +184,7 @@ def validate_cli_config(
     if "colors" in config:
         if not isinstance(config["colors"], dict):
             errors.append("cli.colors -> must be of type object")
-        if not config["colors"]:
+        elif not config["colors"]:
             errors.append("cli.colors -> must not be empty")
 
         # colors are validated in the reporter
@@ -208,6 +199,22 @@ def validate_cli_config(
                 os.path.expanduser(config["rootdir"]),
             )
 
+    return errors
+
+
+def validate_cli_config(
+    config_path: str,
+    config: t.Dict[str, t.Any],
+) -> t.Dict[str, t.Any]:
+    """Validates the CLI configuration.
+
+    Args:
+        config (dict): Raw CLI configuration.
+
+    Returns:
+        object: CLI configuration data.
+    """
+    errors = _validate_cli_config(config)
     if errors:
         raise ProjectConfigInvalidConfigSchema(config_path, errors)
     return config
@@ -297,7 +304,7 @@ class Config:
         else:
             rootdir = os.path.abspath(rootdir)
 
-        if not os.path.isdir(rootdir):
+        if not os.path.isdir(rootdir):  # pragma: no cover
             raise ProjectConfigInvalidConfig(
                 f"Root directory '{rootdir}' must be an existing directory",
             )

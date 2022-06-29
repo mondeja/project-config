@@ -70,7 +70,7 @@ class BaseReporter(abc.ABC):
                 ``"style"``.
             data (dict): Data to report.
         """
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
     @property
     def success(self) -> bool:
@@ -102,7 +102,7 @@ class BaseReporter(abc.ABC):
                 "/" if file.endswith("/") else ""
             )
         else:
-            file = "[CONFIGURATION]"
+            file = "[CONFIGURATION]"  # pragma: no cover
 
         if file not in self.errors:
             self.errors[file] = []
@@ -219,7 +219,7 @@ def colored_color_exists(color: str) -> bool:
     """
     try:
         colored.fg(color)
-    except KeyError:
+    except KeyError:  # pragma: no cover (tested, but not supported on CI)
         return False
     else:
         return True
@@ -229,9 +229,12 @@ class BaseColorReporter(BaseFormattedReporter):
     """Base reporter with colorized output."""
 
     def __init__(
-        self, *args: t.Any, colors: t.Dict[str, str] = {}, **kwargs: t.Any
+        self,
+        *args: t.Any,
+        colors: t.Optional[t.Dict[str, str]] = None,
+        **kwargs: t.Any,
     ) -> None:
-        self.colors = self._normalize_colors(colors)
+        self.colors = self._normalize_colors(colors or {})
         super().__init__(*args, **kwargs)
 
     def _normalize_colors(self, colors: t.Dict[str, str]) -> t.Dict[str, str]:
@@ -245,7 +248,7 @@ class BaseColorReporter(BaseFormattedReporter):
                 errors.append(
                     f"Invalid subject '{normalized_subject}' to colorize",
                 )
-            if not colored_color_exists(color):
+            if not colored_color_exists(color):  # pragma: no cover
                 errors.append(f"Color '{color}' not supported")
             normalized_colors[normalized_subject] = color
         if errors:

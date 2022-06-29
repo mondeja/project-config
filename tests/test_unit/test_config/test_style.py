@@ -375,6 +375,37 @@ from project_config.config.style import ProjectConfigInvalidStyle
             ],
             id="rule-not-existent-action",
         ),
+        pytest.param(
+            {
+                ".project-config.toml": 'style = ["foo.json5"]',
+                "foo.json5": '{ extends: ["bar.yaml"] }',
+                "bar.yaml": "{ rules: 1, extends: 1 }",
+            },
+            [
+                "bar.yaml: .extends -> must be of type array",
+                "bar.yaml: .rules -> must be of type array",
+            ],
+            # NOTE: bug in coverage here, it marks the `else` branch
+            #   as not reached
+            id="invalid-partial-style",
+        ),
+        pytest.param(
+            {
+                ".project-config.toml": 'style = ["foo.py"]',
+                "foo.py": (
+                    # this style must be in a Python file because
+                    # it allows integers as keys in objects (dicts)
+                    'rules = [{"files": {"not": {1: "foo"}}}]'
+                ),
+            },
+            [
+                (
+                    "foo.py: .rules[0].files.not[1] -> file path must"
+                    " be of type string"
+                ),
+            ],
+            id="rule-not-object-invalid-key-type",
+        ),
     ),
 )
 def test_load_style(tmp_path, create_files, chdir, files, expected_result):

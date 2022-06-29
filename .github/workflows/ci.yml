@@ -53,7 +53,7 @@ jobs:
           poetry install --with test
           poetry show
       - name: Run tests
-        run: poetry run coverage run -m pytest
+        run: poetry run coverage run -m pytest -sv
         env:
           PROJECT_CONFIG_TESTS_E2E: true
       - name: Coveralls

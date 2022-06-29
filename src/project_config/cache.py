@@ -41,7 +41,7 @@ class Cache:
     def get(cls, *args: t.Any, **kwargs: t.Any) -> t.Any:  # noqa: D102
         if os.environ.get("PROJECT_CONFIG_USE_CACHE") == "false":
             return None
-        return cls._get_cache().get(*args, **kwargs)
+        return cls._get_cache().get(*args, **kwargs)  # pragma: no cover
 
     @staticmethod
     def clean() -> bool:
