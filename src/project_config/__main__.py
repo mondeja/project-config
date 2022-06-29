@@ -27,7 +27,9 @@ class ReporterAction(argparse.Action):
             _("invalid choice: %(value)r (choose from %(choices)s)")
             % {
                 "value": reporter_id,
-                "choices": ", ".join(POSSIBLE_REPORTER_IDS),
+                "choices": ", ".join(
+                    [f"'{rep}'" for rep in POSSIBLE_REPORTER_IDS],
+                ),
             },
         )
 
@@ -129,6 +131,7 @@ def build_main_parser() -> argparse.ArgumentParser:  # noqa: D103
         "-r",
         "--reporter",
         action=ReporterAction,
+        default={},
         metavar="NAME[:FORMAT];OPTION=VALUE",
         help=(
             "Reporter for generated output when failed. Possible values"
@@ -223,8 +226,6 @@ def parse_args(  # noqa: D103
     if args.cache is False:
         os.environ["PROJECT_CONFIG_USE_CACHE"] = "false"
 
-    args.reporter = args.reporter or {}
-
     return args, subargs
 
 
@@ -242,7 +243,7 @@ def run(argv: t.List[str] = []) -> int:  # noqa: D103
         getattr(project, args.command)(subargs)
     except ProjectConfigException as exc:
         return _controlled_error(args.traceback, exc, exc.message)
-    except FileNotFoundError as exc:
+    except FileNotFoundError as exc:  # pragma: no cover
         return _controlled_error(
             args.traceback,
             exc,
@@ -251,7 +252,7 @@ def run(argv: t.List[str] = []) -> int:  # noqa: D103
     return 0
 
 
-def main() -> None:  # noqa: D103
+def main() -> None:  # noqa: D103  # pragma: no cover
     raise SystemExit(run(sys.argv[1:]))
 
 
