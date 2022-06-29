@@ -9,12 +9,13 @@ from project_config.compat import TypeAlias
 from project_config.config.exceptions import (
     ConfigurationFilesNotFound,
     CustomConfigFileNotFound,
+    ProjectConfigInvalidConfig,
     ProjectConfigInvalidConfigSchema,
     PyprojectTomlFoundButHasNoConfig,
 )
 from project_config.config.style import Style
 from project_config.fetchers import fetch
-from project_config.reporters import POSSIBLE_REPORTER_IDS
+from project_config.reporters import DEFAULT_REPORTER, POSSIBLE_REPORTER_IDS
 
 
 CONFIG_CACHE_REGEX = (
@@ -238,6 +239,8 @@ class Config:
         self.rootdir = rootdir
         self.path, config = read_config(path)
         validate_config(self.path, config)
+
+        # cli configuration in file
         self.cli = validate_cli_config(self.path, config.pop("cli", {}))
 
         config["_cache"] = config["cache"]
@@ -249,10 +252,65 @@ class Config:
             config["cache"],
             expire=None,
         )
+        # main configuration in file
         self.dict_: ConfigType = config
 
         if fetch_styles:
             self.style = Style.from_config(self)
+
+    def update_from_cli_arguments(
+        self,
+        color: t.Optional[bool],
+        reporter: t.Dict[str, t.Any],
+        rootdir: str,
+    ) -> t.Tuple[t.Any, t.Dict[str, t.Any], t.Any]:
+        """Update the configuration objects from CLI arguments."""
+        # colorize output?
+        color = self.cli.get("color") if color is True else color
+
+        # reporter definition
+        reporter_kwargs = reporter.get("kwargs", {})
+        reporter_id = reporter.get(
+            "name",
+            self.cli.get("reporter", DEFAULT_REPORTER),
+        )
+        if ":" in reporter_id:
+            reporter["name"], reporter_kwargs["fmt"] = reporter_id.split(
+                ":",
+                maxsplit=1,
+            )
+        else:
+            reporter["name"] = reporter_id
+
+        if color in (True, None):
+            if "colors" in self.cli:
+                colors = self.cli.get("colors", {})
+                for key, value in reporter_kwargs.get("colors", {}).items():
+                    colors[key] = value  # cli overrides config
+                reporter_kwargs["colors"] = colors
+            reporter["kwargs"] = reporter_kwargs
+        else:
+            reporter["kwargs"] = reporter_kwargs
+
+        if not rootdir:
+            rootdir = self.cli.get("rootdir")  # type: ignore
+            if rootdir:
+                rootdir = os.path.expanduser(rootdir)
+            else:
+                rootdir = os.getcwd()
+        else:
+            rootdir = os.path.abspath(rootdir)
+
+        if not os.path.isdir(rootdir):
+            raise ProjectConfigInvalidConfig(
+                f"Root directory '{rootdir}' must be an existing directory",
+            )
+
+        return (
+            color,
+            reporter,
+            rootdir,
+        )
 
     def __getitem__(self, key: str) -> t.Any:
         return self.dict_.__getitem__(key)

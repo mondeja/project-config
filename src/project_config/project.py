@@ -8,9 +8,8 @@ from dataclasses import dataclass
 
 from project_config.config import Config
 from project_config.constants import Error, InterruptingError, ResultValue
-from project_config.exceptions import ProjectConfigException
 from project_config.plugins import InvalidPluginFunction, Plugins
-from project_config.reporters import DEFAULT_REPORTER, get_reporter
+from project_config.reporters import get_reporter
 from project_config.tree import Tree, TreeNodeFiles
 from project_config.types import Rule
 
@@ -51,7 +50,7 @@ class Project:
     def _load(
         self,
         fetch_styles: bool = True,
-        tree: bool = True,
+        init_tree: bool = True,
     ) -> None:
         self.config = Config(
             self.rootdir,
@@ -59,51 +58,17 @@ class Project:
             fetch_styles=fetch_styles,
         )
 
-        self.color = (
-            self.config.cli.get("color")  # type: ignore
-            if self.color is True
-            else self.color
+        (
+            self.color,
+            self.reporter_,
+            self.rootdir,
+        ) = self.config.update_from_cli_arguments(
+            self.color,
+            self.reporter_,
+            self.rootdir,
         )
 
-        reporter_kwargs = self.reporter_.get("kwargs", {})
-        reporter_id = self.reporter_.get(
-            "name",
-            self.config.cli.get("reporter", DEFAULT_REPORTER),
-        )
-        if ":" in reporter_id:
-            self.reporter_["name"], reporter_kwargs["fmt"] = reporter_id.split(
-                ":",
-                maxsplit=1,
-            )
-        else:
-            self.reporter_["name"] = reporter_id
-
-        if self.color in (True, None):
-            if "colors" in self.config.cli:
-                colors = self.config.cli.get("colors", {})
-                for key, value in reporter_kwargs.get("colors", {}).items():
-                    colors[key] = value  # cli overrides config
-                reporter_kwargs["colors"] = colors
-            self.reporter_["kwargs"] = reporter_kwargs
-        else:
-            self.reporter_["kwargs"] = reporter_kwargs
-
-        if not self.rootdir:
-            self.rootdir = self.config.cli.get("rootdir")  # type: ignore
-            if self.rootdir:
-                self.rootdir = os.path.expanduser(self.rootdir)
-            else:
-                self.rootdir = os.getcwd()
-        else:
-            self.rootdir = os.path.abspath(self.rootdir)
-
-        if not os.path.isdir(self.rootdir):
-            raise ProjectConfigException(
-                f"Root directory '{self.rootdir}' must be an"
-                " existing directory",
-            )
-
-        if tree:
+        if init_tree:
             self.tree = Tree(self.rootdir)
 
         self.reporter = get_reporter(
@@ -328,17 +293,17 @@ class Project:
             report = Cache.get_directory()
         else:
             if args.data == "config":
-                self._load(fetch_styles=False, tree=False)
+                self._load(fetch_styles=False, init_tree=False)
                 data = self.config.dict_
                 data.pop("cache")
                 data["cache"] = data.pop("_cache")
             elif args.data == "plugins":
-                self._load(fetch_styles=False, tree=False)
+                self._load(fetch_styles=False, init_tree=False)
                 data = Plugins(  # type: ignore
                     prepare_all=True,
                 ).plugin_action_names
             else:  # style
-                self._load(tree=False)
+                self._load(init_tree=False)
                 data = self.config.dict_.pop("style")  # type: ignore
 
             report = self.reporter.generate_data_report(args.data, data)
