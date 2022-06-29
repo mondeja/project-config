@@ -1,3 +1,5 @@
+import os
+
 import pytest
 
 from project_config.reporters.base import (
@@ -15,6 +17,8 @@ from project_config.reporters.base import (
     ),
 )
 def test_colored_color_exists(color, expected_result):
+    if expected_result is False and "CI" in os.environ:
+        pytest.skip("colored not supported on CI")
     assert colored_color_exists(color) == expected_result
 
 
@@ -32,11 +36,17 @@ def test_BaseColorReporter_init_fails():
                 "invalid-formatter subject": "blue",
             },
         )
+
+    additional_message = (
+        "- Color 'impossible-color' not supported\n  "
+        if "CI" not in os.environ
+        else ""
+    )
+
     assert (
         exc.value.message
-        == """Invalid colors or subjects in 'colors' configuration for reporters:
-  - Color 'impossible-color' not supported
-  - Invalid subject 'invalid_formatter_subject' to colorize
+        == f"""Invalid colors or subjects in 'colors' configuration for reporters:
+  {additional_message}- Invalid subject 'invalid_formatter_subject' to colorize
 """
     )
 

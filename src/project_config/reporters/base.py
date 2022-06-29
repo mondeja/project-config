@@ -219,7 +219,7 @@ def colored_color_exists(color: str) -> bool:
     """
     try:
         colored.fg(color)
-    except KeyError:
+    except KeyError:  # pragma: no cover (tested, but not supported on CI)
         return False
     else:
         return True
@@ -248,7 +248,7 @@ class BaseColorReporter(BaseFormattedReporter):
                 errors.append(
                     f"Invalid subject '{normalized_subject}' to colorize",
                 )
-            if not colored_color_exists(color):
+            if not colored_color_exists(color):  # pragma: no cover
                 errors.append(f"Color '{color}' not supported")
             normalized_colors[normalized_subject] = color
         if errors:
