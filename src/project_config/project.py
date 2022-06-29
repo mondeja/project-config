@@ -8,6 +8,7 @@ from dataclasses import dataclass
 
 from project_config.config import Config
 from project_config.constants import Error, InterruptingError, ResultValue
+from project_config.exceptions import ProjectConfigException
 from project_config.plugins import InvalidPluginFunction, Plugins
 from project_config.reporters import DEFAULT_REPORTER, get_reporter
 from project_config.tree import Tree, TreeNodeFiles
@@ -57,30 +58,50 @@ class Project:
             self.config_path,
             fetch_styles=fetch_styles,
         )
-        self.reporter_["name"] = self.reporter_.get(
-            "name",
-            self.config.cli.get("reporter", DEFAULT_REPORTER),
-        )
+
         self.color = (
             self.config.cli.get("color")  # type: ignore
             if self.color is True
             else self.color
         )
-        if self.color:
-            reporter_kwargs = self.reporter_.get("kwargs", {})
 
+        reporter_kwargs = self.reporter_.get("kwargs", {})
+        reporter_id = self.reporter_.get(
+            "name",
+            self.config.cli.get("reporter", DEFAULT_REPORTER),
+        )
+        if ":" in reporter_id:
+            self.reporter_["name"], reporter_kwargs["fmt"] = reporter_id.split(
+                ":",
+                maxsplit=1,
+            )
+        else:
+            self.reporter_["name"] = reporter_id
+
+        if self.color in (True, None):
             if "colors" in self.config.cli:
-                colors = reporter_kwargs.get("colors", {})
-                colors.update(self.config.cli["colors"])
+                colors = self.config.cli.get("colors", {})
+                for key, value in reporter_kwargs.get("colors", {}).items():
+                    colors[key] = value  # cli overrides config
                 reporter_kwargs["colors"] = colors
             self.reporter_["kwargs"] = reporter_kwargs
         else:
-            self.reporter_["kwargs"] = {}
+            self.reporter_["kwargs"] = reporter_kwargs
 
         if not self.rootdir:
-            self.rootdir = self.config.cli.get("rootdir", os.getcwd())
+            self.rootdir = self.config.cli.get("rootdir")  # type: ignore
+            if self.rootdir:
+                self.rootdir = os.path.expanduser(self.rootdir)
+            else:
+                self.rootdir = os.getcwd()
         else:
-            self.rootdir = os.getcwd()
+            self.rootdir = os.path.abspath(self.rootdir)
+
+        if not os.path.isdir(self.rootdir):
+            raise ProjectConfigException(
+                f"Root directory '{self.rootdir}' must be an"
+                " existing directory",
+            )
 
         if tree:
             self.tree = Tree(self.rootdir)

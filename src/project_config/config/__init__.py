@@ -200,10 +200,16 @@ def validate_cli_config(
     if "rootdir" in config:
         if not isinstance(config["rootdir"], str):
             errors.append("cli.rootdir -> must be of type string")
-        if not config["rootdir"]:
+        elif not config["rootdir"]:
             errors.append("cli.rootdir -> must not be empty")
-        elif not os.path.isdir(config["rootdir"]):
-            errors.append("cli.rootdir -> must be an existent directory")
+        else:
+            config["rootdir"] = os.path.abspath(
+                os.path.expanduser(config["rootdir"]),
+            )
+
+            # note that other root directory could be passed in the CLI:
+            # if not os.path.isdir(config["rootdir"]):
+            #    errors.append("cli.rootdir -> must be an existent directory")
 
     if errors:
         raise ProjectConfigInvalidConfigSchema(config_path, errors)

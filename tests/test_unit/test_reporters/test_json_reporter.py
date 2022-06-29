@@ -1,10 +1,8 @@
-import importlib
 import json
 
 import pytest
 
-
-json_reporter_module = importlib.import_module("project_config.reporters.json")
+from project_config.reporters import json_
 
 
 parametrize_formats = pytest.mark.parametrize(
@@ -178,7 +176,7 @@ def test_errors_report(
     assert_errors_report,
 ):
     assert_errors_report(
-        json_reporter_module,
+        json_,
         errors,
         _expected_result_by_format(expected_result, fmt),
         fmt=fmt,
@@ -198,7 +196,7 @@ def test_data_report(
     assert_data_report,
 ):
     assert_data_report(
-        json_reporter_module,
+        json_,
         data_key,
         data,
         _expected_result_by_format(expected_result, fmt),

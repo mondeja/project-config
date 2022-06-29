@@ -68,7 +68,7 @@ def _controlled_error(
     return 1
 
 
-def _build_main_parser() -> argparse.ArgumentParser:
+def build_main_parser() -> argparse.ArgumentParser:  # noqa: D103
     parser = argparse.ArgumentParser(
         description=(
             "Validate the configuration of your project against the"
@@ -203,23 +203,40 @@ def _parse_command_args(
     return args, remaining
 
 
-def run(argv: t.List[str] = []) -> int:  # noqa: D103
-    os.environ["PROJECT_CONFIG"] = "true"
-    parser = _build_main_parser()
+def parse_cli_args_and_subargs(  # noqa: D103
+    parser: argparse.ArgumentParser,
+    argv: t.List[str],
+) -> t.Tuple[argparse.Namespace, argparse.Namespace]:
     args, subcommand_args = parser.parse_known_args(argv)
     subargs, remaining = _parse_command_args(args.command, subcommand_args)
     if remaining:
         parser.print_help()
-        return 1
+        raise SystemExit(1)
+    return args, subargs
+
+
+def parse_args(  # noqa: D103
+    argv: t.List[str],
+) -> t.Tuple[argparse.Namespace, argparse.Namespace]:
+    args, subargs = parse_cli_args_and_subargs(build_main_parser(), argv)
 
     if args.cache is False:
         os.environ["PROJECT_CONFIG_USE_CACHE"] = "false"
+
+    args.reporter = args.reporter or {}
+
+    return args, subargs
+
+
+def run(argv: t.List[str] = []) -> int:  # noqa: D103
+    os.environ["PROJECT_CONFIG"] = "true"
+    args, subargs = parse_args(argv)
 
     try:
         project = Project(
             args.config,
             args.rootdir,
-            args.reporter or {},
+            args.reporter,
             args.color,
         )
         getattr(project, args.command)(subargs)
