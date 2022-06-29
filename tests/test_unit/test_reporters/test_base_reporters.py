@@ -53,7 +53,7 @@ def test_BaseColorReporter_init_fails():
 
     with pytest.raises(TypeError) as exc:
         BaseColorReporter()
-    methods_message = "method" if sys.version_info > (3, 7) else "methods"
+    methods_message = "method" if sys.version_info > (3, 8) else "methods"
     assert str(exc.value) == (
         "Can't instantiate abstract class BaseColorReporter with abstract"
         f" {methods_message} generate_errors_report"
