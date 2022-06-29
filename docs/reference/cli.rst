@@ -5,7 +5,7 @@ project-config CLI
 
 .. sphinx_argparse_cli::
    :module: project_config.__main__
-   :func: _build_main_parser
+   :func: build_main_parser
    :prog: project-config
    :title:
 
