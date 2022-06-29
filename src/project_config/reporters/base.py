@@ -70,7 +70,7 @@ class BaseReporter(abc.ABC):
                 ``"style"``.
             data (dict): Data to report.
         """
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
     @property
     def success(self) -> bool:
@@ -102,7 +102,7 @@ class BaseReporter(abc.ABC):
                 "/" if file.endswith("/") else ""
             )
         else:
-            file = "[CONFIGURATION]"
+            file = "[CONFIGURATION]"  # pragma: no cover
 
         if file not in self.errors:
             self.errors[file] = []
@@ -229,9 +229,12 @@ class BaseColorReporter(BaseFormattedReporter):
     """Base reporter with colorized output."""
 
     def __init__(
-        self, *args: t.Any, colors: t.Dict[str, str] = {}, **kwargs: t.Any
+        self,
+        *args: t.Any,
+        colors: t.Optional[t.Dict[str, str]] = None,
+        **kwargs: t.Any,
     ) -> None:
-        self.colors = self._normalize_colors(colors)
+        self.colors = self._normalize_colors(colors or {})
         super().__init__(*args, **kwargs)
 
     def _normalize_colors(self, colors: t.Dict[str, str]) -> t.Dict[str, str]:
