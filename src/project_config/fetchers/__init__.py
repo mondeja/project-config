@@ -26,8 +26,7 @@ class SchemeProtocolNotImplementedError(ProjectConfigNotImplementedError):
 
     def __init__(self, scheme: str):
         super().__init__(
-            f"Retrieving of styles from scheme protocol '{scheme}:'"
-            " is not implemented.",
+            f"Fetching from scheme protocol '{scheme}:' is not implemented.",
         )
 
 
