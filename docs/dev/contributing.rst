@@ -5,7 +5,8 @@ Contributing
 Development install
 ===================
 
-You need to install `poetry`_ >= 1.2.0 and `pre-commit`_ before.
+You need to install the latest version of `poetry`_ >= 1.2.0 and
+`pre-commit`_ before.
 
 .. code-block:: sh
 
@@ -13,7 +14,7 @@ You need to install `poetry`_ >= 1.2.0 and `pre-commit`_ before.
    cd project-config
    poetry install
    pre-commit install
-   pip install --user poetry-exec-plugin
+   poetry self add poetry-exec-plugin
 
 Test
 ====

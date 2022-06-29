@@ -42,6 +42,10 @@ reporters = {
     **{f"table:{fmt}": "TableReporter" for fmt in tabulate_formats},
 }
 
+reporters_modules = {
+    "json": "json_",
+}
+
 
 def _parse_reporter_arguments(arguments_string: str) -> t.Dict[str, t.Any]:
     result: t.Dict[str, str] = {}
@@ -59,11 +63,6 @@ def parse_reporter_id(value: str) -> t.Tuple[str, t.Dict[str, t.Any]]:
     Args:
         value (str): Reporter identifier.
     """
-    if value.startswith(":"):
-        value = f"default:{value}"
-    elif ";" not in value:
-        value = f"default;{value}"
-
     if ";" in value:
         reporter_id, reporter_kwargs_string = value.split(";", maxsplit=1)
     else:
@@ -73,7 +72,10 @@ def parse_reporter_id(value: str) -> t.Tuple[str, t.Dict[str, t.Any]]:
     else:
         reporter_name, fmt = reporter_id, None
 
-    reporter_kwargs = _parse_reporter_arguments(reporter_kwargs_string)
+    if reporter_kwargs_string:
+        reporter_kwargs = _parse_reporter_arguments(reporter_kwargs_string)
+    else:
+        reporter_kwargs = {}
     return reporter_name, {**reporter_kwargs, "fmt": fmt}
 
 
@@ -120,8 +122,12 @@ def get_reporter(
         Reporter = getattr(reporter_module, reporter_class_name)
         third_party_reporters.validate_reporter_class(Reporter)
     else:
+        reporter_module_name = reporters_modules.get(
+            reporter_name,
+            reporter_name,
+        )
         reporter_module = importlib.import_module(
-            f"project_config.reporters.{reporter_name}",
+            f"project_config.reporters.{reporter_module_name}",
         )
         if color in (True, None):
             reporter_class_name = reporter_class_name.replace(

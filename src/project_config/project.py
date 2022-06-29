@@ -9,7 +9,7 @@ from dataclasses import dataclass
 from project_config.config import Config
 from project_config.constants import Error, InterruptingError, ResultValue
 from project_config.plugins import InvalidPluginFunction, Plugins
-from project_config.reporters import DEFAULT_REPORTER, get_reporter
+from project_config.reporters import get_reporter
 from project_config.tree import Tree, TreeNodeFiles
 from project_config.types import Rule
 
@@ -50,39 +50,25 @@ class Project:
     def _load(
         self,
         fetch_styles: bool = True,
-        tree: bool = True,
+        init_tree: bool = True,
     ) -> None:
         self.config = Config(
             self.rootdir,
             self.config_path,
             fetch_styles=fetch_styles,
         )
-        self.reporter_["name"] = self.reporter_.get(
-            "name",
-            self.config.cli.get("reporter", DEFAULT_REPORTER),
+
+        (
+            self.color,
+            self.reporter_,
+            self.rootdir,
+        ) = self.config.guess_from_cli_arguments(
+            self.color,
+            self.reporter_,
+            self.rootdir,
         )
-        self.color = (
-            self.config.cli.get("color")  # type: ignore
-            if self.color is True
-            else self.color
-        )
-        if self.color:
-            reporter_kwargs = self.reporter_.get("kwargs", {})
 
-            if "colors" in self.config.cli:
-                colors = reporter_kwargs.get("colors", {})
-                colors.update(self.config.cli["colors"])
-                reporter_kwargs["colors"] = colors
-            self.reporter_["kwargs"] = reporter_kwargs
-        else:
-            self.reporter_["kwargs"] = {}
-
-        if not self.rootdir:
-            self.rootdir = self.config.cli.get("rootdir", os.getcwd())
-        else:
-            self.rootdir = os.getcwd()
-
-        if tree:
+        if init_tree:
             self.tree = Tree(self.rootdir)
 
         self.reporter = get_reporter(
@@ -307,17 +293,17 @@ class Project:
             report = Cache.get_directory()
         else:
             if args.data == "config":
-                self._load(fetch_styles=False, tree=False)
+                self._load(fetch_styles=False, init_tree=False)
                 data = self.config.dict_
                 data.pop("cache")
                 data["cache"] = data.pop("_cache")
             elif args.data == "plugins":
-                self._load(fetch_styles=False, tree=False)
+                self._load(fetch_styles=False, init_tree=False)
                 data = Plugins(  # type: ignore
                     prepare_all=True,
                 ).plugin_action_names
             else:  # style
-                self._load(tree=False)
+                self._load(init_tree=False)
                 data = self.config.dict_.pop("style")  # type: ignore
 
             report = self.reporter.generate_data_report(args.data, data)
