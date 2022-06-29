@@ -1,0 +1,8 @@
+rules:
+  - files:
+      not:
+        docs/readme.md: Using Sphinx the documentation must be in RestructuredText format
+    hint: Rename 'docs/readme.md' to 'docs/readme.rst'
+  - files:
+      not:
+        - docs/index.md

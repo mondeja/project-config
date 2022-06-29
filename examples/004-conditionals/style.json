@@ -1,0 +1,10 @@
+{
+  "rules": [
+    {
+      "ifIncludeLines": {
+        ".gitignore": ["__pycache__/"]
+      },
+      "files": ["pyproject.toml"]
+    }
+  ]
+}

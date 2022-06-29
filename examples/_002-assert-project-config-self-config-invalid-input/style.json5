@@ -1,0 +1,12 @@
+{
+  rules: [
+    {
+      files: [".project-config.toml"],
+      JMESPathsMatch: [
+        // configure cache explicitly
+        ["contains(keys(@", true],
+      ],
+      hint: "Configure the cache for project-config explicitly",
+    },
+  ],
+}
