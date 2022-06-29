@@ -1,8 +1,8 @@
 rules:
   - files:
       not:
-        docs/readme.md: Using Sphinx the documentation must be in RestructuredText format
-    hint: Rename 'docs/readme.md' to 'docs/readme.rst'
+        readme.md: Users expect are more used to seeing README.md file name in uppercase
+    hint: Rename 'readme.md' to 'README.md'
   - files:
       not:
-        - docs/index.md
+        - index.md
