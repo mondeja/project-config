@@ -48,19 +48,8 @@ class Style:
                 break
             else:
                 if isinstance(style_or_error, dict):
-                    # after collecting the full style, at least one rule
-                    # must be defined, otherwise raise an error
-                    if not style_or_error.get("rules", []):
-                        if (
-                            not error_messages
-                        ):  # don't repeat errors, is confusing
-                            error_messages.append(
-                                "[styles]: .rules -> must not be empty"
-                                " after extending styles",
-                            )
-                        break
-                    else:
-                        style.config["style"] = style_or_error
+                    # final style collected
+                    style.config["style"] = style_or_error
                 else:
                     error_messages.append(style_or_error)
         if error_messages:
@@ -159,7 +148,11 @@ class Style:
                     yield next(validator)
                 except StopIteration:
                     break
-                else:
+                else:  # pragma: no cover
+                    # NOTE: this is marked as not covered, but putting a
+                    # `print` statement here it can be seen that the
+                    # `else` branch is reached, so probably it is a bug
+                    # in coverage.py
                     _partial_style_is_valid = False
             if _partial_style_is_valid:
                 if "extends" in partial_style:
@@ -171,7 +164,7 @@ class Style:
 
                 self._add_new_rules_plugins_to_style(
                     style,
-                    partial_style["rules"],
+                    partial_style.get("rules", []),
                     partial_style.get("plugins", []),
                     prepend=True,
                 )
