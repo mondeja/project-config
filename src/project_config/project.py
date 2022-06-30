@@ -55,7 +55,6 @@ class Project:
         self.config = Config(
             self.rootdir,
             self.config_path,
-            fetch_styles=fetch_styles,
         )
 
         (
@@ -67,6 +66,9 @@ class Project:
             self.reporter_,
             self.rootdir,
         )
+
+        if fetch_styles:
+            self.config.load_style()
 
         if init_tree:
             self.tree = Tree(self.rootdir)
