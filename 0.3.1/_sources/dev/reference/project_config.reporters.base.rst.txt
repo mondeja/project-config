@@ -1,0 +1,8 @@
+project\_config.reporters.base module
+=====================================
+
+.. automodule:: project_config.reporters.base
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:

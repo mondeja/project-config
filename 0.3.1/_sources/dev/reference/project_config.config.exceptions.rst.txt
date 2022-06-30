@@ -1,0 +1,8 @@
+project\_config.config.exceptions module
+========================================
+
+.. automodule:: project_config.config.exceptions
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
