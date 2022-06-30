@@ -94,10 +94,10 @@ jobs:
           path: docs/_build/html/*
 
   build-dist:
-    # if: startsWith(github.ref, 'refs/tags/')
-    #  needs:
-    #   - test
-    #   - test-docs
+    if: startsWith(github.ref, 'refs/tags/')
+    needs:
+      - test
+      - test-docs
     name: Build source distribution
     runs-on: ubuntu-latest
     steps:
@@ -111,9 +111,9 @@ jobs:
       - name: Build package
         run: poetry build
       - uses: actions/upload-artifact@v3
-        name: distribution
         with:
           path: dist/*
+          name: distribution
 
   pypi-upload:
     name: Upload to PyPI
