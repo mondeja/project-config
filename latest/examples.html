@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Examples &mdash; project-config 0.3.0 documentation</title>
+  <title>Examples &mdash; project-config 0.3.1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -106,7 +106,7 @@
 <h1>Examples<a class="headerlink" href="#examples" title="Permalink to this headline"></a></h1>
 <section id="basic-usage">
 <h2>Basic usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline"></a></h2>
-<p>The file <cite>.gitignore</cite> must inline a line with the content <code class="docutils literal notranslate"><span class="pre">/dist/</span></code>.</p>
+<p>The file <cite>.gitignore</cite> must have a line with the content <code class="docutils literal notranslate"><span class="pre">/dist/</span></code>.</p>
 <div class="sphinx-tabs docutils container">
 <div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">.project-config.toml</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">.gitignore</button><button aria-controls="panel-0-0-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-2" name="0-2" role="tab" tabindex="-1">style.json</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="n">style</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;style.json&quot;</span><span class="w"></span>
 </pre></div>
@@ -128,7 +128,7 @@
 </section>
 <section id="project-config-self-configuration">
 <h2>Project config self configuration<a class="headerlink" href="#project-config-self-configuration" title="Permalink to this headline"></a></h2>
-<p>Asserts that <strong>project-config</strong> is defining a valid configuration,
+<p><strong>project-config</strong> is defining a valid configuration,
 forcing the definition of <code class="docutils literal notranslate"><span class="pre">styles</span></code> as an array for styles and
 a valid <code class="docutils literal notranslate"><span class="pre">cache</span></code> value.</p>
 <div class="sphinx-tabs docutils container">
@@ -173,7 +173,7 @@ a valid <code class="docutils literal notranslate"><span class="pre">cache</span
 </div><div aria-labelledby="tab-2-2-1" class="sphinx-tabs-panel" hidden="true" id="panel-2-2-1" name="2-1" role="tabpanel" tabindex="0"><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">rules</span><span class="p">:</span><span class="w"></span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">files</span><span class="p">:</span><span class="w"></span>
 <span class="w">      </span><span class="nt">not</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">readme.md</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Users expect are more used to seeing README.md file name in uppercase</span><span class="w"></span>
+<span class="w">        </span><span class="nt">readme.md</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Users are more used to seeing README.md file name in uppercase</span><span class="w"></span>
 <span class="w">    </span><span class="nt">hint</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Rename &#39;readme.md&#39; to &#39;README.md&#39;</span><span class="w"></span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">files</span><span class="p">:</span><span class="w"></span>
 <span class="w">      </span><span class="nt">not</span><span class="p">:</span><span class="w"></span>

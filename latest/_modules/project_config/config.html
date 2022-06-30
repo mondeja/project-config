@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.config &mdash; project-config 0.3.0 documentation</title>
+  <title>project_config.config &mdash; project-config 0.3.1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -333,7 +333,6 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">rootdir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">path</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
-        <span class="n">fetch_styles</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rootdir</span> <span class="o">=</span> <span class="n">rootdir</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">config</span> <span class="o">=</span> <span class="n">read_config</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
@@ -354,8 +353,8 @@
         <span class="c1"># main configuration in file</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dict_</span><span class="p">:</span> <span class="n">ConfigType</span> <span class="o">=</span> <span class="n">config</span>
 
-        <span class="k">if</span> <span class="n">fetch_styles</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">style</span> <span class="o">=</span> <span class="n">Style</span><span class="o">.</span><span class="n">from_config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+<div class="viewcode-block" id="Config.load_style"><a class="viewcode-back" href="../../dev/reference/project_config.config.html#project_config.config.Config.load_style">[docs]</a>    <span class="k">def</span> <span class="nf">load_style</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: D102</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">style</span> <span class="o">=</span> <span class="n">Style</span><span class="o">.</span><span class="n">from_config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Config.guess_from_cli_arguments"><a class="viewcode-back" href="../../dev/reference/project_config.config.html#project_config.config.Config.guess_from_cli_arguments">[docs]</a>    <span class="k">def</span> <span class="nf">guess_from_cli_arguments</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -394,13 +393,13 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">rootdir</span><span class="p">:</span>
             <span class="n">rootdir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cli</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;rootdir&quot;</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
             <span class="k">if</span> <span class="n">rootdir</span><span class="p">:</span>
-                <span class="n">rootdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="n">rootdir</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">rootdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="n">rootdir</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">rootdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">rootdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">rootdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">rootdir</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rootdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">rootdir</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">rootdir</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rootdir</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
             <span class="k">raise</span> <span class="n">ProjectConfigInvalidConfig</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;Root directory &#39;</span><span class="si">{</span><span class="n">rootdir</span><span class="si">}</span><span class="s2">&#39; must be an existing directory&quot;</span><span class="p">,</span>
             <span class="p">)</span>
@@ -408,7 +407,7 @@
         <span class="k">return</span> <span class="p">(</span>
             <span class="n">color</span><span class="p">,</span>
             <span class="n">reporter</span><span class="p">,</span>
-            <span class="n">rootdir</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rootdir</span><span class="p">,</span>
         <span class="p">)</span></div>
 
     <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">:</span>

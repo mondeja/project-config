@@ -5,7 +5,7 @@ Examples
 Basic usage
 ===========
 
-The file `.gitignore` must inline a line with the content ``/dist/``.
+The file `.gitignore` must have a line with the content ``/dist/``.
 
 .. tabs::
 
@@ -37,7 +37,7 @@ The file `.gitignore` must inline a line with the content ``/dist/``.
 Project config self configuration
 =================================
 
-Asserts that **project-config** is defining a valid configuration,
+**project-config** is defining a valid configuration,
 forcing the definition of ``styles`` as an array for styles and
 a valid ``cache`` value.
 
@@ -98,7 +98,7 @@ The files `readme.md` and `index.md` must not exist.
          rules:
            - files:
                not:
-                 readme.md: Users expect are more used to seeing README.md file name in uppercase
+                 readme.md: Users are more used to seeing README.md file name in uppercase
              hint: Rename 'readme.md' to 'README.md'
            - files:
                not:
