@@ -237,7 +237,6 @@ class Config:
         self,
         rootdir: str,
         path: t.Optional[str],
-        fetch_styles: bool = True,
     ) -> None:
         self.rootdir = rootdir
         self.path, config = read_config(path)
@@ -258,8 +257,8 @@ class Config:
         # main configuration in file
         self.dict_: ConfigType = config
 
-        if fetch_styles:
-            self.style = Style.from_config(self)
+    def load_style(self) -> None:  # noqa: D102
+        self.style = Style.from_config(self)
 
     def guess_from_cli_arguments(
         self,
@@ -298,13 +297,13 @@ class Config:
         if not rootdir:
             rootdir = self.cli.get("rootdir")  # type: ignore
             if rootdir:
-                rootdir = os.path.expanduser(rootdir)
+                self.rootdir = os.path.expanduser(rootdir)
             else:
-                rootdir = os.getcwd()
+                self.rootdir = os.getcwd()
         else:
-            rootdir = os.path.abspath(rootdir)
+            self.rootdir = os.path.abspath(rootdir)
 
-        if not os.path.isdir(rootdir):  # pragma: no cover
+        if not os.path.isdir(self.rootdir):  # pragma: no cover
             raise ProjectConfigInvalidConfig(
                 f"Root directory '{rootdir}' must be an existing directory",
             )
@@ -312,7 +311,7 @@ class Config:
         return (
             color,
             reporter,
-            rootdir,
+            self.rootdir,
         )
 
     def __getitem__(self, key: str) -> t.Any:

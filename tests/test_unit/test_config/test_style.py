@@ -423,8 +423,9 @@ def test_load_style(tmp_path, create_files, chdir, files, expected_result):
                 message.replace("{rootdir}", str(tmp_path))
                 for message in expected_result
             ]
+            config = Config(str(tmp_path), None)
             with pytest.raises(ProjectConfigInvalidStyle) as exc:
-                Config(str(tmp_path), None)
+                config.load_style()
             assert exc.value.args[0] == (
                 ".project-config.toml"
                 if ".project-config.toml" in files
@@ -433,4 +434,5 @@ def test_load_style(tmp_path, create_files, chdir, files, expected_result):
             assert exc.value.args[1] == expected_result
         else:
             config = Config(str(tmp_path), None)
+            config.load_style()
             assert config.dict_["style"] == expected_result

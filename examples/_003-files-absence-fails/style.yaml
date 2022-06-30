@@ -1,7 +1,7 @@
 rules:
   - files:
       not:
-        readme.md: Users expect are more used to seeing README.md file name in uppercase
+        readme.md: Users are more used to seeing README.md file name in uppercase
     hint: Rename 'readme.md' to 'README.md'
   - files:
       not:
