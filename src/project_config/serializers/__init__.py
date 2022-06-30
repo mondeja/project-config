@@ -166,11 +166,11 @@ def _get_serializer(url: str) -> SerializerFunction:
     return functools.partial(loader_function, **function_kwargs)
 
 
-def _file_can_not_be_serialized_as_json_error(
+def _file_can_not_be_serialized_as_object_error(
     url: str,
     error_message: str,
 ) -> str:
-    return f"'{url}' can't be serialized as a valid JSON file:{error_message}"
+    return f"'{url}' can't be serialized as a valid object:{error_message}"
 
 
 def serialize_for_url(url: str, string: str) -> SerializerResult:
@@ -200,7 +200,7 @@ def serialize_for_url(url: str, string: str) -> SerializerResult:
             # "tomlkit",  # tomlkit.exceptions.UnexpectedEofError
         ):
             raise SerializerError(
-                _file_can_not_be_serialized_as_json_error(
+                _file_can_not_be_serialized_as_object_error(
                     url,
                     f" {exc.args[0]}",  # type: ignore
                 ),
@@ -208,9 +208,9 @@ def serialize_for_url(url: str, string: str) -> SerializerResult:
         elif package_name == "ruamel":
             # Example: ruamel.yaml.scanner.ScannerError
             raise SerializerError(
-                _file_can_not_be_serialized_as_json_error(
+                _file_can_not_be_serialized_as_object_error(
                     url,
-                    f"\n{exc.__str__()}",
+                    f"\n{str(exc)}",
                 ),
             )
         raise  # pragma: no cover

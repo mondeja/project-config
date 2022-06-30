@@ -1,0 +1,8 @@
+============================= test session starts ==============================
+platform linux -- Python 3.8.10, pytest-7.1.2, pluggy-1.0.0 -- /home/mondeja/.cache/pypoetry/virtualenvs/project-config-8oNCWBMv-py3.8/bin/python
+cachedir: .pytest_cache
+rootdir: /home/mondeja/files/code/all-repos/repos/mondeja/project-config, configfile: pyproject.toml
+plugins: mock-3.8.1, maybe-raises-0.1.1, project-config-0.3.1, cov-3.0.0
+collecting ... collected 0 items
+
+============================ no tests ran in 0.01s =============================
