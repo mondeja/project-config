@@ -4,6 +4,7 @@ on:
   release:
     types:
       - created
+  workflow_dispatch:
 
 jobs:
   deploy-docs:
@@ -16,8 +17,9 @@ jobs:
       - uses: actions/checkout@v3
       - name: Install poetry
         run: |
-          pip install -U pip poetry==1.2.0b1 poetry-exec-plugin
-          pip list
+          curl -sSL https://install.python-poetry.org | python - --preview
+          poetry self add poetry-exec-plugin
+          poetry self show plugins
       - name: Set up Python v3
         uses: actions/setup-python@v3
         with:
