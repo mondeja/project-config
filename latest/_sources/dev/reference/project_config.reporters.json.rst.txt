@@ -1,8 +1,0 @@
-project\_config.reporters.json module
-=====================================
-
-.. automodule:: project_config.reporters.json
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :private-members:

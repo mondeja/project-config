@@ -30,10 +30,11 @@ multiple projects.
    in-depth/serialization
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: For developers
 
    dev/plugins
    dev/reporters
+   dev/changelog
    dev/contributing
    dev/reference/modules

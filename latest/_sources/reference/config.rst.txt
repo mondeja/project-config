@@ -8,6 +8,8 @@ Configuration must be defined in TOML_ format in one of the next files:
 * `pyproject.toml` (inside a ``[tool.project-config]`` table)
 * A custom file passing ``-c``/``--config`` argument in the command line.
 
+.. _TOML: https://toml.io/en/
+
 ``style`` (`string` or `string[]`)
 ==================================
 
@@ -40,9 +42,46 @@ Time unit can be one of these (plural or singular, it doesn’t matter):
 * ``days / day``
 * ``weeks / week``
 
-.. _TOML: https://toml.io/en/
+Also accepts the next string to not use the cache at all.
 
-.. tip:: Disabling cache with environment variable
+* ``never``
 
-   You can also disable the cache setting the ``PROJECT_CONFIG_USE_CACHE``
-   environment variable to ``"false"``.
+.. tip::
+
+   You can also disable the cache passing the CLI option ``--no-cache`` /
+   ``--nocache`` or setting the ``PROJECT_CONFIG_USE_CACHE`` environment
+   variable to ``"false"``.
+
+``cli`` (`object`)
+==================
+
+Configures the CLI execution. It avoids you to pass the same CLI arguments
+to the **project-config** command.
+
+.. seealso::
+
+   :doc:`./cli`
+
+``cli.rootdir`` (`string`)
+--------------------------
+
+Root directory of the project. Corresponds to the :ref:`project-config---rootdir`
+optional CLI argument.
+
+``cli.reporter`` (`string`)
+---------------------------
+
+Reporter to use. Corresponds to the ``NAME:FORMAT`` part of the
+:ref:`project-config---reporter` optional CLI argument.
+
+``cli.color`` (`boolean`)
+-------------------------
+
+Specifies if your want the output to be colored. Corresponds to the
+:ref:`project-config---no-color` optional CLI argument.
+
+``cli.colors`` (`object`)
+-------------------------
+
+Custom colors used in the output of the CLI. Corresponds to the ``color=``
+argument of the :ref:`project-config---reporter` optional CLI argument.

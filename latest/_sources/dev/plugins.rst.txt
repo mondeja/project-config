@@ -89,7 +89,7 @@ Results
 Each action must yield results, which are tuples of two items,
 defined next as `result type` - `result value`:
 
-* ``Error`` - Checking error, a dictionary (optionally but recommendably typed as :py:class:`project_config.types.ErrorDict`) which must contains the required keys ``message`` (error message shown in the report) and ``definition`` (definition in which the error has been thrown) and an optional key ``file`` (file for which the error has been thrown).
+* ``Error`` - Checking error, a dictionary (optionally but recommendably typed as :py:class:`project_config.types.ErrorDict`) which must contains the required keys ``message`` (error message shown in the report) and ``definition`` (definition in which the error has been thrown) and an optional key ``file`` (file for which the error has been thrown). If raised from conditionals their behaviour is the same that raising an ``InterruptingError``.
 * ``InterruptingError`` - The same as a checking error, but this type of error will stop the execution of the subsequent rules during the checking. Useful if the user has passed some unexpected value that could lead to an invalid context in some later rule.
 
 Additionally, conditionals can yield result values, which
@@ -97,7 +97,7 @@ define if the verbs of the rule should be executed or not.
 
 * ``ResultValue`` - A boolean. When a conditional yields it, the execution of the conditional is terminated and, if the yielded value is ``False``, the execution of the verbs of the rule are skipped. If no result values are yielded by a conditional, the verbs of the rule are always executed as if the conditional would returned ``True``.
 
-You must import thess variables from ``project_config`` because their
+You must import these variables from ``project_config`` because their
 values can change between versions:
 
 .. code-block:: python
@@ -118,6 +118,6 @@ Testing plugins
 
 **project-config** comes with a built-in `pytest fixture`_ to
 easily test plugin actions. See
-:py:mod:`project_config.tests.pytest_plugin`.
+:py:mod:`project_config.tests.pytest_plugin.plugin`.
 
 .. _pytest fixture: https://docs.pytest.org/en/latest/explanation/fixtures.html

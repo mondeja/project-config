@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.reporters package &mdash; project-config 0.2.0 documentation</title>
+  <title>project_config.reporters package &mdash; project-config 0.3.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -34,7 +34,7 @@
             <a href="../../index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.2
+                0.3
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -66,6 +66,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../plugins.html">Writing third party plugins</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reporters.html">Writing third party reporters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">Reference</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="project_config.html">project_config package</a><ul class="current">
@@ -76,6 +77,7 @@
 <li class="toctree-l4 current"><a class="current reference internal" href="#">project_config.reporters package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="project_config.serializers.html">project_config.serializers package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="project_config.tests.html">project_config.tests package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.utils.html">project_config.utils package</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="project_config.html#submodules">Submodules</a></li>
@@ -160,7 +162,7 @@ reporter.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="project_config.reporters.ThirdPartyReporters.instance">
-<span class="sig-name descname"><span class="pre">instance</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#project_config.reporters.ThirdPartyReporters" title="project_config.reporters.ThirdPartyReporters"><span class="pre">project_config.reporters.ThirdPartyReporters</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#project_config.reporters.ThirdPartyReporters.instance" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">instance</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#project_config.reporters.ThirdPartyReporters" title="project_config.reporters.ThirdPartyReporters"><span class="pre">project_config.reporters.ThirdPartyReporters</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;project_config.reporters.ThirdPartyReporters</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#project_config.reporters.ThirdPartyReporters.instance" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -201,18 +203,36 @@ module is valid.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="project_config.reporters._parse_reporter_arguments">
+<span class="sig-prename descclassname"><span class="pre">project_config.reporters.</span></span><span class="sig-name descname"><span class="pre">_parse_reporter_arguments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arguments_string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.10)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.10)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/project_config/reporters.html#_parse_reporter_arguments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.reporters._parse_reporter_arguments" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="project_config.reporters.get_reporter">
-<span class="sig-prename descclassname"><span class="pre">project_config.reporters.</span></span><span class="sig-name descname"><span class="pre">get_reporter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reporter_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rootdir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.10)"><span class="pre">Any</span></a></span></span><a class="reference internal" href="../../_modules/project_config/reporters.html#get_reporter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.reporters.get_reporter" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">project_config.reporters.</span></span><span class="sig-name descname"><span class="pre">get_reporter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reporter_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">reporter_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.10)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.10)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rootdir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.10)"><span class="pre">Any</span></a></span></span><a class="reference internal" href="../../_modules/project_config/reporters.html#get_reporter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.reporters.get_reporter" title="Permalink to this definition"></a></dt>
 <dd><p>Reporters factory.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>reporter_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Reporter identifier name.</p></li>
+<li><p><strong>reporter_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Optional arguments for reporter class.</p></li>
 <li><p><strong>color</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Return the colorized version of the reporter,
 if is implemented, using the black/white version as
 a fallback.</p></li>
 <li><p><strong>rootdir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Root directory of the project.</p></li>
 </ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="project_config.reporters.parse_reporter_id">
+<span class="sig-prename descclassname"><span class="pre">project_config.reporters.</span></span><span class="sig-name descname"><span class="pre">parse_reporter_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.10)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.10)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.10)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/project_config/reporters.html#parse_reporter_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.reporters.parse_reporter_id" title="Permalink to this definition"></a></dt>
+<dd><p>Parse a reporter identifier.</p>
+<p>Returns the reporter name and the optional arguments for his class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Reporter identifier.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -223,7 +243,7 @@ a fallback.</p></li>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="project_config.reporters.base.html">project_config.reporters.base module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="project_config.reporters.default.html">project_config.reporters.default module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="project_config.reporters.json.html">project_config.reporters.json module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="project_config.reporters.json_.html">project_config.reporters.json_ module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="project_config.reporters.table.html">project_config.reporters.table module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="project_config.reporters.toml.html">project_config.reporters.toml module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="project_config.reporters.yaml.html">project_config.reporters.yaml module</a></li>

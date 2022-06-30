@@ -5,6 +5,8 @@ Examples
 Basic usage
 ===========
 
+The file `.gitignore` must inline a line with the content ``/dist/``.
+
 .. tabs::
 
    .. tab:: .project-config.toml
@@ -35,8 +37,9 @@ Basic usage
 Project config self configuration
 =================================
 
-Asserts that project config is defining a valid configuration,
-forcing the definition of ``styles`` as an array for styles.
+Asserts that **project-config** is defining a valid configuration,
+forcing the definition of ``styles`` as an array for styles and
+a valid ``cache`` value.
 
 .. tabs::
 
@@ -67,13 +70,80 @@ forcing the definition of ``styles`` as an array for styles.
                  ["contains(keys(@), 'cache')", true],
                  // cache must have a valid value
                  [
-                   "regex_match('^(\\d+ ((seconds?)|(minutes?)|(hours?)|(days?)|(weeks?)))|(never)', cache)",
+                   "regex_match('^(\\d+ ((seconds?)|(minutes?)|(hours?)|(days?)|(weeks?)))|(never)$', cache)",
                    true,
                  ],
                ],
              },
            ],
          }
+
+Files absence
+=============
+
+The files `readme.md` and `index.md` must not exist.
+
+.. tabs::
+
+   .. tab:: .project-config.toml
+
+      .. code-block:: toml
+
+         style = "style.yaml"
+
+   .. tab:: style.yaml
+
+      .. code-block:: yaml
+
+         rules:
+           - files:
+               not:
+                 readme.md: Users expect are more used to seeing README.md file name in uppercase
+             hint: Rename 'readme.md' to 'README.md'
+           - files:
+               not:
+                 - index.md
+
+Conditionals
+============
+
+If `.gitignore` includes the line ``__pycache__/`` a `pyproject.toml`
+file must be present.
+
+.. tabs::
+
+   .. tab:: .project-config.toml
+
+      .. code-block:: toml
+
+         style = "style.json"
+
+   .. tab:: .gitignore
+
+      .. code-block:: text
+
+         __pycache__/
+
+   .. tab:: style.json
+
+      .. code-block:: json
+
+         {
+           "rules": [
+             {
+               "ifIncludeLines": {
+                 ".gitignore": ["__pycache__/"]
+               },
+               "files": ["pyproject.toml"]
+             }
+           ]
+         }
+
+   .. tab:: pyproject.toml
+
+      .. code-block:: toml
+
+
 
 .. raw:: html
 

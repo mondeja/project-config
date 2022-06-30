@@ -1,8 +1,17 @@
-project\_config.tests.pytest\_plugin module
-===========================================
+project\_config.tests.pytest\_plugin package
+============================================
 
 .. automodule:: project_config.tests.pytest_plugin
    :members:
    :undoc-members:
    :show-inheritance:
    :private-members:
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   project_config.tests.pytest_plugin.helpers
+   project_config.tests.pytest_plugin.plugin

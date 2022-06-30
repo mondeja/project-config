@@ -7,8 +7,8 @@ project\_config.tests package
    :show-inheritance:
    :private-members:
 
-Submodules
-----------
+Subpackages
+-----------
 
 .. toctree::
    :maxdepth: 4

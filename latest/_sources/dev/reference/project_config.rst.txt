@@ -19,6 +19,7 @@ Subpackages
    project_config.reporters
    project_config.serializers
    project_config.tests
+   project_config.utils
 
 Submodules
 ----------
@@ -34,4 +35,3 @@ Submodules
    project_config.project
    project_config.tree
    project_config.types
-   project_config.utils

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.reporters &mdash; project-config 0.2.0 documentation</title>
+  <title>project_config.reporters &mdash; project-config 0.3.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -32,7 +32,7 @@
             <a href="../../index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.2
+                0.3
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -64,6 +64,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../dev/plugins.html">Writing third party plugins</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../dev/reporters.html">Writing third party reporters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../dev/contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../dev/reference/modules.html">Reference</a></li>
 </ul>
@@ -96,6 +97,7 @@
 <span></span><span class="sd">&quot;&quot;&quot;Error reporters.&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">importlib</span>
+<span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">types</span>
 <span class="kn">import</span> <span class="nn">typing</span> <span class="k">as</span> <span class="nn">t</span>
 
@@ -106,6 +108,7 @@
 <span class="kn">from</span> <span class="nn">project_config.reporters.base</span> <span class="kn">import</span> <span class="n">BaseReporter</span>
 
 
+<span class="n">DEFAULT_REPORTER</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span>
 <span class="n">PROJECT_CONFIG_REPORTERS_ENTRYPOINTS_GROUP</span> <span class="o">=</span> <span class="s2">&quot;project_config.reporters&quot;</span>
 
 
@@ -135,9 +138,46 @@
     <span class="o">**</span><span class="p">{</span><span class="sa">f</span><span class="s2">&quot;table:</span><span class="si">{</span><span class="n">fmt</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="s2">&quot;TableReporter&quot;</span> <span class="k">for</span> <span class="n">fmt</span> <span class="ow">in</span> <span class="n">tabulate_formats</span><span class="p">},</span>
 <span class="p">}</span>
 
+<span class="n">reporters_modules</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;json&quot;</span><span class="p">:</span> <span class="s2">&quot;json_&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="_parse_reporter_arguments"><a class="viewcode-back" href="../../dev/reference/project_config.reporters.html#project_config.reporters._parse_reporter_arguments">[docs]</a><span class="k">def</span> <span class="nf">_parse_reporter_arguments</span><span class="p">(</span><span class="n">arguments_string</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">]:</span>
+    <span class="n">result</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">arg_value</span> <span class="ow">in</span> <span class="n">arguments_string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">):</span>
+        <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="n">arg_value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="n">maxsplit</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">result</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="parse_reporter_id"><a class="viewcode-back" href="../../dev/reference/project_config.reporters.html#project_config.reporters.parse_reporter_id">[docs]</a><span class="k">def</span> <span class="nf">parse_reporter_id</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">]]:</span>
+    <span class="sd">&quot;&quot;&quot;Parse a reporter identifier.</span>
+
+<span class="sd">    Returns the reporter name and the optional arguments for his class.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        value (str): Reporter identifier.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;;&quot;</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+        <span class="n">reporter_id</span><span class="p">,</span> <span class="n">reporter_kwargs_string</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">,</span> <span class="n">maxsplit</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">reporter_id</span><span class="p">,</span> <span class="n">reporter_kwargs_string</span> <span class="o">=</span> <span class="n">value</span><span class="p">,</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;:&quot;</span> <span class="ow">in</span> <span class="n">reporter_id</span><span class="p">:</span>
+        <span class="n">reporter_name</span><span class="p">,</span> <span class="n">fmt</span> <span class="o">=</span> <span class="n">reporter_id</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="n">maxsplit</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">reporter_name</span><span class="p">,</span> <span class="n">fmt</span> <span class="o">=</span> <span class="n">reporter_id</span><span class="p">,</span> <span class="kc">None</span>
+
+    <span class="k">if</span> <span class="n">reporter_kwargs_string</span><span class="p">:</span>
+        <span class="n">reporter_kwargs</span> <span class="o">=</span> <span class="n">_parse_reporter_arguments</span><span class="p">(</span><span class="n">reporter_kwargs_string</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">reporter_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">return</span> <span class="n">reporter_name</span><span class="p">,</span> <span class="p">{</span><span class="o">**</span><span class="n">reporter_kwargs</span><span class="p">,</span> <span class="s2">&quot;fmt&quot;</span><span class="p">:</span> <span class="n">fmt</span><span class="p">}</span></div>
+
 
 <div class="viewcode-block" id="get_reporter"><a class="viewcode-back" href="../../dev/reference/project_config.reporters.html#project_config.reporters.get_reporter">[docs]</a><span class="k">def</span> <span class="nf">get_reporter</span><span class="p">(</span>
     <span class="n">reporter_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">reporter_kwargs</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">],</span>
     <span class="n">color</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">],</span>
     <span class="n">rootdir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">:</span>
@@ -145,22 +185,19 @@
 
 <span class="sd">    Args:</span>
 <span class="sd">        reporter_name (str): Reporter identifier name.</span>
+<span class="sd">        reporter_kwargs (dict): Optional arguments for reporter class.</span>
 <span class="sd">        color (bool): Return the colorized version of the reporter,</span>
 <span class="sd">            if is implemented, using the black/white version as</span>
 <span class="sd">            a fallback.</span>
 <span class="sd">        rootdir (str): Root directory of the project.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># if &#39;:&#39; in the reporter, is passing the kwarg &#39;format&#39; with the value</span>
-    <span class="k">if</span> <span class="s2">&quot;:&quot;</span> <span class="ow">in</span> <span class="n">reporter_name</span><span class="p">:</span>
-        <span class="n">reporter_name</span><span class="p">,</span> <span class="n">fmt</span> <span class="o">=</span> <span class="n">reporter_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">fmt</span> <span class="o">=</span> <span class="kc">None</span>
-
     <span class="k">try</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">reporter_name</span> <span class="ow">in</span> <span class="n">reporters</span><span class="p">:</span>
             <span class="n">reporter_class_name</span> <span class="o">=</span> <span class="n">reporters</span><span class="p">[</span><span class="n">reporter_name</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">reporter_class_name</span> <span class="o">=</span> <span class="n">reporters</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">reporter_name</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">fmt</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span>
+            <span class="n">reporter_class_name</span> <span class="o">=</span> <span class="n">reporters</span><span class="p">[</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">reporter_name</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">reporter_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;fmt&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">]</span>
     <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
         <span class="c1"># 3rd party reporter</span>
         <span class="n">third_party_reporters</span> <span class="o">=</span> <span class="n">ThirdPartyReporters</span><span class="p">()</span>
@@ -181,8 +218,12 @@
         <span class="n">Reporter</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">reporter_module</span><span class="p">,</span> <span class="n">reporter_class_name</span><span class="p">)</span>
         <span class="n">third_party_reporters</span><span class="o">.</span><span class="n">validate_reporter_class</span><span class="p">(</span><span class="n">Reporter</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
+        <span class="n">reporter_module_name</span> <span class="o">=</span> <span class="n">reporters_modules</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="n">reporter_name</span><span class="p">,</span>
+            <span class="n">reporter_name</span><span class="p">,</span>
+        <span class="p">)</span>
         <span class="n">reporter_module</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;project_config.reporters.</span><span class="si">{</span><span class="n">reporter_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;project_config.reporters.</span><span class="si">{</span><span class="n">reporter_module_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="n">color</span> <span class="ow">in</span> <span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
             <span class="n">reporter_class_name</span> <span class="o">=</span> <span class="n">reporter_class_name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
@@ -191,7 +232,7 @@
             <span class="p">)</span>
         <span class="n">Reporter</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">reporter_module</span><span class="p">,</span> <span class="n">reporter_class_name</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">Reporter</span><span class="p">(</span><span class="n">rootdir</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="n">fmt</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">Reporter</span><span class="p">(</span><span class="n">rootdir</span><span class="p">,</span> <span class="o">**</span><span class="n">reporter_kwargs</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ThirdPartyReporters"><a class="viewcode-back" href="../../dev/reference/project_config.reporters.html#project_config.reporters.ThirdPartyReporters">[docs]</a><span class="k">class</span> <span class="nc">ThirdPartyReporters</span><span class="p">:</span>
@@ -294,6 +335,9 @@
                 <span class="sa">f</span><span class="s2">&quot;Reporter class &#39;</span><span class="si">{</span><span class="n">reporter_class</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&#39; is not&quot;</span>
                 <span class="s2">&quot; a subclass of BaseReporter&quot;</span><span class="p">,</span>
             <span class="p">)</span></div></div>
+
+
+<span class="n">POSSIBLE_REPORTER_IDS</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">reporters</span><span class="p">)</span> <span class="o">+</span> <span class="n">ThirdPartyReporters</span><span class="p">()</span><span class="o">.</span><span class="n">ids</span>
 </pre></div>
 
            </div>

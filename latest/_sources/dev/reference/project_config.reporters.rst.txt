@@ -15,7 +15,7 @@ Submodules
 
    project_config.reporters.base
    project_config.reporters.default
-   project_config.reporters.json
+   project_config.reporters.json_
    project_config.reporters.table
    project_config.reporters.toml
    project_config.reporters.yaml

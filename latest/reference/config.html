@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Configuration &mdash; project-config 0.2.0 documentation</title>
+  <title>Configuration &mdash; project-config 0.3.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -34,7 +34,7 @@
             <a href="../index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.2
+                0.3
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -56,6 +56,13 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Configuration</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#style-string-or-string"><code class="docutils literal notranslate"><span class="pre">style</span></code> (<cite>string</cite> or <cite>string[]</cite>)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#cache-string"><code class="docutils literal notranslate"><span class="pre">cache</span></code> (<cite>string</cite>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cli-object"><code class="docutils literal notranslate"><span class="pre">cli</span></code> (<cite>object</cite>)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#cli-rootdir-string"><code class="docutils literal notranslate"><span class="pre">cli.rootdir</span></code> (<cite>string</cite>)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cli-reporter-string"><code class="docutils literal notranslate"><span class="pre">cli.reporter</span></code> (<cite>string</cite>)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cli-color-boolean"><code class="docutils literal notranslate"><span class="pre">cli.color</span></code> (<cite>boolean</cite>)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cli-colors-object"><code class="docutils literal notranslate"><span class="pre">cli.colors</span></code> (<cite>object</cite>)</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="styling.html">Styling</a></li>
@@ -70,6 +77,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../dev/plugins.html">Writing third party plugins</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../dev/reporters.html">Writing third party reporters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev/changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../dev/contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../dev/reference/modules.html">Reference</a></li>
 </ul>
@@ -135,12 +143,45 @@ Time unit can be one of these (plural or singular, it doesn’t matter):</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">days</span> <span class="pre">/</span> <span class="pre">day</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">weeks</span> <span class="pre">/</span> <span class="pre">week</span></code></p></li>
 </ul>
+<p>Also accepts the next string to not use the cache at all.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">never</span></code></p></li>
+</ul>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
-<p>Disabling cache with environment variable</p>
-<p>You can also disable the cache setting the <code class="docutils literal notranslate"><span class="pre">PROJECT_CONFIG_USE_CACHE</span></code>
-environment variable to <code class="docutils literal notranslate"><span class="pre">&quot;false&quot;</span></code>.</p>
+<p>You can also disable the cache passing the CLI option <code class="docutils literal notranslate"><span class="pre">--no-cache</span></code> /
+<code class="docutils literal notranslate"><span class="pre">--nocache</span></code> or setting the <code class="docutils literal notranslate"><span class="pre">PROJECT_CONFIG_USE_CACHE</span></code> environment
+variable to <code class="docutils literal notranslate"><span class="pre">&quot;false&quot;</span></code>.</p>
 </div>
+</section>
+<section id="cli-object">
+<h2><code class="docutils literal notranslate"><span class="pre">cli</span></code> (<cite>object</cite>)<a class="headerlink" href="#cli-object" title="Permalink to this headline"></a></h2>
+<p>Configures the CLI execution. It avoids you to pass the same CLI arguments
+to the <strong>project-config</strong> command.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="cli.html"><span class="doc">project-config CLI</span></a></p>
+</div>
+<section id="cli-rootdir-string">
+<h3><code class="docutils literal notranslate"><span class="pre">cli.rootdir</span></code> (<cite>string</cite>)<a class="headerlink" href="#cli-rootdir-string" title="Permalink to this headline"></a></h3>
+<p>Root directory of the project. Corresponds to the <a class="reference internal" href="cli.html#project-config---rootdir"><span class="std std-ref">project-config --rootdir</span></a>
+optional CLI argument.</p>
+</section>
+<section id="cli-reporter-string">
+<h3><code class="docutils literal notranslate"><span class="pre">cli.reporter</span></code> (<cite>string</cite>)<a class="headerlink" href="#cli-reporter-string" title="Permalink to this headline"></a></h3>
+<p>Reporter to use. Corresponds to the <code class="docutils literal notranslate"><span class="pre">NAME:FORMAT</span></code> part of the
+<a class="reference internal" href="cli.html#project-config---reporter"><span class="std std-ref">project-config --reporter</span></a> optional CLI argument.</p>
+</section>
+<section id="cli-color-boolean">
+<h3><code class="docutils literal notranslate"><span class="pre">cli.color</span></code> (<cite>boolean</cite>)<a class="headerlink" href="#cli-color-boolean" title="Permalink to this headline"></a></h3>
+<p>Specifies if your want the output to be colored. Corresponds to the
+<a class="reference internal" href="cli.html#project-config---no-color"><span class="std std-ref">project-config --no-color</span></a> optional CLI argument.</p>
+</section>
+<section id="cli-colors-object">
+<h3><code class="docutils literal notranslate"><span class="pre">cli.colors</span></code> (<cite>object</cite>)<a class="headerlink" href="#cli-colors-object" title="Permalink to this headline"></a></h3>
+<p>Custom colors used in the output of the CLI. Corresponds to the <code class="docutils literal notranslate"><span class="pre">color=</span></code>
+argument of the <a class="reference internal" href="cli.html#project-config---reporter"><span class="std std-ref">project-config --reporter</span></a> optional CLI argument.</p>
+</section>
 </section>
 </section>
 

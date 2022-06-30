@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.plugins.include &mdash; project-config 0.2.0 documentation</title>
+  <title>project_config.plugins.include &mdash; project-config 0.3.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
@@ -32,7 +32,7 @@
             <a href="../../../index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.2
+                0.3
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -64,6 +64,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../dev/plugins.html">Writing third party plugins</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../dev/reporters.html">Writing third party reporters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../dev/contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../dev/reference/modules.html">Reference</a></li>
 </ul>
@@ -149,7 +150,6 @@
                 <span class="p">)</span>
                 <span class="k">continue</span>
 
-            <span class="c1"># Normalize newlines</span>
             <span class="n">fcontent_lines</span> <span class="o">=</span> <span class="n">fcontent</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
             <span class="k">for</span> <span class="n">line_index</span><span class="p">,</span> <span class="n">expected_line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">expected_lines</span><span class="p">):</span>
                 <span class="k">if</span> <span class="n">expected_line</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">fcontent_lines</span><span class="p">:</span>
@@ -196,7 +196,39 @@
                 <span class="k">if</span> <span class="n">expected_line</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">fcontent_lines</span><span class="p">:</span>
                     <span class="k">yield</span> <span class="n">ResultValue</span><span class="p">,</span> <span class="kc">False</span>
                     <span class="k">return</span>
-        <span class="k">yield</span> <span class="n">ResultValue</span><span class="p">,</span> <span class="kc">True</span></div></div>
+        <span class="k">yield</span> <span class="n">ResultValue</span><span class="p">,</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="IncludePlugin.excludeContent"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.include.html#project_config.plugins.include.IncludePlugin.excludeContent">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">excludeContent</span><span class="p">(</span>
+        <span class="n">value</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">tree</span><span class="p">:</span> <span class="n">Tree</span><span class="p">,</span>
+        <span class="n">rule</span><span class="p">:</span> <span class="n">Rule</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Results</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">f</span><span class="p">,</span> <span class="p">(</span><span class="n">fpath</span><span class="p">,</span> <span class="n">fcontent</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tree</span><span class="o">.</span><span class="n">files</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">fcontent</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fcontent</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="p">(</span>
+                    <span class="n">InterruptingError</span><span class="p">,</span>
+                    <span class="n">_directories_not_accepted_as_inputs_error</span><span class="p">(</span>
+                        <span class="s2">&quot;verb&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;excludeContent&quot;</span><span class="p">,</span>
+                        <span class="n">fpath</span><span class="p">,</span>
+                        <span class="sa">f</span><span class="s2">&quot;.files[</span><span class="si">{</span><span class="n">f</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+                    <span class="p">),</span>
+                <span class="p">)</span>
+                <span class="k">continue</span>
+
+            <span class="c1"># Normalize newlines</span>
+            <span class="k">for</span> <span class="n">content_index</span><span class="p">,</span> <span class="n">content</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">content</span> <span class="ow">in</span> <span class="n">fcontent</span><span class="p">:</span>
+                    <span class="k">yield</span> <span class="n">Error</span><span class="p">,</span> <span class="p">{</span>
+                        <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;Found expected content to exclude &#39;</span><span class="si">{</span><span class="n">content</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+                        <span class="p">),</span>
+                        <span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="n">fpath</span><span class="p">,</span>
+                        <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.excludeContent[</span><span class="si">{</span><span class="n">content_index</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+                    <span class="p">}</span></div></div>
 </pre></div>
 
            </div>

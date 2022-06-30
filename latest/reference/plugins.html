@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Plugins &mdash; project-config 0.2.0 documentation</title>
+  <title>Plugins &mdash; project-config 0.3.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -34,7 +34,7 @@
             <a href="../index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.2
+                0.3
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -59,6 +59,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#include">include</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#includelines">includeLines</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#ifincludelines">ifIncludeLines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#excludecontent">excludeContent</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#jmespath">jmespath</a><ul>
@@ -78,6 +79,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../dev/plugins.html">Writing third party plugins</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../dev/reporters.html">Writing third party reporters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev/changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../dev/contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../dev/reference/modules.html">Reference</a></li>
 </ul>
@@ -164,10 +166,36 @@ must correspont:</p>
 <p><span class="versionmodified added">New in version 0.1.0.</span></p>
 </div>
 </section>
+<section id="excludecontent">
+<h3>excludeContent<a class="headerlink" href="#excludecontent" title="Permalink to this headline"></a></h3>
+<p>Check that the files do not include certain content.</p>
+<p>The specified partial contents can match multiple lines
+and line ending characters.</p>
+<p class="rubric">Example</p>
+<p>Don’t allow code blocks in RST documentation files:</p>
+<ul class="simple">
+<li><p>Bash is not a POSIX compliant shell.</p></li>
+<li><p>Pygments’ JSON5 lexer is not implemented yet.</p></li>
+</ul>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">    </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;docs/**/*.rst&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">    </span><span class="nx">excludeContent</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">      </span><span class="s2">&quot;.. code-block:: bash&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="s2">&quot;.. code-block:: json5&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="p">],</span><span class="w"></span>
+<span class="w">  </span><span class="p">]</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.3.0.</span></p>
+</div>
+</section>
 </section>
 <section id="jmespath">
 <h2>jmespath<a class="headerlink" href="#jmespath" title="Permalink to this headline"></a></h2>
-<p>JMES paths manipulation against files.</p>
+<p><a class="reference external" href="https://jmespath.org">JMES paths</a> manipulation against files.</p>
 <p>The actions of this plugin operates against object-serialized versions
 of files, so only files that can be serialized can be targetted (see
 <a class="reference internal" href="../in-depth/serialization.html#objects-serialization"><span class="std std-ref">Objects serialization</span></a>).</p>
@@ -303,7 +331,9 @@ Black must be configured as the formatting tool in <code class="docutils literal
 <span class="w">    </span><span class="p">{</span><span class="w"></span>
 <span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;pyproject.toml&quot;</span><span class="p">],</span><span class="w"></span>
 <span class="w">      </span><span class="nx">ifJMESPathsMatch</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="s2">&quot;pyproject.toml&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[[</span><span class="s2">&quot;tool.flakeheaven.inline_quotes&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;double&quot;</span><span class="p">]],</span><span class="w"></span>
+<span class="w">        </span><span class="s2">&quot;pyproject.toml&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">           </span><span class="p">[</span><span class="s2">&quot;tool.flakeheaven.inline_quotes&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;double&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">         </span><span class="p">],</span><span class="w"></span>
 <span class="w">      </span><span class="p">},</span><span class="w"></span>
 <span class="w">      </span><span class="nx">JMESPathsMatch</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
 <span class="w">        </span><span class="p">[</span><span class="s2">&quot;contains(keys(@), &#39;tool&#39;)&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">],</span><span class="w"></span>

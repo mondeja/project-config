@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Writing third party plugins &mdash; project-config 0.2.0 documentation</title>
+  <title>Writing third party plugins &mdash; project-config 0.3.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -35,7 +35,7 @@
             <a href="../index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.2
+                0.3
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -74,6 +74,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="reporters.html">Writing third party reporters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reference/modules.html">Reference</a></li>
 </ul>
@@ -183,7 +184,7 @@ methods. For example:</p>
 <p>Each action must yield results, which are tuples of two items,
 defined next as <cite>result type</cite> - <cite>result value</cite>:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">Error</span></code> - Checking error, a dictionary (optionally but recommendably typed as <a class="reference internal" href="reference/project_config.types.html#project_config.types.ErrorDict" title="project_config.types.ErrorDict"><code class="xref py py-class docutils literal notranslate"><span class="pre">project_config.types.ErrorDict</span></code></a>) which must contains the required keys <code class="docutils literal notranslate"><span class="pre">message</span></code> (error message shown in the report) and <code class="docutils literal notranslate"><span class="pre">definition</span></code> (definition in which the error has been thrown) and an optional key <code class="docutils literal notranslate"><span class="pre">file</span></code> (file for which the error has been thrown).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Error</span></code> - Checking error, a dictionary (optionally but recommendably typed as <a class="reference internal" href="reference/project_config.types.html#project_config.types.ErrorDict" title="project_config.types.ErrorDict"><code class="xref py py-class docutils literal notranslate"><span class="pre">project_config.types.ErrorDict</span></code></a>) which must contains the required keys <code class="docutils literal notranslate"><span class="pre">message</span></code> (error message shown in the report) and <code class="docutils literal notranslate"><span class="pre">definition</span></code> (definition in which the error has been thrown) and an optional key <code class="docutils literal notranslate"><span class="pre">file</span></code> (file for which the error has been thrown). If raised from conditionals their behaviour is the same that raising an <code class="docutils literal notranslate"><span class="pre">InterruptingError</span></code>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">InterruptingError</span></code> - The same as a checking error, but this type of error will stop the execution of the subsequent rules during the checking. Useful if the user has passed some unexpected value that could lead to an invalid context in some later rule.</p></li>
 </ul>
 <p>Additionally, conditionals can yield result values, which
@@ -191,7 +192,7 @@ define if the verbs of the rule should be executed or not.</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">ResultValue</span></code> - A boolean. When a conditional yields it, the execution of the conditional is terminated and, if the yielded value is <code class="docutils literal notranslate"><span class="pre">False</span></code>, the execution of the verbs of the rule are skipped. If no result values are yielded by a conditional, the verbs of the rule are always executed as if the conditional would returned <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
 </ul>
-<p>You must import thess variables from <code class="docutils literal notranslate"><span class="pre">project_config</span></code> because their
+<p>You must import these variables from <code class="docutils literal notranslate"><span class="pre">project_config</span></code> because their
 values can change between versions:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">project_config</span> <span class="kn">import</span> <span class="n">Error</span><span class="p">,</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="n">ResultValue</span>
 </pre></div>
@@ -211,7 +212,7 @@ is checking the source code of the simplest built-in plugins:</p>
 <h2>Testing plugins<a class="headerlink" href="#testing-plugins" title="Permalink to this headline"></a></h2>
 <p><strong>project-config</strong> comes with a built-in <a class="reference external" href="https://docs.pytest.org/en/latest/explanation/fixtures.html">pytest fixture</a> to
 easily test plugin actions. See
-<a class="reference internal" href="reference/project_config.tests.pytest_plugin.html#module-project_config.tests.pytest_plugin" title="project_config.tests.pytest_plugin"><code class="xref py py-mod docutils literal notranslate"><span class="pre">project_config.tests.pytest_plugin</span></code></a>.</p>
+<a class="reference internal" href="reference/project_config.tests.pytest_plugin.plugin.html#module-project_config.tests.pytest_plugin.plugin" title="project_config.tests.pytest_plugin.plugin"><code class="xref py py-mod docutils literal notranslate"><span class="pre">project_config.tests.pytest_plugin.plugin</span></code></a>.</p>
 </section>
 </section>
 

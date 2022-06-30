@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.fetchers &mdash; project-config 0.2.0 documentation</title>
+  <title>project_config.fetchers &mdash; project-config 0.3.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -32,7 +32,7 @@
             <a href="../../index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.2
+                0.3
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -64,6 +64,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../dev/plugins.html">Writing third party plugins</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../dev/reporters.html">Writing third party reporters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../dev/contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../dev/reference/modules.html">Reference</a></li>
 </ul>
@@ -97,6 +98,7 @@
 
 <span class="kn">import</span> <span class="nn">importlib</span>
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">typing</span> <span class="k">as</span> <span class="nn">t</span>
 <span class="kn">import</span> <span class="nn">urllib.parse</span>
 
 <span class="kn">from</span> <span class="nn">project_config.compat</span> <span class="kn">import</span> <span class="n">TypeAlias</span>
@@ -120,8 +122,7 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scheme</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Retrieving of styles from scheme protocol &#39;</span><span class="si">{</span><span class="n">scheme</span><span class="si">}</span><span class="s2">:&#39;&quot;</span>
-            <span class="s2">&quot; is not implemented.&quot;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;Fetching from scheme protocol &#39;</span><span class="si">{</span><span class="n">scheme</span><span class="si">}</span><span class="s2">:&#39; is not implemented.&quot;</span><span class="p">,</span>
         <span class="p">)</span></div>
 
 
@@ -152,7 +153,7 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="fetch"><a class="viewcode-back" href="../../dev/reference/project_config.fetchers.html#project_config.fetchers.fetch">[docs]</a><span class="k">def</span> <span class="nf">fetch</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FetchResult</span><span class="p">:</span>
+<div class="viewcode-block" id="fetch"><a class="viewcode-back" href="../../dev/reference/project_config.fetchers.html#project_config.fetchers.fetch">[docs]</a><span class="k">def</span> <span class="nf">fetch</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FetchResult</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Fetch a result given an URI.</span>
 
 <span class="sd">    Args:</span>
@@ -165,7 +166,7 @@
     <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">SchemeProtocolNotImplementedError</span><span class="p">(</span><span class="n">scheme</span><span class="p">)</span>
 
-    <span class="n">string</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="s2">&quot;fetch&quot;</span><span class="p">)(</span><span class="n">url_parts</span><span class="p">)</span>
+    <span class="n">string</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="s2">&quot;fetch&quot;</span><span class="p">)(</span><span class="n">url_parts</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">serialize_for_url</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">string</span><span class="p">)</span></div>
 
 

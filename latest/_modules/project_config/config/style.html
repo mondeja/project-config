@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.config.style &mdash; project-config 0.2.0 documentation</title>
+  <title>project_config.config.style &mdash; project-config 0.3.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
@@ -32,7 +32,7 @@
             <a href="../../../index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.2
+                0.3
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -64,6 +64,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../dev/plugins.html">Writing third party plugins</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../dev/reporters.html">Writing third party reporters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../dev/contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../dev/reference/modules.html">Reference</a></li>
 </ul>
@@ -144,19 +145,8 @@
                 <span class="k">break</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">style_or_error</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-                    <span class="c1"># after collecting the full style, at least one rule</span>
-                    <span class="c1"># must be defined, otherwise raise an error</span>
-                    <span class="k">if</span> <span class="ow">not</span> <span class="n">style_or_error</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;rules&quot;</span><span class="p">,</span> <span class="p">[]):</span>
-                        <span class="k">if</span> <span class="p">(</span>
-                            <span class="ow">not</span> <span class="n">error_messages</span>
-                        <span class="p">):</span>  <span class="c1"># don&#39;t repeat errors, is confusing</span>
-                            <span class="n">error_messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                                <span class="s2">&quot;[styles]: .rules -&gt; must not be empty&quot;</span>
-                                <span class="s2">&quot; after extending styles&quot;</span><span class="p">,</span>
-                            <span class="p">)</span>
-                        <span class="k">break</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="n">style</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;style&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">style_or_error</span>
+                    <span class="c1"># final style collected</span>
+                    <span class="n">style</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;style&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">style_or_error</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">error_messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">style_or_error</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">error_messages</span><span class="p">:</span>
@@ -255,7 +245,11 @@
                     <span class="k">yield</span> <span class="nb">next</span><span class="p">(</span><span class="n">validator</span><span class="p">)</span>
                 <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
                     <span class="k">break</span>
-                <span class="k">else</span><span class="p">:</span>
+                <span class="k">else</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+                    <span class="c1"># NOTE: this is marked as not covered, but putting a</span>
+                    <span class="c1"># `print` statement here it can be seen that the</span>
+                    <span class="c1"># `else` branch is reached, so probably it is a bug</span>
+                    <span class="c1"># in coverage.py</span>
                     <span class="n">_partial_style_is_valid</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="k">if</span> <span class="n">_partial_style_is_valid</span><span class="p">:</span>
                 <span class="k">if</span> <span class="s2">&quot;extends&quot;</span> <span class="ow">in</span> <span class="n">partial_style</span><span class="p">:</span>
@@ -267,7 +261,7 @@
 
                 <span class="bp">self</span><span class="o">.</span><span class="n">_add_new_rules_plugins_to_style</span><span class="p">(</span>
                     <span class="n">style</span><span class="p">,</span>
-                    <span class="n">partial_style</span><span class="p">[</span><span class="s2">&quot;rules&quot;</span><span class="p">],</span>
+                    <span class="n">partial_style</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;rules&quot;</span><span class="p">,</span> <span class="p">[]),</span>
                     <span class="n">partial_style</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;plugins&quot;</span><span class="p">,</span> <span class="p">[]),</span>
                     <span class="n">prepend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                 <span class="p">)</span>
@@ -434,11 +428,14 @@
 
                         <span class="c1"># when requiring absence of files,</span>
                         <span class="c1"># no other action can be used</span>
-                        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span> <span class="ow">and</span> <span class="ow">not</span> <span class="p">(</span>
+                            <span class="nb">len</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="s2">&quot;hint&quot;</span> <span class="ow">in</span> <span class="n">rule</span>
+                        <span class="p">):</span>
                             <span class="k">yield</span> <span class="p">(</span>
-                                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">style_url</span><span class="si">}</span><span class="s2">: .rules[</span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s2">] -&gt; when requiring&quot;</span>
-                                <span class="s2">&quot; absence of files with &#39;.files.not&#39;, any&quot;</span>
-                                <span class="s2">&quot; other action can be used in the same rule&quot;</span>
+                                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">style_url</span><span class="si">}</span><span class="s2">: .rules[</span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s2">] -&gt; when&quot;</span>
+                                <span class="s2">&quot; requiring absence of files with&quot;</span>
+                                <span class="s2">&quot; &#39;.files.not&#39;, no other actions can&quot;</span>
+                                <span class="s2">&quot; be used in the same rule&quot;</span>
                             <span class="p">)</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="k">for</span> <span class="n">f</span><span class="p">,</span> <span class="n">file</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">rule</span><span class="p">[</span><span class="s2">&quot;files&quot;</span><span class="p">]):</span>
@@ -455,7 +452,7 @@
 
                 <span class="c1"># Validate rules properties consistency against plugins</span>
                 <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="n">rule</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="n">action</span> <span class="o">==</span> <span class="s2">&quot;files&quot;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">action</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;files&quot;</span><span class="p">,</span> <span class="s2">&quot;hint&quot;</span><span class="p">]:</span>
                         <span class="k">continue</span>
 
                     <span class="c1"># the action must be prepared</span>

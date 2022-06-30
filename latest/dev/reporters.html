@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Writing third party reporters &mdash; project-config 0.2.0 documentation</title>
+  <title>Writing third party reporters &mdash; project-config 0.3.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -23,7 +23,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Contributing" href="contributing.html" />
+    <link rel="next" title="Changelog" href="changelog.html" />
     <link rel="prev" title="Writing third party plugins" href="plugins.html" /> 
 </head>
 
@@ -35,7 +35,7 @@
             <a href="../index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.2
+                0.3
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -68,8 +68,10 @@
 <li class="toctree-l1"><a class="reference internal" href="plugins.html">Writing third party plugins</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Writing third party reporters</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#reporters-module">Reporters module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#testing-reporters">Testing reporters</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reference/modules.html">Reference</a></li>
 </ul>
@@ -127,7 +129,7 @@ so the first thing is to add the entrypoint to the group:</p>
 </div></div>
 <p>The name of the entrypoint (<cite>my_reporter</cite> in the previous example)
 is the name of the reporter that you must pass in the CLI option
-<code class="docutils literal notranslate"><span class="pre">-r</span></code> / <code class="docutils literal notranslate"><span class="pre">--reporter</span></code> to use it.</p>
+<a class="reference internal" href="../reference/cli.html#project-config---reporter"><span class="std std-ref">project-config --reporter</span></a> to use it.</p>
 <section id="reporters-module">
 <h2>Reporters module<a class="headerlink" href="#reporters-module" title="Permalink to this headline"></a></h2>
 <p>A valid reporters module is made of two public classes which inherit from
@@ -154,6 +156,12 @@ parts of the output.</p>
 <p>See the built-in reporters at <a class="reference internal" href="reference/project_config.reporters.html#submodules"><span class="std std-ref">reporters submodules</span></a>
 and the <a class="reference internal" href="reference/project_config.reporters.base.html#module-project_config.reporters.base" title="project_config.reporters.base"><code class="xref py py-mod docutils literal notranslate"><span class="pre">project_config.reporters.base</span></code></a> module for more information.</p>
 </section>
+<section id="testing-reporters">
+<h2>Testing reporters<a class="headerlink" href="#testing-reporters" title="Permalink to this headline"></a></h2>
+<p><strong>project-config</strong> comes with built-in <a class="reference external" href="https://docs.pytest.org/en/latest/explanation/fixtures.html">pytest fixtures</a> to
+easily test reports generated from reporters. See
+<a class="reference internal" href="reference/project_config.tests.pytest_plugin.plugin.html#module-project_config.tests.pytest_plugin.plugin" title="project_config.tests.pytest_plugin.plugin"><code class="xref py py-mod docutils literal notranslate"><span class="pre">project_config.tests.pytest_plugin.plugin</span></code></a>.</p>
+</section>
 </section>
 
 
@@ -161,7 +169,7 @@ and the <a class="reference internal" href="reference/project_config.reporters.b
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="plugins.html" class="btn btn-neutral float-left" title="Writing third party plugins" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="contributing.html" class="btn btn-neutral float-right" title="Contributing" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="changelog.html" class="btn btn-neutral float-right" title="Changelog" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

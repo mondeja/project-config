@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config package &mdash; project-config 0.2.0 documentation</title>
+  <title>project_config package &mdash; project-config 0.3.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -34,7 +34,7 @@
             <a href="../../index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.2
+                0.3
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -66,6 +66,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../plugins.html">Writing third party plugins</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reporters.html">Writing third party reporters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">Reference</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">project_config package</a><ul>
@@ -76,6 +77,7 @@
 <li class="toctree-l4"><a class="reference internal" href="project_config.reporters.html">project_config.reporters package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="project_config.serializers.html">project_config.serializers package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="project_config.tests.html">project_config.tests package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.utils.html">project_config.utils package</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a><ul>
@@ -87,7 +89,6 @@
 <li class="toctree-l4"><a class="reference internal" href="project_config.project.html">project_config.project module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="project_config.tree.html">project_config.tree module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="project_config.types.html">project_config.types module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="project_config.utils.html">project_config.utils module</a></li>
 </ul>
 </li>
 </ul>
@@ -283,7 +284,7 @@ the <a class="reference internal" href="../../reference/plugins.html#jmespath"><
 <li class="toctree-l2"><a class="reference internal" href="project_config.reporters.html#submodules">Submodules</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="project_config.reporters.base.html">project_config.reporters.base module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="project_config.reporters.default.html">project_config.reporters.default module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="project_config.reporters.json.html">project_config.reporters.json module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="project_config.reporters.json_.html">project_config.reporters.json_ module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="project_config.reporters.table.html">project_config.reporters.table module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="project_config.reporters.toml.html">project_config.reporters.toml module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="project_config.reporters.yaml.html">project_config.reporters.yaml module</a></li>
@@ -302,8 +303,18 @@ the <a class="reference internal" href="../../reference/plugins.html#jmespath"><
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="project_config.tests.html">project_config.tests package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="project_config.tests.html#submodules">Submodules</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="project_config.tests.pytest_plugin.html">project_config.tests.pytest_plugin module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.tests.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="project_config.tests.pytest_plugin.html">project_config.tests.pytest_plugin package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="project_config.tests.pytest_plugin.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="project_config.utils.html">project_config.utils package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="project_config.utils.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="project_config.utils.http.html">project_config.utils.http module</a></li>
 </ul>
 </li>
 </ul>
@@ -323,7 +334,6 @@ the <a class="reference internal" href="../../reference/plugins.html#jmespath"><
 <li class="toctree-l1"><a class="reference internal" href="project_config.project.html">project_config.project module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="project_config.tree.html">project_config.tree module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="project_config.types.html">project_config.types module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="project_config.utils.html">project_config.utils module</a></li>
 </ul>
 </div>
 </section>

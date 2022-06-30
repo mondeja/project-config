@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project-config’s documentation &mdash; project-config 0.2.0 documentation</title>
+  <title>project-config’s documentation &mdash; project-config 0.3.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -33,7 +33,7 @@
             <a href="#" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.2
+                0.3
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -65,6 +65,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="dev/plugins.html">Writing third party plugins</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dev/reporters.html">Writing third party reporters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev/changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dev/contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dev/reference/modules.html">Reference</a></li>
 </ul>
@@ -105,6 +106,8 @@ multiple projects.</p>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="examples.html#basic-usage">Basic usage</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples.html#project-config-self-configuration">Project config self configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#files-absence">Files absence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#conditionals">Conditionals</a></li>
 </ul>
 </li>
 </ul>
@@ -114,16 +117,25 @@ multiple projects.</p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="reference/cli.html">project-config CLI</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="reference/cli.html#reporting">Reporting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/cli.html#examples-of-usage">Examples of usage</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="reference/config.html">Configuration</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="reference/config.html#style-string-or-string"><code class="docutils literal notranslate"><span class="pre">style</span></code> (<cite>string</cite> or <cite>string[]</cite>)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reference/config.html#cache-string"><code class="docutils literal notranslate"><span class="pre">cache</span></code> (<cite>string</cite>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/config.html#cli-object"><code class="docutils literal notranslate"><span class="pre">cli</span></code> (<cite>object</cite>)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference/config.html#cli-rootdir-string"><code class="docutils literal notranslate"><span class="pre">cli.rootdir</span></code> (<cite>string</cite>)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/config.html#cli-reporter-string"><code class="docutils literal notranslate"><span class="pre">cli.reporter</span></code> (<cite>string</cite>)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/config.html#cli-color-boolean"><code class="docutils literal notranslate"><span class="pre">cli.color</span></code> (<cite>boolean</cite>)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/config.html#cli-colors-object"><code class="docutils literal notranslate"><span class="pre">cli.colors</span></code> (<cite>object</cite>)</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="reference/styling.html">Styling</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="reference/styling.html#rules-object"><code class="docutils literal notranslate"><span class="pre">rules</span></code> (<cite>object[]</cite>)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="reference/styling.html#files-string-or-object-not-not"><code class="docutils literal notranslate"><span class="pre">files</span></code> (<cite>string[]</cite> or <cite>object{not{} | not[]}</cite>)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/styling.html#hint-string"><code class="docutils literal notranslate"><span class="pre">hint</span></code> (<cite>string</cite>)</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="reference/styling.html#extends-string"><code class="docutils literal notranslate"><span class="pre">extends</span></code> (<cite>string[]</cite>)</a></li>
@@ -134,6 +146,7 @@ multiple projects.</p>
 <li class="toctree-l2"><a class="reference internal" href="reference/plugins.html#include">include</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#includelines">includeLines</a></li>
 <li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#ifincludelines">ifIncludeLines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#excludecontent">excludeContent</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="reference/plugins.html#jmespath">jmespath</a><ul>
@@ -167,27 +180,11 @@ multiple projects.</p>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">For developers</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="dev/plugins.html">Writing third party plugins</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="dev/plugins.html#plugin-class">Plugin class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dev/plugins.html#testing-plugins">Testing plugins</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="dev/reporters.html">Writing third party reporters</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="dev/reporters.html#reporters-module">Reporters module</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="dev/contributing.html">Contributing</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="dev/contributing.html#development-install">Development install</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dev/contributing.html#test">Test</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dev/contributing.html#lint">Lint</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dev/contributing.html#build-documentation">Build documentation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dev/contributing.html#release">Release</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="dev/reference/modules.html">Reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="dev/reference/project_config.html">project_config package</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="dev/plugins.html">Writing third party plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev/reporters.html">Writing third party reporters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev/changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev/contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev/reference/modules.html">Reference</a></li>
 </ul>
 </div>
 </section>
