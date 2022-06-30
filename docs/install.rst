@@ -21,6 +21,6 @@ Installation
      .. code-block:: yaml
 
         - repo: https://github.com/mondeja/project-config
-          rev: v0.3.0
+          rev: v0.3.1
           hooks:
             - id: project-config
