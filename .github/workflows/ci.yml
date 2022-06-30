@@ -94,10 +94,10 @@ jobs:
           path: docs/_build/html/*
 
   build-dist:
-    if: startsWith(github.ref, 'refs/tags/')
-    needs:
-      - test
-      - test-docs
+    # if: startsWith(github.ref, 'refs/tags/')
+    #  needs:
+    #   - test
+    #   - test-docs
     name: Build source distribution
     runs-on: ubuntu-latest
     steps:
@@ -108,15 +108,28 @@ jobs:
         name: Install Python v3.x
         with:
           python-version: 3.x
+      - run: |
+          ls -a .
+          ls -a dist
       - name: Build package
         run: poetry build
+      - run: |
+          ls -a .
+          ls -a dist
       - uses: actions/upload-artifact@v3
         with:
           path: dist/*
 
+  fail:
+    runs-on: ubuntu-latest
+    steps:
+      - run: exit 1
+
   pypi-upload:
     name: Upload to PyPI
-    needs: build-dist
+    needs:
+      - build-dist
+      - fails
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v3
