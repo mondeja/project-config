@@ -108,32 +108,21 @@ jobs:
         name: Install Python v3.x
         with:
           python-version: 3.x
-      - run: |
-          ls -a .
       - name: Build package
         run: poetry build
-      - run: |
-          ls -a .
-          ls -a dist
       - uses: actions/upload-artifact@v3
+        name: distribution
         with:
           path: dist/*
 
-  fail:
-    runs-on: ubuntu-latest
-    steps:
-      - run: exit 1
-
   pypi-upload:
     name: Upload to PyPI
-    needs:
-      - build-dist
-      - fail
+    needs: build-dist
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v3
         with:
-          name: artifact
+          name: distribution
           path: dist
       - uses: pypa/gh-action-pypi-publish@master
         with:
@@ -144,9 +133,7 @@ jobs:
 
   release:
     name: Release
-    needs:
-      - build-dist
-      - fail
+    needs: build-dist
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -177,7 +164,7 @@ jobs:
       - uses: actions/download-artifact@v3
         name: Download builds
         with:
-          name: artifact
+          name: distribution
           path: dist
       - uses: shogo82148/actions-upload-release-asset@v1
         name: Upload release assets
