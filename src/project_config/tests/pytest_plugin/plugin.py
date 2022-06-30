@@ -1,5 +1,6 @@
 """project-config pytest plugin."""
 
+import contextlib
 import copy
 import functools
 import inspect
@@ -30,6 +31,7 @@ def project_config_plugin_action_asserter(
     expected_results: t.List[StrictResultType],
     additional_files: t.Optional[FilesType] = None,
     assert_case_method_name: bool = True,
+    deprecated: bool = False,
 ) -> None:
     """Convenient function to test a plugin action.
 
@@ -113,13 +115,16 @@ def project_config_plugin_action_asserter(
     )
 
     plugin_method = getattr(plugin_class, plugin_method_name)
-    results = list(
-        plugin_method(
-            value,
-            create_tree(files, rootdir, cache_files=True),
-            rule,
-        ),
-    )
+
+    ctx = contextlib.nullcontext if not deprecated else pytest.deprecated_call
+    with ctx():
+        results = list(
+            plugin_method(
+                value,
+                create_tree(files, rootdir, cache_files=True),
+                rule,
+            ),
+        )
 
     assert re.match(
         r"\w",
