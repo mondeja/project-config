@@ -125,6 +125,8 @@ convenient functions defined by the plugin internally:
 
    .. versionadded:: 0.1.0
 
+   .. deprecated:: 0.4.0
+
 .. function:: regex_search(pattern: str, string: str) -> list[str]
 
    Search using a regular expression against a string using the Python's
@@ -182,7 +184,7 @@ convenient functions defined by the plugin internally:
 JMESPathsMatch
 ==============
 
-Compares a set of JMESPath expression against results.
+Compares a set of JMESPath expressions against results.
 
 JSON-serializes each file in the ``files`` property of the rule
 and executes each expression given in the first item of the
@@ -225,7 +227,7 @@ The `.editorconfig` file must have the next content:
 ifJMESPathsMatch
 ================
 
-Compares a set of JMESPath expression against results.
+Compares a set of JMESPath expressions against results.
 
 JSON-serializes each file in the ``ifJMESPathsMatch`` property
 of the rule and executes each expression given in the first item of the

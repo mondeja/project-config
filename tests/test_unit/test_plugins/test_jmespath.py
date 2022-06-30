@@ -365,6 +365,7 @@ def test_JMESPath_custom_functions(
         value,
         rule,
         expected_results,
+        deprecated="regex_matchall" in value[0][0],
     )
 
 

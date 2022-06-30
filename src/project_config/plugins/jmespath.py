@@ -4,6 +4,7 @@ import operator
 import pprint
 import re
 import typing as t
+import warnings
 
 import jmespath
 
@@ -84,6 +85,15 @@ class JMESPathProjectConfigFunctions(
         {"types": ["array", "object"]},
     )
     def _func_regex_matchall(self, regex: str, container: str) -> bool:
+        warnings.warn(
+            "The JMESPath function 'regex_matchall' is deprecated and"
+            " will be removed in 1.0.0. Use 'regex_match' as child"
+            " elements of subexpression filtering the output. See"
+            " https://github.com/mondeja/project-config/issues/69 for"
+            " a more detailed explanation.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return all(bool(re.match(regex, value)) for value in container)
 
     @jmespath.functions.signature(  # type: ignore
