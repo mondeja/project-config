@@ -110,7 +110,6 @@ jobs:
           python-version: 3.x
       - run: |
           ls -a .
-          ls -a dist
       - name: Build package
         run: poetry build
       - run: |
