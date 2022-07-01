@@ -8,6 +8,144 @@ from project_config.plugins.jmespath import JMESPathPlugin
     ("files", "value", "rule", "expected_results"),
     (
         pytest.param(
+            {"foo.json": '{"foo": "bar"}'},
+            [["regex_match('^bar$', foo)", True]],
+            None,
+            [],
+            id="regex_match returns true",
+        ),
+        pytest.param(
+            {"foo.json": '{"foo": "bar"}'},
+            [["regex_match('^foo$', foo)", True]],
+            None,
+            [
+                (
+                    Error,
+                    {
+                        "definition": ".JMESPathsMatch[0]",
+                        "file": "foo.json",
+                        "message": (
+                            "JMESPath 'regex_match('^foo$', foo)'"
+                            " does not match. Expected True,"
+                            " returned False"
+                        ),
+                    },
+                ),
+            ],
+            id="regex_match returns false",
+        ),
+        pytest.param(
+            {"foo.json": '{"foo": ["bar", "baz"]}'},
+            [["regex_matchall('^ba[rz]$', foo)", True]],
+            None,
+            [],
+            id="regex_matchall returns true",
+        ),
+        pytest.param(
+            {"foo.json": '{"baz": ["foo", "bar"]}'},
+            [["regex_matchall('^foo$', baz)", True]],
+            None,
+            [
+                (
+                    Error,
+                    {
+                        "definition": ".JMESPathsMatch[0]",
+                        "file": "foo.json",
+                        "message": (
+                            "JMESPath 'regex_matchall('^foo$', baz)'"
+                            " does not match. Expected True,"
+                            " returned False"
+                        ),
+                    },
+                ),
+            ],
+            id="regex_matchall returns false",
+        ),
+        pytest.param(
+            {"foo.json": '{"foo": "bar"}'},
+            [["regex_search('^bar$', foo)", ["bar"]]],
+            None,
+            [],
+            id="regex_search returns full",
+        ),
+        pytest.param(
+            {"foo.json": '{"foo": "bar"}'},
+            [["regex_search('^(b)(a)(r)$', foo)", ["b", "a", "r"]]],
+            None,
+            [],
+            id="regex_search returns group",
+        ),
+        pytest.param(
+            {"foo.json": '{"foo": "bar"}'},
+            [["regex_search('^baz$', foo)", []]],
+            None,
+            [],
+            id="regex_search returns null",
+        ),
+        pytest.param(
+            {"foo.json": '{"foo": "bar"}'},
+            [["op(foo, 'has the same letters than', foo)", True]],
+            None,
+            [
+                (
+                    Error,
+                    {
+                        "definition": ".JMESPathsMatch[0]",
+                        "file": "foo.json",
+                        "message": (
+                            "Invalid JMESPath \"op(foo, 'has the same"
+                            " letters than', foo)\". Expected to return"
+                            " True, raised JMESPath error: Invalid operator"
+                            " 'has the same letters than' passed to op()"
+                            " function, expected one of: <, <=, ==, !=, >=,"
+                            " >, is, is_not, is-not, is not, isNot, +, &,"
+                            " and, //, <<, %, *, @, |, or, **, >>, -, /, ^,"
+                            " count_of, count of, count-of, countOf, index_of,"
+                            " index of, index-of, indexOf"
+                        ),
+                    },
+                ),
+            ],
+            id="op returns invalid-operator",
+        ),
+        pytest.param(
+            {"foo.json": '{"foo": "bar"}'},
+            [["op(foo, '==', foo)", True]],
+            None,
+            [],
+            id="op returns true",
+        ),
+        pytest.param(
+            {"foo.json": '{"foo": "bar"}'},
+            [["op(foo, '!=', foo)", False]],
+            None,
+            [],
+            id="op returns false",
+        ),
+    ),
+)
+def test_JMESPath_custom_functions(
+    files,
+    value,
+    rule,
+    expected_results,
+    assert_project_config_plugin_action,
+):
+    assert_project_config_plugin_action(
+        JMESPathPlugin,
+        "JMESPathsMatch",
+        files,
+        value,
+        rule,
+        expected_results,
+        deprecated="regex_matchall" in value[0][0],
+    )
+
+
+@pytest.mark.parametrize(
+    ("files", "value", "rule", "expected_results"),
+    (
+        pytest.param(
             {},
             5,
             None,
@@ -17,7 +155,7 @@ from project_config.plugins.jmespath import JMESPathPlugin
                     {
                         "definition": ".JMESPathsMatch",
                         "message": (
-                            "The JMES path - match tuples must be of"
+                            "The JMES path match tuples must be of"
                             " type array"
                         ),
                     },
@@ -35,7 +173,7 @@ from project_config.plugins.jmespath import JMESPathPlugin
                     {
                         "definition": ".JMESPathsMatch",
                         "message": (
-                            "The JMES path - match tuples must not be empty"
+                            "The JMES path match tuples must not be empty"
                         ),
                     },
                 ),
@@ -52,8 +190,7 @@ from project_config.plugins.jmespath import JMESPathPlugin
                     {
                         "definition": ".JMESPathsMatch[1]",
                         "message": (
-                            "The JMES path - match tuple must be"
-                            " of type array"
+                            "The JMES path match tuple must be of type array"
                         ),
                     },
                 ),
@@ -70,7 +207,7 @@ from project_config.plugins.jmespath import JMESPathPlugin
                     {
                         "definition": ".JMESPathsMatch[1]",
                         "message": (
-                            "The JMES path - match tuple must be of length 2"
+                            "The JMES path match tuple must be of length 2"
                         ),
                     },
                 ),
@@ -130,8 +267,9 @@ from project_config.plugins.jmespath import JMESPathPlugin
                         "definition": ".JMESPathsMatch[0][0]",
                         "message": (
                             "Invalid JMESPath expression 'contains(keys(@'."
-                            " Expected to return 'a', raised JMESPath parsing"
-                            " error: Invalid jmespath expression:"
+                            " Expected to return 'a', raised JMESPath"
+                            " incomplete expression error:"
+                            " Invalid jmespath expression:"
                             " Incomplete expression:\n"
                             '"contains(keys(@"\n'
                             "                ^"
@@ -154,7 +292,7 @@ from project_config.plugins.jmespath import JMESPathPlugin
                         "message": (
                             "Invalid JMESPath 'contains(@)'."
                             " Expected to return 'a', raised"
-                            " JMESPath error: Expected 2 arguments"
+                            " JMESPath arity error: Expected 2 arguments"
                             " for function contains(),"
                             " received 1"
                         ),
@@ -200,8 +338,8 @@ from project_config.plugins.jmespath import JMESPathPlugin
                     {
                         "definition": ".JMESPathsMatch[0]",
                         "message": (
-                            "Invalid JMESPath \"contains(a, 'foobarbaz')\""
-                            " in context. Expected to return True, raised"
+                            "Invalid JMESPath \"contains(a, 'foobarbaz')\"."
+                            " Expected to return True, raised"
                             " JMESPath type error: In function"
                             " contains(), invalid type for value: 4, expected"
                             " one of: ['array', 'string'], received: \"number\""
@@ -228,144 +366,6 @@ def test_JMESPathsMatch(
         value,
         rule,
         expected_results,
-    )
-
-
-@pytest.mark.parametrize(
-    ("files", "value", "rule", "expected_results"),
-    (
-        pytest.param(
-            {"foo.json": '{"foo": "bar"}'},
-            [["regex_match('^bar$', foo)", True]],
-            None,
-            [],
-            id="regex_match->true",
-        ),
-        pytest.param(
-            {"foo.json": '{"foo": "bar"}'},
-            [["regex_match('^foo$', foo)", True]],
-            None,
-            [
-                (
-                    Error,
-                    {
-                        "definition": ".JMESPathsMatch[0]",
-                        "file": "foo.json",
-                        "message": (
-                            "JMESPath 'regex_match('^foo$', foo)'"
-                            " does not match. Expected True,"
-                            " returned False"
-                        ),
-                    },
-                ),
-            ],
-            id="regex_match->false",
-        ),
-        pytest.param(
-            {"foo.json": '{"foo": ["bar", "baz"]}'},
-            [["regex_matchall('^ba[rz]$', foo)", True]],
-            None,
-            [],
-            id="regex_matchall->true",
-        ),
-        pytest.param(
-            {"foo.json": '{"baz": ["foo", "bar"]}'},
-            [["regex_matchall('^foo$', baz)", True]],
-            None,
-            [
-                (
-                    Error,
-                    {
-                        "definition": ".JMESPathsMatch[0]",
-                        "file": "foo.json",
-                        "message": (
-                            "JMESPath 'regex_matchall('^foo$', baz)'"
-                            " does not match. Expected True,"
-                            " returned False"
-                        ),
-                    },
-                ),
-            ],
-            id="regex_matchall->false",
-        ),
-        pytest.param(
-            {"foo.json": '{"foo": "bar"}'},
-            [["regex_search('^bar$', foo)", ["bar"]]],
-            None,
-            [],
-            id="regex_search->full",
-        ),
-        pytest.param(
-            {"foo.json": '{"foo": "bar"}'},
-            [["regex_search('^(b)(a)(r)$', foo)", ["b", "a", "r"]]],
-            None,
-            [],
-            id="regex_search->group",
-        ),
-        pytest.param(
-            {"foo.json": '{"foo": "bar"}'},
-            [["regex_search('^baz$', foo)", []]],
-            None,
-            [],
-            id="regex_search->null",
-        ),
-        pytest.param(
-            {"foo.json": '{"foo": "bar"}'},
-            [["op(foo, 'has the same letters than', foo)", True]],
-            None,
-            [
-                (
-                    Error,
-                    {
-                        "definition": ".JMESPathsMatch[0]",
-                        "file": "foo.json",
-                        "message": (
-                            "Invalid JMESPath \"op(foo, 'has the same"
-                            " letters than', foo)\". Expected to return"
-                            " True, raised JMESPath error: Invalid operator"
-                            " 'has the same letters than' passed to op()"
-                            " function, expected one of: <, <=, ==, !=, >=,"
-                            " >, is, is_not, is-not, is not, isNot, +, &,"
-                            " and, //, <<, %, *, @, |, or, **, >>, -, /, ^,"
-                            " count_of, count of, count-of, countOf, index_of,"
-                            " index of, index-of, indexOf"
-                        ),
-                    },
-                ),
-            ],
-            id="op->invalid-operator",
-        ),
-        pytest.param(
-            {"foo.json": '{"foo": "bar"}'},
-            [["op(foo, '==', foo)", True]],
-            None,
-            [],
-            id="op->true",
-        ),
-        pytest.param(
-            {"foo.json": '{"foo": "bar"}'},
-            [["op(foo, '!=', foo)", False]],
-            None,
-            [],
-            id="op->false",
-        ),
-    ),
-)
-def test_JMESPath_custom_functions(
-    files,
-    value,
-    rule,
-    expected_results,
-    assert_project_config_plugin_action,
-):
-    assert_project_config_plugin_action(
-        JMESPathPlugin,
-        "JMESPathsMatch",
-        files,
-        value,
-        rule,
-        expected_results,
-        deprecated="regex_matchall" in value[0][0],
     )
 
 
@@ -468,7 +468,7 @@ def test_JMESPath_custom_functions(
                     InterruptingError,
                     {
                         "message": (
-                            "The JMES path - match tuple must be of type array"
+                            "The JMES path match tuple must be of type array"
                         ),
                         "definition": ".ifJMESPathsMatch[foo][1]",
                     },
@@ -485,7 +485,7 @@ def test_JMESPath_custom_functions(
                     InterruptingError,
                     {
                         "message": (
-                            "The JMES path - match tuple must be of length 2"
+                            "The JMES path match tuple must be of length 2"
                         ),
                         "definition": ".ifJMESPathsMatch[foo][1]",
                     },
@@ -547,9 +547,9 @@ def test_JMESPath_custom_functions(
                         "definition": ".ifJMESPathsMatch[foo.json][0][0]",
                         "message": (
                             "Invalid JMESPath expression 'contains(keys(@'."
-                            " Expected to return 'a', raised JMESPath parsing"
-                            " error: Invalid jmespath expression:"
-                            " Incomplete expression:\n"
+                            " Expected to return 'a', raised JMESPath"
+                            " incomplete expression error: Invalid jmespath"
+                            " expression: Incomplete expression:\n"
                             '"contains(keys(@"\n'
                             "                ^"
                         ),
@@ -572,7 +572,7 @@ def test_JMESPath_custom_functions(
                         "message": (
                             "Invalid JMESPath 'contains(@)'."
                             " Expected to return 'a', raised"
-                            " JMESPath error: Expected 2 arguments"
+                            " JMESPath arity error: Expected 2 arguments"
                             " for function contains(),"
                             " received 1"
                         ),
@@ -614,6 +614,348 @@ def test_ifJMESPathsMatch(
     assert_project_config_plugin_action(
         JMESPathPlugin,
         "ifJMESPathsMatch",
+        files,
+        value,
+        rule,
+        expected_results,
+    )
+
+
+@pytest.mark.parametrize(
+    ("files", "value", "rule", "expected_results"),
+    (
+        pytest.param(
+            {},
+            5,
+            None,
+            [
+                (
+                    InterruptingError,
+                    {
+                        "definition": ".crossJMESPathsMatch",
+                        "message": (
+                            "The JMES path match tuples must be of"
+                            " type array"
+                        ),
+                    },
+                ),
+            ],
+            id="invalid-value-type",
+        ),
+        pytest.param(
+            {},
+            [],
+            None,
+            [
+                (
+                    InterruptingError,
+                    {
+                        "definition": ".crossJMESPathsMatch",
+                        "message": (
+                            "The JMES path match tuples must not be empty"
+                        ),
+                    },
+                ),
+            ],
+            id="invalid-empty-value",
+        ),
+        pytest.param(
+            {},
+            [6],
+            None,
+            [
+                (
+                    InterruptingError,
+                    {
+                        "message": (
+                            "The JMES path match tuple must be of type array"
+                        ),
+                        "definition": ".crossJMESPathsMatch[0]",
+                    },
+                ),
+            ],
+            id="invalid-value-item-type",
+        ),
+        pytest.param(
+            {},
+            [["a", "b", "c"]],
+            None,
+            [
+                (
+                    InterruptingError,
+                    {
+                        "message": (
+                            "The JMES path match tuple must be of length 2"
+                        ),
+                        "definition": ".crossJMESPathsMatch[0]",
+                    },
+                ),
+            ],
+            id="invalid-value-item-length",
+        ),
+        pytest.param(
+            {},
+            [[5, "b"]],
+            None,
+            [
+                (
+                    InterruptingError,
+                    {
+                        "message": (
+                            "The JMES path expression must be of type string"
+                        ),
+                        "definition": ".crossJMESPathsMatch[0][0]",
+                    },
+                ),
+            ],
+            id="invalid-expression-type",
+        ),
+        pytest.param(
+            {},
+            [["foo", 5]],
+            None,
+            [
+                (
+                    InterruptingError,
+                    {
+                        "message": (
+                            "The file and JMES path expression array from which"
+                            " the expected value will be taken must be"
+                            " of type array"
+                        ),
+                        "definition": ".crossJMESPathsMatch[0][1]",
+                    },
+                ),
+            ],
+            id="invalid-ev-type",
+        ),
+        pytest.param(
+            {},
+            [["foo", ["a", "b", "c"]]],
+            None,
+            [
+                (
+                    InterruptingError,
+                    {
+                        "message": (
+                            "The file and JMES path expression from"
+                            " which the expected value will be taken"
+                            " must be of length 2"
+                        ),
+                        "definition": ".crossJMESPathsMatch[0][1]",
+                    },
+                ),
+            ],
+            id="invalid-ev-length",
+        ),
+        pytest.param(
+            {},
+            [["foo", [5, "b"]]],
+            None,
+            [
+                (
+                    InterruptingError,
+                    {
+                        "message": (
+                            "The file from which the expected value"
+                            " will be taken must be of type string"
+                        ),
+                        "definition": ".crossJMESPathsMatch[0][1][0]",
+                    },
+                ),
+            ],
+            id="invalid-ev-file-type",
+        ),
+        pytest.param(
+            {},
+            [["foo", ["a", 5]]],
+            None,
+            [
+                (
+                    InterruptingError,
+                    {
+                        "message": (
+                            "The JMES path expression to query the file"
+                            " from which the expected value will be"
+                            " taken must be of type string"
+                        ),
+                        "definition": ".crossJMESPathsMatch[0][1][1]",
+                    },
+                ),
+            ],
+            id="invalid-ev-expression-type",
+        ),
+        pytest.param(
+            {"foo.ext": False},
+            [["foo", ["bar", "baz"]]],
+            None,
+            [],
+            id="unexistent-file-skips",
+        ),
+        pytest.param(
+            {"foo/": None},
+            [["foo", ["bar", "baz"]]],
+            None,
+            [
+                (
+                    InterruptingError,
+                    {
+                        "definition": ".files[0]",
+                        "message": (
+                            "A JMES path can not be applied to a directory"
+                        ),
+                        "file": "foo/",
+                    },
+                ),
+            ],
+            id="invalid-application-against-directory",
+        ),
+        pytest.param(
+            {"foo.json": '{"a": 4}'},
+            [["contains(keys(@", ["foo.json", "baz"]]],
+            None,
+            [
+                (
+                    InterruptingError,
+                    {
+                        "definition": ".crossJMESPathsMatch[0][0]",
+                        "message": (
+                            "Invalid JMESPath expression 'contains(keys(@'."
+                            " Expected to return from applying the"
+                            " expresion 'baz' to the file 'foo.json',"
+                            " raised JMESPath incomplete expression error:"
+                            " Invalid jmespath expression:"
+                            " Incomplete expression:\n"
+                            '"contains(keys(@"\n'
+                            "                ^"
+                        ),
+                        "file": "foo.json",
+                    },
+                ),
+            ],
+            id="invalid-expression-compilation",
+        ),
+        pytest.param(
+            {"foo.json": '{"a": 4}'},
+            [["a", ["foo.json", "contains(keys(@"]]],
+            None,
+            [
+                (
+                    InterruptingError,
+                    {
+                        "definition": ".crossJMESPathsMatch[0][1][1]",
+                        "message": (
+                            "Invalid JMESPath expression 'contains(keys(@'."
+                            " Expected to return from applying the"
+                            " expresion 'contains(keys(@' to the file"
+                            " 'foo.json', raised JMESPath incomplete"
+                            " expression error: Invalid jmespath expression:"
+                            " Incomplete expression:\n"
+                            '"contains(keys(@"\n'
+                            "                ^"
+                        ),
+                        "file": "foo.json",
+                    },
+                ),
+            ],
+            id="invalid-ev-expression-compilation",
+        ),
+        pytest.param(
+            {"foo.json": '{"a": 4}'},
+            [["contains(@)", ["foo.json", "a"]]],
+            None,
+            [
+                (
+                    Error,
+                    {
+                        "definition": ".crossJMESPathsMatch[0]",
+                        "message": (
+                            "Invalid JMESPath 'contains(@)'."
+                            " Expected to return 4, raised"
+                            " JMESPath arity error: Expected 2 arguments"
+                            " for function contains(),"
+                            " received 1"
+                        ),
+                        "file": "foo.json",
+                    },
+                ),
+            ],
+            id="invalid-expression-evaluation",
+        ),
+        pytest.param(
+            {"foo.json": '{"a": {"b": 4}}'},
+            [["b", ["foo.json", "contains(@)"]]],
+            None,
+            [
+                (
+                    Error,
+                    {
+                        "definition": ".crossJMESPathsMatch[0][1]",
+                        "message": (
+                            "Invalid JMESPath 'contains(@)'."
+                            " Raised JMESPath arity error: Expected 2"
+                            " arguments for function contains(), received 1"
+                        ),
+                        "file": "foo.json",
+                    },
+                ),
+            ],
+            id="invalid-ev-expression-evaluation",
+        ),
+        pytest.param(
+            {"foo.json": '{"a": 4}'},
+            [["b", ["foo.json", "a"]]],
+            None,
+            [
+                (
+                    Error,
+                    {
+                        "definition": ".crossJMESPathsMatch[0]",
+                        "message": (
+                            "JMESPath 'b' does not match."
+                            " Expected 4, returned None"
+                        ),
+                        "file": "foo.json",
+                    },
+                ),
+            ],
+            id="expression-not-match",
+        ),
+        pytest.param(
+            {"foo.json": '{"a": 4, "b": 4}'},
+            [["b", ["foo.json", "b"]]],
+            None,
+            [],
+            id="expression-match",
+        ),
+        pytest.param(
+            {"foo.json": '{"a": 4, "b": 4}'},
+            [["b", ["bar.json", "b"]]],
+            None,
+            [
+                (
+                    InterruptingError,
+                    {
+                        "definition": ".crossJMESPathsMatch[0][1][0]",
+                        "file": "bar.json",
+                        "message": "File 'bar.json' does not exist",
+                    },
+                ),
+            ],
+            id="ev-file-not-exists",
+        ),
+    ),
+)
+def test_crossJMESPathsMatch(
+    files,
+    value,
+    rule,
+    expected_results,
+    assert_project_config_plugin_action,
+):
+    assert_project_config_plugin_action(
+        JMESPathPlugin,
+        "crossJMESPathsMatch",
         files,
         value,
         rule,

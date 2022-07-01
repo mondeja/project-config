@@ -21,7 +21,7 @@ from project_config.serializers import SerializerError
             "foo\nbar\n",
             None,
             (
-                "'foo.txt' can't be serialized as a valid JSON file:"
+                "'foo.txt' can't be serialized as a valid object:"
                 " Expecting value: line 1 column 1 (char 0)"
             ),
             id=".txt",
@@ -40,7 +40,7 @@ from project_config.serializers import SerializerError
             "",
             None,
             (
-                "'foo.json' can't be serialized as a valid JSON file:"
+                "'foo.json' can't be serialized as a valid object:"
                 " Expecting value: line 1 column 1 (char 0)"
             ),
             id=".txt (invalid JSON as empty)",
@@ -59,7 +59,7 @@ from project_config.serializers import SerializerError
             "",
             None,
             (
-                "'foo.json' can't be serialized as a valid JSON file:"
+                "'foo.json' can't be serialized as a valid object:"
                 " Expecting value: line 1 column 1 (char 0)"
             ),
             id=".json (empty)",
@@ -70,7 +70,7 @@ from project_config.serializers import SerializerError
             "{foo}",
             None,
             (
-                "'foo.json' can't be serialized as a valid JSON file:"
+                "'foo.json' can't be serialized as a valid object:"
                 " Expecting property name enclosed in double quotes:"
                 " line 1 column 2 (char 1)"
             ),
@@ -90,7 +90,7 @@ from project_config.serializers import SerializerError
             "",
             None,
             (
-                "'foo.json5' can't be serialized as a valid JSON file:"
+                "'foo.json5' can't be serialized as a valid object:"
                 " No JSON data found near 0"
             ),
             id=".json5 (empty)",
@@ -101,7 +101,7 @@ from project_config.serializers import SerializerError
             "{foo}",
             None,
             (
-                "'foo.json5' can't be serialized as a valid JSON file:"
+                "'foo.json5' can't be serialized as a valid object:"
                 " Expected b'colon' near 5, found U+007d"
             ),
             id=".json5 (invalid JSON)",
@@ -128,7 +128,7 @@ from project_config.serializers import SerializerError
             "true: 1\n2\n3'foo",
             None,
             (
-                "'foo.yaml' can't be serialized as a valid JSON file:\n"
+                "'foo.yaml' can't be serialized as a valid object:\n"
                 "while scanning a simple key\n"
                 '  in "<unicode string>", line 2, column 1:\n'
                 "    2\n"
@@ -162,7 +162,7 @@ from project_config.serializers import SerializerError
             "foo = 'bar",
             None,
             (
-                "'foo.toml' can't be serialized as a valid JSON file:"
+                "'foo.toml' can't be serialized as a valid object:"
                 ' Expected "\'" (at end of document)'
             ),
             id=".toml (invalid JSON)",

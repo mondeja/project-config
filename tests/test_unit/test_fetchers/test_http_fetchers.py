@@ -25,7 +25,7 @@ from project_config.serializers import SerializerError
             SerializerError,
             (
                 "http://127.0.0.1:9997/download/bar.json?content=foo'"
-                " can't be serialized as a valid JSON file:"
+                " can't be serialized as a valid object:"
                 " Expecting value: line 1 column 1 (char 0)"
             ),
             id=".json (invalid)",

@@ -186,7 +186,7 @@ JMESPathsMatch
 
 Compares a set of JMESPath expressions against results.
 
-JSON-serializes each file in the ``files`` property of the rule
+Object-serializes each file in the ``files`` property of the rule
 and executes each expression given in the first item of the
 tuples passed as value. If a result don't match, report an error.
 
@@ -223,6 +223,40 @@ The `.editorconfig` file must have the next content:
 
 .. versionadded:: 0.1.0
 
+crossJMESPathsMatch
+===================
+
+Compare a set of JMESPath expressions against results obtained
+from querying other files against a expression.
+
+Is the same verb as `JMESPathsMatch`_, but instead asserting against
+a constant value, the result is asserted against the result of other
+query against other or the same file.
+
+As the value of each row takes an array with an existent file path as
+the first item and the JMESPath expression as the second item.
+
+.. rubric:: Example
+
+The ``release`` field of a Sphinx configuration defined in a file
+`docs/conf.py` must be the same that the version of the project metadata
+defined in th file `pyproject.toml`, field ``tool.poetry.version``:
+
+.. code-block:: js
+
+   {
+     rules: [
+       {
+         files: ["pyproject.toml"],
+         crossJMESPathsMatch: [
+           ["tool.poetry.metadata", ["docs/conf.py", "release"]],
+         ],
+         hint: "Versions of documentation and metadata must be the same"
+       }
+     ]
+   }
+
+.. versionadded:: 0.4.0
 
 ifJMESPathsMatch
 ================
