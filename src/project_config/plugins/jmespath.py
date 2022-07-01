@@ -3,6 +3,7 @@
 import operator
 import pprint
 import re
+import shlex
 import typing as t
 import warnings
 
@@ -16,7 +17,7 @@ from project_config import (
     Rule,
     Tree,
 )
-from project_config.compat import cached_function
+from project_config.compat import cached_function, shlex_join
 from project_config.exceptions import ProjectConfigException
 
 
@@ -72,14 +73,6 @@ JMESPATH_READABLE_ERRORS = {
 }
 
 
-class InvalidOperator(jmespath.exceptions.JMESPathError):  # type: ignore
-    def __init__(self, operator: str):
-        super().__init__(
-            f"Invalid operator '{operator}' passed to op() function,"
-            f" expected one of: {', '.join(list(OPERATORS_FUNCTIONS))}",
-        )
-
-
 class JMESPathProjectConfigFunctions(
     jmespath.functions.Functions,  # type: ignore
 ):
@@ -112,11 +105,7 @@ class JMESPathProjectConfigFunctions(
         {"types": ["string"]},
         {"types": ["string"]},
     )
-    def _func_regex_search(
-        self,
-        regex: str,
-        value: str,
-    ) -> t.List[str]:
+    def _func_regex_search(self, regex: str, value: str) -> t.List[str]:
         match = re.search(regex, value)
         if not match:
             return []
@@ -129,9 +118,21 @@ class JMESPathProjectConfigFunctions(
     )
     def _func_op(self, a: float, operator: str, b: float) -> bool:
         try:
-            return OPERATORS_FUNCTIONS[operator](a, b)  # type: ignore
+            func = OPERATORS_FUNCTIONS[operator]
         except KeyError:
-            raise InvalidOperator(operator)
+            raise jmespath.exceptions.JMESPathError(
+                f"Invalid operator '{operator}' passed to op() function,"
+                f" expected one of: {', '.join(list(OPERATORS_FUNCTIONS))}",
+            )
+        return func(a, b)  # type: ignore
+
+    @jmespath.functions.signature({"types": ["array"]})  # type: ignore
+    def _func_shlex_join(self, cmd_list: t.List[str]) -> str:
+        return shlex_join(cmd_list)
+
+    @jmespath.functions.signature({"types": ["string"]})  # type: ignore
+    def _func_shlex_split(self, cmd_str: str) -> t.List[str]:
+        return shlex.split(cmd_str)
 
 
 jmespath_options = jmespath.Options(

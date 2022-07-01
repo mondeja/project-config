@@ -219,6 +219,18 @@ convenient functions defined by the plugin internally:
 
    .. versionadded:: 0.1.0
 
+.. function:: shlex_split(cmd_str: str) -> list
+
+   Split a string using the Python's built-in :py:func:`shlex.split` function.
+
+   .. versionadded:: 0.4.0
+
+.. function:: shlex_join(cmd_list: list) -> str
+
+   Join a list of strings using the Python's built-in :py:func:`shlex.join` function.
+
+   .. versionadded:: 0.4.0
+
 .. _JMES paths: https://jmespath.org
 .. _JMESPath builtin functions: https://jmespath.org/proposals/functions.html#built-in-functions
 

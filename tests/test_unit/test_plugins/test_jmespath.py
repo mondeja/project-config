@@ -122,6 +122,20 @@ from project_config.plugins.jmespath import JMESPathPlugin
             [],
             id="op returns false",
         ),
+        pytest.param(
+            {"foo.json": '{"command": "echo -n \'Multiple arguments\'"}'},
+            [["shlex_split(command)", ["echo", "-n", "Multiple arguments"]]],
+            None,
+            [],
+            id="shlex_split",
+        ),
+        pytest.param(
+            {"foo.json": '{"command": ["echo", "-n", "Multiple arguments"]}'},
+            [["shlex_join(command)", "echo -n 'Multiple arguments'"]],
+            None,
+            [],
+            id="shlex_join",
+        ),
     ),
 )
 def test_JMESPath_custom_functions(
