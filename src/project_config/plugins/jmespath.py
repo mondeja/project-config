@@ -60,6 +60,9 @@ OPERATORS_FUNCTIONS = {
     "indexOf": operator.indexOf,
 }
 
+SET_OPERATORS = {"<", ">", "<=", ">=", "and", "&", "or", "|", "-", "^"}
+SET_OPERATORS_THAT_RETURN_SET = {"and", "&", "or", "|", "-", "^"}
+
 # map from jmespath exceptions class names to readable error types
 JMESPATH_READABLE_ERRORS = {
     "ParserError": "parsing error",
@@ -116,7 +119,7 @@ class JMESPathProjectConfigFunctions(
         {"types": ["string"]},
         {"types": ALL_JMESPATH_FUNCTION_TYPES},
     )
-    def _func_op(self, a: float, operator: str, b: float) -> bool:
+    def _func_op(self, a: float, operator: str, b: float) -> t.Any:
         try:
             func = OPERATORS_FUNCTIONS[operator]
         except KeyError:
@@ -124,7 +127,17 @@ class JMESPathProjectConfigFunctions(
                 f"Invalid operator '{operator}' passed to op() function,"
                 f" expected one of: {', '.join(list(OPERATORS_FUNCTIONS))}",
             )
-        return func(a, b)  # type: ignore
+        if (
+            isinstance(b, list)
+            and isinstance(a, list)
+            and operator in SET_OPERATORS
+        ):
+            # both values are lists and the operator is only valid for sets,
+            # so convert both values to set applying the operator
+            b, a = set(b), set(a)
+            if operator in SET_OPERATORS_THAT_RETURN_SET:
+                return list(func(a, b))
+        return func(a, b)
 
     @jmespath.functions.signature({"types": ["array"]})  # type: ignore
     def _func_shlex_join(self, cmd_list: t.List[str]) -> str:
