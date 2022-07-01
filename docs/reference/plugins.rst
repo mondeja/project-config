@@ -217,7 +217,26 @@ convenient functions defined by the plugin internally:
    * ``index-of``: :py:func:`operator.indexOf`
    * ``indexOf``: :py:func:`operator.indexOf`
 
+   If ``source`` and ``target`` are both of type array and the operator
+   is one of the next ones, the arrays are converted to `sets`_ before
+   applying the operator:
+
+   * ``<``: :py:func:`operator.lt`
+   * ``<=``: :py:func:`operator.le`
+   * ``>=``: :py:func:`operator.ge`
+   * ``>``: :py:func:`operator.gt`
+   * ``&``: :py:func:`operator.and_`
+   * ``and``: :py:func:`operator.and_`
+   * ``|``: :py:func:`operator.or_`
+   * ``or``: :py:func:`operator.or_`
+   * ``-``: :py:func:`operator.sub`
+   * ``^``: :py:func:`operator.xor`
+
    .. versionadded:: 0.1.0
+
+   .. versionchanged:: 0.4.0
+
+      Convert to `sets`_ before applying operators if both arguments are arrays.
 
 .. function:: shlex_split(cmd_str: str) -> list
 
@@ -233,6 +252,7 @@ convenient functions defined by the plugin internally:
 
 .. _JMES paths: https://jmespath.org
 .. _JMESPath builtin functions: https://jmespath.org/proposals/functions.html#built-in-functions
+.. _sets: https://docs.python.org/3/library/stdtypes.html#set
 
 JMESPathsMatch
 ==============
