@@ -145,7 +145,7 @@ if SPHINX_IS_RUNNING:
             filepath = os.path.join(example_dir, filename)
             if filename == "README.rst":
                 example_data.update(_parse_example_readme(filepath))
-            else:
+            elif os.path.isfile(filepath):
                 with open(filepath, encoding="utf-8") as f:
                     content = f.read()
                     # put configuration files first
