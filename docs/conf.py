@@ -145,14 +145,21 @@ if SPHINX_IS_RUNNING:
             filepath = os.path.join(example_dir, filename)
             if filename == "README.rst":
                 example_data.update(_parse_example_readme(filepath))
-            elif os.path.isfile(filepath):
-                with open(filepath, encoding="utf-8") as f:
-                    content = f.read()
-                    # put configuration files first
-                    if filename in (".project-config.toml", "pyproject.toml"):
-                        example_data["files"].insert(0, (filename, content))
-                    else:
-                        example_data["files"].append((filename, content))
+            else:
+                if os.path.isdir(filepath):
+                    content = ""
+                    filename = f'{filename.rstrip("/")}/'
+                else:
+                    with open(filepath, encoding="utf-8") as f:
+                        content = f.read()
+                # put configuration files first
+                if content and filename in (
+                    ".project-config.toml",
+                    "pyproject.toml",
+                ):
+                    example_data["files"].insert(0, (filename, content))
+                else:
+                    example_data["files"].append((filename, content))
         return example_data
 
     def _generate_example_tabs(files):
