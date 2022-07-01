@@ -1,0 +1,3 @@
+[[rules]]
+files = ["pyproject.toml"]
+crossJMESPathsMatch = [["tool.poetry.version", ["script.py", "__version__"]]]
