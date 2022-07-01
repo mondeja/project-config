@@ -109,7 +109,8 @@ values can change between versions:
    The best way to learn the most common patterns to write plugins
    is checking the source code of the simplest built-in plugins:
 
-   * :py:class:`project_config.plugins.include.IncludePlugin`
+   * :py:class:`project_config.plugins.inclusion.InclusionPlugin`
+   * :py:class:`project_config.plugins.existence.ExistencePlugin`
    * :py:class:`project_config.plugins.jmespath.JMESPathPlugin`
 
 

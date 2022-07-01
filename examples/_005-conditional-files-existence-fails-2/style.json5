@@ -1,0 +1,12 @@
+{
+  rules: [
+    {
+      files: ["pyproject.toml"],
+      ifFilesExist: ["src/"],
+    },
+    {
+      files: ["*.py"],
+      ifFilesExist: ["pyproject.toml"],
+    },
+  ],
+}

@@ -91,8 +91,8 @@ def test__prepare_default_plugins_cache_ignore_3rd_party_plugin(mocker):
 
 def test_prepare_3rd_party_plugin(mocker):
     plugin_that_overrides_default_plugin = importlib_metadata.EntryPoint(
-        "include",
-        "custom_include",
+        "inclusion",
+        "custom_inclusion",
         PROJECT_CONFIG_PLUGINS_ENTRYPOINTS_GROUP,
     )
     default_plugin_entrypoints = importlib_metadata.entry_points(
@@ -106,10 +106,14 @@ def test_prepare_3rd_party_plugin(mocker):
         ],
     )
 
-    add_plugin_to_cache_spy = mocker.spy(
-        Plugins,
-        "_add_plugin_to_cache",
-    )
+    inclusion_plugin_entrypoint_index = None
+    for index, entrypoint in enumerate(default_plugin_entrypoints):
+        if entrypoint.name == "inclusion":
+            inclusion_plugin_entrypoint_index = index
+            break
+    assert inclusion_plugin_entrypoint_index is not None
+
+    add_plugin_to_cache_spy = mocker.spy(Plugins, "_add_plugin_to_cache")
 
     plugins = Plugins()
 
@@ -131,7 +135,7 @@ def test_prepare_3rd_party_plugin(mocker):
     plugins.prepare_3rd_party_plugin(plugin_that_overrides_default_plugin)
 
     # assert that the 3rd party plugin cache has been prepared
-    _, args, _ = add_plugin_to_cache_spy.mock_calls[2]
+    _, args, _ = add_plugin_to_cache_spy.mock_calls[NUMBER_OF_DEFAULT_PLUGINS]
     assert args[1].name == plugin_that_overrides_default_plugin.name
     assert args[1].value == plugin_that_overrides_default_plugin.value
 
@@ -142,19 +146,24 @@ def test_prepare_3rd_party_plugin(mocker):
             f"No module named '{plugin_that_overrides_default_plugin.module}'"
         ),
     ):
-        plugins.plugin_names_loaders[default_plugin_entrypoints_tuple[0].name]()
+        plugins.plugin_names_loaders[
+            default_plugin_entrypoints_tuple[
+                inclusion_plugin_entrypoint_index
+            ].name
+        ]()
 
 
 def test_get_function_for_action():
     plugins = Plugins()
 
-    IncludePlugin = tuple(
+    InclusionPlugin = tuple(
         importlib_metadata.entry_points(
             group=PROJECT_CONFIG_PLUGINS_ENTRYPOINTS_GROUP,
+            name="inclusion",
         ),
     )[0].load()
-    includeLines_function = getattr(IncludePlugin, "includeLines")
-    ifIncludeLines_function = getattr(IncludePlugin, "ifIncludeLines")
+    includeLines_function = getattr(InclusionPlugin, "includeLines")
+    ifIncludeLines_function = getattr(InclusionPlugin, "ifIncludeLines")
 
     # first time is not cached
     assert (

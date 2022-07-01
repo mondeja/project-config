@@ -151,7 +151,7 @@ def project_config_plugin_action_asserter(
         (result_type, result_value),
         (expected_result_type, expected_result_value),
     ) in zip(results, expected_results):
-        assert result_type == expected_result_type
+        assert result_type == expected_result_type, result_value
         assert result_value == expected_result_value
 
 

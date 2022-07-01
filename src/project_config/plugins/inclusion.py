@@ -29,7 +29,7 @@ def _directories_not_accepted_as_inputs_error(
     }
 
 
-class IncludePlugin:
+class InclusionPlugin:
     @staticmethod
     def includeLines(
         value: t.List[str],

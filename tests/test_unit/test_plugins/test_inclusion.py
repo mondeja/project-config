@@ -1,7 +1,7 @@
 import pytest
 
 from project_config import Error, InterruptingError, ResultValue
-from project_config.plugins.include import IncludePlugin
+from project_config.plugins.inclusion import InclusionPlugin
 
 
 @pytest.mark.parametrize(
@@ -73,7 +73,7 @@ def test_includeLines(
     assert_project_config_plugin_action,
 ):
     assert_project_config_plugin_action(
-        IncludePlugin,
+        InclusionPlugin,
         "includeLines",
         files,
         value,
@@ -196,7 +196,7 @@ def test_ifIncludeLines(
     assert_project_config_plugin_action,
 ):
     assert_project_config_plugin_action(
-        IncludePlugin,
+        InclusionPlugin,
         "ifIncludeLines",
         files,
         value,
@@ -267,7 +267,7 @@ def test_excludeContent(
     assert_project_config_plugin_action,
 ):
     assert_project_config_plugin_action(
-        IncludePlugin,
+        InclusionPlugin,
         "excludeContent",
         files,
         value,

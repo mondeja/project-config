@@ -2,6 +2,7 @@ import pytest
 
 from project_config.config import Config
 from project_config.config.style import ProjectConfigInvalidStyle
+from project_config.plugins import Plugins
 
 
 @pytest.mark.parametrize(
@@ -88,11 +89,11 @@ from project_config.config.style import ProjectConfigInvalidStyle
             {
                 ".project-config.toml": 'style = "foo.json5"',
                 "foo.json5": (
-                    '{ plugins: ["includer"],'
+                    '{ plugins: ["inclusion"],'
                     ' rules: [{files: [".gitignore"]}] }'
                 ),
             },
-            {"plugins": ["includer"], "rules": [{"files": [".gitignore"]}]},
+            {"plugins": ["inclusion"], "rules": [{"files": [".gitignore"]}]},
             id="plugin",
         ),
         pytest.param(
@@ -119,7 +120,7 @@ from project_config.config.style import ProjectConfigInvalidStyle
             {
                 ".project-config.toml": 'style = "foo.json5"',
                 "foo.json5": (
-                    '{ plugins: ["includer", 5],'
+                    '{ plugins: ["inclusion", 5],'
                     ' rules: [{files: [".gitignore"]}] }'
                 ),
             },
@@ -130,7 +131,7 @@ from project_config.config.style import ProjectConfigInvalidStyle
             {
                 ".project-config.toml": 'style = "foo.json5"',
                 "foo.json5": (
-                    '{ plugins: ["includer", ""],'
+                    '{ plugins: ["inclusion", ""],'
                     ' rules: [{files: [".gitignore"]}] }'
                 ),
             },
@@ -369,8 +370,8 @@ from project_config.config.style import ProjectConfigInvalidStyle
             [
                 (
                     "foo.json5: .rules[0].actionFooBarBazThatShouldNotExist"
-                    " -> invalid action, not found in defined plugins: include,"
-                    " jmespath"
+                    " -> invalid action, not found in defined plugins:"
+                    f" {', '.join(Plugins().plugin_names)}"
                 ),
             ],
             id="rule-not-existent-action",

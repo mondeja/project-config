@@ -1,0 +1,12 @@
+{
+  rules: [
+    {
+      files: ["foobarbaz.toml"],
+      ifFilesExist: ["src/"],
+    },
+    {
+      files: ["*.py"],
+      ifFilesExist: ["pyproject.toml"],
+    },
+  ],
+}
