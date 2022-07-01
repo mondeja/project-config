@@ -9,9 +9,9 @@ Plugins are the basic unit for rules application. Plugins defines
 * :bolditalic:`conditionals` filter the execution of verbs in a rule. If all the conditionals of a rule returns ``true``, the verbs are executed. Conditionals are identified because they start with the prefix ``if``.
 * :bolditalic:`verbs` execute actions against the files defined in the special ``files`` property of each rule. They act like asserters.
 
-*******
-include
-*******
+*********
+inclusion
+*********
 
 Plain content inclusion management.
 
@@ -97,6 +97,47 @@ Don't allow code blocks in RST documentation files:
    }
 
 .. versionadded:: 0.3.0
+
+*********
+existence
+*********
+
+Check existence of files.
+
+ifFilesExist
+============
+
+Check if a set of files and/or directories exists.
+
+It acceepts an array of paths. If a path ends with ``/`` character it is
+considered a directory.
+
+.. rubric:: Examples
+
+If the directory `src/` exists, a `pyproject.toml` file must exist also:
+
+.. code-block:: js
+
+   {
+     rules: [
+       files: ["pyproject.toml"],
+       ifFilesExist: ["src/"],
+     ]
+   }
+
+If the file `.pre-commit-hooks.yaml` exists, must be declared as an array:
+
+.. code-block:: js
+
+   {
+     rules: [
+       files: [".pre-commit-hooks.yaml"],
+       ifFilesExist: [".pre-commit-hooks.yaml"],
+       JMESPathsMatch: [["type(@)", "array"]]
+     ]
+   }
+
+.. versionadded:: 0.4.0
 
 ********
 jmespath

@@ -9,7 +9,11 @@ from project_config.compat import TypeAlias
 from project_config.tree import Tree
 
 
-FilesType: TypeAlias = t.Dict[str, t.Optional[t.Union[str, bool]]]
+FileType: TypeAlias = t.Optional[t.Union[str, bool]]
+FilesType: TypeAlias = t.Union[
+    t.List[t.Tuple[str, FileType]],
+    t.Dict[str, FileType],
+]
 RootdirType: TypeAlias = t.Union[str, pathlib.Path]
 
 
@@ -19,7 +23,8 @@ def create_files(  # noqa: D103
 ) -> None:
     if isinstance(rootdir, pathlib.Path):
         rootdir = str(rootdir)
-    for fpath, content in files.items():
+    _files = files.items() if isinstance(files, dict) else files
+    for fpath, content in _files:
         if content is False:
             continue
         full_path = os.path.join(rootdir, fpath)
@@ -27,11 +32,17 @@ def create_files(  # noqa: D103
         if content is None:
             os.mkdir(full_path)
         else:
+            # same name as an existent directory, means that `files` has been
+            # passed as a list of tuples
             content = t.cast(str, content)
             # ensure parent path directory exists
             parent_fpath, _ = os.path.splitext(full_path)
             if parent_fpath:
                 os.makedirs(parent_fpath, exist_ok=True)
+
+            if os.path.isdir(full_path):
+                continue
+
             with open(full_path, "w", encoding="utf-8") as f:
                 f.write(content)
 
@@ -44,7 +55,10 @@ def create_tree(  # noqa: D103
     create_files(files, rootdir)
     tree = Tree(str(rootdir))
     if cache_files:
-        tree.cache_files(list(files))
+        _files = (
+            list(files) if isinstance(files, dict) else [f[0] for f in files]
+        )
+        tree.cache_files(_files)
     return tree
 
 

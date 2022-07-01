@@ -80,6 +80,17 @@ class Tree:
         # latest cached files
         self.files: TreeNodeFiles = []
 
+    def normalize_path(self, fpath: str) -> str:
+        """Normalize a path given his relative path to the root directory.
+
+        Args:
+            fpath (str): Path to the file relative to the root directory.
+
+        Returns:
+            str: Normalized absolute path.
+        """
+        return os.path.join(self.rootdir, fpath)
+
     def _cache_file(self, fpath: str) -> str:
         """Cache a file normalizing its path.
 
@@ -89,7 +100,7 @@ class Tree:
         Returns:
             str: Normalized absolute path.
         """
-        normalized_fpath = os.path.join(self.rootdir, fpath)
+        normalized_fpath = self.normalize_path(fpath)
         if normalized_fpath not in self.files_cache:
             if os.path.isfile(normalized_fpath):
                 with open(normalized_fpath, encoding="utf-8") as f:
@@ -97,7 +108,7 @@ class Tree:
             elif os.path.isdir(normalized_fpath):
                 # recursive generation
                 self.files_cache[normalized_fpath] = self._generator(
-                    os.path.join(normalized_fpath, fname)
+                    self.normalize_path(fname)
                     for fname in os.listdir(normalized_fpath)
                 )
             else:
@@ -154,8 +165,11 @@ class Tree:
 
         Args:
             fpath (str): Path to the file to serialize.
+
+        Returns:
+            object: Object-serialized version of the file.
         """
-        normalized_fpath = os.path.join(self.rootdir, fpath)
+        normalized_fpath = self.normalize_path(fpath)
         try:
             result = self.serialized_files_cache[normalized_fpath]
         except KeyError:

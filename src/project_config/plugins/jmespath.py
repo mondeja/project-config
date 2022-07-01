@@ -460,7 +460,7 @@ class JMESPathPlugin:
     ) -> Results:
         if not isinstance(value, list):
             yield InterruptingError, {
-                "message": ("The JMES path match tuples must be of type array"),
+                "message": "The JMES path match tuples must be of type array",
                 "definition": ".crossJMESPathsMatch",
             }
             return
