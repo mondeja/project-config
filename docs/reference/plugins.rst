@@ -372,7 +372,7 @@ the rule. For example, the next configuration would not raise errors:
 
       .. code-block:: json
 
-         {"foo.json": '{"bar": {"baz": 7}}'}
+         {"bar": {"baz": 7}}
 
 .. versionadded:: 0.4.0
 
