@@ -164,6 +164,22 @@ def _compile_JMESPath_expression(
     return jmespath.compile(expression)
 
 
+def _compile_JMESPath_expression_or_error(
+    expression: str,
+) -> jmespath.parser.ParsedResult:
+    try:
+        return _compile_JMESPath_expression(expression)
+    except jmespath.exceptions.JMESPathError as exc:
+        error_type = JMESPATH_READABLE_ERRORS.get(
+            exc.__class__.__name__,
+            "error",
+        )
+        raise JMESPathError(
+            f"Invalid JMESPath expression {pprint.pformat(expression)}."
+            f" Raised JMESPath {error_type}: {str(exc)}",
+        )
+
+
 def _compile_JMESPath_or_expected_value_error(
     expression: str,
     expected_value: t.Any,
@@ -178,7 +194,7 @@ def _compile_JMESPath_or_expected_value_error(
         raise JMESPathError(
             f"Invalid JMESPath expression {pprint.pformat(expression)}."
             f" Expected to return {pprint.pformat(expected_value)}, raised"
-            f" JMESPath {error_type}: {exc.__str__()}",
+            f" JMESPath {error_type}: {str(exc)}",
         )
 
 
@@ -199,7 +215,7 @@ def _compile_JMESPath_or_expected_value_from_other_file_error(
             f" Expected to return from applying the expresion"
             f" {pprint.pformat(expected_value_expression)} to the file"
             f" {pprint.pformat(expected_value_file)}, raised"
-            f" JMESPath {error_type}: {exc.__str__()}",
+            f" JMESPath {error_type}: {str(exc)}",
         )
 
 
@@ -220,7 +236,7 @@ def _evaluate_JMESPath(
         )
         raise JMESPathError(
             f"Invalid JMESPath {formatted_expression}."
-            f" Raised JMESPath {error_type}: {exc.__str__()}",
+            f" Raised JMESPath {error_type}: {str(exc)}",
         )
 
 
@@ -243,7 +259,7 @@ def _evaluate_JMESPath_or_expected_value_error(
         raise JMESPathError(
             f"Invalid JMESPath {formatted_expression}."
             f" Expected to return {pprint.pformat(expected_value)}, raised"
-            f" JMESPath {error_type}: {exc.__str__()}",
+            f" JMESPath {error_type}: {str(exc)}",
         )
 
 
@@ -474,81 +490,18 @@ class JMESPathPlugin:
     ) -> Results:
         if not isinstance(value, list):
             yield InterruptingError, {
-                "message": "The JMES path match tuples must be of type array",
+                "message": "The pipes must be of type array",
                 "definition": ".crossJMESPathsMatch",
             }
             return
         if not value:
             yield InterruptingError, {
-                "message": "The JMES path match tuples must not be empty",
+                "message": "The pipes must not be empty",
                 "definition": ".crossJMESPathsMatch",
             }
             return
-        for i, jmespath_match_tuple in enumerate(value):
-            if not isinstance(jmespath_match_tuple, list):
-                yield InterruptingError, {
-                    "message": (
-                        "The JMES path match tuple must be of type array"
-                    ),
-                    "definition": f".crossJMESPathsMatch[{i}]",
-                }
-                return
-            if len(jmespath_match_tuple) != 2:
-                yield InterruptingError, {
-                    "message": (
-                        "The JMES path match tuple must be of length 2"
-                    ),
-                    "definition": f".crossJMESPathsMatch[{i}]",
-                }
-                return
-            if not isinstance(jmespath_match_tuple[0], str):
-                yield InterruptingError, {
-                    "message": (
-                        "The JMES path expression must be of type string"
-                    ),
-                    "definition": f".crossJMESPathsMatch[{i}][0]",
-                }
-                return
-            if not isinstance(jmespath_match_tuple[1], list):
-                yield InterruptingError, {
-                    "message": (
-                        "The file and JMES path expression array from"
-                        " which the expected value will be taken must"
-                        " be of type array"
-                    ),
-                    "definition": f".crossJMESPathsMatch[{i}][1]",
-                }
-                return
-            if len(jmespath_match_tuple[1]) != 2:
-                yield InterruptingError, {
-                    "message": (
-                        "The file and JMES path expression from which"
-                        " the expected value will be taken must be of"
-                        " length 2"
-                    ),
-                    "definition": f".crossJMESPathsMatch[{i}][1]",
-                }
-                return
-            if not isinstance(jmespath_match_tuple[1][0], str):
-                yield InterruptingError, {
-                    "message": (
-                        "The file from which the expected value will be"
-                        " taken must be of type string"
-                    ),
-                    "definition": f".crossJMESPathsMatch[{i}][1][0]",
-                }
-                return
-            if not isinstance(jmespath_match_tuple[1][1], str):
-                yield InterruptingError, {
-                    "message": (
-                        "The JMES path expression to query the file"
-                        " from which the expected value will be"
-                        " taken must be of type string"
-                    ),
-                    "definition": f".crossJMESPathsMatch[{i}][1][1]",
-                }
-                return
 
+        # each pipe is evaluated for each file
         for f, (fpath, fcontent) in enumerate(tree.files):
             if fcontent is None:
                 continue
@@ -562,89 +515,224 @@ class JMESPathPlugin:
                 }
                 continue
 
-            instance = tree.serialize_file(fpath)
-
-            for e, (expression, expected_value_getter_tuple) in enumerate(
-                value,
-            ):
-                ev_file, ev_expression = expected_value_getter_tuple
-
-                # parse both expressions
-                try:
-                    ev_compiled_expression = _compile_JMESPath_or_expected_value_from_other_file_error(  # noqa: E501
-                        ev_expression,
-                        ev_file,
-                        ev_expression,
-                    )
-                except JMESPathError as exc:
+            for i, pipe in enumerate(value):
+                if not isinstance(pipe, list):
                     yield InterruptingError, {
-                        "message": exc.message,
-                        "definition": f".crossJMESPathsMatch[{e}][1][1]",
-                        "file": ev_file,
+                        "message": "The pipe must be of type array",
+                        "definition": f".crossJMESPathsMatch[{i}]",
                     }
-                    continue
-
-                # obtain expected value
-                try:
-                    ev_instance = tree.serialize_file(ev_file)
-                except FileNotFoundError as exc:
+                    return
+                elif len(pipe) < 3:
                     yield InterruptingError, {
-                        "message": str(exc),
-                        "definition": f".crossJMESPathsMatch[{f}][1][0]",
-                        "file": ev_file,
+                        "message": "The pipe must be, at least, of length 3",
+                        "definition": f".crossJMESPathsMatch[{i}]",
                     }
-                    continue
+                    return
 
-                try:
-                    expected_value = _evaluate_JMESPath(
-                        ev_compiled_expression,
-                        ev_instance,
-                    )
-                except JMESPathError as exc:
-                    yield Error, {
-                        "message": exc.message,
-                        "definition": f".crossJMESPathsMatch[{e}][1]",
-                        "file": ev_file,
-                    }
-                    continue
+                files_expression = pipe[0]
 
-                try:
-                    compiled_expression = _compile_JMESPath_or_expected_value_from_other_file_error(  # noqa: E501
-                        expression,
-                        ev_file,
-                        ev_expression,
-                    )
-                except JMESPathError as exc:
+                # the first value in the array is the expression for `files`
+                if not isinstance(files_expression, str):
                     yield InterruptingError, {
-                        "message": exc.message,
-                        "definition": f".crossJMESPathsMatch[{e}][0]",
-                        "file": fpath,
+                        "message": "The file expression must be of type string",
+                        "definition": f".crossJMESPathsMatch[{i}][0]",
                     }
-                    continue
+                    return
+                elif not files_expression:
+                    yield InterruptingError, {
+                        "message": "The file expression must not be empty",
+                        "definition": f".crossJMESPathsMatch[{i}][0]",
+                    }
+                    return
+
+                final_expression = pipe[-2]
+                if not isinstance(final_expression, str):
+                    yield InterruptingError, {
+                        "message": (
+                            "The final expression must be of type string"
+                        ),
+                        "definition": (
+                            f".crossJMESPathsMatch[{i}][{len(pipe) - 2}]"
+                        ),
+                    }
+                    return
+                elif not final_expression:
+                    yield InterruptingError, {
+                        "message": "The final expression must not be empty",
+                        "definition": (
+                            f".crossJMESPathsMatch[{i}][{len(pipe) - 2}]"
+                        ),
+                    }
+                    return
+
+                expected_value = pipe[-1]
 
                 try:
-                    expression_result = (
-                        _evaluate_JMESPath_or_expected_value_error(
-                            compiled_expression,
+                    final_compiled_expression = (
+                        _compile_JMESPath_or_expected_value_error(  # noqa: E501
+                            final_expression,
                             expected_value,
-                            instance,
                         )
                     )
                 except JMESPathError as exc:
-                    yield Error, {
+                    yield InterruptingError, {
                         "message": exc.message,
-                        "definition": f".crossJMESPathsMatch[{e}]",
+                        "definition": (
+                            f".crossJMESPathsMatch[{i}][{len(pipe) - 2}]"
+                        ),
                         "file": fpath,
                     }
                     continue
 
-                if expression_result != expected_value:
+                files_instance = tree.serialize_file(fpath)
+
+                try:
+                    files_compiled_expression = (
+                        _compile_JMESPath_expression_or_error(  # noqa: E501
+                            files_expression,
+                        )
+                    )
+                except JMESPathError as exc:
+                    yield InterruptingError, {
+                        "message": exc.message,
+                        "definition": f".crossJMESPathsMatch[{i}][0]",
+                    }
+                    continue
+
+                try:
+                    files_result = _evaluate_JMESPath(
+                        files_compiled_expression,
+                        files_instance,
+                    )
+                except JMESPathError as exc:
+                    yield InterruptingError, {
+                        "message": exc.message,
+                        "definition": f".crossJMESPathsMatch[{i}][0]",
+                        "file": fpath,
+                    }
+                    continue
+
+                other_results = []
+
+                for other_index, other_data in enumerate(pipe[1:-2]):
+                    pipe_index = other_index + 1
+
+                    if not isinstance(other_data, list):
+                        yield InterruptingError, {
+                            "message": (
+                                "The file path and expression tuple must be of"
+                                " type array"
+                            ),
+                            "definition": (
+                                f".crossJMESPathsMatch[{i}][{pipe_index}]"
+                            ),
+                        }
+                        return
+                    elif len(other_data) != 2:
+                        yield InterruptingError, {
+                            "message": (
+                                "The file path and expression tuple must be of"
+                                " length 2"
+                            ),
+                            "definition": (
+                                f".crossJMESPathsMatch[{i}][{pipe_index}]"
+                            ),
+                        }
+                        return
+
+                    other_fpath, other_expression = other_data
+
+                    if not isinstance(other_fpath, str):
+                        yield InterruptingError, {
+                            "message": "The file path must be of type string",
+                            "definition": (
+                                f".crossJMESPathsMatch[{i}][{pipe_index}][0]"
+                            ),
+                        }
+                        return
+                    elif not other_fpath:
+                        yield InterruptingError, {
+                            "message": "The file path must not be empty",
+                            "definition": (
+                                f".crossJMESPathsMatch[{i}][{pipe_index}][0]"
+                            ),
+                        }
+                        return
+
+                    if not isinstance(other_expression, str):
+                        yield InterruptingError, {
+                            "message": "The expression must be of type string",
+                            "definition": (
+                                f".crossJMESPathsMatch[{i}][{pipe_index}][1]"
+                            ),
+                        }
+                        return
+                    elif not other_expression:
+                        yield InterruptingError, {
+                            "message": "The expression must not be empty",
+                            "definition": (
+                                f".crossJMESPathsMatch[{i}][{pipe_index}][1]"
+                            ),
+                        }
+                        return
+
+                    try:
+                        other_compiled_expression = _compile_JMESPath_or_expected_value_from_other_file_error(  # noqa: E501
+                            other_expression,
+                            other_fpath,
+                            other_expression,
+                        )
+                    except JMESPathError as exc:
+                        yield InterruptingError, {
+                            "message": exc.message,
+                            "definition": (
+                                f".crossJMESPathsMatch[{i}][{pipe_index}]"
+                            ),
+                            "file": other_fpath,
+                        }
+                        return
+
+                    other_instance = tree.serialize_file(other_fpath)
+
+                    try:
+                        other_result = _evaluate_JMESPath(
+                            other_compiled_expression,
+                            other_instance,
+                        )
+                    except JMESPathError as exc:
+                        yield InterruptingError, {
+                            "message": exc.message,
+                            "definition": (
+                                f".crossJMESPathsMatch[{i}][{pipe_index}]"
+                            ),
+                            "file": other_fpath,
+                        }
+                        return
+                    else:
+                        other_results.append(other_result)
+
+                try:
+                    final_result = _evaluate_JMESPath(
+                        final_compiled_expression,
+                        [files_result, *other_results],
+                    )
+                except JMESPathError as exc:
+                    yield InterruptingError, {
+                        "message": exc.message,
+                        "definition": (
+                            f".crossJMESPathsMatch[{i}][{len(pipe) - 2}]"
+                        ),
+                        "file": fpath,
+                    }
+                    return
+
+                if final_result != expected_value:
                     yield Error, {
                         "message": (
-                            f"JMESPath '{expression}' does not match."
+                            f"JMESPath '{final_expression}' does not match."
                             f" Expected {pprint.pformat(expected_value)},"
-                            f" returned {pprint.pformat(expression_result)}"
+                            f" returned {pprint.pformat(final_result)}"
                         ),
-                        "definition": f".crossJMESPathsMatch[{e}]",
+                        "definition": f".crossJMESPathsMatch[{i}]",
                         "file": fpath,
                     }
