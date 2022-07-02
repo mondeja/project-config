@@ -299,15 +299,28 @@ The `.editorconfig` file must have the next content:
 crossJMESPathsMatch
 ===================
 
-Compare a set of JMESPath expressions against results obtained
-from querying other files against a expression.
+JMESPaths matching between multiple files.
 
-Is the same verb as `JMESPathsMatch`_, but instead asserting against
-a constant value, the result is asserted against the result of other
-query against other or the same file.
+It accepts an array of arrays. Each one of these arrays must have the syntax:
 
-As the value of each row takes an array with an existent file path as
-the first item and the JMESPath expression as the second item.
+.. code-block:: js
+
+   [
+     "filesJMESPathExpression",  // expression to query each file in `files` property of the rule
+     ["otherFile.ext", "JMESPathExpression"]...,  // optionally other files
+     "finalJMESPathExpression",  // an array with results of previous expressions as input
+     expectedValue,  // value to compare with the result of final JMESPath expression
+   ]
+
+The executed steps are:
+
+1. For each object-serialized file in ``files`` property of the rule.
+2. Execute ``"filesJMESPathExpression"`` and append the result to a temporal array.
+3. For each pair of ``["otherFile.ext", "JMESPathExpression"]``, execute
+   ``"JMESPathExpression"`` against the object-serialized version of
+   ``"otherFile.ext"`` and append each result to the temporal array.
+4. Execute ``"finalJMESPathExpression"`` against the temporal array.
+5. Compare the final result with ``expectedValue`` and raise error if not match.
 
 .. rubric:: Example
 
@@ -322,12 +335,44 @@ defined in th file `pyproject.toml`, field ``tool.poetry.version``:
        {
          files: ["pyproject.toml"],
          crossJMESPathsMatch: [
-           ["tool.poetry.metadata", ["docs/conf.py", "release"]],
+           [
+             "tool.poetry.metadata",
+             ["docs/conf.py", "release"],
+             "op([0], '==', [1])",
+             true,
+           ],
          ],
          hint: "Versions of documentation and metadata must be the same"
        }
      ]
    }
+
+Note that you can pass whatever number of other files, even 0 and just apply
+``files`` and ``final`` expressions to each file in ``files`` property of
+the rule. For example, the next configuration would not raise errors:
+
+.. tabs::
+
+   .. tab:: style.json5
+
+      .. code-block:: js
+
+         {
+           rules: [
+             {
+               files: ["foo.json"],
+               crossJMESPathsMatch: [
+                 ["bar", "[0].baz", 7],
+               ]
+             }
+           ]
+         }
+
+   .. tab:: foo.json
+
+      .. code-block:: json
+
+         {"bar": {"baz": 7}}
 
 .. versionadded:: 0.4.0
 

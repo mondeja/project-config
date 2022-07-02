@@ -678,7 +678,7 @@ def test_ifJMESPathsMatch(
 
 
 @pytest.mark.parametrize(
-    ("files", "value", "rule", "expected_results"),
+    ("files", "value", "rule", "expected_results", "additional_files"),
     (
         pytest.param(
             {},
@@ -689,13 +689,11 @@ def test_ifJMESPathsMatch(
                     InterruptingError,
                     {
                         "definition": ".crossJMESPathsMatch",
-                        "message": (
-                            "The JMES path match tuples must be of"
-                            " type array"
-                        ),
+                        "message": "The pipes must be of type array",
                     },
                 ),
             ],
+            {},
             id="invalid-value-type",
         ),
         pytest.param(
@@ -707,298 +705,484 @@ def test_ifJMESPathsMatch(
                     InterruptingError,
                     {
                         "definition": ".crossJMESPathsMatch",
-                        "message": (
-                            "The JMES path match tuples must not be empty"
-                        ),
+                        "message": "The pipes must not be empty",
                     },
                 ),
             ],
+            {},
             id="invalid-empty-value",
         ),
         pytest.param(
-            {},
-            [6],
+            {"foo.ext": "content"},
+            [5],
             None,
             [
                 (
                     InterruptingError,
                     {
-                        "message": (
-                            "The JMES path match tuple must be of type array"
-                        ),
                         "definition": ".crossJMESPathsMatch[0]",
+                        "message": ("The pipe must be of type array"),
                     },
                 ),
             ],
-            id="invalid-value-item-type",
+            {},
+            id="invalid-pipe-type",
         ),
         pytest.param(
-            {},
-            [["a", "b", "c"]],
+            {"foo.ext": "content"},
+            [["foo", "bar"]],
             None,
             [
                 (
                     InterruptingError,
                     {
-                        "message": (
-                            "The JMES path match tuple must be of length 2"
-                        ),
                         "definition": ".crossJMESPathsMatch[0]",
+                        "message": ("The pipe must be, at least, of length 3"),
                     },
                 ),
             ],
-            id="invalid-value-item-length",
+            {},
+            id="invalid-pipe-length",
         ),
         pytest.param(
-            {},
-            [[5, "b"]],
+            {"foo.ext": "content"},
+            [[5, "foo", "bar", "baz"]],
             None,
             [
                 (
                     InterruptingError,
                     {
-                        "message": (
-                            "The JMES path expression must be of type string"
-                        ),
                         "definition": ".crossJMESPathsMatch[0][0]",
-                    },
-                ),
-            ],
-            id="invalid-expression-type",
-        ),
-        pytest.param(
-            {},
-            [["foo", 5]],
-            None,
-            [
-                (
-                    InterruptingError,
-                    {
                         "message": (
-                            "The file and JMES path expression array from which"
-                            " the expected value will be taken must be"
-                            " of type array"
+                            "The file expression must be of type string"
                         ),
-                        "definition": ".crossJMESPathsMatch[0][1]",
                     },
                 ),
             ],
-            id="invalid-ev-type",
+            {},
+            id="invalid-files-expression-type",
         ),
         pytest.param(
-            {},
-            [["foo", ["a", "b", "c"]]],
+            {"foo.json": '["content"]'},
+            [["", "foo", "bar", "baz"]],
             None,
             [
                 (
                     InterruptingError,
                     {
+                        "definition": ".crossJMESPathsMatch[0][0]",
+                        "message": ("The file expression must not be empty"),
+                    },
+                ),
+            ],
+            {},
+            id="invalid-empty-files-expression",
+        ),
+        pytest.param(
+            {"foo.json": '["content"]'},
+            [["foo", "bar", 5, "baz"]],
+            None,
+            [
+                (
+                    InterruptingError,
+                    {
+                        "definition": ".crossJMESPathsMatch[0][2]",
                         "message": (
-                            "The file and JMES path expression from"
-                            " which the expected value will be taken"
+                            "The final expression must be of type string"
+                        ),
+                    },
+                ),
+            ],
+            {},
+            id="invalid-final-expression-type",
+        ),
+        pytest.param(
+            {"foo.json": '["content"]'},
+            [["foo", "bar", "", "baz"]],
+            None,
+            [
+                (
+                    InterruptingError,
+                    {
+                        "definition": ".crossJMESPathsMatch[0][2]",
+                        "message": ("The final expression must not be empty"),
+                    },
+                ),
+            ],
+            {},
+            id="invalid-empty-final-expression",
+        ),
+        pytest.param(
+            {"foo.json": '["content"]'},
+            [["foo", "bar", "contains(", "baz"]],
+            None,
+            [
+                (
+                    InterruptingError,
+                    {
+                        "definition": ".crossJMESPathsMatch[0][2]",
+                        "message": (
+                            "Invalid JMESPath expression 'contains('."
+                            " Expected to return 'baz', raised JMESPath"
+                            " incomplete expression error: Invalid"
+                            " jmespath expression: Incomplete expression:\n"
+                            '"contains("\n          ^'
+                        ),
+                        "file": "foo.json",
+                    },
+                ),
+            ],
+            {},
+            id="invalid-final-expression-compilation",
+        ),
+        pytest.param(
+            {"foo.json": '["content"]'},
+            [["contains(", "foo", "bar", "baz"]],
+            None,
+            [
+                (
+                    InterruptingError,
+                    {
+                        "definition": ".crossJMESPathsMatch[0][0]",
+                        "message": (
+                            "Invalid JMESPath expression 'contains('."
+                            " Raised JMESPath incomplete expression error:"
+                            " Invalid jmespath expression: Incomplete"
+                            " expression:\n"
+                            '"contains("\n          ^'
+                        ),
+                    },
+                ),
+            ],
+            {},
+            id="invalid-files-expression-compilation",
+        ),
+        pytest.param(
+            {"foo.json": "[5]"},
+            [["contains([0], 'hello')", "foo", "bar", "baz"]],
+            None,
+            [
+                (
+                    InterruptingError,
+                    {
+                        "definition": ".crossJMESPathsMatch[0][0]",
+                        "file": "foo.json",
+                        "message": (
+                            "Invalid JMESPath \"contains([0], 'hello')\"."
+                            " Raised JMESPath type error: In function"
+                            " contains(), invalid type for value: 5,"
+                            " expected one of: ['array', 'string'],"
+                            ' received: "number"'
+                        ),
+                    },
+                ),
+            ],
+            {},
+            id="invalid-files-expression-evaluation",
+        ),
+        pytest.param(
+            {"foo.json": "[5]"},
+            [["[0]", 5, "bar", "baz"]],
+            None,
+            [
+                (
+                    InterruptingError,
+                    {
+                        "definition": ".crossJMESPathsMatch[0][1]",
+                        "message": (
+                            "The file path and expression tuple"
+                            " must be of type array"
+                        ),
+                    },
+                ),
+            ],
+            {},
+            id="invalid-other-file-expression-type",
+        ),
+        pytest.param(
+            {"foo.json": "[5]"},
+            [["[0]", ["foo"], "bar", "baz"]],
+            None,
+            [
+                (
+                    InterruptingError,
+                    {
+                        "definition": ".crossJMESPathsMatch[0][1]",
+                        "message": (
+                            "The file path and expression tuple"
                             " must be of length 2"
                         ),
-                        "definition": ".crossJMESPathsMatch[0][1]",
                     },
                 ),
             ],
-            id="invalid-ev-length",
+            {},
+            id="invalid-other-file-expression-length",
         ),
         pytest.param(
-            {},
-            [["foo", [5, "b"]]],
+            {"foo.json": "[5]"},
+            [["[0]", [5, "foo"], "bar", "baz"]],
             None,
             [
                 (
                     InterruptingError,
                     {
-                        "message": (
-                            "The file from which the expected value"
-                            " will be taken must be of type string"
-                        ),
                         "definition": ".crossJMESPathsMatch[0][1][0]",
+                        "message": "The file path must be of type string",
                     },
                 ),
             ],
-            id="invalid-ev-file-type",
+            {},
+            id="invalid-other-file-type",
         ),
         pytest.param(
-            {},
-            [["foo", ["a", 5]]],
+            {"foo.json": "[5]"},
+            [["[0]", ["", "foo"], "bar", "baz"]],
             None,
             [
                 (
                     InterruptingError,
                     {
-                        "message": (
-                            "The JMES path expression to query the file"
-                            " from which the expected value will be"
-                            " taken must be of type string"
-                        ),
-                        "definition": ".crossJMESPathsMatch[0][1][1]",
+                        "definition": ".crossJMESPathsMatch[0][1][0]",
+                        "message": "The file path must not be empty",
                     },
                 ),
             ],
-            id="invalid-ev-expression-type",
+            {},
+            id="invalid-empty-other-file",
         ),
         pytest.param(
-            {"foo.ext": False},
-            [["foo", ["bar", "baz"]]],
+            {"foo.json": "[5]"},
+            [["[0]", ["foo", 5], "bar", "baz"]],
+            None,
+            [
+                (
+                    InterruptingError,
+                    {
+                        "definition": ".crossJMESPathsMatch[0][1][1]",
+                        "message": "The expression must be of type string",
+                    },
+                ),
+            ],
+            {},
+            id="invalid-other-expression-type",
+        ),
+        pytest.param(
+            {"foo.json": "[5]"},
+            [["[0]", ["foo", ""], "bar", "baz"]],
+            None,
+            [
+                (
+                    InterruptingError,
+                    {
+                        "definition": ".crossJMESPathsMatch[0][1][1]",
+                        "message": "The expression must not be empty",
+                    },
+                ),
+            ],
+            {},
+            id="invalid-empty-other-expression",
+        ),
+        pytest.param(
+            {"foo.json": "[5]"},
+            [["[0]", ["qux.ext", "type("], "bar", "baz"]],
+            None,
+            [
+                (
+                    InterruptingError,
+                    {
+                        "definition": ".crossJMESPathsMatch[0][1]",
+                        "message": (
+                            "Invalid JMESPath expression 'type('."
+                            " Expected to return from applying the"
+                            " expresion 'type(' to the file 'qux.ext',"
+                            " raised JMESPath incomplete expression"
+                            " error: Invalid jmespath expression:"
+                            " Incomplete expression:\n"
+                            '"type("\n      ^'
+                        ),
+                        "file": "qux.ext",
+                    },
+                ),
+            ],
+            {},
+            id="invalid-other-expression-compilation",
+        ),
+        pytest.param(
+            {"foo.json": "[5]", "qux.ext": '{"foo": 8}'},
+            [["[0]", ["qux.ext", "contains(foo, 'hello')"], "bar", "baz"]],
+            None,
+            [
+                (
+                    InterruptingError,
+                    {
+                        "definition": ".crossJMESPathsMatch[0][1]",
+                        "message": (
+                            "Invalid JMESPath \"contains(foo, 'hello')\"."
+                            " Raised JMESPath type error: In function"
+                            " contains(), invalid type for value: 8,"
+                            " expected one of: ['array', 'string'],"
+                            ' received: "number"'
+                        ),
+                        "file": "qux.ext",
+                    },
+                ),
+            ],
+            {},
+            id="invalid-other-expression-evaluation",
+        ),
+        pytest.param(
+            {"foo.json": "[5]", "qux.ext": '{"foo": 8}'},
+            [["[0]", ["qux.ext", "foo"], "contains([1], 'hello')", "baz"]],
+            None,
+            [
+                (
+                    InterruptingError,
+                    {
+                        "definition": ".crossJMESPathsMatch[0][2]",
+                        "message": (
+                            "Invalid JMESPath \"contains([1], 'hello')\"."
+                            " Raised JMESPath type error: In function"
+                            " contains(), invalid type for value: 8,"
+                            " expected one of: ['array', 'string'],"
+                            ' received: "number"'
+                        ),
+                        "file": "foo.json",
+                    },
+                ),
+            ],
+            {},
+            id="invalid-final-expression-evaluation",
+        ),
+        pytest.param(
+            {"foo.json": "[5]"},
+            [
+                [
+                    "[0]",
+                    ["qux.ext", "foo"],
+                    "[contains(@, `5`), contains(@, `8`)]",
+                    [True, True],
+                ],
+            ],
             None,
             [],
-            id="unexistent-file-skips",
+            {"qux.ext": '{"foo": 8}'},
+            id="match",
         ),
         pytest.param(
-            {"foo/": None},
-            [["foo", ["bar", "baz"]]],
+            {"foo.json": "[5]"},
+            [
+                [
+                    "[0]",
+                    ["qux.ext", "foo"],
+                    "[contains(@, `5`), contains(@, `7`)]",
+                    [True, True],
+                ],
+            ],
+            None,
+            [
+                (
+                    Error,
+                    {
+                        "definition": ".crossJMESPathsMatch[0]",
+                        "file": "foo.json",
+                        "message": (
+                            "JMESPath '[contains(@, `5`), contains(@, `7`)]'"
+                            " does not match. Expected [True, True], returned"
+                            " [True, False]"
+                        ),
+                    },
+                ),
+            ],
+            {"qux.ext": '{"foo": 8}'},
+            id="not-match",
+        ),
+        pytest.param(
+            {"foo.json": "[5]"},
+            [
+                [
+                    "[0]",
+                    ["bar.ext", "foo"],
+                    ["baz.ext", "foo"],
+                    (
+                        "[contains(@, `5`), contains(@, `7`),"
+                        " contains(@, `8`), contains(@, `9`)]"
+                    ),
+                    [True, True],
+                ],
+            ],
+            None,
+            [
+                (
+                    Error,
+                    {
+                        "definition": ".crossJMESPathsMatch[0]",
+                        "file": "foo.json",
+                        "message": (
+                            "JMESPath '[contains(@, `5`), contains(@, `7`),"
+                            " contains(@, `8`), contains(@, `9`)]'"
+                            " does not match. Expected [True, True], returned"
+                            " [True, False, True, True]"
+                        ),
+                    },
+                ),
+            ],
+            {"bar.ext": '{"foo": 8}', "baz.ext": '{"foo": 9}'},
+            id="not-match-multiple-other-files",
+        ),
+        pytest.param(
+            {"foo.json": False},
+            [
+                [
+                    "@",
+                    ["qux.ext", "foo"],
+                    "@",
+                    True,
+                ],
+            ],
+            None,
+            [],
+            {},
+            id="file-not-exists",
+        ),
+        pytest.param(
+            {"foo": None},
+            [
+                [
+                    "@",
+                    ["qux.ext", "foo"],
+                    "@",
+                    True,
+                ],
+            ],
             None,
             [
                 (
                     InterruptingError,
                     {
                         "definition": ".files[0]",
+                        "file": "foo",
                         "message": (
                             "A JMES path can not be applied to a directory"
                         ),
-                        "file": "foo/",
                     },
                 ),
             ],
-            id="invalid-application-against-directory",
+            {},
+            id="verb-applyied-to-directory",
         ),
         pytest.param(
-            {"foo.json": '{"a": 4}'},
-            [["contains(keys(@", ["foo.json", "baz"]]],
-            None,
+            {"foo.json": '{"bar": {"baz": true}}'},
             [
-                (
-                    InterruptingError,
-                    {
-                        "definition": ".crossJMESPathsMatch[0][0]",
-                        "message": (
-                            "Invalid JMESPath expression 'contains(keys(@'."
-                            " Expected to return from applying the"
-                            " expresion 'baz' to the file 'foo.json',"
-                            " raised JMESPath incomplete expression error:"
-                            " Invalid jmespath expression:"
-                            " Incomplete expression:\n"
-                            '"contains(keys(@"\n'
-                            "                ^"
-                        ),
-                        "file": "foo.json",
-                    },
-                ),
+                [
+                    "bar",
+                    "[0].baz",
+                    True,
+                ],
             ],
-            id="invalid-expression-compilation",
-        ),
-        pytest.param(
-            {"foo.json": '{"a": 4}'},
-            [["a", ["foo.json", "contains(keys(@"]]],
-            None,
-            [
-                (
-                    InterruptingError,
-                    {
-                        "definition": ".crossJMESPathsMatch[0][1][1]",
-                        "message": (
-                            "Invalid JMESPath expression 'contains(keys(@'."
-                            " Expected to return from applying the"
-                            " expresion 'contains(keys(@' to the file"
-                            " 'foo.json', raised JMESPath incomplete"
-                            " expression error: Invalid jmespath expression:"
-                            " Incomplete expression:\n"
-                            '"contains(keys(@"\n'
-                            "                ^"
-                        ),
-                        "file": "foo.json",
-                    },
-                ),
-            ],
-            id="invalid-ev-expression-compilation",
-        ),
-        pytest.param(
-            {"foo.json": '{"a": 4}'},
-            [["contains(@)", ["foo.json", "a"]]],
-            None,
-            [
-                (
-                    Error,
-                    {
-                        "definition": ".crossJMESPathsMatch[0]",
-                        "message": (
-                            "Invalid JMESPath 'contains(@)'."
-                            " Expected to return 4, raised"
-                            " JMESPath arity error: Expected 2 arguments"
-                            " for function contains(),"
-                            " received 1"
-                        ),
-                        "file": "foo.json",
-                    },
-                ),
-            ],
-            id="invalid-expression-evaluation",
-        ),
-        pytest.param(
-            {"foo.json": '{"a": {"b": 4}}'},
-            [["b", ["foo.json", "contains(@)"]]],
-            None,
-            [
-                (
-                    Error,
-                    {
-                        "definition": ".crossJMESPathsMatch[0][1]",
-                        "message": (
-                            "Invalid JMESPath 'contains(@)'."
-                            " Raised JMESPath arity error: Expected 2"
-                            " arguments for function contains(), received 1"
-                        ),
-                        "file": "foo.json",
-                    },
-                ),
-            ],
-            id="invalid-ev-expression-evaluation",
-        ),
-        pytest.param(
-            {"foo.json": '{"a": 4}'},
-            [["b", ["foo.json", "a"]]],
-            None,
-            [
-                (
-                    Error,
-                    {
-                        "definition": ".crossJMESPathsMatch[0]",
-                        "message": (
-                            "JMESPath 'b' does not match."
-                            " Expected 4, returned None"
-                        ),
-                        "file": "foo.json",
-                    },
-                ),
-            ],
-            id="expression-not-match",
-        ),
-        pytest.param(
-            {"foo.json": '{"a": 4, "b": 4}'},
-            [["b", ["foo.json", "b"]]],
             None,
             [],
-            id="expression-match",
-        ),
-        pytest.param(
-            {"foo.json": '{"a": 4, "b": 4}'},
-            [["b", ["bar.json", "b"]]],
-            None,
-            [
-                (
-                    InterruptingError,
-                    {
-                        "definition": ".crossJMESPathsMatch[0][1][0]",
-                        "file": "bar.json",
-                        "message": "File 'bar.json' does not exist",
-                    },
-                ),
-            ],
-            id="ev-file-not-exists",
+            {},
+            id="other-files-are-optional",
         ),
     ),
 )
@@ -1007,6 +1191,7 @@ def test_crossJMESPathsMatch(
     value,
     rule,
     expected_results,
+    additional_files,
     assert_project_config_plugin_action,
 ):
     assert_project_config_plugin_action(
@@ -1016,4 +1201,5 @@ def test_crossJMESPathsMatch(
         value,
         rule,
         expected_results,
+        additional_files=additional_files,
     )
