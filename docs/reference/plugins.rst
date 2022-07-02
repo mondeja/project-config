@@ -360,7 +360,7 @@ the rule. For example, the next configuration would not raise errors:
          {
            rules: [
              {
-               files: ["file.json"],
+               files: ["foo.json"],
                crossJMESPathsMatch: [
                  ["bar", "[0].baz", 7],
                ]
@@ -368,7 +368,7 @@ the rule. For example, the next configuration would not raise errors:
            ]
          }
 
-   .. tab:: file.json
+   .. tab:: foo.json
 
       .. code-block:: json
 
