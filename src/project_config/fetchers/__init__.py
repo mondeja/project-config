@@ -71,7 +71,10 @@ def fetch(url: str, **kwargs: t.Any) -> FetchResult:
         raise SchemeProtocolNotImplementedError(scheme)
 
     string = getattr(mod, "fetch")(url_parts, **kwargs)
-    return serialize_for_url(url, string)
+    try:
+        return serialize_for_url(url, string)
+    except SerializerError as exc:
+        raise FetchError(exc.message)
 
 
 def resolve_maybe_relative_url(url: str, parent_url: str, rootdir: str) -> str:
