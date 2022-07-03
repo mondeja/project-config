@@ -1,5 +1,3 @@
-import contextlib
-import io
 import os
 
 import pytest
@@ -62,17 +60,18 @@ def test_examples_check(
     expected_stderr,
     interface,
     chdir,
+    capsys,
 ):
     args = ["--nocolor", "check"]
 
     # from command line
     if interface == "CLI":
-        stderr_stream = io.StringIO()
-        with chdir(example_dir), contextlib.redirect_stderr(stderr_stream):
+        with chdir(example_dir):
             exitcode = run(args)
-            stderr = stderr_stream.getvalue()
-            assert exitcode == expected_exitcode, stderr
-            assert stderr == expected_stderr
+            out, err = capsys.readouterr()
+            assert exitcode == expected_exitcode, err
+            assert err == expected_stderr
+            assert out == ""
     else:
         # from API
         with chdir(example_dir):
