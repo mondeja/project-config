@@ -1,0 +1,6 @@
+rules:
+  - files:
+      - .project-config.toml
+    JMESPathsMatch:
+      - - style
+        - gh://mondeja/project-config/tests/data/styles/foo/style-1.json5
