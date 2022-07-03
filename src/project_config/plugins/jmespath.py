@@ -19,6 +19,7 @@ from project_config import (
 )
 from project_config.compat import cached_function, shlex_join
 from project_config.exceptions import ProjectConfigException
+from project_config.serializers import SerializerError
 
 
 ALL_JMESPATH_FUNCTION_TYPES = list(jmespath.functions.REVERSE_TYPES_MAP.keys())
@@ -431,6 +432,14 @@ class JMESPathPlugin:
         for fpath, jmespath_match_tuples in value.items():
             fcontent = tree.get_file_content(fpath)
             if fcontent is None:
+                yield InterruptingError, {
+                    "message": (
+                        "The file to check if matches against JMES paths does"
+                        " not exist"
+                    ),
+                    "definition": f".ifJMESPathsMatch[{fpath}]",
+                    "file": fpath,
+                }
                 continue
             elif not isinstance(fcontent, str):
                 yield InterruptingError, {
@@ -440,7 +449,15 @@ class JMESPathPlugin:
                 }
                 continue
 
-            instance = tree.serialize_file(fpath)
+            try:
+                instance = tree.serialize_file(fpath)
+            except SerializerError as exc:
+                yield InterruptingError, {
+                    "message": exc.message,
+                    "definition": f".ifJMESPathsMatch[{fpath}]",
+                    "file": fpath,
+                }
+                continue
 
             for e, (expression, expected_value) in enumerate(
                 jmespath_match_tuples,
@@ -692,7 +709,26 @@ class JMESPathPlugin:
                         }
                         return
 
-                    other_instance = tree.serialize_file(other_fpath)
+                    try:
+                        other_instance = tree.serialize_file(other_fpath)
+                    except FileNotFoundError as exc:
+                        yield InterruptingError, {
+                            "message": exc.args[0],
+                            "definition": (
+                                f".crossJMESPathsMatch[{i}][{pipe_index}][0]"
+                            ),
+                            "file": other_fpath,
+                        }
+                        return
+                    except SerializerError as exc:
+                        yield InterruptingError, {
+                            "message": exc.message,
+                            "definition": (
+                                f".crossJMESPathsMatch[{i}][{pipe_index}][0]"
+                            ),
+                            "file": other_fpath,
+                        }
+                        return
 
                     try:
                         other_result = _evaluate_JMESPath(

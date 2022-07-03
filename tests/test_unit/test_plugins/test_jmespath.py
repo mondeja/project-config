@@ -568,8 +568,21 @@ def test_JMESPathsMatch(
             {"foo.ext": False},
             {"bar.ext": [["foo", "bar"]]},
             None,
-            [(ResultValue, True)],
-            id="unexistent-file-skips",
+            [
+                (
+                    InterruptingError,
+                    {
+                        "definition": ".ifJMESPathsMatch[bar.ext]",
+                        "file": "bar.ext",
+                        "message": (
+                            "The file to check if matches against JMES paths"
+                            " does not exist"
+                        ),
+                    },
+                ),
+                (ResultValue, True),
+            ],
+            id="unexistent-file",
         ),
         pytest.param(
             {"bar/": None},
@@ -586,11 +599,29 @@ def test_JMESPathsMatch(
                         "file": "bar/",
                     },
                 ),
-                # this result does not matter because the check will be
-                # interrupted because of the previous InterruptingError
                 (ResultValue, True),
             ],
-            id="invalid-application-against-directory",
+            id="directory",
+        ),
+        pytest.param(
+            {"foo.json": '{"a":'},
+            {"foo.json": [["a", "b"]]},
+            None,
+            [
+                (
+                    InterruptingError,
+                    {
+                        "definition": ".ifJMESPathsMatch[foo.json]",
+                        "file": "foo.json",
+                        "message": (
+                            "'foo.json' can't be serialized as a valid object:"
+                            " Expecting value: line 1 column 6 (char 5)"
+                        ),
+                    },
+                ),
+                (ResultValue, True),
+            ],
+            id="unserializable-file",
         ),
         pytest.param(
             {"foo.json": "{}"},
@@ -1183,6 +1214,58 @@ def test_ifJMESPathsMatch(
             [],
             {},
             id="other-files-are-optional",
+        ),
+        pytest.param(
+            {"foo.json": '{"bar": {"baz": true}}'},
+            [
+                [
+                    "bar",
+                    ["qux.ext", "foo"],
+                    "baz",
+                    True,
+                ],
+            ],
+            None,
+            [
+                (
+                    InterruptingError,
+                    {
+                        "definition": ".crossJMESPathsMatch[0][1][0]",
+                        "file": "qux.ext",
+                        "message": "File 'qux.ext' does not exist",
+                    },
+                ),
+            ],
+            {},
+            id="unexistent-other-file-raises-error",
+        ),
+        pytest.param(
+            {"foo.json": '{"bar": {"baz": true}}'},
+            [
+                [
+                    "bar",
+                    ["qux.json", "foo"],
+                    "baz",
+                    True,
+                ],
+            ],
+            None,
+            [
+                (
+                    InterruptingError,
+                    {
+                        "definition": ".crossJMESPathsMatch[0][1][0]",
+                        "file": "qux.json",
+                        "message": (
+                            "'qux.json' can't be serialized as a valid object:"
+                            " Expecting property name enclosed in double"
+                            " quotes: line 1 column 2 (char 1)"
+                        ),
+                    },
+                ),
+            ],
+            {"qux.json": "{"},
+            id="unserializable-other-file-raises-error",
         ),
     ),
 )
