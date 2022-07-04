@@ -174,11 +174,15 @@ class Tree:
         try:
             result = self.serialized_files_cache[normalized_fpath]
         except KeyError:
-            file_content = self.get_file_content(fpath)
-            if file_content is None:
-                raise FileNotFoundError(f"File '{fpath}' does not exist")
-
-            result = serialize_for_url(fpath, file_content)  # type: ignore
+            fcontent = self.get_file_content(fpath)
+            if fcontent is None:
+                raise FileNotFoundError(
+                    f"No such file or directory: '{fpath}'",
+                )
+            result = serialize_for_url(
+                fpath,
+                fcontent,  # type: ignore
+            )
             self.serialized_files_cache[normalized_fpath] = result
         return result
 
