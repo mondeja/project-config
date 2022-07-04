@@ -1,0 +1,8 @@
+project\_config.fetchers.https module
+=====================================
+
+.. automodule:: project_config.fetchers.https
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:

@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>project_config.serializers &mdash; project-config 0.4.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/tabs.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/bolditalic.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/override-styles.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/tabs.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> project-config
+          </a>
+              <div class="version">
+                0.4
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Quickstart</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../basic-usage.html">Basic usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/cli.html">project-config CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/config.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/styling.html">Styling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/plugins.html">Plugins</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">In depth</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../in-depth/rationale.html">Rationale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../in-depth/serialization.html">Objects serialization</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For developers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/plugins.html">Writing third party plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/reporters.html">Writing third party reporters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/reference/modules.html">Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">project-config</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      <li>project_config.serializers</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for project_config.serializers</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Object serializers.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">functools</span>
+<span class="kn">import</span> <span class="nn">importlib</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">typing</span> <span class="k">as</span> <span class="nn">t</span>
+<span class="kn">import</span> <span class="nn">urllib.parse</span>
+
+<span class="kn">from</span> <span class="nn">identify</span> <span class="kn">import</span> <span class="n">identify</span>
+
+<span class="kn">from</span> <span class="nn">project_config.compat</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">NotRequired</span><span class="p">,</span>
+    <span class="n">Protocol</span><span class="p">,</span>
+    <span class="n">TypeAlias</span><span class="p">,</span>
+    <span class="n">TypedDict</span><span class="p">,</span>
+    <span class="n">tomllib_package_name</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">project_config.exceptions</span> <span class="kn">import</span> <span class="n">ProjectConfigException</span>
+
+
+<span class="n">SerializerResult</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="SerializerFunction"><a class="viewcode-back" href="../../dev/reference/project_config.serializers.html#project_config.serializers.SerializerFunction">[docs]</a><span class="k">class</span> <span class="nc">SerializerFunction</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Typecheck protocol for function resolved by serialization factory.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span>  <span class="c1"># noqa: D102</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">string</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SerializerResult</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+        <span class="o">...</span></div>
+
+
+<div class="viewcode-block" id="SerializerError"><a class="viewcode-back" href="../../dev/reference/project_config.serializers.html#project_config.serializers.SerializerError">[docs]</a><span class="k">class</span> <span class="nc">SerializerError</span><span class="p">(</span><span class="n">ProjectConfigException</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Error happened serializing content as JSON.&quot;&quot;&quot;</span></div>
+
+
+<span class="n">SerializerFunctionKwargs</span><span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="SerializerDefinitionType"><a class="viewcode-back" href="../../dev/reference/project_config.serializers.html#project_config.serializers.SerializerDefinitionType">[docs]</a><span class="k">class</span> <span class="nc">SerializerDefinitionType</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Serializer definition type.&quot;&quot;&quot;</span>
+
+    <span class="n">module</span><span class="p">:</span> <span class="nb">str</span>
+
+    <span class="n">function</span><span class="p">:</span> <span class="n">NotRequired</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">function_kwargs_from_url_path</span><span class="p">:</span> <span class="n">NotRequired</span><span class="p">[</span>
+        <span class="n">t</span><span class="o">.</span><span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="n">SerializerFunctionKwargs</span><span class="p">]</span>
+    <span class="p">]</span></div>
+
+
+<span class="n">SerializerDefinitionsType</span><span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">SerializerDefinitionType</span><span class="p">]</span>
+
+<span class="n">serializers</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">SerializerDefinitionsType</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;.json&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;json&quot;</span><span class="p">}],</span>
+    <span class="s2">&quot;.json5&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;pyjson5&quot;</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;json5&quot;</span><span class="p">}],</span>
+    <span class="s2">&quot;.yaml&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="c1"># Implementation notes:</span>
+            <span class="c1">#</span>
+            <span class="c1"># PyYaml is currently using the Yaml 1.1 specification,</span>
+            <span class="c1"># which converts some words like `on` and `off` to `True`</span>
+            <span class="c1"># and `False`. This leads to problems, for example, checking</span>
+            <span class="c1"># `on.` objects in Github workflows.</span>
+            <span class="c1">#</span>
+            <span class="c1"># There is an issue open to track the progress to support</span>
+            <span class="c1"># YAML 1.2 at https://github.com/yaml/pyyaml/issues/486</span>
+            <span class="c1">#</span>
+            <span class="c1"># Comparison of v1.1 vs v1.2 at:</span>
+            <span class="c1"># https://perlpunk.github.io/yaml-test-schema/schemas.html</span>
+            <span class="c1">#</span>
+            <span class="c1"># &quot;module&quot;: &quot;yaml&quot;,</span>
+            <span class="c1"># &quot;function&quot;: &quot;load&quot;,</span>
+            <span class="c1"># &quot;function_kwargs&quot;: {</span>
+            <span class="c1">#    &quot;Loader&quot;: {</span>
+            <span class="c1">#        &quot;module&quot;: &quot;yaml&quot;,</span>
+            <span class="c1">#        &quot;object&quot;: &quot;CSafeLoader&quot;,</span>
+            <span class="c1">#        &quot;object_fallback&quot;: &quot;SafeLoader&quot;,</span>
+            <span class="c1">#    },</span>
+            <span class="c1"># },</span>
+            <span class="c1">#</span>
+            <span class="c1"># So we use ruamel.yaml, which supports v1.2 by default</span>
+            <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;project_config.serializers.yaml&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;.toml&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="n">tomllib_package_name</span><span class="p">}],</span>
+    <span class="s2">&quot;.ini&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;project_config.serializers.ini&quot;</span><span class="p">}],</span>
+    <span class="s2">&quot;.editorconfig&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;project_config.serializers.editorconfig&quot;</span><span class="p">}],</span>
+    <span class="s2">&quot;.py&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;project_config.serializers.python&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;function_kwargs_from_url_path&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">path</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;namespace&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;__file__&quot;</span><span class="p">:</span> <span class="n">path</span><span class="p">},</span>
+            <span class="p">},</span>
+        <span class="p">},</span>
+    <span class="p">],</span>
+<span class="p">}</span>
+
+<span class="n">serializers_fallback</span><span class="p">:</span> <span class="n">SerializerDefinitionsType</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span><span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;project_config.serializers.text&quot;</span><span class="p">},</span>
+<span class="p">]</span>
+
+
+<div class="viewcode-block" id="_identify_serializer"><a class="viewcode-back" href="../../dev/reference/project_config.serializers.html#project_config.serializers._identify_serializer">[docs]</a><span class="k">def</span> <span class="nf">_identify_serializer</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SerializerDefinitionsType</span><span class="p">:</span>
+    <span class="n">serializer</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">identify</span><span class="o">.</span><span class="n">tags_from_filename</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+        <span class="k">if</span> <span class="sa">f</span><span class="s2">&quot;.</span><span class="si">{</span><span class="n">tag</span><span class="si">}</span><span class="s2">&quot;</span> <span class="ow">in</span> <span class="n">serializers</span><span class="p">:</span>
+            <span class="n">serializer</span> <span class="o">=</span> <span class="n">serializers</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;.</span><span class="si">{</span><span class="n">tag</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span>
+            <span class="k">break</span>
+    <span class="k">return</span> <span class="n">serializer</span> <span class="k">if</span> <span class="n">serializer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">serializers_fallback</span></div>
+
+
+<div class="viewcode-block" id="_get_serializer"><a class="viewcode-back" href="../../dev/reference/project_config.serializers.html#project_config.serializers._get_serializer">[docs]</a><span class="k">def</span> <span class="nf">_get_serializer</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SerializerFunction</span><span class="p">:</span>
+    <span class="n">url_parts</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">urlsplit</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="n">ext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">url_parts</span><span class="o">.</span><span class="n">path</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">serializer</span> <span class="o">=</span> <span class="n">serializers</span><span class="p">[</span><span class="n">ext</span><span class="p">]</span>
+    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+        <span class="c1"># try to guess the file type with identify</span>
+        <span class="n">serializer</span> <span class="o">=</span> <span class="n">_identify_serializer</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">url_parts</span><span class="o">.</span><span class="n">path</span><span class="p">))</span>
+
+    <span class="c1"># prepare serializer function</span>
+    <span class="n">serializer_definition</span><span class="p">,</span> <span class="n">module</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">serializer_def</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">serializer</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">module</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">serializer_def</span><span class="p">[</span><span class="s2">&quot;module&quot;</span><span class="p">])</span>
+        <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+            <span class="c1"># if module for implementation is not importable, try next maybe</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">serializer</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">raise</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">serializer_definition</span> <span class="o">=</span> <span class="n">serializer_def</span>
+            <span class="k">break</span>
+    <span class="n">serializer_definition</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span>
+        <span class="n">SerializerDefinitionType</span><span class="p">,</span>
+        <span class="n">serializer_definition</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">loader_function</span><span class="p">:</span> <span class="n">SerializerFunction</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span>
+        <span class="n">module</span><span class="p">,</span>
+        <span class="n">serializer_definition</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;function&quot;</span><span class="p">,</span> <span class="s2">&quot;loads&quot;</span><span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="n">function_kwargs</span><span class="p">:</span> <span class="n">SerializerFunctionKwargs</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    if &quot;function_kwargs&quot; in serializer:</span>
+<span class="sd">        function_kwargs = {}</span>
+<span class="sd">        for kwarg_name, kwarg_values in serializer[</span>
+<span class="sd">            &quot;function_kwargs&quot;</span>
+<span class="sd">        ].items():</span>
+<span class="sd">            mod = importlib.import_module(kwarg_values[&quot;module&quot;])</span>
+<span class="sd">            try:</span>
+<span class="sd">                obj = getattr(mod, kwarg_values[&quot;object&quot;])</span>
+<span class="sd">            except AttributeError:</span>
+<span class="sd">                # fallback object, as with pyyaml use CSafeLoader instead</span>
+<span class="sd">                # of SafeLoader if libyyaml bindings are available</span>
+<span class="sd">                if &quot;fallback_object&quot; in kwarg_values:</span>
+<span class="sd">                    obj = getattr(mod, kwarg_values[&quot;object&quot;])</span>
+<span class="sd">                else:</span>
+<span class="sd">                    raise</span>
+<span class="sd">            function_kwargs[kwarg_name] = obj</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="s2">&quot;function_kwargs_from_url_path&quot;</span> <span class="ow">in</span> <span class="n">serializer_definition</span><span class="p">:</span>
+        <span class="n">function_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+            <span class="n">serializer_definition</span><span class="p">[</span><span class="s2">&quot;function_kwargs_from_url_path&quot;</span><span class="p">](</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">url_parts</span><span class="o">.</span><span class="n">path</span><span class="p">),</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">loader_function</span><span class="p">,</span> <span class="o">**</span><span class="n">function_kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="_file_can_not_be_serialized_as_object_error"><a class="viewcode-back" href="../../dev/reference/project_config.serializers.html#project_config.serializers._file_can_not_be_serialized_as_object_error">[docs]</a><span class="k">def</span> <span class="nf">_file_can_not_be_serialized_as_object_error</span><span class="p">(</span>
+    <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">error_message</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">&#39; can&#39;t be serialized as a valid object:</span><span class="si">{</span><span class="n">error_message</span><span class="si">}</span><span class="s2">&quot;</span></div>
+
+
+<div class="viewcode-block" id="serialize_for_url"><a class="viewcode-back" href="../../dev/reference/project_config.serializers.html#project_config.serializers.serialize_for_url">[docs]</a><span class="k">def</span> <span class="nf">serialize_for_url</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">string</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SerializerResult</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Serializes to JSON a string according to the given URI.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        url (str): URI of the file, used to detect the type of the file,</span>
+<span class="sd">            either using the extension or through `identify`_.</span>
+<span class="sd">        string (str): File content to serialize.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: Result of the object serialization.</span>
+
+<span class="sd">    .. _identify: https://github.com/pre-commit/identify</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># serialize</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">_get_serializer</span><span class="p">(</span><span class="n">url</span><span class="p">)(</span><span class="n">string</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="c1"># handle exceptions in third party packages without importing them</span>
+        <span class="n">exc_class</span><span class="p">,</span> <span class="n">exc</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">()</span>
+        <span class="n">package_name</span> <span class="o">=</span> <span class="n">exc_class</span><span class="o">.</span><span class="vm">__module__</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">package_name</span> <span class="ow">in</span> <span class="p">(</span>  <span class="c1"># Examples:</span>
+            <span class="s2">&quot;json&quot;</span><span class="p">,</span>  <span class="c1"># json.serializer.JSONDecodeError</span>
+            <span class="s2">&quot;pyjson5&quot;</span><span class="p">,</span>  <span class="c1"># pyjson5.Json5IllegalCharacter</span>
+            <span class="s2">&quot;tomli&quot;</span><span class="p">,</span>  <span class="c1"># tomli.TOMLDecodeError</span>
+            <span class="c1"># &quot;tomlkit&quot;,  # tomlkit.exceptions.UnexpectedEofError</span>
+        <span class="p">):</span>
+            <span class="k">raise</span> <span class="n">SerializerError</span><span class="p">(</span>
+                <span class="n">_file_can_not_be_serialized_as_object_error</span><span class="p">(</span>
+                    <span class="n">url</span><span class="p">,</span>
+                    <span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="n">exc</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
+                <span class="p">),</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">package_name</span> <span class="o">==</span> <span class="s2">&quot;ruamel&quot;</span><span class="p">:</span>
+            <span class="c1"># Example: ruamel.yaml.scanner.ScannerError</span>
+            <span class="k">raise</span> <span class="n">SerializerError</span><span class="p">(</span>
+                <span class="n">_file_can_not_be_serialized_as_object_error</span><span class="p">(</span>
+                    <span class="n">url</span><span class="p">,</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="p">),</span>
+            <span class="p">)</span>
+        <span class="k">raise</span>  <span class="c1"># pragma: no cover</span>
+    <span class="k">return</span> <span class="n">result</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Álvaro Mondéjar Rubio.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
