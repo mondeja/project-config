@@ -8,7 +8,7 @@ import colored
 
 from project_config.compat import TypeAlias
 from project_config.exceptions import (
-    ProjectConfigCheckFailedBase,
+    ProjectConfigCheckFailed,
     ProjectConfigException,
 )
 from project_config.types import ErrorDict
@@ -34,7 +34,7 @@ class InvalidColors(ProjectConfigException):
 class BaseReporter(abc.ABC):
     """Base reporter from which all reporters inherit."""
 
-    exception_class = ProjectConfigCheckFailedBase
+    exception_class = ProjectConfigCheckFailed
 
     def __init__(
         self,
