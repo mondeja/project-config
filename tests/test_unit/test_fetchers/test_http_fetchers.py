@@ -6,7 +6,6 @@ import pytest
 from testing_helpers import TEST_SERVER_URL
 
 from project_config.fetchers import FetchError, fetch
-from project_config.serializers import SerializerError
 
 
 @pytest.mark.parametrize(
@@ -22,7 +21,7 @@ from project_config.serializers import SerializerError
         pytest.param(
             "download/bar.json",
             "foo",
-            SerializerError,
+            FetchError,
             (
                 "http://127.0.0.1:9997/download/bar.json?content=foo'"
                 " can't be serialized as a valid object:"

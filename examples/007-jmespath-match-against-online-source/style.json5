@@ -1,0 +1,18 @@
+{
+  rules: [
+    {
+      files: ["package.json"],
+      crossJMESPathsMatch: [
+        [
+          "license",
+          [
+            "gh://spdx/license-list-data/json/licenses.json",
+            "licenses[?isOsiApproved] | [?isDeprecatedLicenseId == `false`].licenseId",
+          ],
+          "contains([1], [0])",
+          true,
+        ],
+      ],
+    },
+  ],
+}

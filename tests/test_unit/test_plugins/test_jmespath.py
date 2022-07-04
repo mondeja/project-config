@@ -1,4 +1,5 @@
 import pytest
+from testing_helpers import mark_end2end
 
 from project_config import Error, InterruptingError, ResultValue
 from project_config.plugins.jmespath import JMESPathPlugin
@@ -1232,7 +1233,7 @@ def test_ifJMESPathsMatch(
                     {
                         "definition": ".crossJMESPathsMatch[0][1][0]",
                         "file": "qux.ext",
-                        "message": "File 'qux.ext' does not exist",
+                        "message": "'qux.ext' file not found",
                     },
                 ),
             ],
@@ -1285,4 +1286,87 @@ def test_crossJMESPathsMatch(
         rule,
         expected_results,
         additional_files=additional_files,
+    )
+
+
+@mark_end2end
+@pytest.mark.parametrize(
+    ("files", "value", "rule", "expected_results"),
+    (
+        pytest.param(
+            {"foo.json": '{"bar": {"baz": true}}'},
+            [
+                [
+                    "bar",
+                    [
+                        (
+                            "gh://mondeja/project-config/tests/data/styles"
+                            "/bar/baz.toml"
+                        ),
+                        "foo",
+                    ],
+                    "baz",
+                    True,
+                ],
+            ],
+            None,
+            [
+                (
+                    InterruptingError,
+                    {
+                        "definition": ".crossJMESPathsMatch[0][1][0]",
+                        "file": (
+                            "gh://mondeja/project-config/tests/data/"
+                            "styles/bar/baz.toml"
+                        ),
+                        "message": (
+                            "Impossible to fetch "
+                            "'https://raw.githubusercontent.com/mondeja/"
+                            "project-config/master/tests/data/styles/bar/"
+                            "baz.toml' after 0.5 seconds. Possibly caused by:"
+                            " HTTP Error 404: Not Found"
+                        ),
+                    },
+                ),
+            ],
+            id="unexistent-online-other-file-raises-error",
+        ),
+        pytest.param(
+            {"foo.json": '{"bar": {"baz": true}}'},
+            [
+                [
+                    "bar",
+                    [
+                        (
+                            "gh://mondeja/project-config/tests/data/styles/"
+                            "foo/style-1.json5"
+                        ),
+                        "extends",
+                    ],
+                    "[[0].baz, type([1])]",
+                    [True, "array"],
+                ],
+            ],
+            None,
+            [],
+            id="unexistent-online-other-file-ok",
+        ),
+    ),
+)
+def test_crossJMESPathsMatch_online_sources(
+    files,
+    value,
+    rule,
+    expected_results,
+    assert_project_config_plugin_action,
+    monkeypatch,
+):
+    monkeypatch.setenv("PROJECT_CONFIG_REQUESTS_TIMEOUT", "0.5")
+    assert_project_config_plugin_action(
+        JMESPathPlugin,
+        "crossJMESPathsMatch",
+        files,
+        value,
+        rule,
+        expected_results,
     )

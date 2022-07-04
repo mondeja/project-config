@@ -6,18 +6,22 @@ import typing as t
 import urllib.parse
 
 from project_config.compat import TypeAlias
-from project_config.exceptions import ProjectConfigNotImplementedError
+from project_config.exceptions import (
+    ProjectConfigException,
+    ProjectConfigNotImplementedError,
+)
 from project_config.serializers import (
     SerializerError,
     SerializerResult,
     serialize_for_url,
 )
+from project_config.utils.http import ProjectConfigTimeoutError
 
 
 FetchResult: TypeAlias = SerializerResult
 
 
-class FetchError(SerializerError):
+class FetchError(ProjectConfigException):
     """Error happened during the fetching of a resource."""
 
 
@@ -66,11 +70,17 @@ def fetch(url: str, **kwargs: t.Any) -> FetchResult:
     url_parts = urllib.parse.urlsplit(url)
     scheme = _get_scheme_from_urlparts(url_parts)
     try:
-        mod = importlib.import_module(f"project_config.fetchers.{scheme}")
+        module = importlib.import_module(f"project_config.fetchers.{scheme}")
     except ImportError:
         raise SchemeProtocolNotImplementedError(scheme)
 
-    string = getattr(mod, "fetch")(url_parts, **kwargs)
+    fetch_func = getattr(module, "fetch")
+    try:
+        string = fetch_func(url_parts, **kwargs)
+    except FileNotFoundError:
+        raise FetchError(f"'{url}' file not found")
+    except ProjectConfigTimeoutError as exc:
+        raise FetchError(exc.message)
     try:
         return serialize_for_url(url, string)
     except SerializerError as exc:

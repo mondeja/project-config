@@ -3,7 +3,6 @@ import re
 import pytest
 
 from project_config.fetchers import FetchError, fetch
-from project_config.serializers import SerializerError
 
 
 @pytest.mark.parametrize(
@@ -195,7 +194,7 @@ def test_fetch_existing_file(
     with chdir(tmp_path):
         if expected_error_message:
             with pytest.raises(
-                SerializerError,
+                FetchError,
                 match=re.escape(expected_error_message),
             ):
                 fetch(url)
