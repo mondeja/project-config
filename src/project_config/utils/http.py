@@ -1,5 +1,6 @@
 """HTTP/s utilities."""
 
+import os
 import time
 import typing as t
 import urllib.request
@@ -16,9 +17,16 @@ class ProjectConfigTimeoutError(ProjectConfigHTTPError):
     """Timeout error."""
 
 
-def _GET(url: str, timeout: int = 10, sleep: float = 1.0) -> str:
+def _GET(
+    url: str,
+    timeout: t.Optional[float] = None,
+    sleep: float = 1.0,
+) -> str:
     start = time.time()
-    end = start + (timeout or 0.01)
+    timeout = timeout or float(
+        os.environ.get("PROJECT_CONFIG_REQUESTS_TIMEOUT", 0.01),
+    )
+    end = start + timeout
     err = None
     while time.time() < end:
         try:

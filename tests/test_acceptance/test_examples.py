@@ -1,7 +1,7 @@
 import os
 
 import pytest
-from testing_helpers import rootdir
+from testing_helpers import mark_end2end, rootdir
 
 from project_config.__main__ import run
 from project_config.exceptions import ProjectConfigException
@@ -49,6 +49,7 @@ def _collect_examples():
     return examples
 
 
+@mark_end2end
 @pytest.mark.parametrize("interface", ("CLI", "API"))
 @pytest.mark.parametrize(
     ("example_dir", "expected_exitcode", "expected_stderr"),

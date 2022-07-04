@@ -52,6 +52,7 @@ contextlib-chdir = "^1"
 pytest-maybe-raises = "^0.1.1"
 pytest-mock = "^3"
 flask = "^2"
+pysetenv = "^1.0.1"
 
 [tool.poetry.group.doc.dependencies]
 Sphinx = "^4"
@@ -108,6 +109,7 @@ coverage html &&
 python -c 'import webbrowser as w;w.open("http://127.0.0.1:8088")' &&
 python -m http.server 8088 -b localhost -d htmlcov
 """
+"test:e2e" = "pysetenv PROJECT_CONFIG_TESTS_E2E=true coverage run -m pytest"
 doc = "python -m sphinx -n -T -E -W docs docs/_build/html"
 "doc:show" = """python -m sphinx -n -T -E -W docs docs/_build/html &&
 python -c 'import webbrowser as w;w.open("http://127.0.0.1:8089")' &&

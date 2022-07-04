@@ -4,6 +4,7 @@ import contextlib
 import copy
 import functools
 import inspect
+import os
 import pathlib
 import re
 import types
@@ -116,8 +117,11 @@ def project_config_plugin_action_asserter(
 
     plugin_method = getattr(plugin_class, plugin_method_name)
 
-    ctx = contextlib.nullcontext if not deprecated else pytest.deprecated_call
-    with ctx():
+    deprecated_ctx = (
+        contextlib.nullcontext if not deprecated else pytest.deprecated_call
+    )
+    with deprecated_ctx():
+        os.chdir(rootdir)
         results = list(
             plugin_method(
                 value,

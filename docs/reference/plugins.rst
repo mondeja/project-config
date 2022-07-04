@@ -322,6 +322,10 @@ The executed steps are:
 4. Execute ``"finalJMESPathExpression"`` against the temporal array.
 5. Compare the final result with ``expectedValue`` and raise error if not match.
 
+.. tip::
+
+   Other file paths can be URLs if you want to match against online sources.
+
 .. rubric:: Example
 
 The ``release`` field of a Sphinx configuration defined in a file

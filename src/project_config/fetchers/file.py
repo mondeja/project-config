@@ -3,14 +3,8 @@
 import os
 import urllib.parse
 
-from project_config.fetchers import FetchError
-
 
 def fetch(url_parts: urllib.parse.SplitResult) -> str:
     """Fetch a file, just read it from filesystem."""
-    url = url_parts.geturl()
-    try:
-        with open(os.path.expanduser(url), encoding="utf-8") as f:
-            return f.read()
-    except FileNotFoundError:
-        raise FetchError(f"'{url}' file not found")
+    with open(os.path.expanduser(url_parts.geturl()), encoding="utf-8") as f:
+        return f.read()

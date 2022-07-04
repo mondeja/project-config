@@ -5,6 +5,7 @@ import os
 import typing as t
 from dataclasses import dataclass
 
+from project_config.fetchers import fetch
 from project_config.serializers import serialize_for_url
 
 
@@ -179,4 +180,26 @@ class Tree:
 
             result = serialize_for_url(fpath, file_content)  # type: ignore
             self.serialized_files_cache[normalized_fpath] = result
+        return result
+
+    def fetch_file(self, url: str) -> t.Any:
+        """Fetch a file from online or offline sources given a url or path.
+
+        This method is a convenient cache wrapper for
+        :py:func:`project_config.fetchers.fetch`. Used by plugin actions
+        which need an object-serialized version of files to perform
+        operations against them, like the :ref:`reference/plugins:jmespath`
+        one.
+
+        Args:
+            url (str): Url or path to the file to fetch.
+
+        Returns:
+            object: Object-serialized version of the file.
+        """
+        try:
+            result = self.serialized_files_cache[url]
+        except KeyError:
+            result = fetch(url)  # type: ignore
+            self.serialized_files_cache[url] = result
         return result

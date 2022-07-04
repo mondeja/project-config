@@ -403,6 +403,18 @@ python-versions = ">=3.6.8"
 diagrams = ["railroad-diagrams", "jinja2"]
 
 [[package]]
+name = "pysetenv"
+version = "1.0.1"
+description = "A simple tool to set environment variables before running a command"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[package.extras]
+dev = ["coverage", "flake8 (>=3.0)", "pypandoc"]
+test = ["coverage", "flake8 (>=3.0)"]
+
+[[package]]
 name = "pytest"
 version = "7.1.2"
 description = "pytest: simple powerful testing with Python"
@@ -801,7 +813,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "997be8570dd32a9a292122a50a6f14262fe91b9172dcd8480b5758dcf89b7fa7"
+content-hash = "909ede385588fadc18b78f253924ef36cd3e7722ce9ffd240155d83d560a34c3"
 
 [metadata.files]
 alabaster = [
@@ -1105,6 +1117,10 @@ pyjson5 = [
 pyparsing = [
     {file = "pyparsing-3.0.9-py3-none-any.whl", hash = "sha256:5026bae9a10eeaefb61dab2f09052b9f4307d44aee4eda64b309723d8d206bbc"},
     {file = "pyparsing-3.0.9.tar.gz", hash = "sha256:2b020ecf7d21b687f219b71ecad3631f644a47f01403fa1d1036b0c6416d70fb"},
+]
+pysetenv = [
+    {file = "pysetenv-1.0.1-py2.py3-none-any.whl", hash = "sha256:d77afb3d53927bff0b8385ccfcf79db60ab024625582a5d5e221462e5029f927"},
+    {file = "pysetenv-1.0.1.tar.gz", hash = "sha256:381a3e52e550e22618cbb8fffa889fcb9bbf2bf079e0a055c0eb03c9d8431580"},
 ]
 pytest = [
     {file = "pytest-7.1.2-py3-none-any.whl", hash = "sha256:13d0e3ccfc2b6e26be000cb6568c832ba67ba32e719443bfe725814d3c42433c"},

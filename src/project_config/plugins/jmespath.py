@@ -19,6 +19,7 @@ from project_config import (
 )
 from project_config.compat import cached_function, shlex_join
 from project_config.exceptions import ProjectConfigException
+from project_config.fetchers import FetchError
 from project_config.serializers import SerializerError
 
 
@@ -710,17 +711,8 @@ class JMESPathPlugin:
                         return
 
                     try:
-                        other_instance = tree.serialize_file(other_fpath)
-                    except FileNotFoundError as exc:
-                        yield InterruptingError, {
-                            "message": exc.args[0],
-                            "definition": (
-                                f".crossJMESPathsMatch[{i}][{pipe_index}][0]"
-                            ),
-                            "file": other_fpath,
-                        }
-                        return
-                    except SerializerError as exc:
+                        other_instance = tree.fetch_file(other_fpath)
+                    except FetchError as exc:
                         yield InterruptingError, {
                             "message": exc.message,
                             "definition": (
