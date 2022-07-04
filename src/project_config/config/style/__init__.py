@@ -182,14 +182,10 @@ class Style:
         style["rules"] = style.pop("rules", [])
         if prepend:
             style["rules"] = new_rules + style["rules"]
-            for plugin in new_plugins:
-                if plugin not in style["plugins"]:
-                    style["plugins"].insert(0, plugin)
+            style["plugins"] = list(set(new_plugins + style["plugins"]))
         else:
             style["rules"].extend(new_rules)
-            for plugin in new_plugins:
-                if plugin not in style["plugins"]:
-                    style["plugins"].append(plugin)
+            style["plugins"] = list(set(style["plugins"] + new_plugins))
 
     def _validate_style_preparing_new_plugins(
         self,

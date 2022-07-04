@@ -201,3 +201,13 @@ def test_glob_with_symlink(tmp_path, chdir):
 
         with pytest.raises(StopIteration):
             next(generator)
+
+
+def test_serialize_unexistent_file(tmp_path, chdir):
+    tree = Tree(str(tmp_path))
+    with chdir(tmp_path):
+        with pytest.raises(
+            FileNotFoundError,
+            match=r"No such file or directory: 'foo\.ext'",
+        ):
+            tree.serialize_file("foo.ext")
