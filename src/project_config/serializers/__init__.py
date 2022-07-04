@@ -5,6 +5,7 @@ import importlib
 import os
 import sys
 import typing as t
+import urllib.parse
 
 from identify import identify
 
@@ -45,7 +46,7 @@ class SerializerDefinitionType(TypedDict):
     module: str
 
     function: NotRequired[str]
-    function_kwargs_from_url: NotRequired[
+    function_kwargs_from_url_path: NotRequired[
         t.Callable[[str], SerializerFunctionKwargs]
     ]
 
@@ -90,12 +91,16 @@ serializers: t.Dict[str, SerializerDefinitionsType] = {
     ".py": [
         {
             "module": "project_config.serializers.python",
-            "function_kwargs_from_url": lambda url: {
-                "namespace": {"__file__": url},
+            "function_kwargs_from_url_path": lambda path: {
+                "namespace": {"__file__": path},
             },
         },
     ],
 }
+
+serializers_fallback: SerializerDefinitionsType = [
+    {"module": "project_config.serializers.text"},
+]
 
 
 def _identify_serializer(filename: str) -> SerializerDefinitionsType:
@@ -104,16 +109,17 @@ def _identify_serializer(filename: str) -> SerializerDefinitionsType:
         if f".{tag}" in serializers:
             serializer = serializers[f".{tag}"]
             break
-    return serializer if serializer is not None else serializers[".json"]
+    return serializer if serializer is not None else serializers_fallback
 
 
 def _get_serializer(url: str) -> SerializerFunction:
-    ext = os.path.splitext(url)[-1]
+    url_parts = urllib.parse.urlsplit(url)
+    ext = os.path.splitext(url_parts.path)[-1]
     try:
         serializer = serializers[ext]
     except KeyError:
         # try to guess the file type with identify
-        serializer = _identify_serializer(os.path.basename(url))
+        serializer = _identify_serializer(os.path.basename(url_parts.path))
 
     # prepare serializer function
     serializer_definition, module = None, None
@@ -158,9 +164,11 @@ def _get_serializer(url: str) -> SerializerFunction:
             function_kwargs[kwarg_name] = obj
     """
 
-    if "function_kwargs_from_url" in serializer_definition:
+    if "function_kwargs_from_url_path" in serializer_definition:
         function_kwargs.update(
-            serializer_definition["function_kwargs_from_url"](url),
+            serializer_definition["function_kwargs_from_url_path"](
+                os.path.basename(url_parts.path),
+            ),
         )
 
     return functools.partial(loader_function, **function_kwargs)

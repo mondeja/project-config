@@ -107,7 +107,7 @@ Python
 For Python files, the global namespace exposed is serialized after
 executing them.
 
-* Loader: :py:func:`exec`
+* Loader: :py:func:`project_config.serializers.python.loads`
 
 .. tabs::
 
@@ -130,3 +130,27 @@ executing them.
    **project-config** CLI sets the environment variable ``PROJECT_CONFIG``
    while is running, which is useful if you want to expose the global namespaces
    of scripts only when the tool is running.
+
+****
+Text
+****
+
+Fallback for all serialized files. Just converts the string to an array
+of lines, excluding line endings.
+
+* Loader: :py:func:`project_config.serializers.text.loads`.
+
+.. tabs::
+
+   .. tab:: foo.txt
+
+      .. code-block:: text
+
+         bar
+         baz
+
+   .. tab:: object
+
+      .. code-block:: json
+
+         ["bar", "baz"]

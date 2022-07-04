@@ -684,8 +684,8 @@ def test_JMESPathsMatch(
             id="expression-not-match",
         ),
         pytest.param(
-            {"bar.ext": '{"foo": "bar"}'},
-            {"bar.ext": [["foo", "bar"]]},
+            {"bar.json": '{"foo": "bar"}'},
+            {"bar.json": [["foo", "bar"]]},
             None,
             [(ResultValue, True)],
             id="expression-match",
@@ -1040,8 +1040,8 @@ def test_ifJMESPathsMatch(
             id="invalid-other-expression-compilation",
         ),
         pytest.param(
-            {"foo.json": "[5]", "qux.ext": '{"foo": 8}'},
-            [["[0]", ["qux.ext", "contains(foo, 'hello')"], "bar", "baz"]],
+            {"foo.json": "[5]", "qux.json": '{"foo": 8}'},
+            [["[0]", ["qux.json", "contains(foo, 'hello')"], "bar", "baz"]],
             None,
             [
                 (
@@ -1055,7 +1055,7 @@ def test_ifJMESPathsMatch(
                             " expected one of: ['array', 'string'],"
                             ' received: "number"'
                         ),
-                        "file": "qux.ext",
+                        "file": "qux.json",
                     },
                 ),
             ],
@@ -1063,8 +1063,8 @@ def test_ifJMESPathsMatch(
             id="invalid-other-expression-evaluation",
         ),
         pytest.param(
-            {"foo.json": "[5]", "qux.ext": '{"foo": 8}'},
-            [["[0]", ["qux.ext", "foo"], "contains([1], 'hello')", "baz"]],
+            {"foo.json": "[5]", "qux.json": '{"foo": 8}'},
+            [["[0]", ["qux.json", "foo"], "contains([1], 'hello')", "baz"]],
             None,
             [
                 (
@@ -1090,14 +1090,14 @@ def test_ifJMESPathsMatch(
             [
                 [
                     "[0]",
-                    ["qux.ext", "foo"],
+                    ["qux.json", "foo"],
                     "[contains(@, `5`), contains(@, `8`)]",
                     [True, True],
                 ],
             ],
             None,
             [],
-            {"qux.ext": '{"foo": 8}'},
+            {"qux.json": '{"foo": 8}'},
             id="match",
         ),
         pytest.param(
@@ -1133,8 +1133,8 @@ def test_ifJMESPathsMatch(
             [
                 [
                     "[0]",
-                    ["bar.ext", "foo"],
-                    ["baz.ext", "foo"],
+                    ["bar.json", "foo"],
+                    ["baz.json", "foo"],
                     (
                         "[contains(@, `5`), contains(@, `7`),"
                         " contains(@, `8`), contains(@, `9`)]"
@@ -1158,7 +1158,7 @@ def test_ifJMESPathsMatch(
                     },
                 ),
             ],
-            {"bar.ext": '{"foo": 8}', "baz.ext": '{"foo": 9}'},
+            {"bar.json": '{"foo": 8}', "baz.json": '{"foo": 9}'},
             id="not-match-multiple-other-files",
         ),
         pytest.param(

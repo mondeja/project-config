@@ -33,7 +33,7 @@ def chdir():
     return chdir_ctx
 
 
-def _assert_minimal_valid_config(config, expected_style="foo"):
+def _assert_minimal_valid_config(config, expected_style="foo.json"):
     assert isinstance(config, dict)
     assert len(config) == 1
     assert config["style"] == expected_style
@@ -43,7 +43,9 @@ def _minimal_valid_config_with_style(value):
     return f"style = '{value}'"
 
 
-default_minimal_valid_config_string = _minimal_valid_config_with_style("foo")
+default_minimal_valid_config_string = _minimal_valid_config_with_style(
+    "foo.json",
+)
 
 
 @pytest.fixture

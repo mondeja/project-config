@@ -1,4 +1,4 @@
-"""Python namespace for dictionary serializing."""
+"""Object serializing for Python scripts namespaces."""
 
 import typing as t
 

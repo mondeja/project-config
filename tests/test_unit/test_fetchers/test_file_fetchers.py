@@ -18,31 +18,17 @@ from project_config.fetchers import FetchError, fetch
             "foo.txt",
             "foo.txt",
             "foo\nbar\n",
+            ["foo", "bar"],
             None,
-            (
-                "'foo.txt' can't be serialized as a valid object:"
-                " Expecting value: line 1 column 1 (char 0)"
-            ),
             id=".txt",
         ),
         pytest.param(
             "foo.txt",
             "foo.txt",
-            "{}",
-            {},
-            None,
-            id=".txt (valid JSON)",
-        ),
-        pytest.param(
-            "foo.json",
-            "foo.json",
             "",
+            [],
             None,
-            (
-                "'foo.json' can't be serialized as a valid object:"
-                " Expecting value: line 1 column 1 (char 0)"
-            ),
-            id=".txt (invalid JSON as empty)",
+            id=".txt (empty)",
         ),
         pytest.param(
             "foo.json",
