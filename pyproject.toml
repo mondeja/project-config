@@ -52,7 +52,7 @@ contextlib-chdir = "^1"
 pytest-maybe-raises = "^0.1.1"
 pytest-mock = "^3"
 flask = "^2"
-pysetenv = "^1.0.1"
+pysetenv = "^1"
 
 [tool.poetry.group.doc.dependencies]
 Sphinx = "^4"
