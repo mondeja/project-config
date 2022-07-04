@@ -135,6 +135,11 @@ def project_config_plugin_action_asserter(
         plugin_method_name,
     ), f"Plugin method name '{plugin_method_name}' must be public"
 
+    assert plugin_method_name.isidentifier(), (
+        f"Plugin method name '{plugin_method_name}' must be a valid Python"
+        " identifier"
+    )
+
     if assert_case_method_name:
         assert re.match(
             r"[A-Za-z]+((\d)|([A-Z0-9][a-z0-9]+))*([A-Z])?",
