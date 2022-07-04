@@ -6,7 +6,7 @@
         [
           "license",
           [
-            "gh://spdx/license-list-data/json/licenses.json",
+            "gh://spdx/license-list-data@v3.17/json/licenses.json",
             "licenses[?isOsiApproved] | [?isDeprecatedLicenseId == `false`].licenseId",
           ],
           "contains([1], [0])",

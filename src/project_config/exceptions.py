@@ -10,10 +10,10 @@ class ProjectConfigException(Exception):
     message: str
 
 
-class ProjectConfigCheckFailedBase(ProjectConfigException):
+class ProjectConfigCheckFailed(ProjectConfigException):
     """Exception raised when a ``check`` command has failed.
 
-    Means that an error has been found in the configuration of the
+    Means that an error has been found in the style of the
     project when using the ``check`` command through the CLI.
     """
 
