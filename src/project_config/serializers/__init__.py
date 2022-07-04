@@ -1,4 +1,4 @@
-"""JSON serializers."""
+"""Object serializers."""
 
 import functools
 import importlib
@@ -190,7 +190,7 @@ def serialize_for_url(url: str, string: str) -> SerializerResult:
         string (str): File content to serialize.
 
     Returns:
-        dict: Result of the JSON serialization.
+        dict: Result of the object serialization.
 
     .. _identify: https://github.com/pre-commit/identify
     """
