@@ -1,5 +1,8 @@
 name: Deploy documentation
 
+permissions:
+      contents: write
+
 on:
   release:
     types:
@@ -7,10 +10,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  deploy-docs:
+  deploy-version-docs:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
     steps:
@@ -42,6 +43,31 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./docs/_build/html
           destination_dir: ${{ steps.get-version.outputs.version }}
+  deploy-latest-docs:
+    needs: deploy-version-docs
+    runs-on: ubuntu-latest
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python - --preview
+          poetry self add poetry-exec-plugin
+          poetry self show plugins
+      - name: Set up Python v3
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.x
+          cache: poetry
+      - name: Install dependencies
+        run: |
+          poetry install --with doc
+          poetry show
+      - name: Build documentation
+        run: poetry exec doc
+        env:
+          SPHINX_GITHUB_CHANGELOG_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Deploy documentation
         uses: peaceiris/actions-gh-pages@v3
         with:
