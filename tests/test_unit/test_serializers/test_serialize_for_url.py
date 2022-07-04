@@ -53,7 +53,7 @@ from project_config.serializers import SerializerError, serialize_for_url
         pytest.param(
             "https://example.com/file.py",
             "foo = 'bar'\nbaz = 1",
-            {"__file__": "https://example.com/file.py", "foo": "bar", "baz": 1},
+            {"__file__": "file.py", "foo": "bar", "baz": 1},
             id=".py",
         ),
     ),

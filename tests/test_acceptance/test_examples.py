@@ -29,7 +29,7 @@ def _parse_example_metadata(example_dir):
     return metadata
 
 
-def _collect_examples():
+def _collect_examples(online=False):
     examples = []
     examples_dir = os.path.join(rootdir, "examples")
     for example_dirname in sorted(os.listdir(examples_dir)):
@@ -38,6 +38,10 @@ def _collect_examples():
         expected_stderr = example_metadata.get("stderr", "")
         if expected_stderr:
             expected_stderr += "\n"
+        if not online and example_metadata.get("online", "false") == "true":
+            continue
+        elif online and example_metadata.get("online", "false") == "false":
+            continue
         examples.append(
             pytest.param(
                 example_dirpath,
@@ -49,7 +53,6 @@ def _collect_examples():
     return examples
 
 
-@mark_end2end
 @pytest.mark.parametrize("interface", ("CLI", "API"))
 @pytest.mark.parametrize(
     ("example_dir", "expected_exitcode", "expected_stderr"),
@@ -65,7 +68,6 @@ def test_examples_check(
 ):
     args = ["--nocolor", "check"]
 
-    # from command line
     if interface == "CLI":
         with chdir(example_dir):
             exitcode = run(args)
@@ -74,7 +76,40 @@ def test_examples_check(
             assert err == expected_stderr
             assert out == ""
     else:
-        # from API
+        with chdir(example_dir):
+            project = Project(None, example_dir, {"name": "default"}, False)
+            if expected_stderr:
+                with pytest.raises(ProjectConfigException) as exc:
+                    project.check(args)
+                assert str(exc.value) == expected_stderr.rstrip("\n")
+            else:
+                project.check(args)
+
+
+@mark_end2end
+@pytest.mark.parametrize("interface", ("CLI", "API"))
+@pytest.mark.parametrize(
+    ("example_dir", "expected_exitcode", "expected_stderr"),
+    _collect_examples(online=True),
+)
+def test_examples_with_online_sources_check(
+    example_dir,
+    expected_exitcode,
+    expected_stderr,
+    interface,
+    chdir,
+    capsys,
+):
+    args = ["--nocolor", "check"]
+
+    if interface == "CLI":
+        with chdir(example_dir):
+            exitcode = run(args)
+            out, err = capsys.readouterr()
+            assert exitcode == expected_exitcode, err
+            assert err == expected_stderr
+            assert out == ""
+    else:
         with chdir(example_dir):
             project = Project(None, example_dir, {"name": "default"}, False)
             if expected_stderr:

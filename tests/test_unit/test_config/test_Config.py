@@ -13,14 +13,14 @@ def test_Config___getitem__(
     minimal_valid_config,
     minimal_valid_style,
 ):
-    (tmp_path / "foo").write_text(minimal_valid_style.string)
+    (tmp_path / "foo.json").write_text(minimal_valid_style.string)
     (tmp_path / "pyproject.toml").write_text(
         f"[tool.project-config]\n{minimal_valid_config.string}",
     )
 
     with chdir(tmp_path):
         config = Config(str(tmp_path), None)
-        assert config["style"] == "foo"
+        assert config["style"] == "foo.json"
         config.load_style()
         assert config["style"] == {"rules": [{"files": ["foo"]}]}
     assert isinstance(config.dict_, dict)
