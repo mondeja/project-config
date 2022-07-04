@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Plugins &mdash; project-config 0.3.1 documentation</title>
+  <title>Plugins &mdash; project-config 0.4.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -19,6 +19,7 @@
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/tabs.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -34,7 +35,7 @@
             <a href="../index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.3
+                0.4
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -56,14 +57,19 @@
 <li class="toctree-l1"><a class="reference internal" href="config.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="styling.html">Styling</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Plugins</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#include">include</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#inclusion">inclusion</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#includelines">includeLines</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#ifincludelines">ifIncludeLines</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#excludecontent">excludeContent</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#existence">existence</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#iffilesexist">ifFilesExist</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#jmespath">jmespath</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#jmespathsmatch">JMESPathsMatch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#crossjmespathsmatch">crossJMESPathsMatch</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#ifjmespathsmatch">ifJMESPathsMatch</a></li>
 </ul>
 </li>
@@ -117,8 +123,8 @@
 <li><p><span class="bolditalic">conditionals</span> filter the execution of verbs in a rule. If all the conditionals of a rule returns <code class="docutils literal notranslate"><span class="pre">true</span></code>, the verbs are executed. Conditionals are identified because they start with the prefix <code class="docutils literal notranslate"><span class="pre">if</span></code>.</p></li>
 <li><p><span class="bolditalic">verbs</span> execute actions against the files defined in the special <code class="docutils literal notranslate"><span class="pre">files</span></code> property of each rule. They act like asserters.</p></li>
 </ul>
-<section id="include">
-<h2>include<a class="headerlink" href="#include" title="Permalink to this headline"></a></h2>
+<section id="inclusion">
+<h2>inclusion<a class="headerlink" href="#inclusion" title="Permalink to this headline"></a></h2>
 <p>Plain content inclusion management.</p>
 <section id="includelines">
 <h3>includeLines<a class="headerlink" href="#includelines" title="Permalink to this headline"></a></h3>
@@ -193,6 +199,39 @@ and line ending characters.</p>
 </div>
 </section>
 </section>
+<section id="existence">
+<h2>existence<a class="headerlink" href="#existence" title="Permalink to this headline"></a></h2>
+<p>Check existence of files.</p>
+<section id="iffilesexist">
+<h3>ifFilesExist<a class="headerlink" href="#iffilesexist" title="Permalink to this headline"></a></h3>
+<p>Check if a set of files and/or directories exists.</p>
+<p>It acceepts an array of paths. If a path ends with <code class="docutils literal notranslate"><span class="pre">/</span></code> character it is
+considered a directory.</p>
+<p class="rubric">Examples</p>
+<p>If the directory <cite>src/</cite> exists, a <cite>pyproject.toml</cite> file must exist also:</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">    </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;pyproject.toml&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">    </span><span class="nx">ifFilesExist</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;src/&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">  </span><span class="p">]</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+<p>If the file <cite>.pre-commit-hooks.yaml</cite> exists, must be declared as an array:</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">    </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.pre-commit-hooks.yaml&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">    </span><span class="nx">ifFilesExist</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.pre-commit-hooks.yaml&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">    </span><span class="nx">JMESPathsMatch</span><span class="o">:</span><span class="w"> </span><span class="p">[[</span><span class="s2">&quot;type(@)&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;array&quot;</span><span class="p">]]</span><span class="w"></span>
+<span class="w">  </span><span class="p">]</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.4.0.</span></p>
+</div>
+</section>
+</section>
 <section id="jmespath">
 <h2>jmespath<a class="headerlink" href="#jmespath" title="Permalink to this headline"></a></h2>
 <p><a class="reference external" href="https://jmespath.org">JMES paths</a> manipulation against files.</p>
@@ -218,6 +257,9 @@ convenient functions defined by the plugin internally:</p>
 using the Python’s built-in <a class="reference external" href="https://docs.python.org/3/library/re.html#re.match" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">re.match()</span></code></a> function.</p>
 <div class="versionadded">
 <p><span class="versionmodified added">New in version 0.1.0.</span></p>
+</div>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version 0.4.0.</span></p>
 </div>
 </dd></dl>
 
@@ -274,15 +316,51 @@ for two values defined in <a class="reference internal" href="#op" title="op"><c
 <li><p><code class="docutils literal notranslate"><span class="pre">index-of</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.indexOf" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.indexOf()</span></code></a></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">indexOf</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.indexOf" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.indexOf()</span></code></a></p></li>
 </ul>
+<p>If <code class="docutils literal notranslate"><span class="pre">source</span></code> and <code class="docutils literal notranslate"><span class="pre">target</span></code> are both of type array and the operator
+is one of the next ones, the arrays are converted to <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set">sets</a> before
+applying the operator:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.lt" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.lt()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;=</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.le" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.le()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&gt;=</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.ge" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.ge()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&gt;</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.gt" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.gt()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&amp;</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.and_" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.and_()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">and</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.and_" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.and_()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">|</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.or_" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.or_()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">or</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.or_" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.or_()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.sub" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.sub()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">^</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.xor" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.xor()</span></code></a></p></li>
+</ul>
 <div class="versionadded">
 <p><span class="versionmodified added">New in version 0.1.0.</span></p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 0.4.0: </span>Convert to <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set">sets</a> before applying operators if both arguments are arrays.</p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="shlex_split">
+<span class="sig-name descname"><span class="pre">shlex_split</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmd_str</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><span class="pre">list</span></a></span></span><a class="headerlink" href="#shlex_split" title="Permalink to this definition"></a></dt>
+<dd><p>Split a string using the Python’s built-in <a class="reference external" href="https://docs.python.org/3/library/shlex.html#shlex.split" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">shlex.split()</span></code></a> function.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.4.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="shlex_join">
+<span class="sig-name descname"><span class="pre">shlex_join</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmd_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><span class="pre">list</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></span><a class="headerlink" href="#shlex_join" title="Permalink to this definition"></a></dt>
+<dd><p>Join a list of strings using the Python’s built-in <a class="reference external" href="https://docs.python.org/3/library/shlex.html#shlex.join" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">shlex.join()</span></code></a> function.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.4.0.</span></p>
 </div>
 </dd></dl>
 
 <section id="jmespathsmatch">
 <h3>JMESPathsMatch<a class="headerlink" href="#jmespathsmatch" title="Permalink to this headline"></a></h3>
-<p>Compares a set of JMESPath expression against results.</p>
-<p>JSON-serializes each file in the <code class="docutils literal notranslate"><span class="pre">files</span></code> property of the rule
+<p>Compares a set of JMESPath expressions against results.</p>
+<p>Object-serializes each file in the <code class="docutils literal notranslate"><span class="pre">files</span></code> property of the rule
 and executes each expression given in the first item of the
 tuples passed as value. If a result don’t match, report an error.</p>
 <p class="rubric">Example</p>
@@ -316,9 +394,81 @@ tuples passed as value. If a result don’t match, report an error.</p>
 <p><span class="versionmodified added">New in version 0.1.0.</span></p>
 </div>
 </section>
+<section id="crossjmespathsmatch">
+<h3>crossJMESPathsMatch<a class="headerlink" href="#crossjmespathsmatch" title="Permalink to this headline"></a></h3>
+<p>JMESPaths matching between multiple files.</p>
+<p>It accepts an array of arrays. Each one of these arrays must have the syntax:</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="w"></span>
+<span class="w">  </span><span class="s2">&quot;filesJMESPathExpression&quot;</span><span class="p">,</span><span class="w">  </span><span class="c1">// expression to query each file in `files` property of the rule</span><span class="w"></span>
+<span class="w">  </span><span class="p">[</span><span class="s2">&quot;otherFile.ext&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;JMESPathExpression&quot;</span><span class="p">]...,</span><span class="w">  </span><span class="c1">// optionally other files</span><span class="w"></span>
+<span class="w">  </span><span class="s2">&quot;finalJMESPathExpression&quot;</span><span class="p">,</span><span class="w">  </span><span class="c1">// an array with results of previous expressions as input</span><span class="w"></span>
+<span class="w">  </span><span class="nx">expectedValue</span><span class="p">,</span><span class="w">  </span><span class="c1">// value to compare with the result of final JMESPath expression</span><span class="w"></span>
+<span class="p">]</span><span class="w"></span>
+</pre></div>
+</div>
+<p>The executed steps are:</p>
+<ol class="arabic simple">
+<li><p>For each object-serialized file in <code class="docutils literal notranslate"><span class="pre">files</span></code> property of the rule.</p></li>
+<li><p>Execute <code class="docutils literal notranslate"><span class="pre">&quot;filesJMESPathExpression&quot;</span></code> and append the result to a temporal array.</p></li>
+<li><p>For each pair of <code class="docutils literal notranslate"><span class="pre">[&quot;otherFile.ext&quot;,</span> <span class="pre">&quot;JMESPathExpression&quot;]</span></code>, execute
+<code class="docutils literal notranslate"><span class="pre">&quot;JMESPathExpression&quot;</span></code> against the object-serialized version of
+<code class="docutils literal notranslate"><span class="pre">&quot;otherFile.ext&quot;</span></code> and append each result to the temporal array.</p></li>
+<li><p>Execute <code class="docutils literal notranslate"><span class="pre">&quot;finalJMESPathExpression&quot;</span></code> against the temporal array.</p></li>
+<li><p>Compare the final result with <code class="docutils literal notranslate"><span class="pre">expectedValue</span></code> and raise error if not match.</p></li>
+</ol>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Other file paths can be URLs if you want to match against online sources.</p>
+</div>
+<p class="rubric">Example</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">release</span></code> field of a Sphinx configuration defined in a file
+<cite>docs/conf.py</cite> must be the same that the version of the project metadata
+defined in th file <cite>pyproject.toml</cite>, field <code class="docutils literal notranslate"><span class="pre">tool.poetry.version</span></code>:</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;pyproject.toml&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">      </span><span class="nx">crossJMESPathsMatch</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">        </span><span class="p">[</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;tool.poetry.metadata&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="p">[</span><span class="s2">&quot;docs/conf.py&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;release&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;op([0], &#39;==&#39;, [1])&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="kc">true</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="p">],</span><span class="w"></span>
+<span class="w">      </span><span class="p">],</span><span class="w"></span>
+<span class="w">      </span><span class="nx">hint</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Versions of documentation and metadata must be the same&quot;</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="p">]</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+<p>Note that you can pass whatever number of other files, even 0 and just apply
+<code class="docutils literal notranslate"><span class="pre">files</span></code> and <code class="docutils literal notranslate"><span class="pre">final</span></code> expressions to each file in <code class="docutils literal notranslate"><span class="pre">files</span></code> property of
+the rule. For example, the next configuration would not raise errors:</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">style.json5</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">foo.json</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;foo.json&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">      </span><span class="nx">crossJMESPathsMatch</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">        </span><span class="p">[</span><span class="s2">&quot;bar&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;[0].baz&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">7</span><span class="p">],</span><span class="w"></span>
+<span class="w">      </span><span class="p">]</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="p">]</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="nt">&quot;bar&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;baz&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="p">}}</span><span class="w"></span>
+</pre></div>
+</div>
+</div></div>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.4.0.</span></p>
+</div>
+</section>
 <section id="ifjmespathsmatch">
 <h3>ifJMESPathsMatch<a class="headerlink" href="#ifjmespathsmatch" title="Permalink to this headline"></a></h3>
-<p>Compares a set of JMESPath expression against results.</p>
+<p>Compares a set of JMESPath expressions against results.</p>
 <p>JSON-serializes each file in the <code class="docutils literal notranslate"><span class="pre">ifJMESPathsMatch</span></code> property
 of the rule and executes each expression given in the first item of the
 tuples passed as value for each file. If a result don’t match,

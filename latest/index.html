@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project-config’s documentation &mdash; project-config 0.3.1 documentation</title>
+  <title>project-config’s documentation &mdash; project-config 0.4.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -33,7 +33,7 @@
             <a href="#" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.3
+                0.4
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -108,6 +108,9 @@ multiple projects.</p>
 <li class="toctree-l2"><a class="reference internal" href="examples.html#project-config-self-configuration">Project config self configuration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples.html#files-absence">Files absence</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples.html#conditionals">Conditionals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#conditionals-files-existence">Conditionals files existence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#compare-values-between-serializable-files">Compare values between serializable files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#jmespath-against-online-sources">JMESPath against online sources</a></li>
 </ul>
 </li>
 </ul>
@@ -143,14 +146,19 @@ multiple projects.</p>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="reference/plugins.html">Plugins</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="reference/plugins.html#include">include</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reference/plugins.html#inclusion">inclusion</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#includelines">includeLines</a></li>
 <li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#ifincludelines">ifIncludeLines</a></li>
 <li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#excludecontent">excludeContent</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="reference/plugins.html#existence">existence</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#iffilesexist">ifFilesExist</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="reference/plugins.html#jmespath">jmespath</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#jmespathsmatch">JMESPathsMatch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#crossjmespathsmatch">crossJMESPathsMatch</a></li>
 <li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#ifjmespathsmatch">ifJMESPathsMatch</a></li>
 </ul>
 </li>
@@ -173,6 +181,7 @@ multiple projects.</p>
 <li class="toctree-l2"><a class="reference internal" href="in-depth/serialization.html#ini">INI</a></li>
 <li class="toctree-l2"><a class="reference internal" href="in-depth/serialization.html#editorconfig">Editorconfig</a></li>
 <li class="toctree-l2"><a class="reference internal" href="in-depth/serialization.html#python">Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="in-depth/serialization.html#text">Text</a></li>
 </ul>
 </li>
 </ul>

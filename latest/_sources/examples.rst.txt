@@ -145,6 +145,144 @@ file must be present.
 
 
 
+Conditionals files existence
+============================
+
+* 1st rule: if the directory `src/` exists, the file `pyproject.toml` must exists too.
+* 2nd rule: if the file `pyproject.toml` exists, a Python file must be present in the root directory.
+
+.. tabs::
+
+   .. tab:: .project-config.toml
+
+      .. code-block:: toml
+
+         style = "style.json5"
+
+   .. tab:: style.json5
+
+      .. code-block:: js
+
+         {
+           rules: [
+             {
+               files: ["pyproject.toml"],
+               ifFilesExist: ["src/"],
+             },
+             {
+               files: ["*.py"],
+               ifFilesExist: ["pyproject.toml"],
+             },
+           ],
+         }
+
+   .. tab:: pyproject.toml
+
+      .. code-block:: toml
+
+
+
+   .. tab:: src/
+
+      .. code-block:: text
+
+
+
+   .. tab:: file.py
+
+      .. code-block:: python
+
+
+
+Compare values between serializable files
+=========================================
+
+The version defined in ``__version__`` inside a Python script must match
+the metadata defined in `pyproject.toml` file.
+
+.. tabs::
+
+   .. tab:: .project-config.toml
+
+      .. code-block:: toml
+
+         style = "style.toml"
+
+   .. tab:: pyproject.toml
+
+      .. code-block:: toml
+
+         [tool.poetry]
+         version = "1.0.0"
+
+   .. tab:: style.toml
+
+      .. code-block:: toml
+
+         [[rules]]
+         files = ["pyproject.toml"]
+         crossJMESPathsMatch = [
+           [
+             "tool.poetry.version",
+             ["script.py", "__version__"],
+             "op([0], '==', [1])",
+             true,
+           ],
+         ]
+
+   .. tab:: script.py
+
+      .. code-block:: python
+
+         """Simple script."""
+
+         __version__ = "1.0.0"
+
+JMESPath against online sources
+===============================
+
+Check that the ``license`` field of *package.json* file is defined with
+a valid OSI approved SPDX license identifier.
+
+.. tabs::
+
+   .. tab:: .project-config.toml
+
+      .. code-block:: toml
+
+         style = "style.json5"
+
+   .. tab:: style.json5
+
+      .. code-block:: js
+
+         {
+           rules: [
+             {
+               files: ["package.json"],
+               crossJMESPathsMatch: [
+                 [
+                   "license",
+                   [
+                     "gh://spdx/license-list-data@v3.17/json/licenses.json",
+                     "licenses[?isOsiApproved] | [?isDeprecatedLicenseId == `false`].licenseId",
+                   ],
+                   "contains([1], [0])",
+                   true,
+                 ],
+               ],
+             },
+           ],
+         }
+
+   .. tab:: package.json
+
+      .. code-block:: json
+
+         {
+           "license": "BSD-3-Clause"
+         }
+
 .. raw:: html
 
    <hr>

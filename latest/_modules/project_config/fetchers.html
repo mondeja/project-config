@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.fetchers &mdash; project-config 0.3.1 documentation</title>
+  <title>project_config.fetchers &mdash; project-config 0.4.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -32,7 +32,7 @@
             <a href="../../index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.3
+                0.4
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -102,18 +102,22 @@
 <span class="kn">import</span> <span class="nn">urllib.parse</span>
 
 <span class="kn">from</span> <span class="nn">project_config.compat</span> <span class="kn">import</span> <span class="n">TypeAlias</span>
-<span class="kn">from</span> <span class="nn">project_config.exceptions</span> <span class="kn">import</span> <span class="n">ProjectConfigNotImplementedError</span>
+<span class="kn">from</span> <span class="nn">project_config.exceptions</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ProjectConfigException</span><span class="p">,</span>
+    <span class="n">ProjectConfigNotImplementedError</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">project_config.serializers</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">SerializerError</span><span class="p">,</span>
     <span class="n">SerializerResult</span><span class="p">,</span>
     <span class="n">serialize_for_url</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="kn">from</span> <span class="nn">project_config.utils.http</span> <span class="kn">import</span> <span class="n">ProjectConfigTimeoutError</span>
 
 
 <span class="n">FetchResult</span><span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="n">SerializerResult</span>
 
 
-<div class="viewcode-block" id="FetchError"><a class="viewcode-back" href="../../dev/reference/project_config.fetchers.html#project_config.fetchers.FetchError">[docs]</a><span class="k">class</span> <span class="nc">FetchError</span><span class="p">(</span><span class="n">SerializerError</span><span class="p">):</span>
+<div class="viewcode-block" id="FetchError"><a class="viewcode-back" href="../../dev/reference/project_config.fetchers.html#project_config.fetchers.FetchError">[docs]</a><span class="k">class</span> <span class="nc">FetchError</span><span class="p">(</span><span class="n">ProjectConfigException</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Error happened during the fetching of a resource.&quot;&quot;&quot;</span></div>
 
 
@@ -162,12 +166,21 @@
     <span class="n">url_parts</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">urlsplit</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
     <span class="n">scheme</span> <span class="o">=</span> <span class="n">_get_scheme_from_urlparts</span><span class="p">(</span><span class="n">url_parts</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">mod</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;project_config.fetchers.</span><span class="si">{</span><span class="n">scheme</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">module</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;project_config.fetchers.</span><span class="si">{</span><span class="n">scheme</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">SchemeProtocolNotImplementedError</span><span class="p">(</span><span class="n">scheme</span><span class="p">)</span>
 
-    <span class="n">string</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="s2">&quot;fetch&quot;</span><span class="p">)(</span><span class="n">url_parts</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">serialize_for_url</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">string</span><span class="p">)</span></div>
+    <span class="n">fetch_func</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s2">&quot;fetch&quot;</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">string</span> <span class="o">=</span> <span class="n">fetch_func</span><span class="p">(</span><span class="n">url_parts</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">FetchError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">&#39; file not found&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">ProjectConfigTimeoutError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">FetchError</span><span class="p">(</span><span class="n">exc</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">serialize_for_url</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">string</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">SerializerError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">FetchError</span><span class="p">(</span><span class="n">exc</span><span class="o">.</span><span class="n">message</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="resolve_maybe_relative_url"><a class="viewcode-back" href="../../dev/reference/project_config.fetchers.html#project_config.fetchers.resolve_maybe_relative_url">[docs]</a><span class="k">def</span> <span class="nf">resolve_maybe_relative_url</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">parent_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">rootdir</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>

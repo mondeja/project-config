@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Objects serialization &mdash; project-config 0.3.1 documentation</title>
+  <title>Objects serialization &mdash; project-config 0.4.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -35,7 +35,7 @@
             <a href="../index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.3
+                0.4
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -69,6 +69,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#ini">INI</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#editorconfig">Editorconfig</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#python">Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#text">Text</a></li>
 </ul>
 </li>
 </ul>
@@ -188,7 +189,7 @@ using <a class="reference external" href="https://github.com/pre-commit/identify
 <p>For Python files, the global namespace exposed is serialized after
 executing them.</p>
 <ul class="simple">
-<li><p>Loader: <a class="reference external" href="https://docs.python.org/3/library/functions.html#exec" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">exec()</span></code></a></p></li>
+<li><p>Loader: <a class="reference internal" href="../dev/reference/project_config.serializers.python.html#project_config.serializers.python.loads" title="project_config.serializers.python.loads"><code class="xref py py-func docutils literal notranslate"><span class="pre">project_config.serializers.python.loads()</span></code></a></p></li>
 </ul>
 <div class="sphinx-tabs docutils container">
 <div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-1-1-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-1-1-0" name="1-0" role="tab" tabindex="0">foo.py</button><button aria-controls="panel-1-1-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-1-1-1" name="1-1" role="tab" tabindex="-1">object</button></div><div aria-labelledby="tab-1-1-0" class="sphinx-tabs-panel" id="panel-1-1-0" name="1-0" role="tabpanel" tabindex="0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">bar</span> <span class="o">=</span> <span class="s2">&quot;baz&quot;</span>
@@ -206,6 +207,23 @@ executing them.</p>
 while is running, which is useful if you want to expose the global namespaces
 of scripts only when the tool is running.</p>
 </div>
+</section>
+<section id="text">
+<h2>Text<a class="headerlink" href="#text" title="Permalink to this headline"></a></h2>
+<p>Fallback for all serialized files. Just converts the string to an array
+of lines, excluding line endings.</p>
+<ul class="simple">
+<li><p>Loader: <a class="reference internal" href="../dev/reference/project_config.serializers.text.html#project_config.serializers.text.loads" title="project_config.serializers.text.loads"><code class="xref py py-func docutils literal notranslate"><span class="pre">project_config.serializers.text.loads()</span></code></a>.</p></li>
+</ul>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-2-2-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-2-2-0" name="2-0" role="tab" tabindex="0">foo.txt</button><button aria-controls="panel-2-2-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-2-2-1" name="2-1" role="tab" tabindex="-1">object</button></div><div aria-labelledby="tab-2-2-0" class="sphinx-tabs-panel" id="panel-2-2-0" name="2-0" role="tabpanel" tabindex="0"><div class="highlight-text notranslate"><div class="highlight"><pre><span></span>bar
+baz
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-2-2-1" class="sphinx-tabs-panel" hidden="true" id="panel-2-2-1" name="2-1" role="tabpanel" tabindex="0"><div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="s2">&quot;bar&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;baz&quot;</span><span class="p">]</span><span class="w"></span>
+</pre></div>
+</div>
+</div></div>
 </section>
 </section>
 

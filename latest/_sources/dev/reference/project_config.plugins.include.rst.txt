@@ -1,8 +1,0 @@
-project\_config.plugins.include module
-======================================
-
-.. automodule:: project_config.plugins.include
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :private-members:

@@ -23,7 +23,20 @@ Test
 
    poetry exec test
    # or just `poetry exec t`
-   # or `poetry exec test:show` if you want to see coverage HTML report
+
+Show coverage report
+--------------------
+
+.. code-block:: sh
+
+   poetry exec test:show
+
+End to end tests
+----------------
+
+.. code-block:: sh
+
+   poetry exec test:e2e
 
 Lint
 ====
@@ -43,6 +56,8 @@ Build documentation
 
 Release
 =======
+
+You must have administrator permissions on the repository.
 
 .. code-block:: sh
 

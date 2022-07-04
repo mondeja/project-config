@@ -13,5 +13,6 @@ Submodules
 .. toctree::
    :maxdepth: 4
 
-   project_config.plugins.include
+   project_config.plugins.existence
+   project_config.plugins.inclusion
    project_config.plugins.jmespath

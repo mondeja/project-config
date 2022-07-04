@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.serializers package &mdash; project-config 0.3.1 documentation</title>
+  <title>project_config.serializers package &mdash; project-config 0.4.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -34,7 +34,7 @@
             <a href="../../index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.3
+                0.4
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -115,7 +115,7 @@
              
   <section id="module-project_config.serializers">
 <span id="project-config-serializers-package"></span><h1>project_config.serializers package<a class="headerlink" href="#module-project_config.serializers" title="Permalink to this headline"></a></h1>
-<p>JSON serializers.</p>
+<p>Object serializers.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="project_config.serializers.SerializerDefinitionType">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">project_config.serializers.</span></span><span class="sig-name descname"><span class="pre">SerializerDefinitionType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/project_config/serializers.html#SerializerDefinitionType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.serializers.SerializerDefinitionType" title="Permalink to this definition"></a></dt>
@@ -127,8 +127,8 @@
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="project_config.serializers.SerializerDefinitionType.function_kwargs_from_url">
-<span class="sig-name descname"><span class="pre">function_kwargs_from_url</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">typing_extensions.NotRequired</span><span class="p"><span class="pre">[</span></span><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#project_config.serializers.SerializerDefinitionType.function_kwargs_from_url" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="project_config.serializers.SerializerDefinitionType.function_kwargs_from_url_path">
+<span class="sig-name descname"><span class="pre">function_kwargs_from_url_path</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">typing_extensions.NotRequired</span><span class="p"><span class="pre">[</span></span><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#project_config.serializers.SerializerDefinitionType.function_kwargs_from_url_path" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -168,8 +168,8 @@
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="project_config.serializers._file_can_not_be_serialized_as_json_error">
-<span class="sig-prename descclassname"><span class="pre">project_config.serializers.</span></span><span class="sig-name descname"><span class="pre">_file_can_not_be_serialized_as_json_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../_modules/project_config/serializers.html#_file_can_not_be_serialized_as_json_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.serializers._file_can_not_be_serialized_as_json_error" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="project_config.serializers._file_can_not_be_serialized_as_object_error">
+<span class="sig-prename descclassname"><span class="pre">project_config.serializers.</span></span><span class="sig-name descname"><span class="pre">_file_can_not_be_serialized_as_object_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../_modules/project_config/serializers.html#_file_can_not_be_serialized_as_object_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.serializers._file_can_not_be_serialized_as_object_error" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
@@ -195,7 +195,7 @@ either using the extension or through <a class="reference external" href="https:
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result of the JSON serialization.</p>
+<dd class="field-even"><p>Result of the object serialization.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a></p>
@@ -210,6 +210,7 @@ either using the extension or through <a class="reference external" href="https:
 <li class="toctree-l1"><a class="reference internal" href="project_config.serializers.editorconfig.html">project_config.serializers.editorconfig module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="project_config.serializers.ini.html">project_config.serializers.ini module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="project_config.serializers.python.html">project_config.serializers.python module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="project_config.serializers.text.html">project_config.serializers.text module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="project_config.serializers.yaml.html">project_config.serializers.yaml module</a></li>
 </ul>
 </div>

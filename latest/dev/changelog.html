@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Changelog &mdash; project-config 0.3.1 documentation</title>
+  <title>Changelog &mdash; project-config 0.4.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -34,7 +34,7 @@
             <a href="../index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.3
+                0.4
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -67,6 +67,7 @@
 <li class="toctree-l1"><a class="reference internal" href="plugins.html">Writing third party plugins</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reporters.html">Writing third party reporters</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#release-v0-4-0">v0.4.0</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#release-v0-3-1">v0.3.1</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#release-v0-3-0">v0.3.0</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#release-v0-2-0">v0.2.0</a></li>
@@ -103,6 +104,26 @@
              
   <section id="changelog">
 <h1>Changelog<a class="headerlink" href="#changelog" title="Permalink to this headline"></a></h1>
+<section id="release-v0-4-0">
+<h2>v0.4.0<a class="headerlink" href="#release-v0-4-0" title="Permalink to this headline"></a></h2>
+<p><em>Released on 2022-07-04 - <a class="reference external" href="https://github.com/mondeja/project-config/releases/tag/v0.4.0">GitHub</a> - <a class="reference external" href="https://pypi.org/project/project-config/v0.4.0/">PyPI</a></em></p>
+<p>Deprecations:</p>
+<ul>
+<li>The custom JMESPath function <code>regex_matchall</code> has been deprecated and will be removed in v1.0.0. Rewrite <code>regex_matchall('^foo$', ['foo', 'bar'])</code> as <code>op(length(['foo', 'bar'][?regex_match('^foo$', @)]), '==', length(['foo', 'bar']))</code>.</li>
+</ul>
+<p>New features:</p>
+<ul>
+<li>New <a href="https://mondeja.github.io/project-config/0.4.0/reference/plugins.html#crossjmespathsmatch" rel="nofollow"><code>crossJMESPathsMatch</code> verb</a> for <a href="https://mondeja.github.io/project-config/0.4.0/reference/plugins.html#jmespath" rel="nofollow"><code>jmespath</code> plugin</a>.</li>
+<li>New <a href="https://mondeja.github.io/project-config/0.4.0/reference/plugins.html#iffilesexist" rel="nofollow"><code>ifFilesExist</code> conditional</a>.</li>
+<li>New custom functions for <a href="https://mondeja.github.io/project-config/0.4.0/reference/plugins.html#jmespath" rel="nofollow"><code>jmespath</code> plugin</a>: <a href="https://mondeja.github.io/project-config/0.4.0/reference/plugins.html#shlex_split" rel="nofollow"><code>shlex_split</code></a> and <a href="https://mondeja.github.io/project-config/0.4.0/reference/plugins.html#shlex_join" rel="nofollow"><code>shlex_join</code></a>.</li>
+<li>Custom function <a href="https://mondeja.github.io/project-config/0.4.0/reference/plugins.html#op" rel="nofollow"><code>op</code></a> now can handle <a href="https://docs.python.org/3/library/stdtypes.html#set" rel="nofollow">sets</a> operations.</li>
+<li>New <a href="https://mondeja.github.io/project-config/0.4.0/in-depth/serialization.html#text" rel="nofollow">text serializer</a> as fallback for all text files.</li>
+</ul>
+<p>Enhancements:</p>
+<ul>
+<li>Better errors catching fetching and serializing files.</li>
+<li>Values validation in <a href="https://mondeja.github.io/project-config/0.4.0/reference/plugins.html#inclusion" rel="nofollow"><code>inclusion</code> plugin</a> actions.</li>
+</ul></section>
 <section id="release-v0-3-1">
 <h2>v0.3.1<a class="headerlink" href="#release-v0-3-1" title="Permalink to this headline"></a></h2>
 <p><em>Released on 2022-06-30 - <a class="reference external" href="https://github.com/mondeja/project-config/releases/tag/v0.3.1">GitHub</a> - <a class="reference external" href="https://pypi.org/project/project-config/v0.3.1/">PyPI</a></em></p>
