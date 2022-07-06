@@ -109,7 +109,7 @@ ifFilesExist
 
 Check if a set of files and/or directories exists.
 
-It acceepts an array of paths. If a path ends with ``/`` character it is
+It accepts an array of paths. If a path ends with ``/`` character it is
 considered a directory.
 
 .. rubric:: Examples
@@ -250,9 +250,24 @@ convenient functions defined by the plugin internally:
 
    .. versionadded:: 0.4.0
 
+.. function:: round(number: float[, precision: int]) -> float
+
+   Round a number to a given precision using the function `round`_.
+
+   .. versionadded:: 0.5.0
+
+.. function:: range([start: float,] stop: float[, step: float]) -> list
+
+   Return an array of numbers from `start` to `stop` with a step of `step` casting
+   the result of the constructor `range`_ to an array.
+
+    .. versionadded:: 0.5.0
+
 .. _JMES paths: https://jmespath.org
 .. _JMESPath builtin functions: https://jmespath.org/proposals/functions.html#built-in-functions
 .. _sets: https://docs.python.org/3/library/stdtypes.html#set
+.. _round: https://docs.python.org/3/library/functions.html#round
+.. _range: https://docs.python.org/3/library/stdtypes.html#range
 
 JMESPathsMatch
 ==============

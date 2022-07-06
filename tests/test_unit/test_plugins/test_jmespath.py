@@ -179,6 +179,41 @@ from project_config.plugins.jmespath import JMESPathPlugin
             [],
             id="shlex_join",
         ),
+        pytest.param(
+            {"foo.json": '{"n": 5.46}'},
+            [["round(n)", 5]],
+            None,
+            [],
+            id="round(n)",
+        ),
+        pytest.param(
+            {"foo.json": '{"n": 5.46}'},
+            [["round(n, `1`)", 5.5]],
+            None,
+            [],
+            id="round(n, digits)",
+        ),
+        pytest.param(
+            {"foo.json": "{}"},
+            [["range(`5`)", [0, 1, 2, 3, 4]]],
+            None,
+            [],
+            id="range(stop)",
+        ),
+        pytest.param(
+            {"foo.json": "{}"},
+            [["range(`1`, `6`)", [1, 2, 3, 4, 5]]],
+            None,
+            [],
+            id="range(start, stop)",
+        ),
+        pytest.param(
+            {"foo.json": "{}"},
+            [["range(`1`, `6`, `2`)", [1, 3, 5]]],
+            None,
+            [],
+            id="range(start, stop, step)",
+        ),
     ),
 )
 def test_JMESPath_custom_functions(

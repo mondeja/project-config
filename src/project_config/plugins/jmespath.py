@@ -23,8 +23,6 @@ from project_config.fetchers import FetchError
 from project_config.serializers import SerializerError
 
 
-ALL_JMESPATH_FUNCTION_TYPES = list(jmespath.functions.REVERSE_TYPES_MAP.keys())
-
 OPERATORS_FUNCTIONS = {
     "<": operator.lt,
     "<=": operator.le,
@@ -92,7 +90,7 @@ class JMESPathProjectConfigFunctions(
 
     @jmespath.functions.signature(  # type: ignore
         {"types": ["string"]},
-        {"types": ["array", "object"]},
+        {"types": ["array-string", "object"]},
     )
     def _func_regex_matchall(self, regex: str, container: str) -> bool:
         warnings.warn(
@@ -117,9 +115,9 @@ class JMESPathProjectConfigFunctions(
         return [match.group(0)] if not match.groups() else list(match.groups())
 
     @jmespath.functions.signature(  # type: ignore
-        {"types": ALL_JMESPATH_FUNCTION_TYPES},
+        {"types": []},
         {"types": ["string"]},
-        {"types": ALL_JMESPATH_FUNCTION_TYPES},
+        {"types": []},
     )
     def _func_op(self, a: float, operator: str, b: float) -> t.Any:
         try:
@@ -141,13 +139,31 @@ class JMESPathProjectConfigFunctions(
                 return list(func(a, b))
         return func(a, b)
 
-    @jmespath.functions.signature({"types": ["array"]})  # type: ignore
+    @jmespath.functions.signature({"types": ["array-string"]})  # type: ignore
     def _func_shlex_join(self, cmd_list: t.List[str]) -> str:
         return shlex_join(cmd_list)
 
     @jmespath.functions.signature({"types": ["string"]})  # type: ignore
     def _func_shlex_split(self, cmd_str: str) -> t.List[str]:
         return shlex.split(cmd_str)
+
+    @jmespath.functions.signature(
+        {  # type: ignore
+            "types": ["number"],
+            "variadic": True,
+        },
+    )
+    def _func_round(self, *args) -> t.Union[float, int]:
+        return round(*args)  # type: ignore
+
+    @jmespath.functions.signature(
+        {  # type: ignore
+            "types": ["number"],
+            "variadic": True,
+        },
+    )
+    def _func_range(self, *args) -> t.Union[t.List[float], t.List[int]]:
+        return list(range(*args))
 
 
 jmespath_options = jmespath.Options(
