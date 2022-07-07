@@ -86,18 +86,18 @@ def _create_simple_transform_function_for_string(
 
 
 def _create_is_function_for_string(
-    func_suffix: str,
+    func_sufix: str,
 ) -> t.Callable[[type, str], bool]:
-    func = getattr(str, f"is{func_suffix}")
+    func = getattr(str, f"is{func_sufix}")
     return jmespath.functions.signature({"types": ["string"]})(  # type: ignore
         lambda self, value: func(value),
     )
 
 
 def _create_find_function_for_string_or_array(
-    func_preffix: str,
+    func_prefix: str,
 ) -> t.Callable[[type, t.Union[t.List[t.Any], str], t.Any, t.Any], int]:
-    getattr(str, f"{func_preffix}find")
+    getattr(str, f"{func_prefix}find")
 
     def _wrapper(
         self: type, value: t.Union[t.List[t.Any], str], sub: t.Any, *args: t.Any
@@ -114,10 +114,30 @@ def _create_find_function_for_string_or_array(
     )(_wrapper)
 
 
-def _create_strip_function_for_string(
-    func_preffix: str,
+def _create_just_function_for_string(
+    func_prefix: str,
 ) -> t.Callable[[type, str], str]:
-    func = getattr(str, f"{func_preffix}strip")
+    func = getattr(str, f"{func_prefix}just")
+    return jmespath.functions.signature(  # type: ignore
+        {"types": ["string"]},
+        {"types": ["number"], "variadic": True},
+    )(lambda self, value, width, *args: func(value, width, *args))
+
+
+def _create_partition_function_for_string(
+    func_prefix: str,
+) -> t.Callable[[type, str, str], t.List[str]]:
+    func = getattr(str, f"{func_prefix}partition")
+    return jmespath.functions.signature(  # type: ignore
+        {"types": ["string"]},
+        {"types": ["string"]},
+    )(lambda self, value, sep: list(func(value, sep)))
+
+
+def _create_strip_function_for_string(
+    func_prefix: str,
+) -> t.Callable[[type, str], str]:
+    func = getattr(str, f"{func_prefix}strip")
     return jmespath.functions.signature(  # type: ignore
         {"types": ["string"], "variadic": True},
     )(lambda self, value, *args: func(value, *args))
@@ -224,23 +244,6 @@ class JMESPathProjectConfigFunctions(
     def _func_range(self, *args) -> t.Union[t.List[float], t.List[int]]:
         return list(range(*args))
 
-    # simple transformation functions for strings
-    locals().update(
-        {
-            f"_func_{func_name}": _create_simple_transform_function_for_string(
-                func_name,
-            )
-            for func_name in {
-                "capitalize",
-                "casefold",
-                "lower",
-                "swapcase",
-                "title",
-                "upper",
-            }
-        },
-    )
-
     @jmespath.functions.signature(  # type: ignore
         {"types": ["string"]},
         {"types": ["number"], "variadic": True},
@@ -260,61 +263,73 @@ class JMESPathProjectConfigFunctions(
     ) -> int:
         return value.count(sub, *args)
 
-    locals().update(
-        {
-            f"_func_{func_preffix}find": (
-                _create_find_function_for_string_or_array(
-                    func_preffix,
-                )
-            )
-            for func_preffix in {"", "r"}
-        },
-    )
-
     @jmespath.functions.signature(  # type: ignore
         {"types": [], "variadic": True},
     )
     def _func_format(self, schema: str, *args: t.Any) -> str:
         return schema.format(*args)
 
-    # add is{funcsuffix} Python's builtin string functions
     locals().update(
-        {
-            f"_func_is{func_suffix}": _create_is_function_for_string(
-                func_suffix,
-            )
-            for func_suffix in {
-                "alnum",
-                "alpha",
-                "ascii",
-                "decimal",
-                "digit",
-                "identifier",
-                "lower",
-                "numeric",
-                "printable",
-                "space",
-                "title",
-                "upper",
-            }
-        },
-    )
-
-    @jmespath.functions.signature(  # type: ignore
-        {"types": ["string"]},
-        {"types": ["number"], "variadic": True},
-    )
-    def _func_ljust(self, value: str, width: int, *args: t.Any) -> str:
-        return value.ljust(width, *args)
-
-    # create `strip` functions for strings
-    locals().update(
-        {
-            f"_func_{func_preffix}strip": _create_strip_function_for_string(
-                func_preffix,
-            )
-            for func_preffix in {"", "l", "r"}
-        },
+        dict(
+            {
+                f"_func_{func_name}": (
+                    _create_simple_transform_function_for_string(func_name)
+                )
+                for func_name in {
+                    "capitalize",
+                    "casefold",
+                    "lower",
+                    "swapcase",
+                    "title",
+                    "upper",
+                }
+            },
+            **{
+                f"_func_{func_prefix}find": (
+                    _create_find_function_for_string_or_array(
+                        func_prefix,
+                    )
+                )
+                for func_prefix in {"", "r"}
+            },
+            **{
+                f"_func_is{func_sufix}": _create_is_function_for_string(
+                    func_sufix,
+                )
+                for func_sufix in {
+                    "alnum",
+                    "alpha",
+                    "ascii",
+                    "decimal",
+                    "digit",
+                    "identifier",
+                    "lower",
+                    "numeric",
+                    "printable",
+                    "space",
+                    "title",
+                    "upper",
+                }
+            },
+            **{
+                f"_func_{func_prefix}just": _create_just_function_for_string(
+                    func_prefix,
+                )
+                for func_prefix in {"l", "r"}
+            },
+            **{
+                f"_func_{func_prefix}strip": _create_strip_function_for_string(
+                    func_prefix,
+                )
+                for func_prefix in {"", "l", "r"}
+            },
+            **{
+                f"_func_{func_prefix}partition": (
+                    _create_partition_function_for_string(func_prefix)
+                )
+                for func_prefix in {"", "r"}
+            },
+        ),
     )
 
 

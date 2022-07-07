@@ -409,6 +409,13 @@ convenient functions defined by the plugin internally:
 
    .. versionadded:: 0.5.0
 
+.. function:: partition(string: str, sep: str) -> list[str]
+
+   Return an array of 3 items containing the part before the separator,
+   the separator itself, and the part after the separator.
+
+   .. versionadded:: 0.5.0
+
 .. function:: rfind(string: str | list, sub: any[, start: int[, end: int]]) -> int
 
    Return the highest index in ``value`` where subvalue ``sub`` is found.
@@ -416,6 +423,20 @@ convenient functions defined by the plugin internally:
    ``start`` and ``end``. If not found, ``-1`` is returned. If ``value`` is a string
    it uses internally the Python's built-in function :py:meth:`str.find`
    or :py:meth:`str.index` if ``value`` is an array.
+
+   .. versionadded:: 0.5.0
+
+.. function:: rjust(string: str, width: int[, fillchar: str]) -> str
+
+   Return a right-justified version of the string using :py:meth:`str.rjust`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: rpartition(string: str, sep: str) -> list[str]
+
+   Return an array of 3 items containing the part after the separator,
+   the separator itself, and the part before the separator splitting the
+   string at the last occurrence of ``sep``.
 
    .. versionadded:: 0.5.0
 

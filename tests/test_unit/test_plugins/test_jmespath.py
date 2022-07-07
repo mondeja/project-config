@@ -326,7 +326,7 @@ from project_config.plugins.jmespath import JMESPathPlugin
             [],
             id="isalnum(string) returns false",
         ),
-        # all others is{funcsuffix} behave the same way: isalpha, isdigit, etc.
+        # all others is{funcsufix} behave the same way: isalpha, isdigit, etc.
         pytest.param(
             {"foo.json": '{"foo": "bar"}'},
             [["ljust(foo, `4`)", "bar "]],
@@ -361,6 +361,20 @@ from project_config.plugins.jmespath import JMESPathPlugin
             None,
             [],
             id="strip(string, chars)",
+        ),
+        pytest.param(
+            {"foo.json": '{"foo": "aabbaabbcc"}'},
+            [["partition(foo, 'bb')", ["aa", "bb", "aabbcc"]]],
+            None,
+            [],
+            id="partition(string, sep)",
+        ),
+        pytest.param(
+            {"foo.json": '{"foo": "aabbaabbcc"}'},
+            [["rpartition(foo, 'bb')", ["aabbaa", "bb", "cc"]]],
+            None,
+            [],
+            id="rpartition(string, sep)",
         ),
     ),
 )
