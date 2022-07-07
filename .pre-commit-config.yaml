@@ -83,6 +83,7 @@ repos:
         additional_dependencies:
           - types-PyYAML
           - types-tabulate
+          - types-jmespath
   - repo: https://github.com/Lucas-C/pre-commit-hooks
     rev: v1.2.0
     hooks:

@@ -425,6 +425,41 @@ from project_config.plugins.jmespath import JMESPathPlugin
             [],
             id="zfill(string, width)",
         ),
+        pytest.param(
+            {"foo.json": '{"foo": "ab"}'},
+            [["enumerate(foo)", [[0, "a"], [1, "b"]]]],
+            None,
+            [],
+            id="enumerate(string)",
+        ),
+        pytest.param(
+            {"foo.json": '{"foo": ["a", "b"]}'},
+            [["enumerate(foo)", [[0, "a"], [1, "b"]]]],
+            None,
+            [],
+            id="enumerate(array)",
+        ),
+        pytest.param(
+            {"foo.json": '{"foo": {"a": 1, "b": 2}}'},
+            [["enumerate(foo)", [[0, ["a", 1]], [1, ["b", 2]]]]],
+            None,
+            [],
+            id="enumerate(object)",
+        ),
+        pytest.param(
+            {"foo.json": '{"foo": {"a": 1, "b": 2}}'},
+            [["to_items(foo)", [["a", 1], ["b", 2]]]],
+            None,
+            [],
+            id="to_items(object)",
+        ),
+        pytest.param(
+            {"foo.json": '{"foo": [["a", 1], ["b", 2]]}'},
+            [["from_items(foo)", {"a": 1, "b": 2}]],
+            None,
+            [],
+            id="from_items(object)",
+        ),
     ),
 )
 def test_JMESPath_custom_functions(

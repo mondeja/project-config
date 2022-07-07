@@ -131,7 +131,6 @@ source = ["src"]
 [tool.mypy]
 python_version = "3.7"
 strict = true
-mypy_path = "../../../../typeshed/stubs/jmespath"
 
 [tool.isort]
 lines_after_imports = 2

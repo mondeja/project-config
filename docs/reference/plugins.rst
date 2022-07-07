@@ -511,6 +511,25 @@ convenient functions defined by the plugin internally:
 
    .. versionadded:: 0.5.0
 
+.. function:: enumerate(string: str | list | dict) -> list[list[int, str]]
+
+   Return an array of arrays containing the index and value of each item in the iterable.
+   If the iterable is an object, the value is converted before using :py:func:`to_items`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: to_items(string: dict) -> list[list[str, any]]
+
+   Convert an object to an array of arrays containing the key and value of each item.
+
+   .. versionadded:: 0.5.0
+
+.. function:: from_items(items: list[list[str, any]]) -> dict
+
+   Convert an array of arrays containing the key and value of each item to an object.
+
+   .. versionadded:: 0.5.0
+
 .. _JMES paths: https://jmespath.org
 .. _JMESPath builtin functions: https://jmespath.org/proposals/functions.html#built-in-functions
 

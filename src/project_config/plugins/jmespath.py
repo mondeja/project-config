@@ -173,6 +173,10 @@ def _create_removeaffix_function_for_string(
     )(lambda self, value, affix: func(value, affix))
 
 
+def _to_items(value: t.Any) -> t.List[t.Any]:
+    return [[key, value] for key, value in value.items()]
+
+
 class JMESPathProjectConfigFunctions(JMESPathFunctions):
     """JMESPath class to include custom functions."""
 
@@ -297,18 +301,33 @@ class JMESPathProjectConfigFunctions(JMESPathFunctions):
     def _func_format(self, schema: str, *args: t.Any) -> str:
         return schema.format(*args)
 
-    @jmespath_func_signature(
-        {"types": ["string"], "variadic": True},
-    )
+    @jmespath_func_signature({"types": ["string"], "variadic": True})
     def _func_splitlines(self, value: str, *args: t.Any) -> t.List[str]:
         return value.splitlines(*args)
 
-    @jmespath_func_signature(
-        {"types": ["string"]},
-        {"types": ["number"]},
-    )
+    @jmespath_func_signature({"types": ["string"]}, {"types": ["number"]})
     def _func_zfill(self, value: str, width: int) -> str:
         return value.zfill(width)
+
+    @jmespath_func_signature({"types": ["string", "array", "object"]})
+    def _func_enumerate(
+        self,
+        value: t.Union[t.List[t.Any], str, t.Dict[str, t.Any]],
+    ) -> t.List[t.Tuple[int, t.Any]]:
+        if isinstance(value, dict):
+            return [list(item) for item in enumerate(_to_items(value))]
+        return [list(item) for item in enumerate(value)]
+
+    @jmespath_func_signature({"types": ["object"]})
+    def _func_to_items(
+        self,
+        value: t.Dict[str, t.Any],
+    ) -> t.List[t.List[t.Any]]:
+        return _to_items(value)
+
+    @jmespath_func_signature({"types": ["array"]})
+    def _func_from_items(self, value: t.List[t.Any]) -> t.Dict[str, t.Any]:
+        return {str(key): subv for key, subv in value}
 
     locals().update(
         dict(
