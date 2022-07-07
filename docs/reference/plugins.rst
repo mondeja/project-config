@@ -153,12 +153,16 @@ of files, so only files that can be serialized can be targetted (see
 You can use in expressions all `JMESPath builtin functions`_ plus a set of
 convenient functions defined by the plugin internally:
 
-.. function:: regex_match(pattern: str, string: str) -> bool
+.. function:: regex_match(pattern: str, string: str[, flags: int=0]) -> bool
 
    Match a regular expression against a string using the Python's built-in
    :py:func:`re.match` function.
 
    .. versionadded:: 0.1.0
+
+   .. versionchanged:: 0.5.0
+
+      Allow to pass ``flags`` optional argument as an integer.
 
 .. function:: regex_matchall(pattern: str, strings: list[str]) -> bool
 
@@ -169,7 +173,7 @@ convenient functions defined by the plugin internally:
 
    .. deprecated:: 0.4.0
 
-.. function:: regex_search(pattern: str, string: str) -> list[str]
+.. function:: regex_search(pattern: str, string: str[, flags: int=0]) -> list[str]
 
    Search using a regular expression against a string using the Python's
    built-in :py:func:`re.search` function. Returns all found groups in an
@@ -177,6 +181,10 @@ convenient functions defined by the plugin internally:
    are defined. If no results are found, returns an empty array.
 
    .. versionadded:: 0.1.0
+
+   .. versionchanged:: 0.5.0
+
+      Allow to pass ``flags`` optional argument as an integer.
 
 .. function:: op(source: type, operation: str, target: type) -> bool
 
@@ -246,7 +254,7 @@ convenient functions defined by the plugin internally:
 
    .. versionadded:: 0.4.0
 
-.. function:: shlex_join(cmd_list: list) -> str
+.. function:: shlex_join(cmd_list: list[str]) -> str
 
    Join a list of strings using the Python's built-in :py:func:`shlex.join` function.
 
@@ -283,10 +291,103 @@ convenient functions defined by the plugin internally:
 
    .. versionadded:: 0.5.0
 
-.. function:: count(string: str | list, sub: any[, start: int[, end: int]]) -> int
+.. function:: count(value: str | list, sub: any[, start: int[, end: int]]) -> int
 
-   Return the number of occurrences of ``sub`` in ``string``
-   using :py:meth:`str.count`.
+   Return the number of occurrences of ``sub`` in ``value`` using :py:meth:`str.count`.
+   If ``start`` and ``end`` are given, return the number of occurrences between
+   ``start`` and ``end``.
+   .
+
+   .. versionadded:: 0.5.0
+
+.. function:: find(string: str | list, sub: any[, start: int[, end: int]]) -> int
+
+   Return the lowest index in ``value`` where subvalue ``sub`` is found.
+   If ``start`` and ``end`` are given, return the number of occurrences between
+   ``start`` and ``end``. If not found, ``-1`` is returned. If ``value`` is a string
+   it uses internally the Python's built-in function :py:meth:`str.find`
+   or :py:meth:`str.index` if ``value`` is an array.
+
+   .. versionadded:: 0.5.0
+
+.. function:: format(schema: str, *args: any) -> str
+
+   Return a string formatted using the Python's built-in :py:func:`format` function.
+   The variable ``schema`` only accepts numeric indexes delimited by braces ``{}``
+   for positional arguments in ``*args``.
+
+   .. versionadded:: 0.5.0
+
+.. function:: isalnum(string: str) -> bool
+
+   Return True if all characters in ``string`` are alphanumeric using :py:meth:`str.isalnum`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: isalpha(string: str) -> bool
+
+   Return True if all characters in ``string`` are alphabetic using :py:meth:`str.isalpha`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: isascii(string: str) -> bool
+
+   Return True if all characters in ``string`` are ASCII using :py:meth:`str.isascii`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: isdecimal(string: str) -> bool
+
+   Return True if all characters in ``string`` are decimal using :py:meth:`str.isdecimal`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: isdigit(string: str) -> bool
+
+   Return True if all characters in ``string`` are digits using :py:meth:`str.isdigit`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: isidentifier(string: str) -> bool
+
+   Return True if all characters in ``string`` are identifiers if the string is a valid
+   identifier according to the Python language definition using :py:meth:`str.isidentifier`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: islower(string: str) -> bool
+
+   Return True if all characters in ``string`` are lowercase using :py:meth:`str.islower`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: isnumeric(string: str) -> bool
+
+   Return True if all characters in ``string`` are numeric using :py:meth:`str.isnumeric`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: isprintable(string: str) -> bool
+
+   Return True if all characters in ``string`` are printable using :py:meth:`str.isprintable`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: isspace(string: str) -> bool
+
+   Return True if all characters in ``string`` are whitespace using :py:meth:`str.isspace`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: istitle(string: str) -> bool
+
+   Return True if all characters in ``string`` are titlecased using :py:meth:`str.istitle`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: isupper(string: str) -> bool
+
+   Return True if all characters in ``string`` are uppercase using :py:meth:`str.isupper`.
 
    .. versionadded:: 0.5.0
 

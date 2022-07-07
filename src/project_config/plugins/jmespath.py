@@ -76,6 +76,13 @@ JMESPATH_READABLE_ERRORS = {
 }
 
 
+def _create_is_function_for_string(func_suffix: str) -> t.Callable[[], bool]:
+    func = getattr(str, f"is{func_suffix}")
+    return jmespath.functions.signature({"types": ["string"]})(  # type: ignore
+        lambda self, value: func(value),
+    )
+
+
 class JMESPathProjectConfigFunctions(
     jmespath.functions.Functions,  # type: ignore
 ):
@@ -83,10 +90,10 @@ class JMESPathProjectConfigFunctions(
 
     @jmespath.functions.signature(  # type: ignore
         {"types": ["string"]},
-        {"types": ["string"]},
+        {"types": ["string"], "variadic": True},
     )
-    def _func_regex_match(self, regex: str, value: str) -> bool:
-        return bool(re.match(regex, value))
+    def _func_regex_match(self, regex: str, value: str, *args: t.Any) -> bool:
+        return bool(re.match(regex, value, *args))
 
     @jmespath.functions.signature(  # type: ignore
         {"types": ["string"]},
@@ -106,13 +113,25 @@ class JMESPathProjectConfigFunctions(
 
     @jmespath.functions.signature(  # type: ignore
         {"types": ["string"]},
-        {"types": ["string"]},
+        {"types": ["string"], "variadic": True},
     )
-    def _func_regex_search(self, regex: str, value: str) -> t.List[str]:
-        match = re.search(regex, value)
+    def _func_regex_search(
+        self, regex: str, value: str, *args: t.Any
+    ) -> t.List[str]:
+        match = re.search(regex, value, *args)
         if not match:
             return []
         return [match.group(0)] if not match.groups() else list(match.groups())
+
+    @jmespath.functions.signature(  # type: ignore
+        {"types": ["string"]},
+        {"types": ["string"]},
+        {"types": ["string"], "variadic": True},
+    )
+    def _func_regex_sub(
+        self, regex: str, repl: str, value: str, *args: t.Any
+    ) -> str:
+        return re.sub(regex, repl, value, *args)
 
     @jmespath.functions.signature(  # type: ignore
         {"types": []},
@@ -191,6 +210,48 @@ class JMESPathProjectConfigFunctions(
         *args: t.Any,
     ) -> int:
         return value.count(sub, *args)
+
+    @jmespath.functions.signature(  # type: ignore
+        {"types": ["string", "array"], "variadic": True},
+    )
+    def _func_find(
+        self, value: t.Union[t.List[t.Any], str], sub: t.Any, *args: t.Any
+    ) -> int:
+        if isinstance(value, list):
+            try:
+                return value.index(sub, *args)
+            except ValueError:
+                return -1
+        return value.find(sub, *args)
+
+    @jmespath.functions.signature(  # type: ignore
+        {"types": [], "variadic": True},
+    )
+    def _func_format(self, schema: str, *args: t.Any) -> str:
+        return schema.format(*args)
+
+    # add is{funcsuffix} Python's builtin string functions
+    locals().update(
+        {
+            f"_func_is{func_suffix}": _create_is_function_for_string(
+                func_suffix,
+            )
+            for func_suffix in {
+                "alnum",
+                "alpha",
+                "ascii",
+                "decimal",
+                "digit",
+                "identifier",
+                "lower",
+                "numeric",
+                "printable",
+                "space",
+                "title",
+                "upper",
+            }
+        },
+    )
 
 
 jmespath_options = jmespath.Options(
