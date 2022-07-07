@@ -416,6 +416,18 @@ convenient functions defined by the plugin internally:
 
    .. versionadded:: 0.5.0
 
+.. function:: removeprefix(string: str, prefix: str) -> str
+
+   Return a string with the given prefix removed using :py:meth:`str.removeprefix`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: removesuffix(string: str, suffix: str) -> str
+
+   Return a string with the given suffix removed using :py:meth:`str.removesuffix`.
+
+   .. versionadded:: 0.5.0
+
 .. function:: rfind(string: str | list, sub: any[, start: int[, end: int]]) -> int
 
    Return the highest index in ``value`` where subvalue ``sub`` is found.
@@ -440,9 +452,32 @@ convenient functions defined by the plugin internally:
 
    .. versionadded:: 0.5.0
 
+.. function:: rsplit(string: str[, sep: str[, maxsplit: int]]) -> list[str]
+
+   Return a list of the words in the string, using ``sep`` as the delimiter string
+   as returned from the method :py:meth:`str.rsplit`. Except for splitting from the
+   right, :py:func:`rsplit` behaves like :py:func:`split`.
+
+   .. versionadded:: 0.5.0
+
 .. function:: rstrip(string: str[, chars: str]) -> str
 
    Return a right-stripped version of the string using :py:meth:`str.rstrip`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: split(string: str[, sep: str[, maxsplit: int]]) -> list[str]
+
+   Return a list of the words in the string, using ``sep`` as the delimiter string
+   as returned from the method :py:meth:`str.split`. If ``sep`` is not given,
+   it defaults to ``None``, meaning that any whitespace string is a separator.
+
+   .. versionadded:: 0.5.0
+
+.. function:: splitlines(string: str[, keepends: bool]) -> list[str]
+
+   Return a list of the lines in the string, breaking at line boundaries using
+   the method :py:meth:`str.splitlines`.
 
    .. versionadded:: 0.5.0
 
@@ -467,6 +502,12 @@ convenient functions defined by the plugin internally:
 .. function:: upper(string: str) -> str
 
    Return an uppercased version of the string using :py:meth:`str.upper`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: zfill(string: str, width: int) -> str
+
+   Return a zero-padded version of the string using :py:meth:`str.zfill`.
 
    .. versionadded:: 0.5.0
 

@@ -326,7 +326,7 @@ from project_config.plugins.jmespath import JMESPathPlugin
             [],
             id="isalnum(string) returns false",
         ),
-        # all others is{funcsufix} behave the same way: isalpha, isdigit, etc.
+        # all others is{funcsuffix} behave the same way: isalpha, isdigit, etc.
         pytest.param(
             {"foo.json": '{"foo": "bar"}'},
             [["ljust(foo, `4`)", "bar "]],
@@ -375,6 +375,55 @@ from project_config.plugins.jmespath import JMESPathPlugin
             None,
             [],
             id="rpartition(string, sep)",
+        ),
+        pytest.param(
+            {"foo.json": '{"foo": "aabbaabbcc"}'},
+            [["removeprefix(foo, 'aab')", "baabbcc"]],
+            None,
+            [],
+            id="removeprefix(string, prefix)",
+        ),
+        pytest.param(
+            {"foo.json": '{"foo": "aabbaabbcc"}'},
+            [["removesuffix(foo, 'bcc')", "aabbaab"]],
+            None,
+            [],
+            id="removesuffix(string, suffix)",
+        ),
+        pytest.param(
+            {"foo.json": '{"foo": "abccc"}'},
+            [["split(foo, 'c', `2`)", ["ab", "", "c"]]],
+            None,
+            [],
+            id="split(string, sep, maxsplit)",
+        ),
+        pytest.param(
+            {"foo.json": '{"foo": "abccc"}'},
+            [["rsplit(foo, 'c', `2`)", ["abc", "", ""]]],
+            None,
+            [],
+            id="rsplit(string, sep, maxsplit)",
+        ),
+        pytest.param(
+            {"foo.json": '{"foo": "a\\nb\\r\\nc"}'},
+            [["splitlines(foo)", ["a", "b", "c"]]],
+            None,
+            [],
+            id="splitlines(string)",
+        ),
+        pytest.param(
+            {"foo.json": '{"foo": "a\\nb\\r\\nc"}'},
+            [["splitlines(foo, `true`)", ["a\n", "b\r\n", "c"]]],
+            None,
+            [],
+            id="splitlines(string, keepends)",
+        ),
+        pytest.param(
+            {"foo.json": '{"foo": "aa"}'},
+            [["zfill(foo, `4`)", "00aa"]],
+            None,
+            [],
+            id="zfill(string, width)",
         ),
     ),
 )

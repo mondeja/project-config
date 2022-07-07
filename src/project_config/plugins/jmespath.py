@@ -7,7 +7,13 @@ import shlex
 import typing as t
 import warnings
 
-import jmespath
+from jmespath import Options as JMESPathOptions, compile as jmespath_compile
+from jmespath.exceptions import JMESPathError as OriginalJMESPathError
+from jmespath.functions import (
+    Functions as JMESPathFunctions,
+    signature as jmespath_func_signature,
+)
+from jmespath.parser import ParsedResult as JMESPathParsedResult
 
 from project_config import (
     Error,
@@ -17,7 +23,12 @@ from project_config import (
     Rule,
     Tree,
 )
-from project_config.compat import cached_function, shlex_join
+from project_config.compat import (
+    cached_function,
+    removeprefix,
+    removesuffix,
+    shlex_join,
+)
 from project_config.exceptions import ProjectConfigException
 from project_config.fetchers import FetchError
 from project_config.serializers import SerializerError
@@ -80,16 +91,16 @@ def _create_simple_transform_function_for_string(
     func_name: str,
 ) -> t.Callable[[type, str], str]:
     func = getattr(str, func_name)
-    return jmespath.functions.signature({"types": ["string"]})(  # type: ignore
+    return jmespath_func_signature({"types": ["string"]})(
         lambda self, value: func(value),
     )
 
 
 def _create_is_function_for_string(
-    func_sufix: str,
+    func_suffix: str,
 ) -> t.Callable[[type, str], bool]:
-    func = getattr(str, f"is{func_sufix}")
-    return jmespath.functions.signature({"types": ["string"]})(  # type: ignore
+    func = getattr(str, f"is{func_suffix}")
+    return jmespath_func_signature({"types": ["string"]})(
         lambda self, value: func(value),
     )
 
@@ -109,16 +120,16 @@ def _create_find_function_for_string_or_array(
                 return -1
         return value.find(sub, *args)
 
-    return jmespath.functions.signature(  # type: ignore
+    return jmespath_func_signature(
         {"types": ["string", "array"], "variadic": True},
     )(_wrapper)
 
 
 def _create_just_function_for_string(
     func_prefix: str,
-) -> t.Callable[[type, str], str]:
+) -> t.Callable[[type, str, int, t.Any], str]:
     func = getattr(str, f"{func_prefix}just")
-    return jmespath.functions.signature(  # type: ignore
+    return jmespath_func_signature(
         {"types": ["string"]},
         {"types": ["number"], "variadic": True},
     )(lambda self, value, width, *args: func(value, width, *args))
@@ -128,34 +139,51 @@ def _create_partition_function_for_string(
     func_prefix: str,
 ) -> t.Callable[[type, str, str], t.List[str]]:
     func = getattr(str, f"{func_prefix}partition")
-    return jmespath.functions.signature(  # type: ignore
+    return jmespath_func_signature(
         {"types": ["string"]},
         {"types": ["string"]},
     )(lambda self, value, sep: list(func(value, sep)))
+
+
+def _create_split_function_for_string(
+    func_prefix: str,
+) -> t.Callable[[type, str, t.Any], t.List[str]]:
+    func = getattr(str, f"{func_prefix}split")
+    return jmespath_func_signature(
+        {"types": ["string"], "variadic": True},
+    )(lambda self, value, *args: func(value, *args))
 
 
 def _create_strip_function_for_string(
     func_prefix: str,
 ) -> t.Callable[[type, str], str]:
     func = getattr(str, f"{func_prefix}strip")
-    return jmespath.functions.signature(  # type: ignore
+    return jmespath_func_signature(
         {"types": ["string"], "variadic": True},
     )(lambda self, value, *args: func(value, *args))
 
 
-class JMESPathProjectConfigFunctions(
-    jmespath.functions.Functions,  # type: ignore
-):
+def _create_removeaffix_function_for_string(
+    func_suffix: str,
+) -> t.Callable[[type, str, str], str]:
+    func = removesuffix if func_suffix.startswith("s") else removeprefix
+    return jmespath_func_signature(
+        {"types": ["string"]},
+        {"types": ["string"]},
+    )(lambda self, value, affix: func(value, affix))
+
+
+class JMESPathProjectConfigFunctions(JMESPathFunctions):
     """JMESPath class to include custom functions."""
 
-    @jmespath.functions.signature(  # type: ignore
+    @jmespath_func_signature(
         {"types": ["string"]},
         {"types": ["string"], "variadic": True},
     )
     def _func_regex_match(self, regex: str, value: str, *args: t.Any) -> bool:
         return bool(re.match(regex, value, *args))
 
-    @jmespath.functions.signature(  # type: ignore
+    @jmespath_func_signature(
         {"types": ["string"]},
         {"types": ["array-string", "object"]},
     )
@@ -171,7 +199,7 @@ class JMESPathProjectConfigFunctions(
         )
         return all(bool(re.match(regex, value)) for value in container)
 
-    @jmespath.functions.signature(  # type: ignore
+    @jmespath_func_signature(
         {"types": ["string"]},
         {"types": ["string"], "variadic": True},
     )
@@ -183,7 +211,7 @@ class JMESPathProjectConfigFunctions(
             return []
         return [match.group(0)] if not match.groups() else list(match.groups())
 
-    @jmespath.functions.signature(  # type: ignore
+    @jmespath_func_signature(
         {"types": ["string"]},
         {"types": ["string"]},
         {"types": ["string"], "variadic": True},
@@ -193,7 +221,7 @@ class JMESPathProjectConfigFunctions(
     ) -> str:
         return re.sub(regex, repl, value, *args)
 
-    @jmespath.functions.signature(  # type: ignore
+    @jmespath_func_signature(
         {"types": []},
         {"types": ["string"]},
         {"types": []},
@@ -202,7 +230,7 @@ class JMESPathProjectConfigFunctions(
         try:
             func = OPERATORS_FUNCTIONS[operator]
         except KeyError:
-            raise jmespath.exceptions.JMESPathError(
+            raise OriginalJMESPathError(
                 f"Invalid operator '{operator}' passed to op() function,"
                 f" expected one of: {', '.join(list(OPERATORS_FUNCTIONS))}",
             )
@@ -218,40 +246,40 @@ class JMESPathProjectConfigFunctions(
                 return list(func(a, b))
         return func(a, b)
 
-    @jmespath.functions.signature({"types": ["array-string"]})  # type: ignore
+    @jmespath_func_signature({"types": ["array-string"]})
     def _func_shlex_join(self, cmd_list: t.List[str]) -> str:
         return shlex_join(cmd_list)
 
-    @jmespath.functions.signature({"types": ["string"]})  # type: ignore
+    @jmespath_func_signature({"types": ["string"]})
     def _func_shlex_split(self, cmd_str: str) -> t.List[str]:
         return shlex.split(cmd_str)
 
-    @jmespath.functions.signature(
-        {  # type: ignore
+    @jmespath_func_signature(
+        {
             "types": ["number"],
             "variadic": True,
         },
     )
-    def _func_round(self, *args) -> t.Union[float, int]:
-        return round(*args)  # type: ignore
+    def _func_round(self, *args: t.Any) -> t.Any:
+        return round(*args)
 
-    @jmespath.functions.signature(
-        {  # type: ignore
+    @jmespath_func_signature(
+        {
             "types": ["number"],
             "variadic": True,
         },
     )
-    def _func_range(self, *args) -> t.Union[t.List[float], t.List[int]]:
+    def _func_range(self, *args: t.Any) -> t.Union[t.List[float], t.List[int]]:
         return list(range(*args))
 
-    @jmespath.functions.signature(  # type: ignore
+    @jmespath_func_signature(
         {"types": ["string"]},
         {"types": ["number"], "variadic": True},
     )
     def _func_center(self, value: str, width: int, *args: t.Any) -> str:
         return value.center(width, *args)
 
-    @jmespath.functions.signature(  # type: ignore
+    @jmespath_func_signature(
         {"types": ["string", "array"]},
         {"types": [], "variadic": True},
     )
@@ -263,11 +291,24 @@ class JMESPathProjectConfigFunctions(
     ) -> int:
         return value.count(sub, *args)
 
-    @jmespath.functions.signature(  # type: ignore
+    @jmespath_func_signature(
         {"types": [], "variadic": True},
     )
     def _func_format(self, schema: str, *args: t.Any) -> str:
         return schema.format(*args)
+
+    @jmespath_func_signature(
+        {"types": ["string"], "variadic": True},
+    )
+    def _func_splitlines(self, value: str, *args: t.Any) -> t.List[str]:
+        return value.splitlines(*args)
+
+    @jmespath_func_signature(
+        {"types": ["string"]},
+        {"types": ["number"]},
+    )
+    def _func_zfill(self, value: str, width: int) -> str:
+        return value.zfill(width)
 
     locals().update(
         dict(
@@ -293,10 +334,10 @@ class JMESPathProjectConfigFunctions(
                 for func_prefix in {"", "r"}
             },
             **{
-                f"_func_is{func_sufix}": _create_is_function_for_string(
-                    func_sufix,
+                f"_func_is{func_suffix}": _create_is_function_for_string(
+                    func_suffix,
                 )
-                for func_sufix in {
+                for func_suffix in {
                     "alnum",
                     "alpha",
                     "ascii",
@@ -318,6 +359,12 @@ class JMESPathProjectConfigFunctions(
                 for func_prefix in {"l", "r"}
             },
             **{
+                f"_func_{func_prefix}split": _create_split_function_for_string(
+                    func_prefix,
+                )
+                for func_prefix in {"", "r"}
+            },
+            **{
                 f"_func_{func_prefix}strip": _create_strip_function_for_string(
                     func_prefix,
                 )
@@ -329,11 +376,17 @@ class JMESPathProjectConfigFunctions(
                 )
                 for func_prefix in {"", "r"}
             },
+            **{
+                f"_func_remove{func_suffix}": (
+                    _create_removeaffix_function_for_string(func_suffix)
+                )
+                for func_suffix in {"suffix", "prefix"}
+            },
         ),
     )
 
 
-jmespath_options = jmespath.Options(
+jmespath_options = JMESPathOptions(
     custom_functions=JMESPathProjectConfigFunctions(),
 )
 
@@ -345,16 +398,16 @@ class JMESPathError(ProjectConfigException):
 @cached_function
 def _compile_JMESPath_expression(
     expression: str,
-) -> jmespath.parser.ParsedResult:
-    return jmespath.compile(expression)
+) -> JMESPathParsedResult:
+    return jmespath_compile(expression)
 
 
 def _compile_JMESPath_expression_or_error(
     expression: str,
-) -> jmespath.parser.ParsedResult:
+) -> JMESPathParsedResult:
     try:
         return _compile_JMESPath_expression(expression)
-    except jmespath.exceptions.JMESPathError as exc:
+    except OriginalJMESPathError as exc:
         error_type = JMESPATH_READABLE_ERRORS.get(
             exc.__class__.__name__,
             "error",
@@ -368,10 +421,10 @@ def _compile_JMESPath_expression_or_error(
 def _compile_JMESPath_or_expected_value_error(
     expression: str,
     expected_value: t.Any,
-) -> jmespath.parser.ParsedResult:
+) -> JMESPathParsedResult:
     try:
         return _compile_JMESPath_expression(expression)
-    except jmespath.exceptions.JMESPathError as exc:
+    except OriginalJMESPathError as exc:
         error_type = JMESPATH_READABLE_ERRORS.get(
             exc.__class__.__name__,
             "error",
@@ -387,10 +440,10 @@ def _compile_JMESPath_or_expected_value_from_other_file_error(
     expression: str,
     expected_value_file: str,
     expected_value_expression: str,
-) -> jmespath.parser.ParsedResult:
+) -> JMESPathParsedResult:
     try:
         return _compile_JMESPath_expression(expression)
-    except jmespath.exceptions.JMESPathError as exc:
+    except OriginalJMESPathError as exc:
         error_type = JMESPATH_READABLE_ERRORS.get(
             exc.__class__.__name__,
             "error",
@@ -405,7 +458,7 @@ def _compile_JMESPath_or_expected_value_from_other_file_error(
 
 
 def _evaluate_JMESPath(
-    compiled_expression: jmespath.parser.ParsedResult,
+    compiled_expression: JMESPathParsedResult,
     instance: t.Any,
 ) -> t.Any:
     try:
@@ -413,7 +466,7 @@ def _evaluate_JMESPath(
             instance,
             options=jmespath_options,
         )
-    except jmespath.exceptions.JMESPathError as exc:
+    except OriginalJMESPathError as exc:
         formatted_expression = pprint.pformat(compiled_expression.expression)
         error_type = JMESPATH_READABLE_ERRORS.get(
             exc.__class__.__name__,
@@ -426,7 +479,7 @@ def _evaluate_JMESPath(
 
 
 def _evaluate_JMESPath_or_expected_value_error(
-    compiled_expression: jmespath.parser.ParsedResult,
+    compiled_expression: JMESPathParsedResult,
     expected_value: t.Any,
     instance: t.Dict[str, t.Any],
 ) -> t.Any:
@@ -435,7 +488,7 @@ def _evaluate_JMESPath_or_expected_value_error(
             instance,
             options=jmespath_options,
         )
-    except jmespath.exceptions.JMESPathError as exc:
+    except OriginalJMESPathError as exc:
         formatted_expression = pprint.pformat(compiled_expression.expression)
         error_type = JMESPATH_READABLE_ERRORS.get(
             exc.__class__.__name__,

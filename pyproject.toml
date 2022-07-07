@@ -131,6 +131,7 @@ source = ["src"]
 [tool.mypy]
 python_version = "3.7"
 strict = true
+mypy_path = "../../../../typeshed/stubs/jmespath"
 
 [tool.isort]
 lines_after_imports = 2
@@ -165,7 +166,7 @@ pytest_parametrize_values_type = "tuple"
 pytest_fixture_no_parentheses = true
 
 [tool.flakeheaven.plugins]
-pycodestyle = ["+*", "-W503"]
+pycodestyle = ["+*", "-W503", "-E203"]
 pyflakes = ["+*"]
 pylint = ["+*"]
 flake8-builtins = ["+*"]

@@ -20,8 +20,18 @@ else:
 
 if sys.version_info < (3, 9):
     cached_function = functools.lru_cache(maxsize=None)
+
+    def removeprefix(string: str, prefix: str) -> str:
+        return string[len(prefix) :] if string.startswith(prefix) else string
+
+    def removesuffix(string: str, suffix: str) -> str:
+        return string[: -len(suffix)] if string.endswith(suffix) else string
+
 else:
     cached_function = functools.cache
+
+    removeprefix = str.removeprefix
+    removesuffix = str.removesuffix
 
 if sys.version_info < (3, 10):
     import importlib_metadata
