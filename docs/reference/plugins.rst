@@ -391,6 +391,64 @@ convenient functions defined by the plugin internally:
 
    .. versionadded:: 0.5.0
 
+.. function:: ljust(string: str, width: int[, fillchar: str]) -> str
+
+   Return a left-justified version of the string using :py:meth:`str.ljust`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: lower(string: str) -> str
+
+   Return a lowercased version of the string using :py:meth:`str.lower`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: lstrip(string: str[, chars: str]) -> str
+
+   Return a left-stripped version of the string using :py:meth:`str.lstrip`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: rfind(string: str | list, sub: any[, start: int[, end: int]]) -> int
+
+   Return the highest index in ``value`` where subvalue ``sub`` is found.
+   If ``start`` and ``end`` are given, return the number of occurrences between
+   ``start`` and ``end``. If not found, ``-1`` is returned. If ``value`` is a string
+   it uses internally the Python's built-in function :py:meth:`str.find`
+   or :py:meth:`str.index` if ``value`` is an array.
+
+   .. versionadded:: 0.5.0
+
+.. function:: rstrip(string: str[, chars: str]) -> str
+
+   Return a right-stripped version of the string using :py:meth:`str.rstrip`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: strip(string: str[, chars: str]) -> str
+
+   Return a stripped version of the string using :py:meth:`str.strip`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: swapcase(string: str) -> str
+
+   Return a swapped-case version of the string using :py:meth:`str.swapcase`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: title(string: str) -> str
+
+   Return a titlecased version of the string using :py:meth:`str.title`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: upper(string: str) -> str
+
+   Return an uppercased version of the string using :py:meth:`str.upper`.
+
+   .. versionadded:: 0.5.0
+
 .. _JMES paths: https://jmespath.org
 .. _JMESPath builtin functions: https://jmespath.org/proposals/functions.html#built-in-functions
 

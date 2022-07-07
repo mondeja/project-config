@@ -76,11 +76,51 @@ JMESPATH_READABLE_ERRORS = {
 }
 
 
-def _create_is_function_for_string(func_suffix: str) -> t.Callable[[], bool]:
+def _create_simple_transform_function_for_string(
+    func_name: str,
+) -> t.Callable[[type, str], str]:
+    func = getattr(str, func_name)
+    return jmespath.functions.signature({"types": ["string"]})(  # type: ignore
+        lambda self, value: func(value),
+    )
+
+
+def _create_is_function_for_string(
+    func_suffix: str,
+) -> t.Callable[[type, str], bool]:
     func = getattr(str, f"is{func_suffix}")
     return jmespath.functions.signature({"types": ["string"]})(  # type: ignore
         lambda self, value: func(value),
     )
+
+
+def _create_find_function_for_string_or_array(
+    func_preffix: str,
+) -> t.Callable[[type, t.Union[t.List[t.Any], str], t.Any, t.Any], int]:
+    getattr(str, f"{func_preffix}find")
+
+    def _wrapper(
+        self: type, value: t.Union[t.List[t.Any], str], sub: t.Any, *args: t.Any
+    ) -> int:
+        if isinstance(value, list):
+            try:
+                return value.index(sub, *args)
+            except ValueError:
+                return -1
+        return value.find(sub, *args)
+
+    return jmespath.functions.signature(  # type: ignore
+        {"types": ["string", "array"], "variadic": True},
+    )(_wrapper)
+
+
+def _create_strip_function_for_string(
+    func_preffix: str,
+) -> t.Callable[[type, str], str]:
+    func = getattr(str, f"{func_preffix}strip")
+    return jmespath.functions.signature(  # type: ignore
+        {"types": ["string"], "variadic": True},
+    )(lambda self, value, *args: func(value, *args))
 
 
 class JMESPathProjectConfigFunctions(
@@ -184,13 +224,22 @@ class JMESPathProjectConfigFunctions(
     def _func_range(self, *args) -> t.Union[t.List[float], t.List[int]]:
         return list(range(*args))
 
-    @jmespath.functions.signature({"types": ["string"]})  # type: ignore
-    def _func_capitalize(self, value: str) -> str:
-        return value.capitalize()
-
-    @jmespath.functions.signature({"types": ["string"]})  # type: ignore
-    def _func_casefold(self, value: str) -> str:
-        return value.casefold()
+    # simple transformation functions for strings
+    locals().update(
+        {
+            f"_func_{func_name}": _create_simple_transform_function_for_string(
+                func_name,
+            )
+            for func_name in {
+                "capitalize",
+                "casefold",
+                "lower",
+                "swapcase",
+                "title",
+                "upper",
+            }
+        },
+    )
 
     @jmespath.functions.signature(  # type: ignore
         {"types": ["string"]},
@@ -211,18 +260,16 @@ class JMESPathProjectConfigFunctions(
     ) -> int:
         return value.count(sub, *args)
 
-    @jmespath.functions.signature(  # type: ignore
-        {"types": ["string", "array"], "variadic": True},
+    locals().update(
+        {
+            f"_func_{func_preffix}find": (
+                _create_find_function_for_string_or_array(
+                    func_preffix,
+                )
+            )
+            for func_preffix in {"", "r"}
+        },
     )
-    def _func_find(
-        self, value: t.Union[t.List[t.Any], str], sub: t.Any, *args: t.Any
-    ) -> int:
-        if isinstance(value, list):
-            try:
-                return value.index(sub, *args)
-            except ValueError:
-                return -1
-        return value.find(sub, *args)
 
     @jmespath.functions.signature(  # type: ignore
         {"types": [], "variadic": True},
@@ -250,6 +297,23 @@ class JMESPathProjectConfigFunctions(
                 "title",
                 "upper",
             }
+        },
+    )
+
+    @jmespath.functions.signature(  # type: ignore
+        {"types": ["string"]},
+        {"types": ["number"], "variadic": True},
+    )
+    def _func_ljust(self, value: str, width: int, *args: t.Any) -> str:
+        return value.ljust(width, *args)
+
+    # create `strip` functions for strings
+    locals().update(
+        {
+            f"_func_{func_preffix}strip": _create_strip_function_for_string(
+                func_preffix,
+            )
+            for func_preffix in {"", "l", "r"}
         },
     )
 

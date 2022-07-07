@@ -236,13 +236,6 @@ from project_config.plugins.jmespath import JMESPathPlugin
             id="capitalize(string)",
         ),
         pytest.param(
-            {"foo.json": '{"foo": "ßar"}'},
-            [["casefold(foo)", "ssar"]],
-            None,
-            [],
-            id="casefold(string)",
-        ),
-        pytest.param(
             {"foo.json": '{"foo": "bar"}'},
             [["center(foo, `5`)", " bar "]],
             None,
@@ -332,6 +325,42 @@ from project_config.plugins.jmespath import JMESPathPlugin
             None,
             [],
             id="isalnum(string) returns false",
+        ),
+        # all others is{funcsuffix} behave the same way: isalpha, isdigit, etc.
+        pytest.param(
+            {"foo.json": '{"foo": "bar"}'},
+            [["ljust(foo, `4`)", "bar "]],
+            None,
+            [],
+            id="ljust(string, width)",
+        ),
+        pytest.param(
+            {"foo.json": '{"foo": "bar"}'},
+            [["ljust(foo, `4`, 'a')", "bara"]],
+            None,
+            [],
+            id="ljust(string, width, fillchar)",
+        ),
+        pytest.param(
+            {"foo.json": '{"foo": "  bab   "}'},
+            [["strip(foo)", "bab"]],
+            None,
+            [],
+            id="strip(string)",
+        ),
+        pytest.param(
+            {"foo.json": '{"foo": "  bab   "}'},
+            [["lstrip(foo)", "bab   "]],
+            None,
+            [],
+            id="lstrip(string)",
+        ),
+        pytest.param(
+            {"foo.json": '{"foo": "cbababcb"}'},
+            [["strip(foo, 'bc')", "aba"]],
+            None,
+            [],
+            id="strip(string, chars)",
         ),
     ),
 )
