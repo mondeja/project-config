@@ -313,7 +313,7 @@ class JMESPathProjectConfigFunctions(JMESPathFunctions):
     def _func_enumerate(
         self,
         value: t.Union[t.List[t.Any], str, t.Dict[str, t.Any]],
-    ) -> t.List[t.Tuple[int, t.Any]]:
+    ) -> t.List[t.List[t.Any]]:
         if isinstance(value, dict):
             return [list(item) for item in enumerate(_to_items(value))]
         return [list(item) for item in enumerate(value)]

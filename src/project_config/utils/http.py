@@ -30,7 +30,7 @@ def _GET(
     err = None
     while time.time() < end:
         try:
-            return (  # type: ignore
+            response = (
                 urllib.request.urlopen(urllib.request.Request(url))
                 .read()
                 .decode("utf-8")
@@ -42,6 +42,9 @@ def _GET(
         ) as exc:
             err = exc.__str__()
             time.sleep(sleep)
+        else:
+            urllib.request.urlcleanup()
+            return response  # type: ignore
 
     error_reason = "" if not err else f" Possibly caused by: {err}"
     raise ProjectConfigTimeoutError(
