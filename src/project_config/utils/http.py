@@ -24,13 +24,13 @@ def _GET(
 ) -> str:
     start = time.time()
     timeout = timeout or float(
-        os.environ.get("PROJECT_CONFIG_REQUESTS_TIMEOUT", 0.01),
+        os.environ.get("PROJECT_CONFIG_REQUESTS_TIMEOUT", 10),
     )
     end = start + timeout
     err = None
     while time.time() < end:
         try:
-            return (  # type: ignore
+            response = (
                 urllib.request.urlopen(urllib.request.Request(url))
                 .read()
                 .decode("utf-8")
@@ -42,7 +42,11 @@ def _GET(
         ) as exc:
             err = exc.__str__()
             time.sleep(sleep)
+        else:
+            urllib.request.urlcleanup()
+            return response  # type: ignore
 
+    urllib.request.urlcleanup()
     error_reason = "" if not err else f" Possibly caused by: {err}"
     raise ProjectConfigTimeoutError(
         f"Impossible to fetch '{url}' after {timeout} seconds.{error_reason}",

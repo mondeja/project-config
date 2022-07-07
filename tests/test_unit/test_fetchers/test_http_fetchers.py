@@ -3,11 +3,12 @@ import re
 import urllib.parse
 
 import pytest
-from testing_helpers import TEST_SERVER_URL
+from testing_helpers import TEST_SERVER_URL, mark_end2end
 
 from project_config.fetchers import FetchError, fetch
 
 
+@mark_end2end
 @pytest.mark.parametrize(
     ("path", "content", "expected_result", "expected_error_message"),
     (
