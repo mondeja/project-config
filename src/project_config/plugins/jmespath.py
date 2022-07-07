@@ -165,6 +165,33 @@ class JMESPathProjectConfigFunctions(
     def _func_range(self, *args) -> t.Union[t.List[float], t.List[int]]:
         return list(range(*args))
 
+    @jmespath.functions.signature({"types": ["string"]})  # type: ignore
+    def _func_capitalize(self, value: str) -> str:
+        return value.capitalize()
+
+    @jmespath.functions.signature({"types": ["string"]})  # type: ignore
+    def _func_casefold(self, value: str) -> str:
+        return value.casefold()
+
+    @jmespath.functions.signature(  # type: ignore
+        {"types": ["string"]},
+        {"types": ["number"], "variadic": True},
+    )
+    def _func_center(self, value: str, width: int, *args: t.Any) -> str:
+        return value.center(width, *args)
+
+    @jmespath.functions.signature(  # type: ignore
+        {"types": ["string", "array"]},
+        {"types": [], "variadic": True},
+    )
+    def _func_count(
+        self,
+        value: t.Union[t.List[t.Any], str],
+        sub: t.Any,
+        *args: t.Any,
+    ) -> int:
+        return value.count(sub, *args)
+
 
 jmespath_options = jmespath.Options(
     custom_functions=JMESPathProjectConfigFunctions(),

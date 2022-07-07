@@ -90,6 +90,7 @@ Don't allow code blocks in RST documentation files:
      rules: [
        files: ["docs/**/*.rst"],
        excludeContent: [
+         ".. code-block::  ",
          ".. code-block:: bash",
          ".. code-block:: json5",
        ],
@@ -109,7 +110,7 @@ ifFilesExist
 
 Check if a set of files and/or directories exists.
 
-It accepts an array of paths. If a path ends with ``/`` character it is
+Accepts an array of paths. If a path ends with ``/`` character it is
 considered a directory.
 
 .. rubric:: Examples
@@ -218,8 +219,8 @@ convenient functions defined by the plugin internally:
    * ``indexOf``: :py:func:`operator.indexOf`
 
    If ``source`` and ``target`` are both of type array and the operator
-   is one of the next ones, the arrays are converted to `sets`_ before
-   applying the operator:
+   is one of the next ones, the arrays are converted to
+   :external:py:class:`set` before applying the operator:
 
    * ``<``: :py:func:`operator.lt`
    * ``<=``: :py:func:`operator.le`
@@ -236,7 +237,8 @@ convenient functions defined by the plugin internally:
 
    .. versionchanged:: 0.4.0
 
-      Convert to `sets`_ before applying operators if both arguments are arrays.
+      Convert to :external:py:class:`set` before applying operators if both
+      arguments are arrays.
 
 .. function:: shlex_split(cmd_str: str) -> list
 
@@ -252,22 +254,44 @@ convenient functions defined by the plugin internally:
 
 .. function:: round(number: float[, precision: int]) -> float
 
-   Round a number to a given precision using the function `round`_.
+   Round a number to a given precision using the function :external:py:func:`round`.
 
    .. versionadded:: 0.5.0
 
 .. function:: range([start: float,] stop: float[, step: float]) -> list
 
-   Return an array of numbers from `start` to `stop` with a step of `step` casting
-   the result of the constructor `range`_ to an array.
+   Return an array of numbers from ``start`` to ``stop`` with a step of ``step``
+   casting the result of the constructor :external:py:class:`range` to an array.
 
-    .. versionadded:: 0.5.0
+   .. versionadded:: 0.5.0
+
+.. function:: capitalize(string: str) -> str
+
+   Capitalize the first letter of a string using :py:meth:`str.capitalize`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: casefold(string: str) -> str
+
+   Return a casefolded copy of a string using :py:meth:`str.casefold`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: center(string: str, width: int[, fillchar: str]) -> str
+
+   Return centered in a string of length ``width`` using :py:meth:`str.center`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: count(string: str | list, sub: any[, start: int[, end: int]]) -> int
+
+   Return the number of occurrences of ``sub`` in ``string``
+   using :py:meth:`str.count`.
+
+   .. versionadded:: 0.5.0
 
 .. _JMES paths: https://jmespath.org
 .. _JMESPath builtin functions: https://jmespath.org/proposals/functions.html#built-in-functions
-.. _sets: https://docs.python.org/3/library/stdtypes.html#set
-.. _round: https://docs.python.org/3/library/functions.html#round
-.. _range: https://docs.python.org/3/library/stdtypes.html#range
 
 JMESPathsMatch
 ==============
@@ -316,7 +340,7 @@ crossJMESPathsMatch
 
 JMESPaths matching between multiple files.
 
-It accepts an array of arrays. Each one of these arrays must have the syntax:
+Accepts an array of arrays. Each one of these arrays must have the syntax:
 
 .. code-block:: js
 
