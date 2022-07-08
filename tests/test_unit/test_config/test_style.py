@@ -454,7 +454,11 @@ class FakeConfig:
         return self.dict_[key]
 
 
-def test__prefetch_urls_local_files(tmp_path, mocker, monkeypatch):
+@mark_end2end
+def test__prefetch_urls_local_files(tmp_path, mocker, capsys, monkeypatch):
+    assert run(["clean", "cache"]) == 0
+    capsys.readouterr()
+
     monkeypatch.setenv("PROJECT_CONFIG_USE_CACHE", "true")
 
     extended_style_file = tmp_path / "bar.yaml"
