@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.cache &mdash; project-config 0.4.0 documentation</title>
+  <title>project_config.cache &mdash; project-config 0.5.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -32,7 +32,7 @@
             <a href="../../index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.4
+                0.5
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -96,6 +96,8 @@
   <h1>Source code for project_config.cache</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Persistent cache.&quot;&quot;&quot;</span>
 
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
 <span class="kn">import</span> <span class="nn">contextlib</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
@@ -113,31 +115,32 @@
     <span class="k">return</span> <span class="n">appdirs</span><span class="o">.</span><span class="n">user_data_dir</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
         <span class="n">appname</span><span class="o">=</span><span class="n">project_config_metadata</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
         <span class="n">appauthor</span><span class="o">=</span><span class="n">project_config_metadata</span><span class="p">[</span><span class="s2">&quot;author&quot;</span><span class="p">],</span>
-        <span class="n">version</span><span class="o">=</span><span class="n">project_config_metadata</span><span class="p">[</span><span class="s2">&quot;version&quot;</span><span class="p">],</span>
     <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Cache"><a class="viewcode-back" href="../../dev/reference/project_config.cache.html#project_config.cache.Cache">[docs]</a><span class="k">class</span> <span class="nc">Cache</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Wrapper for a unique :py:class:`diskcache.Cache` instance.&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Cache.Keys"><a class="viewcode-back" href="../../dev/reference/project_config.cache.html#project_config.cache.Cache.Keys">[docs]</a>    <span class="k">class</span> <span class="nc">Keys</span><span class="p">:</span>  <span class="c1"># noqa: D106</span>
-        <span class="n">expiration</span> <span class="o">=</span> <span class="s2">&quot;_project_config_cache_expiration&quot;</span></div>
+    <span class="n">_cache</span> <span class="o">=</span> <span class="n">diskcache</span><span class="o">.</span><span class="n">Cache</span><span class="p">(</span><span class="n">_directory</span><span class="p">())</span>
 
-<div class="viewcode-block" id="Cache._get_cache"><a class="viewcode-back" href="../../dev/reference/project_config.cache.html#project_config.cache.Cache._get_cache">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="nd">@cached_function</span>
-    <span class="k">def</span> <span class="nf">_get_cache</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">diskcache</span><span class="o">.</span><span class="n">Cache</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">diskcache</span><span class="o">.</span><span class="n">Cache</span><span class="p">(</span><span class="n">_directory</span><span class="p">())</span></div>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Cache is a not instanceable interface.&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Cache.set"><a class="viewcode-back" href="../../dev/reference/project_config.cache.html#project_config.cache.Cache.set">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">:</span>  <span class="c1"># noqa: A003, D102</span>
-        <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;expire&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">Keys</span><span class="o">.</span><span class="n">expiration</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_get_cache</span><span class="p">()</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span>
+            <span class="o">*</span><span class="n">args</span><span class="p">,</span>
+            <span class="o">**</span><span class="nb">dict</span><span class="p">(</span>
+                <span class="n">expire</span><span class="o">=</span><span class="bp">cls</span><span class="o">.</span><span class="n">_expiration_time</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
+                <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span></div>
 
 <div class="viewcode-block" id="Cache.get"><a class="viewcode-back" href="../../dev/reference/project_config.cache.html#project_config.cache.Cache.get">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">:</span>  <span class="c1"># noqa: D102</span>
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;PROJECT_CONFIG_USE_CACHE&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;false&quot;</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
-        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_get_cache</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>  <span class="c1"># pragma: no cover</span></div>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>  <span class="c1"># pragma: no cover</span></div>
 
 <div class="viewcode-block" id="Cache.clean"><a class="viewcode-back" href="../../dev/reference/project_config.cache.html#project_config.cache.Cache.clean">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">clean</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
@@ -149,7 +152,19 @@
 <div class="viewcode-block" id="Cache.get_directory"><a class="viewcode-back" href="../../dev/reference/project_config.cache.html#project_config.cache.Cache.get_directory">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_directory</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Return the cache directory.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">_directory</span><span class="p">()</span></div></div>
+        <span class="k">return</span> <span class="n">_directory</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Cache.set_expiration_time"><a class="viewcode-back" href="../../dev/reference/project_config.cache.html#project_config.cache.Cache.set_expiration_time">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">set_expiration_time</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">expiration_time</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Set the expiration time for the cache.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            expiration_time (float): Time in seconds.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">_expiration_time</span> <span class="o">=</span> <span class="n">expiration_time</span>  <span class="c1"># type: ignore</span></div></div>
 </pre></div>
 
            </div>

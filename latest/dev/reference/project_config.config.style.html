@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.config.style package &mdash; project-config 0.4.0 documentation</title>
+  <title>project_config.config.style package &mdash; project-config 0.5.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -34,7 +34,7 @@
             <a href="../../index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.4
+                0.5
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -168,6 +168,19 @@ If the first yielded value is a dict, we have a style without errors.</p>
 <dd><p>Loads styles to the configuration passed as argument.</p>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="project_config.config.style._prefetch_urls">
+<span class="sig-prename descclassname"><span class="pre">project_config.config.style.</span></span><span class="sig-name descname"><span class="pre">_prefetch_urls</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.10)"><span class="pre">Any</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../_modules/project_config/config/style.html#_prefetch_urls"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.config.style._prefetch_urls" title="Permalink to this definition"></a></dt>
+<dd><p>Prefetch urls concurrently and store them in cache.</p>
+<p>This function is used to store urls in cache before they are used,
+so the network calls are speedup a lot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>config</strong> – The config object.</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>

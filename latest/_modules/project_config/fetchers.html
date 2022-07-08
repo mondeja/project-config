@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.fetchers &mdash; project-config 0.4.0 documentation</title>
+  <title>project_config.fetchers &mdash; project-config 0.5.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -32,7 +32,7 @@
             <a href="../../index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.4
+                0.5
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -96,6 +96,8 @@
   <h1>Source code for project_config.fetchers</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Fetchers for different types of resources by URI schema.&quot;&quot;&quot;</span>
 
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
 <span class="kn">import</span> <span class="nn">importlib</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">typing</span> <span class="k">as</span> <span class="nn">t</span>
@@ -124,9 +126,9 @@
 <div class="viewcode-block" id="SchemeProtocolNotImplementedError"><a class="viewcode-back" href="../../dev/reference/project_config.fetchers.html#project_config.fetchers.SchemeProtocolNotImplementedError">[docs]</a><span class="k">class</span> <span class="nc">SchemeProtocolNotImplementedError</span><span class="p">(</span><span class="n">ProjectConfigNotImplementedError</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;A URI schema has not been implemented.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scheme</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scheme</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Fetching&quot;</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Fetching from scheme protocol &#39;</span><span class="si">{</span><span class="n">scheme</span><span class="si">}</span><span class="s2">:&#39; is not implemented.&quot;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">action</span><span class="si">}</span><span class="s2"> from scheme protocol &#39;</span><span class="si">{</span><span class="n">scheme</span><span class="si">}</span><span class="s2">:&#39; is not implemented.&quot;</span><span class="p">,</span>
         <span class="p">)</span></div>
 
 
@@ -183,6 +185,27 @@
         <span class="k">raise</span> <span class="n">FetchError</span><span class="p">(</span><span class="n">exc</span><span class="o">.</span><span class="n">message</span><span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="resolve_url"><a class="viewcode-back" href="../../dev/reference/project_config.fetchers.html#project_config.fetchers.resolve_url">[docs]</a><span class="k">def</span> <span class="nf">resolve_url</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;Resolve an URL from a custom URI to their real counterpart.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        url (str): URI to the target resource.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple: Real URL for the target resource and scheme.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">url_parts</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">urlsplit</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="n">scheme</span> <span class="o">=</span> <span class="n">_get_scheme_from_urlparts</span><span class="p">(</span><span class="n">url_parts</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">module</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;project_config.fetchers.</span><span class="si">{</span><span class="n">scheme</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">SchemeProtocolNotImplementedError</span><span class="p">(</span><span class="n">scheme</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;Resolving&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="nb">getattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s2">&quot;resolve_url&quot;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">url_parts_</span><span class="p">:</span> <span class="n">url</span><span class="p">)(</span><span class="n">url_parts</span><span class="p">),</span>
+        <span class="n">scheme</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="resolve_maybe_relative_url"><a class="viewcode-back" href="../../dev/reference/project_config.fetchers.html#project_config.fetchers.resolve_maybe_relative_url">[docs]</a><span class="k">def</span> <span class="nf">resolve_maybe_relative_url</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">parent_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">rootdir</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Relative URL resolver.</span>
 
@@ -235,7 +258,10 @@
 
         <span class="c1"># parent url is another protocol like https, so we are online,</span>
         <span class="c1"># must convert to a relative URI depending on the protocol</span>
-        <span class="k">raise</span> <span class="n">SchemeProtocolNotImplementedError</span><span class="p">(</span><span class="n">parent_url_parts</span><span class="o">.</span><span class="n">scheme</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">SchemeProtocolNotImplementedError</span><span class="p">(</span>
+            <span class="n">parent_url_parts</span><span class="o">.</span><span class="n">scheme</span><span class="p">,</span>
+            <span class="n">action</span><span class="o">=</span><span class="s2">&quot;Resolving&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
 
     <span class="c1"># other protocols like https uses absolute URLs</span>
     <span class="k">return</span> <span class="n">url</span></div>

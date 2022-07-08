@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.fetchers.github module &mdash; project-config 0.4.0 documentation</title>
+  <title>project_config.fetchers.github module &mdash; project-config 0.5.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -34,7 +34,7 @@
             <a href="../../index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.4
+                0.5
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -141,6 +141,34 @@
 <dt class="sig sig-object py" id="project_config.fetchers.github.fetch">
 <span class="sig-prename descclassname"><span class="pre">project_config.fetchers.github.</span></span><span class="sig-name descname"><span class="pre">fetch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url_parts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/urllib.parse.html#urllib.parse.SplitResult" title="(in Python v3.10)"><span class="pre">urllib.parse.SplitResult</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.10)"><span class="pre">Any</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../_modules/project_config/fetchers/github.html#fetch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.fetchers.github.fetch" title="Permalink to this definition"></a></dt>
 <dd><p>Fetch a resource through HTTPs protocol for a Github URI.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>url_parts</strong> (<a class="reference external" href="https://docs.python.org/3/library/urllib.parse.html#urllib.parse.SplitResult" title="(in Python v3.10)"><em>urllib.parse.SplitResult</em></a>) – The URL parts of the URI.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The fetched resource content.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="project_config.fetchers.github.resolve_url">
+<span class="sig-prename descclassname"><span class="pre">project_config.fetchers.github.</span></span><span class="sig-name descname"><span class="pre">resolve_url</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url_parts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/urllib.parse.html#urllib.parse.SplitResult" title="(in Python v3.10)"><span class="pre">urllib.parse.SplitResult</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../_modules/project_config/fetchers/github.html#resolve_url"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.fetchers.github.resolve_url" title="Permalink to this definition"></a></dt>
+<dd><p>Resolve a <code class="docutils literal notranslate"><span class="pre">gh:</span></code> scheme URI to their real counterpart.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>url_parts</strong> (<a class="reference external" href="https://docs.python.org/3/library/urllib.parse.html#urllib.parse.SplitResult" title="(in Python v3.10)"><em>urllib.parse.SplitResult</em></a>) – The URL parts of the URI.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The real <code class="docutils literal notranslate"><span class="pre">https:</span></code> scheme URL.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>

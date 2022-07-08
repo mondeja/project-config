@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.config &mdash; project-config 0.4.0 documentation</title>
+  <title>project_config.config &mdash; project-config 0.5.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -32,7 +32,7 @@
             <a href="../../index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.4
+                0.5
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -96,12 +96,15 @@
   <h1>Source code for project_config.config</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Configuration handler.&quot;&quot;&quot;</span>
 
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span> <span class="nn">importlib</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">typing</span> <span class="k">as</span> <span class="nn">t</span>
 
 <span class="kn">from</span> <span class="nn">project_config.cache</span> <span class="kn">import</span> <span class="n">Cache</span>
-<span class="kn">from</span> <span class="nn">project_config.compat</span> <span class="kn">import</span> <span class="n">TypeAlias</span>
+<span class="kn">from</span> <span class="nn">project_config.compat</span> <span class="kn">import</span> <span class="n">TypeAlias</span><span class="p">,</span> <span class="n">tomllib_package_name</span>
 <span class="kn">from</span> <span class="nn">project_config.config.exceptions</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">ConfigurationFilesNotFound</span><span class="p">,</span>
     <span class="n">CustomConfigFileNotFound</span><span class="p">,</span>
@@ -127,7 +130,9 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        object: ``None`` if not found, configuration data otherwise.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">pyproject_toml</span> <span class="o">=</span> <span class="n">fetch</span><span class="p">(</span><span class="s2">&quot;pyproject.toml&quot;</span><span class="p">)</span>
+    <span class="n">tomllib</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">tomllib_package_name</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;pyproject.toml&quot;</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">pyproject_toml</span> <span class="o">=</span> <span class="n">tomllib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
     <span class="k">if</span> <span class="s2">&quot;tool&quot;</span> <span class="ow">in</span> <span class="n">pyproject_toml</span> <span class="ow">and</span> <span class="s2">&quot;project-config&quot;</span> <span class="ow">in</span> <span class="n">pyproject_toml</span><span class="p">[</span><span class="s2">&quot;tool&quot;</span><span class="p">]:</span>
         <span class="k">return</span> <span class="n">pyproject_toml</span><span class="p">[</span><span class="s2">&quot;tool&quot;</span><span class="p">][</span><span class="s2">&quot;project-config&quot;</span><span class="p">]</span>
     <span class="k">return</span> <span class="kc">None</span></div>
@@ -160,9 +165,10 @@
 
     <span class="n">project_config_toml_exists</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="s2">&quot;.project-config.toml&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">project_config_toml_exists</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s2">&quot;.project-config.toml&quot;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span>
-            <span class="n">fetch</span><span class="p">(</span><span class="s2">&quot;.project-config.toml&quot;</span><span class="p">),</span>
-        <span class="p">)</span>
+        <span class="n">tomllib</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">tomllib_package_name</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;.project-config.toml&quot;</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">project_config_toml</span> <span class="o">=</span> <span class="n">tomllib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;.project-config.toml&quot;</span><span class="p">,</span> <span class="n">project_config_toml</span>
 
     <span class="k">if</span> <span class="n">pyproject_toml_exists</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">PyprojectTomlFoundButHasNoConfig</span><span class="p">()</span>
@@ -345,11 +351,8 @@
         <span class="n">config</span><span class="p">[</span><span class="s2">&quot;cache&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_cache_string_to_seconds</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;cache&quot;</span><span class="p">])</span>
 
         <span class="c1"># set the cache expiration time globally</span>
-        <span class="n">Cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span>
-            <span class="n">Cache</span><span class="o">.</span><span class="n">Keys</span><span class="o">.</span><span class="n">expiration</span><span class="p">,</span>
-            <span class="n">config</span><span class="p">[</span><span class="s2">&quot;cache&quot;</span><span class="p">],</span>
-            <span class="n">expire</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="p">)</span>
+        <span class="n">Cache</span><span class="o">.</span><span class="n">set_expiration_time</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;cache&quot;</span><span class="p">])</span>
+
         <span class="c1"># main configuration in file</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dict_</span><span class="p">:</span> <span class="n">ConfigType</span> <span class="o">=</span> <span class="n">config</span>
 

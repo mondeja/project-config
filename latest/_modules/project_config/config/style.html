@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.config.style &mdash; project-config 0.4.0 documentation</title>
+  <title>project_config.config.style &mdash; project-config 0.5.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
@@ -32,7 +32,7 @@
             <a href="../../../index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.4
+                0.5
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -97,15 +97,21 @@
   <h1>Source code for project_config.config.style</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Style loader, blender and checker.&quot;&quot;&quot;</span>
 
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">typing</span> <span class="k">as</span> <span class="nn">t</span>
 
+<span class="kn">from</span> <span class="nn">project_config.cache</span> <span class="kn">import</span> <span class="n">Cache</span>
 <span class="kn">from</span> <span class="nn">project_config.config.exceptions</span> <span class="kn">import</span> <span class="n">ProjectConfigInvalidConfigSchema</span>
 <span class="kn">from</span> <span class="nn">project_config.fetchers</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">FetchError</span><span class="p">,</span>
     <span class="n">fetch</span><span class="p">,</span>
     <span class="n">resolve_maybe_relative_url</span><span class="p">,</span>
+    <span class="n">resolve_url</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">project_config.plugins</span> <span class="kn">import</span> <span class="n">Plugins</span>
+<span class="kn">from</span> <span class="nn">project_config.serializers</span> <span class="kn">import</span> <span class="n">serialize_for_url</span>
 <span class="kn">from</span> <span class="nn">project_config.types</span> <span class="kn">import</span> <span class="n">Rule</span>
 
 
@@ -117,7 +123,7 @@
 <span class="c1"># TODO: improve style type with TypedDict?</span>
 <span class="c1"># https://docs.python.org/3/library/typing.html#typing.TypedDict</span>
 <span class="n">StyleType</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">]]</span>
-<span class="n">StyleLoderIterator</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">Iterator</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">StyleType</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span>
+<span class="n">StyleLoaderIterator</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">Iterator</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">StyleType</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span>
 
 
 <div class="viewcode-block" id="Style"><a class="viewcode-back" href="../../../dev/reference/project_config.config.style.html#project_config.config.style.Style">[docs]</a><span class="k">class</span> <span class="nc">Style</span><span class="p">:</span>
@@ -132,8 +138,23 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
 
 <div class="viewcode-block" id="Style.from_config"><a class="viewcode-back" href="../../../dev/reference/project_config.config.style.html#project_config.config.style.Style.from_config">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Style&quot;</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">from_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Style</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Loads styles to the configuration passed as argument.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;PROJECT_CONFIG_USE_CACHE&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">&quot;false&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span>  <span class="c1"># pragma: no cover</span>
+                <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;style&quot;</span><span class="p">],</span> <span class="nb">str</span><span class="p">)</span>
+                <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;style&quot;</span><span class="p">])</span>
+            <span class="p">)</span> <span class="ow">or</span> <span class="p">(</span>
+                <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;style&quot;</span><span class="p">],</span> <span class="nb">list</span><span class="p">)</span>
+                <span class="ow">and</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">([</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">url</span><span class="p">)</span> <span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;style&quot;</span><span class="p">]])</span>
+            <span class="p">):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">_prefetch_urls</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                    <span class="c1"># if a exception is raised, will be raised again</span>
+                    <span class="c1"># in the synchronous style loader</span>
+                    <span class="k">pass</span>
+
         <span class="n">style</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
 
         <span class="n">style_gen</span> <span class="o">=</span> <span class="n">style</span><span class="o">.</span><span class="n">_load_styles_from_config</span><span class="p">()</span>
@@ -154,7 +175,7 @@
 
         <span class="k">return</span> <span class="n">style</span></div>
 
-<div class="viewcode-block" id="Style._load_styles_from_config"><a class="viewcode-back" href="../../../dev/reference/project_config.config.style.html#project_config.config.style.Style._load_styles_from_config">[docs]</a>    <span class="k">def</span> <span class="nf">_load_styles_from_config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">StyleLoderIterator</span><span class="p">:</span>
+<div class="viewcode-block" id="Style._load_styles_from_config"><a class="viewcode-back" href="../../../dev/reference/project_config.config.style.html#project_config.config.style.Style._load_styles_from_config">[docs]</a>    <span class="k">def</span> <span class="nf">_load_styles_from_config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">StyleLoaderIterator</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Load styles yielding error messages if found.</span>
 
 <span class="sd">        Error messages are of type string and style is of type dict.</span>
@@ -227,7 +248,7 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">parent_style_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">style</span><span class="p">:</span> <span class="n">StyleType</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">StyleLoderIterator</span><span class="p">:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">StyleLoaderIterator</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">s</span><span class="p">,</span> <span class="n">extend_url</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">style</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;extends&quot;</span><span class="p">)):</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">partial_style</span> <span class="o">=</span> <span class="n">fetch</span><span class="p">(</span><span class="n">extend_url</span><span class="p">)</span>
@@ -464,6 +485,74 @@
                             <span class="s2">&quot; defined plugins:&quot;</span>
                             <span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plugins</span><span class="o">.</span><span class="n">plugin_names</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
                         <span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="_prefetch_urls"><a class="viewcode-back" href="../../../dev/reference/project_config.config.style.html#project_config.config.style._prefetch_urls">[docs]</a><span class="k">def</span> <span class="nf">_prefetch_urls</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Prefetch urls concurrently and store them in cache.</span>
+
+<span class="sd">    This function is used to store urls in cache before they are used,</span>
+<span class="sd">    so the network calls are speedup a lot.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        config: The config object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="kn">import</span> <span class="n">as_completed</span>
+
+    <span class="kn">from</span> <span class="nn">requests_futures.sessions</span> <span class="kn">import</span> <span class="n">FuturesSession</span>
+
+    <span class="n">session</span> <span class="o">=</span> <span class="n">FuturesSession</span><span class="p">()</span>
+
+    <span class="n">style_urls_</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;style&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">style_urls_</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">style_urls_</span> <span class="o">=</span> <span class="p">[</span><span class="n">style_urls_</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">prefetch_partial_style</span><span class="p">(</span>
+        <span class="n">parent_style_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">extend_urls</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">urls</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">extend_url</span> <span class="ow">in</span> <span class="n">extend_urls</span><span class="p">:</span>
+            <span class="n">resolved_extend_url</span> <span class="o">=</span> <span class="n">resolve_maybe_relative_url</span><span class="p">(</span>
+                <span class="n">extend_url</span><span class="p">,</span>
+                <span class="n">parent_style_url</span><span class="p">,</span>
+                <span class="n">config</span><span class="o">.</span><span class="n">rootdir</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">url</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">resolve_url</span><span class="p">(</span><span class="n">resolved_extend_url</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">Cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">urls</span><span class="p">[</span><span class="n">url</span><span class="p">]</span> <span class="o">=</span> <span class="n">resolved_extend_url</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">urls</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="n">futures</span> <span class="o">=</span> <span class="p">[</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span> <span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">urls</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">future</span> <span class="ow">in</span> <span class="n">as_completed</span><span class="p">(</span><span class="n">futures</span><span class="p">):</span>
+            <span class="n">resp</span> <span class="o">=</span> <span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+            <span class="n">Cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">url</span><span class="p">,</span> <span class="n">resp</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+            <span class="n">style_obj</span> <span class="o">=</span> <span class="n">serialize_for_url</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">url</span><span class="p">,</span> <span class="n">resp</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">style_obj</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;extends&quot;</span><span class="p">),</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="n">prefetch_partial_style</span><span class="p">(</span><span class="n">urls</span><span class="p">[</span><span class="n">resp</span><span class="o">.</span><span class="n">url</span><span class="p">],</span> <span class="n">style_obj</span><span class="p">[</span><span class="s2">&quot;extends&quot;</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">prefetch_style</span><span class="p">(</span><span class="n">style_urls</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">urls</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">style_url</span> <span class="ow">in</span> <span class="n">style_urls</span><span class="p">:</span>
+            <span class="n">url</span><span class="p">,</span> <span class="n">scheme</span> <span class="o">=</span> <span class="n">resolve_url</span><span class="p">(</span><span class="n">style_url</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">scheme</span> <span class="o">==</span> <span class="s2">&quot;file&quot;</span> <span class="ow">or</span> <span class="n">Cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">urls</span><span class="p">[</span><span class="n">url</span><span class="p">]</span> <span class="o">=</span> <span class="n">style_url</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">urls</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="n">futures</span> <span class="o">=</span> <span class="p">[</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span> <span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">urls</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">future</span> <span class="ow">in</span> <span class="n">as_completed</span><span class="p">(</span><span class="n">futures</span><span class="p">):</span>
+            <span class="n">resp</span> <span class="o">=</span> <span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+            <span class="n">Cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">url</span><span class="p">,</span> <span class="n">resp</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+            <span class="n">style_obj</span> <span class="o">=</span> <span class="n">serialize_for_url</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">url</span><span class="p">,</span> <span class="n">resp</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">style_obj</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;extends&quot;</span><span class="p">),</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="n">prefetch_partial_style</span><span class="p">(</span><span class="n">urls</span><span class="p">[</span><span class="n">resp</span><span class="o">.</span><span class="n">url</span><span class="p">],</span> <span class="n">style_obj</span><span class="p">[</span><span class="s2">&quot;extends&quot;</span><span class="p">])</span>
+
+    <span class="n">prefetch_style</span><span class="p">(</span><span class="n">style_urls_</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

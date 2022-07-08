@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.plugins.jmespath &mdash; project-config 0.4.0 documentation</title>
+  <title>project_config.plugins.jmespath &mdash; project-config 0.5.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
@@ -32,7 +32,7 @@
             <a href="../../../index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.4
+                0.5
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -97,6 +97,8 @@
   <h1>Source code for project_config.plugins.jmespath</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;JMESPath expressions plugin.&quot;&quot;&quot;</span>
 
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
 <span class="kn">import</span> <span class="nn">operator</span>
 <span class="kn">import</span> <span class="nn">pprint</span>
 <span class="kn">import</span> <span class="nn">re</span>
@@ -104,7 +106,13 @@
 <span class="kn">import</span> <span class="nn">typing</span> <span class="k">as</span> <span class="nn">t</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 
-<span class="kn">import</span> <span class="nn">jmespath</span>
+<span class="kn">from</span> <span class="nn">jmespath</span> <span class="kn">import</span> <span class="n">Options</span> <span class="k">as</span> <span class="n">JMESPathOptions</span><span class="p">,</span> <span class="nb">compile</span> <span class="k">as</span> <span class="n">jmespath_compile</span>
+<span class="kn">from</span> <span class="nn">jmespath.exceptions</span> <span class="kn">import</span> <span class="n">JMESPathError</span> <span class="k">as</span> <span class="n">OriginalJMESPathError</span>
+<span class="kn">from</span> <span class="nn">jmespath.functions</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Functions</span> <span class="k">as</span> <span class="n">JMESPathFunctions</span><span class="p">,</span>
+    <span class="n">signature</span> <span class="k">as</span> <span class="n">jmespath_func_signature</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">jmespath.parser</span> <span class="kn">import</span> <span class="n">ParsedResult</span> <span class="k">as</span> <span class="n">JMESPathParsedResult</span>
 
 <span class="kn">from</span> <span class="nn">project_config</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">Error</span><span class="p">,</span>
@@ -114,13 +122,16 @@
     <span class="n">Rule</span><span class="p">,</span>
     <span class="n">Tree</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">project_config.compat</span> <span class="kn">import</span> <span class="n">cached_function</span><span class="p">,</span> <span class="n">shlex_join</span>
+<span class="kn">from</span> <span class="nn">project_config.compat</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">cached_function</span><span class="p">,</span>
+    <span class="n">removeprefix</span><span class="p">,</span>
+    <span class="n">removesuffix</span><span class="p">,</span>
+    <span class="n">shlex_join</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">project_config.exceptions</span> <span class="kn">import</span> <span class="n">ProjectConfigException</span>
 <span class="kn">from</span> <span class="nn">project_config.fetchers</span> <span class="kn">import</span> <span class="n">FetchError</span>
 <span class="kn">from</span> <span class="nn">project_config.serializers</span> <span class="kn">import</span> <span class="n">SerializerError</span>
 
-
-<span class="n">ALL_JMESPATH_FUNCTION_TYPES</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">jmespath</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">REVERSE_TYPES_MAP</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
 
 <span class="n">OPERATORS_FUNCTIONS</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;&lt;&quot;</span><span class="p">:</span> <span class="n">operator</span><span class="o">.</span><span class="n">lt</span><span class="p">,</span>
@@ -175,21 +186,109 @@
 <span class="p">}</span>
 
 
-<div class="viewcode-block" id="JMESPathProjectConfigFunctions"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions">[docs]</a><span class="k">class</span> <span class="nc">JMESPathProjectConfigFunctions</span><span class="p">(</span>
-    <span class="n">jmespath</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">Functions</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
-<span class="p">):</span>
+<div class="viewcode-block" id="_create_simple_transform_function_for_string"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath._create_simple_transform_function_for_string">[docs]</a><span class="k">def</span> <span class="nf">_create_simple_transform_function_for_string</span><span class="p">(</span>
+    <span class="n">func_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Callable</span><span class="p">[[</span><span class="nb">type</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">]:</span>
+    <span class="n">func</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">func_name</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">jmespath_func_signature</span><span class="p">({</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">]})(</span>
+        <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">func</span><span class="p">(</span><span class="n">value</span><span class="p">),</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="_create_is_function_for_string"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath._create_is_function_for_string">[docs]</a><span class="k">def</span> <span class="nf">_create_is_function_for_string</span><span class="p">(</span>
+    <span class="n">func_suffix</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Callable</span><span class="p">[[</span><span class="nb">type</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]:</span>
+    <span class="n">func</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;is</span><span class="si">{</span><span class="n">func_suffix</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">jmespath_func_signature</span><span class="p">({</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">]})(</span>
+        <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">func</span><span class="p">(</span><span class="n">value</span><span class="p">),</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="_create_find_function_for_string_or_array"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath._create_find_function_for_string_or_array">[docs]</a><span class="k">def</span> <span class="nf">_create_find_function_for_string_or_array</span><span class="p">(</span>
+    <span class="n">func_prefix</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Callable</span><span class="p">[[</span><span class="nb">type</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">],</span> <span class="nb">str</span><span class="p">],</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">],</span> <span class="nb">int</span><span class="p">]:</span>
+    <span class="nb">getattr</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">func_prefix</span><span class="si">}</span><span class="s2">find&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_wrapper</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">:</span> <span class="nb">type</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">],</span> <span class="nb">str</span><span class="p">],</span> <span class="n">sub</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">value</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">sub</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="k">return</span> <span class="n">value</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">sub</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">jmespath_func_signature</span><span class="p">(</span>
+        <span class="p">{</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;array&quot;</span><span class="p">],</span> <span class="s2">&quot;variadic&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+    <span class="p">)(</span><span class="n">_wrapper</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="_create_just_function_for_string"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath._create_just_function_for_string">[docs]</a><span class="k">def</span> <span class="nf">_create_just_function_for_string</span><span class="p">(</span>
+    <span class="n">func_prefix</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Callable</span><span class="p">[[</span><span class="nb">type</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">],</span> <span class="nb">str</span><span class="p">]:</span>
+    <span class="n">func</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">func_prefix</span><span class="si">}</span><span class="s2">just&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">jmespath_func_signature</span><span class="p">(</span>
+        <span class="p">{</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">]},</span>
+        <span class="p">{</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;number&quot;</span><span class="p">],</span> <span class="s2">&quot;variadic&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+    <span class="p">)(</span><span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">func</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="_create_partition_function_for_string"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath._create_partition_function_for_string">[docs]</a><span class="k">def</span> <span class="nf">_create_partition_function_for_string</span><span class="p">(</span>
+    <span class="n">func_prefix</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Callable</span><span class="p">[[</span><span class="nb">type</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+    <span class="n">func</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">func_prefix</span><span class="si">}</span><span class="s2">partition&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">jmespath_func_signature</span><span class="p">(</span>
+        <span class="p">{</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">]},</span>
+        <span class="p">{</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">]},</span>
+    <span class="p">)(</span><span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">sep</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">func</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">sep</span><span class="p">)))</span></div>
+
+
+<div class="viewcode-block" id="_create_split_function_for_string"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath._create_split_function_for_string">[docs]</a><span class="k">def</span> <span class="nf">_create_split_function_for_string</span><span class="p">(</span>
+    <span class="n">func_prefix</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Callable</span><span class="p">[[</span><span class="nb">type</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">],</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+    <span class="n">func</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">func_prefix</span><span class="si">}</span><span class="s2">split&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">jmespath_func_signature</span><span class="p">(</span>
+        <span class="p">{</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">],</span> <span class="s2">&quot;variadic&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+    <span class="p">)(</span><span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">func</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="_create_strip_function_for_string"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath._create_strip_function_for_string">[docs]</a><span class="k">def</span> <span class="nf">_create_strip_function_for_string</span><span class="p">(</span>
+    <span class="n">func_prefix</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Callable</span><span class="p">[[</span><span class="nb">type</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">]:</span>
+    <span class="n">func</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">func_prefix</span><span class="si">}</span><span class="s2">strip&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">jmespath_func_signature</span><span class="p">(</span>
+        <span class="p">{</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">],</span> <span class="s2">&quot;variadic&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+    <span class="p">)(</span><span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">func</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="_create_removeaffix_function_for_string"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath._create_removeaffix_function_for_string">[docs]</a><span class="k">def</span> <span class="nf">_create_removeaffix_function_for_string</span><span class="p">(</span>
+    <span class="n">func_suffix</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Callable</span><span class="p">[[</span><span class="nb">type</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">]:</span>
+    <span class="n">func</span> <span class="o">=</span> <span class="n">removesuffix</span> <span class="k">if</span> <span class="n">func_suffix</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;s&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="n">removeprefix</span>
+    <span class="k">return</span> <span class="n">jmespath_func_signature</span><span class="p">(</span>
+        <span class="p">{</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">]},</span>
+        <span class="p">{</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">]},</span>
+    <span class="p">)(</span><span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">affix</span><span class="p">:</span> <span class="n">func</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">affix</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="_to_items"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath._to_items">[docs]</a><span class="k">def</span> <span class="nf">_to_items</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="p">[[</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span></div>
+
+
+<div class="viewcode-block" id="JMESPathProjectConfigFunctions"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions">[docs]</a><span class="k">class</span> <span class="nc">JMESPathProjectConfigFunctions</span><span class="p">(</span><span class="n">JMESPathFunctions</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;JMESPath class to include custom functions.&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="JMESPathProjectConfigFunctions._func_regex_match"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_regex_match">[docs]</a>    <span class="nd">@jmespath</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
+<div class="viewcode-block" id="JMESPathProjectConfigFunctions._func_regex_match"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_regex_match">[docs]</a>    <span class="nd">@jmespath_func_signature</span><span class="p">(</span>
         <span class="p">{</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">]},</span>
-        <span class="p">{</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">]},</span>
+        <span class="p">{</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">],</span> <span class="s2">&quot;variadic&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
     <span class="p">)</span>
-    <span class="k">def</span> <span class="nf">_func_regex_match</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">regex</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">regex</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span></div>
+    <span class="k">def</span> <span class="nf">_func_regex_match</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">regex</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">regex</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="JMESPathProjectConfigFunctions._func_regex_matchall"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_regex_matchall">[docs]</a>    <span class="nd">@jmespath</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
+<div class="viewcode-block" id="JMESPathProjectConfigFunctions._func_regex_matchall"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_regex_matchall">[docs]</a>    <span class="nd">@jmespath_func_signature</span><span class="p">(</span>
         <span class="p">{</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">]},</span>
-        <span class="p">{</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;array&quot;</span><span class="p">,</span> <span class="s2">&quot;object&quot;</span><span class="p">]},</span>
+        <span class="p">{</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;array-string&quot;</span><span class="p">,</span> <span class="s2">&quot;object&quot;</span><span class="p">]},</span>
     <span class="p">)</span>
     <span class="k">def</span> <span class="nf">_func_regex_matchall</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">regex</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">container</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
@@ -203,26 +302,38 @@
         <span class="p">)</span>
         <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">regex</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">container</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="JMESPathProjectConfigFunctions._func_regex_search"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_regex_search">[docs]</a>    <span class="nd">@jmespath</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
+<div class="viewcode-block" id="JMESPathProjectConfigFunctions._func_regex_search"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_regex_search">[docs]</a>    <span class="nd">@jmespath_func_signature</span><span class="p">(</span>
         <span class="p">{</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">]},</span>
-        <span class="p">{</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">]},</span>
+        <span class="p">{</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">],</span> <span class="s2">&quot;variadic&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
     <span class="p">)</span>
-    <span class="k">def</span> <span class="nf">_func_regex_search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">regex</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">regex</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_func_regex_search</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">regex</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">regex</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">match</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[]</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)]</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">match</span><span class="o">.</span><span class="n">groups</span><span class="p">()</span> <span class="k">else</span> <span class="nb">list</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">groups</span><span class="p">())</span></div>
 
-<div class="viewcode-block" id="JMESPathProjectConfigFunctions._func_op"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_op">[docs]</a>    <span class="nd">@jmespath</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
-        <span class="p">{</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="n">ALL_JMESPATH_FUNCTION_TYPES</span><span class="p">},</span>
+<div class="viewcode-block" id="JMESPathProjectConfigFunctions._func_regex_sub"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_regex_sub">[docs]</a>    <span class="nd">@jmespath_func_signature</span><span class="p">(</span>
         <span class="p">{</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">]},</span>
-        <span class="p">{</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="n">ALL_JMESPATH_FUNCTION_TYPES</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">]},</span>
+        <span class="p">{</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">],</span> <span class="s2">&quot;variadic&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+    <span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_func_regex_sub</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">regex</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">repl</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">regex</span><span class="p">,</span> <span class="n">repl</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="JMESPathProjectConfigFunctions._func_op"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_op">[docs]</a>    <span class="nd">@jmespath_func_signature</span><span class="p">(</span>
+        <span class="p">{</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[]},</span>
+        <span class="p">{</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">]},</span>
+        <span class="p">{</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[]},</span>
     <span class="p">)</span>
     <span class="k">def</span> <span class="nf">_func_op</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">operator</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">func</span> <span class="o">=</span> <span class="n">OPERATORS_FUNCTIONS</span><span class="p">[</span><span class="n">operator</span><span class="p">]</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">jmespath</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">JMESPathError</span><span class="p">(</span>
+            <span class="k">raise</span> <span class="n">OriginalJMESPathError</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;Invalid operator &#39;</span><span class="si">{</span><span class="n">operator</span><span class="si">}</span><span class="s2">&#39; passed to op() function,&quot;</span>
                 <span class="sa">f</span><span class="s2">&quot; expected one of: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">OPERATORS_FUNCTIONS</span><span class="p">))</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
             <span class="p">)</span>
@@ -238,16 +349,162 @@
                 <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">func</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="JMESPathProjectConfigFunctions._func_shlex_join"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_shlex_join">[docs]</a>    <span class="nd">@jmespath</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">signature</span><span class="p">({</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;array&quot;</span><span class="p">]})</span>  <span class="c1"># type: ignore</span>
+<div class="viewcode-block" id="JMESPathProjectConfigFunctions._func_shlex_join"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_shlex_join">[docs]</a>    <span class="nd">@jmespath_func_signature</span><span class="p">({</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;array-string&quot;</span><span class="p">]})</span>
     <span class="k">def</span> <span class="nf">_func_shlex_join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmd_list</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">shlex_join</span><span class="p">(</span><span class="n">cmd_list</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="JMESPathProjectConfigFunctions._func_shlex_split"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_shlex_split">[docs]</a>    <span class="nd">@jmespath</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">signature</span><span class="p">({</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">]})</span>  <span class="c1"># type: ignore</span>
+<div class="viewcode-block" id="JMESPathProjectConfigFunctions._func_shlex_split"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_shlex_split">[docs]</a>    <span class="nd">@jmespath_func_signature</span><span class="p">({</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">]})</span>
     <span class="k">def</span> <span class="nf">_func_shlex_split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmd_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="k">return</span> <span class="n">shlex</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">cmd_str</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="n">shlex</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">cmd_str</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="JMESPathProjectConfigFunctions._func_round"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_round">[docs]</a>    <span class="nd">@jmespath_func_signature</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;number&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;variadic&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_func_round</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">round</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="JMESPathProjectConfigFunctions._func_range"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_range">[docs]</a>    <span class="nd">@jmespath_func_signature</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;number&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;variadic&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_func_range</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="JMESPathProjectConfigFunctions._func_center"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_center">[docs]</a>    <span class="nd">@jmespath_func_signature</span><span class="p">(</span>
+        <span class="p">{</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">]},</span>
+        <span class="p">{</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;number&quot;</span><span class="p">],</span> <span class="s2">&quot;variadic&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+    <span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_func_center</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">value</span><span class="o">.</span><span class="n">center</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="JMESPathProjectConfigFunctions._func_count"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_count">[docs]</a>    <span class="nd">@jmespath_func_signature</span><span class="p">(</span>
+        <span class="p">{</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;array&quot;</span><span class="p">]},</span>
+        <span class="p">{</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">&quot;variadic&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+    <span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_func_count</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">value</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">],</span> <span class="nb">str</span><span class="p">],</span>
+        <span class="n">sub</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">value</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">sub</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="JMESPathProjectConfigFunctions._func_format"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_format">[docs]</a>    <span class="nd">@jmespath_func_signature</span><span class="p">(</span>
+        <span class="p">{</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">&quot;variadic&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+    <span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_func_format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">schema</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">schema</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="JMESPathProjectConfigFunctions._func_splitlines"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_splitlines">[docs]</a>    <span class="nd">@jmespath_func_signature</span><span class="p">({</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">],</span> <span class="s2">&quot;variadic&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span>
+    <span class="k">def</span> <span class="nf">_func_splitlines</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="n">value</span><span class="o">.</span><span class="n">splitlines</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="JMESPathProjectConfigFunctions._func_zfill"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_zfill">[docs]</a>    <span class="nd">@jmespath_func_signature</span><span class="p">({</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">]},</span> <span class="p">{</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;number&quot;</span><span class="p">]})</span>
+    <span class="k">def</span> <span class="nf">_func_zfill</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">value</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="n">width</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="JMESPathProjectConfigFunctions._func_enumerate"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_enumerate">[docs]</a>    <span class="nd">@jmespath_func_signature</span><span class="p">({</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;array&quot;</span><span class="p">,</span> <span class="s2">&quot;object&quot;</span><span class="p">]})</span>
+    <span class="k">def</span> <span class="nf">_func_enumerate</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">value</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">],</span> <span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">]],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">]]:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">_to_items</span><span class="p">(</span><span class="n">value</span><span class="p">))]</span>
+        <span class="k">return</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">value</span><span class="p">)]</span></div>
+
+<div class="viewcode-block" id="JMESPathProjectConfigFunctions._func_to_items"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_to_items">[docs]</a>    <span class="nd">@jmespath_func_signature</span><span class="p">({</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;object&quot;</span><span class="p">]})</span>
+    <span class="k">def</span> <span class="nf">_func_to_items</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">value</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">]]:</span>
+        <span class="k">return</span> <span class="n">_to_items</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="JMESPathProjectConfigFunctions._func_from_items"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_from_items">[docs]</a>    <span class="nd">@jmespath_func_signature</span><span class="p">({</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;array&quot;</span><span class="p">]})</span>
+    <span class="k">def</span> <span class="nf">_func_from_items</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">):</span> <span class="n">subv</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">subv</span> <span class="ow">in</span> <span class="n">value</span><span class="p">}</span></div>
+
+    <span class="nb">locals</span><span class="p">()</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+        <span class="nb">dict</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="sa">f</span><span class="s2">&quot;_func_</span><span class="si">{</span><span class="n">func_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="p">(</span>
+                    <span class="n">_create_simple_transform_function_for_string</span><span class="p">(</span><span class="n">func_name</span><span class="p">)</span>
+                <span class="p">)</span>
+                <span class="k">for</span> <span class="n">func_name</span> <span class="ow">in</span> <span class="p">{</span>
+                    <span class="s2">&quot;capitalize&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;casefold&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;lower&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;swapcase&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;title&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;upper&quot;</span><span class="p">,</span>
+                <span class="p">}</span>
+            <span class="p">},</span>
+            <span class="o">**</span><span class="p">{</span>
+                <span class="sa">f</span><span class="s2">&quot;_func_</span><span class="si">{</span><span class="n">func_prefix</span><span class="si">}</span><span class="s2">find&quot;</span><span class="p">:</span> <span class="p">(</span>
+                    <span class="n">_create_find_function_for_string_or_array</span><span class="p">(</span>
+                        <span class="n">func_prefix</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+                <span class="k">for</span> <span class="n">func_prefix</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">}</span>
+            <span class="p">},</span>
+            <span class="o">**</span><span class="p">{</span>
+                <span class="sa">f</span><span class="s2">&quot;_func_is</span><span class="si">{</span><span class="n">func_suffix</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="n">_create_is_function_for_string</span><span class="p">(</span>
+                    <span class="n">func_suffix</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="k">for</span> <span class="n">func_suffix</span> <span class="ow">in</span> <span class="p">{</span>
+                    <span class="s2">&quot;alnum&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;alpha&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;ascii&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;decimal&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;digit&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;identifier&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;lower&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;numeric&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;printable&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;space&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;title&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;upper&quot;</span><span class="p">,</span>
+                <span class="p">}</span>
+            <span class="p">},</span>
+            <span class="o">**</span><span class="p">{</span>
+                <span class="sa">f</span><span class="s2">&quot;_func_</span><span class="si">{</span><span class="n">func_prefix</span><span class="si">}</span><span class="s2">just&quot;</span><span class="p">:</span> <span class="n">_create_just_function_for_string</span><span class="p">(</span>
+                    <span class="n">func_prefix</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="k">for</span> <span class="n">func_prefix</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;l&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">}</span>
+            <span class="p">},</span>
+            <span class="o">**</span><span class="p">{</span>
+                <span class="sa">f</span><span class="s2">&quot;_func_</span><span class="si">{</span><span class="n">func_prefix</span><span class="si">}</span><span class="s2">split&quot;</span><span class="p">:</span> <span class="n">_create_split_function_for_string</span><span class="p">(</span>
+                    <span class="n">func_prefix</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="k">for</span> <span class="n">func_prefix</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">}</span>
+            <span class="p">},</span>
+            <span class="o">**</span><span class="p">{</span>
+                <span class="sa">f</span><span class="s2">&quot;_func_</span><span class="si">{</span><span class="n">func_prefix</span><span class="si">}</span><span class="s2">strip&quot;</span><span class="p">:</span> <span class="n">_create_strip_function_for_string</span><span class="p">(</span>
+                    <span class="n">func_prefix</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="k">for</span> <span class="n">func_prefix</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;l&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">}</span>
+            <span class="p">},</span>
+            <span class="o">**</span><span class="p">{</span>
+                <span class="sa">f</span><span class="s2">&quot;_func_</span><span class="si">{</span><span class="n">func_prefix</span><span class="si">}</span><span class="s2">partition&quot;</span><span class="p">:</span> <span class="p">(</span>
+                    <span class="n">_create_partition_function_for_string</span><span class="p">(</span><span class="n">func_prefix</span><span class="p">)</span>
+                <span class="p">)</span>
+                <span class="k">for</span> <span class="n">func_prefix</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">}</span>
+            <span class="p">},</span>
+            <span class="o">**</span><span class="p">{</span>
+                <span class="sa">f</span><span class="s2">&quot;_func_remove</span><span class="si">{</span><span class="n">func_suffix</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="p">(</span>
+                    <span class="n">_create_removeaffix_function_for_string</span><span class="p">(</span><span class="n">func_suffix</span><span class="p">)</span>
+                <span class="p">)</span>
+                <span class="k">for</span> <span class="n">func_suffix</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;suffix&quot;</span><span class="p">,</span> <span class="s2">&quot;prefix&quot;</span><span class="p">}</span>
+            <span class="p">},</span>
+        <span class="p">),</span>
+    <span class="p">)</span></div>
 
 
-<span class="n">jmespath_options</span> <span class="o">=</span> <span class="n">jmespath</span><span class="o">.</span><span class="n">Options</span><span class="p">(</span>
+<span class="n">jmespath_options</span> <span class="o">=</span> <span class="n">JMESPathOptions</span><span class="p">(</span>
     <span class="n">custom_functions</span><span class="o">=</span><span class="n">JMESPathProjectConfigFunctions</span><span class="p">(),</span>
 <span class="p">)</span>
 
@@ -259,16 +516,16 @@
 <div class="viewcode-block" id="_compile_JMESPath_expression"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath._compile_JMESPath_expression">[docs]</a><span class="nd">@cached_function</span>
 <span class="k">def</span> <span class="nf">_compile_JMESPath_expression</span><span class="p">(</span>
     <span class="n">expression</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">jmespath</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">ParsedResult</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">jmespath</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">expression</span><span class="p">)</span></div>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JMESPathParsedResult</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">jmespath_compile</span><span class="p">(</span><span class="n">expression</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="_compile_JMESPath_expression_or_error"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath._compile_JMESPath_expression_or_error">[docs]</a><span class="k">def</span> <span class="nf">_compile_JMESPath_expression_or_error</span><span class="p">(</span>
     <span class="n">expression</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">jmespath</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">ParsedResult</span><span class="p">:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JMESPathParsedResult</span><span class="p">:</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">_compile_JMESPath_expression</span><span class="p">(</span><span class="n">expression</span><span class="p">)</span>
-    <span class="k">except</span> <span class="n">jmespath</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">JMESPathError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+    <span class="k">except</span> <span class="n">OriginalJMESPathError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
         <span class="n">error_type</span> <span class="o">=</span> <span class="n">JMESPATH_READABLE_ERRORS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
             <span class="n">exc</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
             <span class="s2">&quot;error&quot;</span><span class="p">,</span>
@@ -282,10 +539,10 @@
 <div class="viewcode-block" id="_compile_JMESPath_or_expected_value_error"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath._compile_JMESPath_or_expected_value_error">[docs]</a><span class="k">def</span> <span class="nf">_compile_JMESPath_or_expected_value_error</span><span class="p">(</span>
     <span class="n">expression</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">expected_value</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">jmespath</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">ParsedResult</span><span class="p">:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JMESPathParsedResult</span><span class="p">:</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">_compile_JMESPath_expression</span><span class="p">(</span><span class="n">expression</span><span class="p">)</span>
-    <span class="k">except</span> <span class="n">jmespath</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">JMESPathError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+    <span class="k">except</span> <span class="n">OriginalJMESPathError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
         <span class="n">error_type</span> <span class="o">=</span> <span class="n">JMESPATH_READABLE_ERRORS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
             <span class="n">exc</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
             <span class="s2">&quot;error&quot;</span><span class="p">,</span>
@@ -301,10 +558,10 @@
     <span class="n">expression</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">expected_value_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">expected_value_expression</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">jmespath</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">ParsedResult</span><span class="p">:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JMESPathParsedResult</span><span class="p">:</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">_compile_JMESPath_expression</span><span class="p">(</span><span class="n">expression</span><span class="p">)</span>
-    <span class="k">except</span> <span class="n">jmespath</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">JMESPathError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+    <span class="k">except</span> <span class="n">OriginalJMESPathError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
         <span class="n">error_type</span> <span class="o">=</span> <span class="n">JMESPATH_READABLE_ERRORS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
             <span class="n">exc</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
             <span class="s2">&quot;error&quot;</span><span class="p">,</span>
@@ -319,7 +576,7 @@
 
 
 <div class="viewcode-block" id="_evaluate_JMESPath"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath._evaluate_JMESPath">[docs]</a><span class="k">def</span> <span class="nf">_evaluate_JMESPath</span><span class="p">(</span>
-    <span class="n">compiled_expression</span><span class="p">:</span> <span class="n">jmespath</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">ParsedResult</span><span class="p">,</span>
+    <span class="n">compiled_expression</span><span class="p">:</span> <span class="n">JMESPathParsedResult</span><span class="p">,</span>
     <span class="n">instance</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">:</span>
     <span class="k">try</span><span class="p">:</span>
@@ -327,7 +584,7 @@
             <span class="n">instance</span><span class="p">,</span>
             <span class="n">options</span><span class="o">=</span><span class="n">jmespath_options</span><span class="p">,</span>
         <span class="p">)</span>
-    <span class="k">except</span> <span class="n">jmespath</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">JMESPathError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+    <span class="k">except</span> <span class="n">OriginalJMESPathError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
         <span class="n">formatted_expression</span> <span class="o">=</span> <span class="n">pprint</span><span class="o">.</span><span class="n">pformat</span><span class="p">(</span><span class="n">compiled_expression</span><span class="o">.</span><span class="n">expression</span><span class="p">)</span>
         <span class="n">error_type</span> <span class="o">=</span> <span class="n">JMESPATH_READABLE_ERRORS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
             <span class="n">exc</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
@@ -340,7 +597,7 @@
 
 
 <div class="viewcode-block" id="_evaluate_JMESPath_or_expected_value_error"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath._evaluate_JMESPath_or_expected_value_error">[docs]</a><span class="k">def</span> <span class="nf">_evaluate_JMESPath_or_expected_value_error</span><span class="p">(</span>
-    <span class="n">compiled_expression</span><span class="p">:</span> <span class="n">jmespath</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">ParsedResult</span><span class="p">,</span>
+    <span class="n">compiled_expression</span><span class="p">:</span> <span class="n">JMESPathParsedResult</span><span class="p">,</span>
     <span class="n">expected_value</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">,</span>
     <span class="n">instance</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">:</span>
@@ -349,7 +606,7 @@
             <span class="n">instance</span><span class="p">,</span>
             <span class="n">options</span><span class="o">=</span><span class="n">jmespath_options</span><span class="p">,</span>
         <span class="p">)</span>
-    <span class="k">except</span> <span class="n">jmespath</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">JMESPathError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+    <span class="k">except</span> <span class="n">OriginalJMESPathError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
         <span class="n">formatted_expression</span> <span class="o">=</span> <span class="n">pprint</span><span class="o">.</span><span class="n">pformat</span><span class="p">(</span><span class="n">compiled_expression</span><span class="o">.</span><span class="n">expression</span><span class="p">)</span>
         <span class="n">error_type</span> <span class="o">=</span> <span class="n">JMESPATH_READABLE_ERRORS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
             <span class="n">exc</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
