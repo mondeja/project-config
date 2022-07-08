@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>project_config.reporters &mdash; project-config 0.5.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/tabs.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/bolditalic.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/override-styles.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/tabs.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> project-config
+          </a>
+              <div class="version">
+                0.5
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Quickstart</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../basic-usage.html">Basic usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/cli.html">project-config CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/config.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/styling.html">Styling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/plugins.html">Plugins</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">In depth</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../in-depth/rationale.html">Rationale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../in-depth/serialization.html">Objects serialization</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For developers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/plugins.html">Writing third party plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/reporters.html">Writing third party reporters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/reference/modules.html">Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">project-config</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      <li>project_config.reporters</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for project_config.reporters</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Error reporters.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span> <span class="nn">importlib</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">types</span>
+<span class="kn">import</span> <span class="nn">typing</span> <span class="k">as</span> <span class="nn">t</span>
+
+<span class="kn">from</span> <span class="nn">tabulate</span> <span class="kn">import</span> <span class="n">tabulate_formats</span>
+
+<span class="kn">from</span> <span class="nn">project_config.compat</span> <span class="kn">import</span> <span class="n">importlib_metadata</span>
+<span class="kn">from</span> <span class="nn">project_config.exceptions</span> <span class="kn">import</span> <span class="n">ProjectConfigException</span>
+<span class="kn">from</span> <span class="nn">project_config.reporters.base</span> <span class="kn">import</span> <span class="n">BaseReporter</span>
+
+
+<span class="n">DEFAULT_REPORTER</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span>
+<span class="n">PROJECT_CONFIG_REPORTERS_ENTRYPOINTS_GROUP</span> <span class="o">=</span> <span class="s2">&quot;project_config.reporters&quot;</span>
+
+
+<div class="viewcode-block" id="InvalidNotBasedThirdPartyReporter"><a class="viewcode-back" href="../../dev/reference/project_config.reporters.html#project_config.reporters.InvalidNotBasedThirdPartyReporter">[docs]</a><span class="k">class</span> <span class="nc">InvalidNotBasedThirdPartyReporter</span><span class="p">(</span><span class="n">ProjectConfigException</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Reporter not based on base reporter class.</span>
+
+<span class="sd">    All reporters must be based on the base reporter class</span>
+<span class="sd">    :py::class:``project_config.reporters.base.BaseReporter``.</span>
+<span class="sd">    &quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="InvalidThirdPartyReportersModule"><a class="viewcode-back" href="../../dev/reference/project_config.reporters.html#project_config.reporters.InvalidThirdPartyReportersModule">[docs]</a><span class="k">class</span> <span class="nc">InvalidThirdPartyReportersModule</span><span class="p">(</span><span class="n">ProjectConfigException</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Third party reporters module is invalid.</span>
+
+<span class="sd">    Third party reporters module must expose a color and a black/white</span>
+<span class="sd">    reporter.</span>
+<span class="sd">    &quot;&quot;&quot;</span></div>
+
+
+<span class="n">reporters</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="s2">&quot;DefaultReporter&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;json&quot;</span><span class="p">:</span> <span class="s2">&quot;JsonReporter&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;json:pretty&quot;</span><span class="p">:</span> <span class="s2">&quot;JsonReporter&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;json:pretty4&quot;</span><span class="p">:</span> <span class="s2">&quot;JsonReporter&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;toml&quot;</span><span class="p">:</span> <span class="s2">&quot;TomlReporter&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;yaml&quot;</span><span class="p">:</span> <span class="s2">&quot;YamlReporter&quot;</span><span class="p">,</span>
+    <span class="o">**</span><span class="p">{</span><span class="sa">f</span><span class="s2">&quot;table:</span><span class="si">{</span><span class="n">fmt</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="s2">&quot;TableReporter&quot;</span> <span class="k">for</span> <span class="n">fmt</span> <span class="ow">in</span> <span class="n">tabulate_formats</span><span class="p">},</span>
+<span class="p">}</span>
+
+<span class="n">reporters_modules</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;json&quot;</span><span class="p">:</span> <span class="s2">&quot;json_&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="_parse_reporter_arguments"><a class="viewcode-back" href="../../dev/reference/project_config.reporters.html#project_config.reporters._parse_reporter_arguments">[docs]</a><span class="k">def</span> <span class="nf">_parse_reporter_arguments</span><span class="p">(</span><span class="n">arguments_string</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">]:</span>
+    <span class="n">result</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">arg_value</span> <span class="ow">in</span> <span class="n">arguments_string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">):</span>
+        <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="n">arg_value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="n">maxsplit</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">result</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="parse_reporter_id"><a class="viewcode-back" href="../../dev/reference/project_config.reporters.html#project_config.reporters.parse_reporter_id">[docs]</a><span class="k">def</span> <span class="nf">parse_reporter_id</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">]]:</span>
+    <span class="sd">&quot;&quot;&quot;Parse a reporter identifier.</span>
+
+<span class="sd">    Returns the reporter name and the optional arguments for his class.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        value (str): Reporter identifier.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;;&quot;</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+        <span class="n">reporter_id</span><span class="p">,</span> <span class="n">reporter_kwargs_string</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">,</span> <span class="n">maxsplit</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">reporter_id</span><span class="p">,</span> <span class="n">reporter_kwargs_string</span> <span class="o">=</span> <span class="n">value</span><span class="p">,</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;:&quot;</span> <span class="ow">in</span> <span class="n">reporter_id</span><span class="p">:</span>
+        <span class="n">reporter_name</span><span class="p">,</span> <span class="n">fmt</span> <span class="o">=</span> <span class="n">reporter_id</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="n">maxsplit</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">reporter_name</span><span class="p">,</span> <span class="n">fmt</span> <span class="o">=</span> <span class="n">reporter_id</span><span class="p">,</span> <span class="kc">None</span>
+
+    <span class="k">if</span> <span class="n">reporter_kwargs_string</span><span class="p">:</span>
+        <span class="n">reporter_kwargs</span> <span class="o">=</span> <span class="n">_parse_reporter_arguments</span><span class="p">(</span><span class="n">reporter_kwargs_string</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">reporter_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">return</span> <span class="n">reporter_name</span><span class="p">,</span> <span class="p">{</span><span class="o">**</span><span class="n">reporter_kwargs</span><span class="p">,</span> <span class="s2">&quot;fmt&quot;</span><span class="p">:</span> <span class="n">fmt</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="get_reporter"><a class="viewcode-back" href="../../dev/reference/project_config.reporters.html#project_config.reporters.get_reporter">[docs]</a><span class="k">def</span> <span class="nf">get_reporter</span><span class="p">(</span>
+    <span class="n">reporter_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">reporter_kwargs</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">],</span>
+    <span class="n">color</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">],</span>
+    <span class="n">rootdir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Reporters factory.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        reporter_name (str): Reporter identifier name.</span>
+<span class="sd">        reporter_kwargs (dict): Optional arguments for reporter class.</span>
+<span class="sd">        color (bool): Return the colorized version of the reporter,</span>
+<span class="sd">            if is implemented, using the black/white version as</span>
+<span class="sd">            a fallback.</span>
+<span class="sd">        rootdir (str): Root directory of the project.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">reporter_name</span> <span class="ow">in</span> <span class="n">reporters</span><span class="p">:</span>
+            <span class="n">reporter_class_name</span> <span class="o">=</span> <span class="n">reporters</span><span class="p">[</span><span class="n">reporter_name</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">reporter_class_name</span> <span class="o">=</span> <span class="n">reporters</span><span class="p">[</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">reporter_name</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">reporter_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;fmt&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">]</span>
+    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+        <span class="c1"># 3rd party reporter</span>
+        <span class="n">third_party_reporters</span> <span class="o">=</span> <span class="n">ThirdPartyReporters</span><span class="p">()</span>
+        <span class="n">reporter_module</span> <span class="o">=</span> <span class="n">third_party_reporters</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">reporter_name</span><span class="p">)</span>
+        <span class="p">(</span>
+            <span class="n">color_class_name</span><span class="p">,</span>
+            <span class="n">bw_class_name</span><span class="p">,</span>
+        <span class="p">)</span> <span class="o">=</span> <span class="n">third_party_reporters</span><span class="o">.</span><span class="n">validate_reporter_module</span><span class="p">(</span>
+            <span class="n">reporter_module</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="c1"># validate both reporters in the class</span>
+        <span class="k">for</span> <span class="n">class_name</span> <span class="ow">in</span> <span class="p">(</span><span class="n">color_class_name</span><span class="p">,</span> <span class="n">bw_class_name</span><span class="p">):</span>
+            <span class="n">third_party_reporters</span><span class="o">.</span><span class="n">validate_reporter_class</span><span class="p">(</span>
+                <span class="nb">getattr</span><span class="p">(</span><span class="n">reporter_module</span><span class="p">,</span> <span class="n">class_name</span><span class="p">),</span>
+            <span class="p">)</span>
+
+        <span class="n">reporter_class_name</span> <span class="o">=</span> <span class="n">color_class_name</span> <span class="k">if</span> <span class="n">color</span> <span class="k">else</span> <span class="n">bw_class_name</span>
+        <span class="n">Reporter</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">reporter_module</span><span class="p">,</span> <span class="n">reporter_class_name</span><span class="p">)</span>
+        <span class="n">third_party_reporters</span><span class="o">.</span><span class="n">validate_reporter_class</span><span class="p">(</span><span class="n">Reporter</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">reporter_module_name</span> <span class="o">=</span> <span class="n">reporters_modules</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="n">reporter_name</span><span class="p">,</span>
+            <span class="n">reporter_name</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">reporter_module</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;project_config.reporters.</span><span class="si">{</span><span class="n">reporter_module_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">color</span> <span class="ow">in</span> <span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="n">reporter_class_name</span> <span class="o">=</span> <span class="n">reporter_class_name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+                <span class="s2">&quot;Reporter&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;ColorReporter&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="n">Reporter</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">reporter_module</span><span class="p">,</span> <span class="n">reporter_class_name</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">Reporter</span><span class="p">(</span><span class="n">rootdir</span><span class="p">,</span> <span class="o">**</span><span class="n">reporter_kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ThirdPartyReporters"><a class="viewcode-back" href="../../dev/reference/project_config.reporters.html#project_config.reporters.ThirdPartyReporters">[docs]</a><span class="k">class</span> <span class="nc">ThirdPartyReporters</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Third party reporters loader from entrypoints.&quot;&quot;&quot;</span>
+
+    <span class="c1"># allow to reset the instance, just for testing purposes</span>
+    <span class="n">instance</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">ThirdPartyReporters</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ThirdPartyReporters</span><span class="p">:</span>  <span class="c1"># noqa: D102</span>
+        <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">instance</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">instance</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">instance</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reporters_loaders</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span>
+            <span class="nb">str</span><span class="p">,</span>
+            <span class="n">t</span><span class="o">.</span><span class="n">Callable</span><span class="p">[[],</span> <span class="n">types</span><span class="o">.</span><span class="n">ModuleType</span><span class="p">],</span>
+        <span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loaded_reporters</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">ModuleType</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_third_party_reporters</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">ids</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Returns the identifiers of the 3rd party reporters.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reporters_loaders</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+<div class="viewcode-block" id="ThirdPartyReporters._prepare_third_party_reporters"><a class="viewcode-back" href="../../dev/reference/project_config.reporters.html#project_config.reporters.ThirdPartyReporters._prepare_third_party_reporters">[docs]</a>    <span class="k">def</span> <span class="nf">_prepare_third_party_reporters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">reporter_entrypoint</span> <span class="ow">in</span> <span class="n">importlib_metadata</span><span class="o">.</span><span class="n">entry_points</span><span class="p">(</span>
+            <span class="n">group</span><span class="o">=</span><span class="n">PROJECT_CONFIG_REPORTERS_ENTRYPOINTS_GROUP</span><span class="p">,</span>
+        <span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reporters_loaders</span><span class="p">[</span>
+                <span class="n">reporter_entrypoint</span><span class="o">.</span><span class="n">name</span>
+            <span class="p">]</span> <span class="o">=</span> <span class="n">reporter_entrypoint</span><span class="o">.</span><span class="n">load</span></div>
+
+<div class="viewcode-block" id="ThirdPartyReporters.load"><a class="viewcode-back" href="../../dev/reference/project_config.reporters.html#project_config.reporters.ThirdPartyReporters.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reporter_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">ModuleType</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Load a third party reporter.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            reporter_name (str): Reporter module entrypoint name.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">reporter_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">loaded_reporters</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">loaded_reporters</span><span class="p">[</span><span class="n">reporter_name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reporters_loaders</span><span class="p">[</span>
+                <span class="n">reporter_name</span>
+            <span class="p">]()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">loaded_reporters</span><span class="p">[</span><span class="n">reporter_name</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="ThirdPartyReporters.validate_reporter_module"><a class="viewcode-back" href="../../dev/reference/project_config.reporters.html#project_config.reporters.ThirdPartyReporters.validate_reporter_module">[docs]</a>    <span class="k">def</span> <span class="nf">validate_reporter_module</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">reporter_module</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">ModuleType</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Validate a reporter module.</span>
+
+<span class="sd">        Returns black/white and color reporter class names if the reporters</span>
+<span class="sd">        module is valid.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            reporter_module (type): Reporters module to validate.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">color_reporter_class_name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">bw_reporter_class_name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">object_name</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">reporter_module</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">object_name</span><span class="o">.</span><span class="n">startswith</span><span class="p">((</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="s2">&quot;Base&quot;</span><span class="p">)):</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="s2">&quot;ColorReporter&quot;</span> <span class="ow">in</span> <span class="n">object_name</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">color_reporter_class_name</span><span class="p">:</span>
+                    <span class="n">color_reporter_class_name</span> <span class="o">=</span> <span class="n">object_name</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">InvalidThirdPartyReportersModule</span><span class="p">(</span>
+                        <span class="s2">&quot;Multiple public color reporters found in module&quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot; &#39;</span><span class="si">{</span><span class="n">reporter_module</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">,</span>
+                    <span class="p">)</span>
+            <span class="k">elif</span> <span class="s2">&quot;Reporter&quot;</span> <span class="ow">in</span> <span class="n">object_name</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">bw_reporter_class_name</span><span class="p">:</span>
+                    <span class="n">bw_reporter_class_name</span> <span class="o">=</span> <span class="n">object_name</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">InvalidThirdPartyReportersModule</span><span class="p">(</span>
+                        <span class="s2">&quot;Multiple public black/white reporters found in&quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot; module &#39;</span><span class="si">{</span><span class="n">reporter_module</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">,</span>
+                    <span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">color_reporter_class_name</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">InvalidThirdPartyReportersModule</span><span class="p">(</span>
+                <span class="s2">&quot;No color reporter found in module&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot; &#39;</span><span class="si">{</span><span class="n">reporter_module</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">bw_reporter_class_name</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">InvalidThirdPartyReportersModule</span><span class="p">(</span>
+                <span class="s2">&quot;No black/white reporter found in module&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot; &#39;</span><span class="si">{</span><span class="n">reporter_module</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">color_reporter_class_name</span><span class="p">,</span> <span class="n">bw_reporter_class_name</span></div>
+
+<div class="viewcode-block" id="ThirdPartyReporters.validate_reporter_class"><a class="viewcode-back" href="../../dev/reference/project_config.reporters.html#project_config.reporters.ThirdPartyReporters.validate_reporter_class">[docs]</a>    <span class="k">def</span> <span class="nf">validate_reporter_class</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reporter_class</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Validate a reporter class.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            reporter_class (type): Reporter class to validate.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">reporter_class</span><span class="p">,</span> <span class="n">BaseReporter</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">InvalidNotBasedThirdPartyReporter</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Reporter class &#39;</span><span class="si">{</span><span class="n">reporter_class</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&#39; is not&quot;</span>
+                <span class="s2">&quot; a subclass of BaseReporter&quot;</span><span class="p">,</span>
+            <span class="p">)</span></div></div>
+
+
+<span class="n">POSSIBLE_REPORTER_IDS</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">reporters</span><span class="p">)</span> <span class="o">+</span> <span class="n">ThirdPartyReporters</span><span class="p">()</span><span class="o">.</span><span class="n">ids</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Álvaro Mondéjar Rubio.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

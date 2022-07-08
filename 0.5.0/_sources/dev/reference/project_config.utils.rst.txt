@@ -1,0 +1,16 @@
+project\_config.utils package
+=============================
+
+.. automodule:: project_config.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   project_config.utils.http
