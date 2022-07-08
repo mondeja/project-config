@@ -50,7 +50,7 @@ class Cache:
     def clean() -> bool:
         """Remove the cache directory."""
         with contextlib.suppress(FileNotFoundError):
-            shutil.rmtree(_directory())
+            shutil.rmtree(os.path.abspath(os.path.dirname(_directory())))
         return True
 
     @staticmethod

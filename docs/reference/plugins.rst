@@ -90,6 +90,7 @@ Don't allow code blocks in RST documentation files:
      rules: [
        files: ["docs/**/*.rst"],
        excludeContent: [
+         ".. code-block::  ",
          ".. code-block:: bash",
          ".. code-block:: json5",
        ],
@@ -109,7 +110,7 @@ ifFilesExist
 
 Check if a set of files and/or directories exists.
 
-It acceepts an array of paths. If a path ends with ``/`` character it is
+Accepts an array of paths. If a path ends with ``/`` character it is
 considered a directory.
 
 .. rubric:: Examples
@@ -152,12 +153,16 @@ of files, so only files that can be serialized can be targetted (see
 You can use in expressions all `JMESPath builtin functions`_ plus a set of
 convenient functions defined by the plugin internally:
 
-.. function:: regex_match(pattern: str, string: str) -> bool
+.. function:: regex_match(pattern: str, string: str[, flags: int=0]) -> bool
 
    Match a regular expression against a string using the Python's built-in
    :py:func:`re.match` function.
 
    .. versionadded:: 0.1.0
+
+   .. versionchanged:: 0.5.0
+
+      Allow to pass ``flags`` optional argument as an integer.
 
 .. function:: regex_matchall(pattern: str, strings: list[str]) -> bool
 
@@ -168,7 +173,7 @@ convenient functions defined by the plugin internally:
 
    .. deprecated:: 0.4.0
 
-.. function:: regex_search(pattern: str, string: str) -> list[str]
+.. function:: regex_search(pattern: str, string: str[, flags: int=0]) -> list[str]
 
    Search using a regular expression against a string using the Python's
    built-in :py:func:`re.search` function. Returns all found groups in an
@@ -176,6 +181,10 @@ convenient functions defined by the plugin internally:
    are defined. If no results are found, returns an empty array.
 
    .. versionadded:: 0.1.0
+
+   .. versionchanged:: 0.5.0
+
+      Allow to pass ``flags`` optional argument as an integer.
 
 .. function:: op(source: type, operation: str, target: type) -> bool
 
@@ -218,8 +227,8 @@ convenient functions defined by the plugin internally:
    * ``indexOf``: :py:func:`operator.indexOf`
 
    If ``source`` and ``target`` are both of type array and the operator
-   is one of the next ones, the arrays are converted to `sets`_ before
-   applying the operator:
+   is one of the next ones, the arrays are converted to
+   :external:py:class:`set` before applying the operator:
 
    * ``<``: :py:func:`operator.lt`
    * ``<=``: :py:func:`operator.le`
@@ -236,7 +245,8 @@ convenient functions defined by the plugin internally:
 
    .. versionchanged:: 0.4.0
 
-      Convert to `sets`_ before applying operators if both arguments are arrays.
+      Convert to :external:py:class:`set` before applying operators if both
+      arguments are arrays.
 
 .. function:: shlex_split(cmd_str: str) -> list
 
@@ -244,15 +254,284 @@ convenient functions defined by the plugin internally:
 
    .. versionadded:: 0.4.0
 
-.. function:: shlex_join(cmd_list: list) -> str
+.. function:: shlex_join(cmd_list: list[str]) -> str
 
    Join a list of strings using the Python's built-in :py:func:`shlex.join` function.
 
    .. versionadded:: 0.4.0
 
+.. function:: round(number: float[, precision: int]) -> float
+
+   Round a number to a given precision using the function :external:py:func:`round`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: range([start: float,] stop: float[, step: float]) -> list
+
+   Return an array of numbers from ``start`` to ``stop`` with a step of ``step``
+   casting the result of the constructor :external:py:class:`range` to an array.
+
+   .. versionadded:: 0.5.0
+
+.. function:: capitalize(string: str) -> str
+
+   Capitalize the first letter of a string using :py:meth:`str.capitalize`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: casefold(string: str) -> str
+
+   Return a casefolded copy of a string using :py:meth:`str.casefold`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: center(string: str, width: int[, fillchar: str]) -> str
+
+   Return centered in a string of length ``width`` using :py:meth:`str.center`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: count(value: str | list, sub: any[, start: int[, end: int]]) -> int
+
+   Return the number of occurrences of ``sub`` in ``value`` using :py:meth:`str.count`.
+   If ``start`` and ``end`` are given, return the number of occurrences between
+   ``start`` and ``end``.
+   .
+
+   .. versionadded:: 0.5.0
+
+.. function:: find(string: str | list, sub: any[, start: int[, end: int]]) -> int
+
+   Return the lowest index in ``value`` where subvalue ``sub`` is found.
+   If ``start`` and ``end`` are given, return the number of occurrences between
+   ``start`` and ``end``. If not found, ``-1`` is returned. If ``value`` is a string
+   it uses internally the Python's built-in function :py:meth:`str.find`
+   or :py:meth:`str.index` if ``value`` is an array.
+
+   .. versionadded:: 0.5.0
+
+.. function:: format(schema: str, *args: any) -> str
+
+   Return a string formatted using the Python's built-in :py:func:`format` function.
+   The variable ``schema`` only accepts numeric indexes delimited by braces ``{}``
+   for positional arguments in ``*args``.
+
+   .. versionadded:: 0.5.0
+
+.. function:: isalnum(string: str) -> bool
+
+   Return True if all characters in ``string`` are alphanumeric using :py:meth:`str.isalnum`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: isalpha(string: str) -> bool
+
+   Return True if all characters in ``string`` are alphabetic using :py:meth:`str.isalpha`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: isascii(string: str) -> bool
+
+   Return True if all characters in ``string`` are ASCII using :py:meth:`str.isascii`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: isdecimal(string: str) -> bool
+
+   Return True if all characters in ``string`` are decimal using :py:meth:`str.isdecimal`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: isdigit(string: str) -> bool
+
+   Return True if all characters in ``string`` are digits using :py:meth:`str.isdigit`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: isidentifier(string: str) -> bool
+
+   Return True if all characters in ``string`` are identifiers if the string is a valid
+   identifier according to the Python language definition using :py:meth:`str.isidentifier`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: islower(string: str) -> bool
+
+   Return True if all characters in ``string`` are lowercase using :py:meth:`str.islower`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: isnumeric(string: str) -> bool
+
+   Return True if all characters in ``string`` are numeric using :py:meth:`str.isnumeric`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: isprintable(string: str) -> bool
+
+   Return True if all characters in ``string`` are printable using :py:meth:`str.isprintable`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: isspace(string: str) -> bool
+
+   Return True if all characters in ``string`` are whitespace using :py:meth:`str.isspace`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: istitle(string: str) -> bool
+
+   Return True if all characters in ``string`` are titlecased using :py:meth:`str.istitle`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: isupper(string: str) -> bool
+
+   Return True if all characters in ``string`` are uppercase using :py:meth:`str.isupper`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: ljust(string: str, width: int[, fillchar: str]) -> str
+
+   Return a left-justified version of the string using :py:meth:`str.ljust`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: lower(string: str) -> str
+
+   Return a lowercased version of the string using :py:meth:`str.lower`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: lstrip(string: str[, chars: str]) -> str
+
+   Return a left-stripped version of the string using :py:meth:`str.lstrip`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: partition(string: str, sep: str) -> list[str]
+
+   Return an array of 3 items containing the part before the separator,
+   the separator itself, and the part after the separator.
+
+   .. versionadded:: 0.5.0
+
+.. function:: removeprefix(string: str, prefix: str) -> str
+
+   Return a string with the given prefix removed using :py:meth:`str.removeprefix`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: removesuffix(string: str, suffix: str) -> str
+
+   Return a string with the given suffix removed using :py:meth:`str.removesuffix`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: rfind(string: str | list, sub: any[, start: int[, end: int]]) -> int
+
+   Return the highest index in ``value`` where subvalue ``sub`` is found.
+   If ``start`` and ``end`` are given, return the number of occurrences between
+   ``start`` and ``end``. If not found, ``-1`` is returned. If ``value`` is a string
+   it uses internally the Python's built-in function :py:meth:`str.find`
+   or :py:meth:`str.index` if ``value`` is an array.
+
+   .. versionadded:: 0.5.0
+
+.. function:: rjust(string: str, width: int[, fillchar: str]) -> str
+
+   Return a right-justified version of the string using :py:meth:`str.rjust`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: rpartition(string: str, sep: str) -> list[str]
+
+   Return an array of 3 items containing the part after the separator,
+   the separator itself, and the part before the separator splitting the
+   string at the last occurrence of ``sep``.
+
+   .. versionadded:: 0.5.0
+
+.. function:: rsplit(string: str[, sep: str[, maxsplit: int]]) -> list[str]
+
+   Return a list of the words in the string, using ``sep`` as the delimiter string
+   as returned from the method :py:meth:`str.rsplit`. Except for splitting from the
+   right, :py:func:`rsplit` behaves like :py:func:`split`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: rstrip(string: str[, chars: str]) -> str
+
+   Return a right-stripped version of the string using :py:meth:`str.rstrip`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: split(string: str[, sep: str[, maxsplit: int]]) -> list[str]
+
+   Return a list of the words in the string, using ``sep`` as the delimiter string
+   as returned from the method :py:meth:`str.split`. If ``sep`` is not given,
+   it defaults to ``None``, meaning that any whitespace string is a separator.
+
+   .. versionadded:: 0.5.0
+
+.. function:: splitlines(string: str[, keepends: bool]) -> list[str]
+
+   Return a list of the lines in the string, breaking at line boundaries using
+   the method :py:meth:`str.splitlines`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: strip(string: str[, chars: str]) -> str
+
+   Return a stripped version of the string using :py:meth:`str.strip`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: swapcase(string: str) -> str
+
+   Return a swapped-case version of the string using :py:meth:`str.swapcase`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: title(string: str) -> str
+
+   Return a titlecased version of the string using :py:meth:`str.title`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: upper(string: str) -> str
+
+   Return an uppercased version of the string using :py:meth:`str.upper`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: zfill(string: str, width: int) -> str
+
+   Return a zero-padded version of the string using :py:meth:`str.zfill`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: enumerate(string: str | list | dict) -> list[list[int, str]]
+
+   Return an array of arrays containing the index and value of each item in the iterable.
+   If the iterable is an object, the value is converted before using :py:func:`to_items`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: to_items(string: dict) -> list[list[str, any]]
+
+   Convert an object to an array of arrays containing the key and value of each item.
+
+   .. versionadded:: 0.5.0
+
+.. function:: from_items(items: list[list[str, any]]) -> dict
+
+   Convert an array of arrays containing the key and value of each item to an object.
+
+   .. versionadded:: 0.5.0
+
 .. _JMES paths: https://jmespath.org
 .. _JMESPath builtin functions: https://jmespath.org/proposals/functions.html#built-in-functions
-.. _sets: https://docs.python.org/3/library/stdtypes.html#set
 
 JMESPathsMatch
 ==============
@@ -301,7 +580,7 @@ crossJMESPathsMatch
 
 JMESPaths matching between multiple files.
 
-It accepts an array of arrays. Each one of these arrays must have the syntax:
+Accepts an array of arrays. Each one of these arrays must have the syntax:
 
 .. code-block:: js
 
