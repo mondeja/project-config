@@ -2,15 +2,19 @@
 
 from __future__ import annotations
 
+import os
 import typing as t
 
+from project_config.cache import Cache
 from project_config.config.exceptions import ProjectConfigInvalidConfigSchema
 from project_config.fetchers import (
     FetchError,
     fetch,
     resolve_maybe_relative_url,
+    resolve_url,
 )
 from project_config.plugins import Plugins
+from project_config.serializers import serialize_for_url
 from project_config.types import Rule
 
 
@@ -22,7 +26,8 @@ PluginType = type
 # TODO: improve style type with TypedDict?
 # https://docs.python.org/3/library/typing.html#typing.TypedDict
 StyleType = t.Dict[str, t.List[t.Any]]
-StyleLoderIterator = t.Iterator[t.Union[StyleType, str]]
+StyleLoaderIterator = t.Iterator[t.Union[StyleType, str]]
+StyleUrlsPrefetcherIterator = t.Iterator[str]
 
 
 class Style:
@@ -39,10 +44,20 @@ class Style:
     @classmethod
     def from_config(cls, config: t.Any) -> Style:
         """Loads styles to the configuration passed as argument."""
+        if (
+            not all([os.path.isfile(url) for url in config["style"]])
+        ) and os.environ.get("PROJECT_CONFIG_USE_CACHE") != "false":
+            try:
+                _prefetch_urls(config)
+            except Exception:
+                # if a exception is raised, will be raised again
+                # in the synchronous style loader
+                pass
         style = cls(config)
 
-        style_gen = style._load_styles_from_config()
         error_messages: t.List[str] = []
+
+        style_gen = style._load_styles_from_config()
         while True:
             try:
                 style_or_error = next(style_gen)
@@ -59,7 +74,7 @@ class Style:
 
         return style
 
-    def _load_styles_from_config(self) -> StyleLoderIterator:
+    def _load_styles_from_config(self) -> StyleLoaderIterator:
         """Load styles yielding error messages if found.
 
         Error messages are of type string and style is of type dict.
@@ -132,7 +147,7 @@ class Style:
         self,
         parent_style_url: str,
         style: StyleType,
-    ) -> StyleLoderIterator:
+    ) -> StyleLoaderIterator:
         for s, extend_url in enumerate(style.pop("extends")):
             try:
                 partial_style = fetch(extend_url)
@@ -369,3 +384,71 @@ class Style:
                             " defined plugins:"
                             f" {', '.join(self.plugins.plugin_names)}"
                         )
+
+
+def _prefetch_urls(config: t.Any) -> None:
+    """Prefetch urls concurrently and store them in cache.
+
+    This function is used to store urls in cache before they are used,
+    so the network calls are speedup a lot.
+
+    Args:
+        config: The config object.
+    """
+    from concurrent.futures import as_completed
+
+    from requests_futures.sessions import FuturesSession
+
+    session = FuturesSession()
+
+    style_urls_ = config["style"]
+    if isinstance(style_urls_, str):
+        style_urls_ = [style_urls_]
+
+    def prefetch_partial_style(
+        parent_style_url: str,
+        extend_urls: t.List[str],
+    ) -> None:
+        urls = {}
+        for extend_url in extend_urls:
+            resolved_extend_url = resolve_maybe_relative_url(
+                extend_url,
+                parent_style_url,
+                config.rootdir,
+            )
+            url, _ = resolve_url(resolved_extend_url)
+            if Cache.get(url) is not None:
+                continue
+            urls[url] = resolved_extend_url
+        if not urls:
+            return
+
+        futures = [session.get(url) for url in urls]
+
+        for future in as_completed(futures):
+            resp = future.result()
+            Cache.set(resp.url, resp.text)
+            style_obj = serialize_for_url(resp.url, resp.text)
+            if isinstance(style_obj.get("extends"), list):
+                prefetch_partial_style(urls[resp.url], style_obj["extends"])
+
+    def prefetch_style(style_urls: t.List[str]) -> None:
+        urls = {}
+        for style_url in style_urls:
+            url, scheme = resolve_url(style_url)
+            if scheme == "file" or Cache.get(url) is not None:
+                continue
+            urls[url] = style_url
+        if not urls:
+            return
+
+        futures = [session.get(url) for url in urls]
+
+        for future in as_completed(futures):
+            resp = future.result()
+            Cache.set(resp.url, resp.text)
+            style_obj = serialize_for_url(resp.url, resp.text)
+            if isinstance(style_obj.get("extends"), list):
+                prefetch_partial_style(urls[resp.url], style_obj["extends"])
+
+    prefetch_style(style_urls_)

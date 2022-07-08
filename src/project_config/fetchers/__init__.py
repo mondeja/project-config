@@ -30,9 +30,9 @@ class FetchError(ProjectConfigException):
 class SchemeProtocolNotImplementedError(ProjectConfigNotImplementedError):
     """A URI schema has not been implemented."""
 
-    def __init__(self, scheme: str):
+    def __init__(self, scheme: str, action: str = "Fetching"):
         super().__init__(
-            f"Fetching from scheme protocol '{scheme}:' is not implemented.",
+            f"{action} from scheme protocol '{scheme}:' is not implemented.",
         )
 
 
@@ -89,6 +89,27 @@ def fetch(url: str, **kwargs: t.Any) -> FetchResult:
         raise FetchError(exc.message)
 
 
+def resolve_url(url: str) -> t.Tuple[str, str]:
+    """Resolve an URL from a custom URI to their real counterpart.
+
+    Args:
+        url (str): URI to the target resource.
+
+    Returns:
+        tuple: Real URL for the target resource and scheme.
+    """
+    url_parts = urllib.parse.urlsplit(url)
+    scheme = _get_scheme_from_urlparts(url_parts)
+    try:
+        module = importlib.import_module(f"project_config.fetchers.{scheme}")
+    except ImportError:
+        raise SchemeProtocolNotImplementedError(scheme, action="Resolving")
+    return (
+        getattr(module, "resolve_url", lambda url_parts_: url)(url_parts),
+        scheme,
+    )
+
+
 def resolve_maybe_relative_url(url: str, parent_url: str, rootdir: str) -> str:
     """Relative URL resolver.
 
@@ -141,7 +162,10 @@ def resolve_maybe_relative_url(url: str, parent_url: str, rootdir: str) -> str:
 
         # parent url is another protocol like https, so we are online,
         # must convert to a relative URI depending on the protocol
-        raise SchemeProtocolNotImplementedError(parent_url_parts.scheme)
+        raise SchemeProtocolNotImplementedError(
+            parent_url_parts.scheme,
+            action="Resolving",
+        )
 
     # other protocols like https uses absolute URLs
     return url

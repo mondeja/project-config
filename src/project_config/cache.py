@@ -27,7 +27,7 @@ class Cache:
 
     _cache = diskcache.Cache(_directory())
 
-    def __init__(self) -> None:
+    def __init__(self) -> None:  # pragma: no cover
         raise NotImplementedError("Cache is a singleton class.")
 
     @classmethod
@@ -50,7 +50,7 @@ class Cache:
     def clean() -> bool:
         """Remove the cache directory."""
         with contextlib.suppress(FileNotFoundError):
-            shutil.rmtree(os.path.abspath(os.path.dirname(_directory())))
+            shutil.rmtree(_directory())
         return True
 
     @staticmethod

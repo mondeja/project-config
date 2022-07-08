@@ -40,6 +40,8 @@ identify = "^2"
 appdirs = "^1"
 diskcache = "^5"
 typing-extensions = "^4.3.0"
+requests = "^2.28.1"
+requests-futures = "^1.0.0"
 
 [tool.poetry.group.dev.dependencies]
 mondeja-bump = "*"

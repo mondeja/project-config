@@ -62,8 +62,15 @@ def _build_raw_githubusercontent_url(
     )
 
 
-def fetch(url_parts: urllib.parse.SplitResult, **kwargs: t.Any) -> str:
-    """Fetch a resource through HTTPs protocol for a Github URI."""
+def resolve_url(url_parts: urllib.parse.SplitResult) -> str:
+    """Resolve a ``gh:`` scheme URI to their real counterpart.
+
+    Args:
+        url_parts (urllib.parse.SplitResult): The URL parts of the URI.
+
+    Returns:
+        str: The real ``https:`` scheme URL.
+    """
     # extract project, filepath and git reference
     project_maybe_with_gitref, fpath = url_parts.path.lstrip("/").split(
         "/",
@@ -78,10 +85,21 @@ def fetch(url_parts: urllib.parse.SplitResult, **kwargs: t.Any) -> str:
             project,
         )
 
-    url = _build_raw_githubusercontent_url(
+    return _build_raw_githubusercontent_url(
         url_parts.netloc,
         project,
         git_reference,
         fpath,
     )
-    return GET(url, **kwargs)
+
+
+def fetch(url_parts: urllib.parse.SplitResult, **kwargs: t.Any) -> str:
+    """Fetch a resource through HTTPs protocol for a Github URI.
+
+    Args:
+        url_parts (urllib.parse.SplitResult): The URL parts of the URI.
+
+    Returns:
+        str: The fetched resource content.
+    """
+    return GET(resolve_url(url_parts), **kwargs)
