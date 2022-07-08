@@ -28,9 +28,7 @@ class Cache:
     _cache = diskcache.Cache(_directory())
 
     def __init__(self) -> None:  # pragma: no cover
-        raise NotImplementedError(
-            "Cache is a wrapper interface and can not be instanceable.",
-        )
+        raise NotImplementedError("Cache is a not instanceable interface.")
 
     @classmethod
     def set(cls, *args: t.Any, **kwargs: t.Any) -> t.Any:  # noqa: A003, D102
