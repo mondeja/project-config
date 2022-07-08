@@ -1,3 +1,5 @@
+import sys
+
 import pytest
 from testing_helpers import mark_end2end
 
@@ -455,6 +457,10 @@ class FakeConfig:
 
 
 @mark_end2end
+@pytest.mark.skipif(
+    "win" in sys.platform,
+    reason="Windows have problems cleaning cache in CI",
+)
 def test__prefetch_urls_local_files(tmp_path, mocker, capsys, monkeypatch):
     assert run(["clean", "cache"]) == 0
     capsys.readouterr()
@@ -491,6 +497,10 @@ def test__prefetch_urls_local_files(tmp_path, mocker, capsys, monkeypatch):
 
 
 @mark_end2end
+@pytest.mark.skipif(
+    "win" in sys.platform,
+    reason="Windows have problems cleaning cache in CI",
+)
 def test__prefetch_urls_remote_files(tmp_path, mocker, monkeypatch, capsys):
     assert run(["clean", "cache"]) == 0
     capsys.readouterr()
