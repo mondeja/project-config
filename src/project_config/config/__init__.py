@@ -2,12 +2,13 @@
 
 from __future__ import annotations
 
+import importlib
 import os
 import re
 import typing as t
 
 from project_config.cache import Cache
-from project_config.compat import TypeAlias
+from project_config.compat import TypeAlias, tomllib_package_name
 from project_config.config.exceptions import (
     ConfigurationFilesNotFound,
     CustomConfigFileNotFound,
@@ -33,7 +34,9 @@ def read_config_from_pyproject_toml() -> t.Optional[t.Any]:
     Returns:
         object: ``None`` if not found, configuration data otherwise.
     """
-    pyproject_toml = fetch("pyproject.toml")
+    tomllib = importlib.import_module(tomllib_package_name)
+    with open("pyproject.toml", "rb") as f:
+        pyproject_toml = tomllib.load(f)
     if "tool" in pyproject_toml and "project-config" in pyproject_toml["tool"]:
         return pyproject_toml["tool"]["project-config"]
     return None
@@ -66,9 +69,10 @@ def read_config(
 
     project_config_toml_exists = os.path.isfile(".project-config.toml")
     if project_config_toml_exists:
-        return ".project-config.toml", dict(
-            fetch(".project-config.toml"),
-        )
+        tomllib = importlib.import_module(tomllib_package_name)
+        with open(".project-config.toml", "rb") as f:
+            project_config_toml = tomllib.load(f)
+        return ".project-config.toml", project_config_toml
 
     if pyproject_toml_exists:
         raise PyprojectTomlFoundButHasNoConfig()
