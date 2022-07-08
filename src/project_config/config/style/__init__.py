@@ -43,20 +43,25 @@ class Style:
     @classmethod
     def from_config(cls, config: t.Any) -> Style:
         """Loads styles to the configuration passed as argument."""
-        if (
-            not all([os.path.isfile(url) for url in config["style"]])
-        ) and os.environ.get("PROJECT_CONFIG_USE_CACHE") != "false":
-            try:
-                _prefetch_urls(config)
-            except Exception:
-                # if a exception is raised, will be raised again
-                # in the synchronous style loader
-                pass
+        if os.environ.get("PROJECT_CONFIG_USE_CACHE") != "false":
+            if (
+                isinstance(config["style"], str)
+                and not os.path.isfile(config["style"])
+            ) or (
+                isinstance(config["style"], list)
+                and not all([os.path.isfile(url) for url in config["style"]])
+            ):
+                try:
+                    _prefetch_urls(config)
+                except Exception:
+                    # if a exception is raised, will be raised again
+                    # in the synchronous style loader
+                    pass
+
         style = cls(config)
 
-        error_messages: t.List[str] = []
-
         style_gen = style._load_styles_from_config()
+        error_messages: t.List[str] = []
         while True:
             try:
                 style_or_error = next(style_gen)
