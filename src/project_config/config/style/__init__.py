@@ -44,7 +44,7 @@ class Style:
     def from_config(cls, config: t.Any) -> Style:
         """Loads styles to the configuration passed as argument."""
         if os.environ.get("PROJECT_CONFIG_USE_CACHE") != "false":
-            if (
+            if (  # pragma: no cover
                 isinstance(config["style"], str)
                 and not os.path.isfile(config["style"])
             ) or (
