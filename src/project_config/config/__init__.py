@@ -249,11 +249,8 @@ class Config:
         config["cache"] = _cache_string_to_seconds(config["cache"])
 
         # set the cache expiration time globally
-        Cache.set(
-            Cache.Keys.expiration,
-            config["cache"],
-            expire=None,
-        )
+        Cache.set_expiration_time(config["cache"])
+
         # main configuration in file
         self.dict_: ConfigType = config
 
