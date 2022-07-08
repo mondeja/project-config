@@ -39,6 +39,7 @@ identify = "^2"
 "ruamel.yaml" = "~0.17"
 appdirs = "^1"
 diskcache = "^5"
+typing-extensions = "^4.3.0"
 
 [tool.poetry.group.dev.dependencies]
 mondeja-bump = "*"
