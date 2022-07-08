@@ -1,5 +1,7 @@
 """HTTP/s utilities."""
 
+from __future__ import annotations
+
 import os
 import time
 import typing as t
@@ -30,11 +32,8 @@ def _GET(
     err = None
     while time.time() < end:
         try:
-            response = (
-                urllib.request.urlopen(urllib.request.Request(url))
-                .read()
-                .decode("utf-8")
-            )
+            with urllib.request.urlopen(url) as req:
+                response = req.read().decode("utf-8")
         except (
             urllib.error.URLError,
             urllib.error.HTTPError,
@@ -43,10 +42,8 @@ def _GET(
             err = exc.__str__()
             time.sleep(sleep)
         else:
-            urllib.request.urlcleanup()
             return response  # type: ignore
 
-    urllib.request.urlcleanup()
     error_reason = "" if not err else f" Possibly caused by: {err}"
     raise ProjectConfigTimeoutError(
         f"Impossible to fetch '{url}' after {timeout} seconds.{error_reason}",

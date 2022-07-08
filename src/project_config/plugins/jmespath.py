@@ -1,5 +1,7 @@
 """JMESPath expressions plugin."""
 
+from __future__ import annotations
+
 import operator
 import pprint
 import re

@@ -47,6 +47,16 @@ repos:
     rev: 5.10.1
     hooks:
       - id: isort
+        name: isort-src
+        alias: isort-src
+        files: ^src
+        args:
+          - --add-import
+          - from __future__ import annotations
+      - id: isort
+        name: isort-tests
+        alias: isort-tests
+        files: ^tests
   - repo: https://github.com/flakeheaven/flakeheaven
     rev: 2.0.0
     hooks:

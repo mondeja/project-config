@@ -1,5 +1,7 @@
 """Reproducible configuration across projects."""
 
+from __future__ import annotations
+
 from project_config.constants import Error, InterruptingError, ResultValue
 from project_config.tree import Tree
 from project_config.types import Results, Rule

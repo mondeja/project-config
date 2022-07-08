@@ -1,5 +1,7 @@
 """Compatibility between Python versions."""
 
+from __future__ import annotations
+
 import functools
 import shlex
 import sys

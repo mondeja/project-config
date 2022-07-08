@@ -34,12 +34,14 @@ tomli-w = "^1"
 pyjson5 = "*"
 colored = "*"
 tabulate = "^0.8"
-typing-extensions = "^4"
 jmespath = "^1"
 identify = "^2"
 "ruamel.yaml" = "~0.17"
 appdirs = "^1"
 diskcache = "^5"
+typing-extensions = "^4.3.0"
+requests = "^2.28.1"
+requests-futures = "^1.0.0"
 
 [tool.poetry.group.dev.dependencies]
 mondeja-bump = "*"
@@ -140,8 +142,16 @@ use_parentheses = true
 combine_as_imports = true
 include_trailing_comma = true
 known_tests = "tests"
-sections = ["STDLIB", "THIRDPARTY", "FIRSTPARTY", "TESTS", "LOCALFOLDER"]
+sections = [
+  "FUTURE",
+  "STDLIB",
+  "THIRDPARTY",
+  "FIRSTPARTY",
+  "TESTS",
+  "LOCALFOLDER"
+]
 py_version = 37
+remove_redundant_aliases = true
 extra_standard_library = [
   "contextvars",
   "dataclasses",

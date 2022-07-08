@@ -1,5 +1,7 @@
 """Object serializers."""
 
+from __future__ import annotations
+
 import functools
 import importlib
 import os

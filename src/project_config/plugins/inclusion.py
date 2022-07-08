@@ -1,5 +1,7 @@
 """Inclusions checker plugin."""
 
+from __future__ import annotations
+
 import os
 import pprint
 import typing as t

@@ -1,5 +1,7 @@
 """YAML to JSON converter."""
 
+from __future__ import annotations
+
 import io
 import typing as t
 

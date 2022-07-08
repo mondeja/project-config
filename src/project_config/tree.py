@@ -1,5 +1,7 @@
 """Cached files tree used by the linter when using checker commands."""
 
+from __future__ import annotations
+
 import glob
 import os
 import typing as t

@@ -1,5 +1,7 @@
 """YAML reporters."""
 
+from __future__ import annotations
+
 import typing as t
 
 from project_config.reporters.base import BaseColorReporter, BaseReporter
