@@ -3,6 +3,8 @@
 Based on https://github.com/editorconfig/editorconfig-core-py/blob/master/editorconfig/ini.py
 """  # noqa: E501
 
+from __future__ import annotations
+
 import re
 import typing as t
 

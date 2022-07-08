@@ -1,5 +1,7 @@
 """Error reporters."""
 
+from __future__ import annotations
+
 import importlib
 import json
 import types
@@ -143,9 +145,9 @@ class ThirdPartyReporters:
     """Third party reporters loader from entrypoints."""
 
     # allow to reset the instance, just for testing purposes
-    instance: t.Optional["ThirdPartyReporters"] = None
+    instance: t.Optional[ThirdPartyReporters] = None
 
-    def __new__(cls) -> "ThirdPartyReporters":  # noqa: D102
+    def __new__(cls) -> ThirdPartyReporters:  # noqa: D102
         if cls.instance is None:
             cls.instance = super().__new__(cls)
         return cls.instance

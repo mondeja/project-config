@@ -1,5 +1,7 @@
 """High level logic for checking a project."""
 
+from __future__ import annotations
+
 import argparse
 import os
 import sys

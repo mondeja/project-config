@@ -1,5 +1,7 @@
 """HTTP/s utilities."""
 
+from __future__ import annotations
+
 import os
 import time
 import typing as t

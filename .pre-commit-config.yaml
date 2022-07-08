@@ -51,7 +51,8 @@ repos:
         alias: isort-src
         files: ^src
         args:
-          - "--add-import='from __future__ import annotations'"
+          - --add-import
+          - from __future__ import annotations
       - id: isort
         name: isort-tests
         alias: isort-tests

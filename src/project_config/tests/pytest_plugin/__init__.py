@@ -1,5 +1,7 @@
 """Pytest plugin for project-config."""
 
+from __future__ import annotations
+
 import pytest
 
 

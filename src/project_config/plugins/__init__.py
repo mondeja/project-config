@@ -4,6 +4,8 @@ These plugins are not required to be specified in ``plugins``
 properties of styles.
 """
 
+from __future__ import annotations
+
 import importlib.util
 import inspect
 import re

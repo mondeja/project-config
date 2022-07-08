@@ -1,5 +1,7 @@
 """Style loader, blender and checker."""
 
+from __future__ import annotations
+
 import typing as t
 
 from project_config.config.exceptions import ProjectConfigInvalidConfigSchema
@@ -35,7 +37,7 @@ class Style:
         self.config = config
 
     @classmethod
-    def from_config(cls, config: t.Any) -> "Style":
+    def from_config(cls, config: t.Any) -> Style:
         """Loads styles to the configuration passed as argument."""
         style = cls(config)
 

@@ -1,5 +1,7 @@
 """Fetchers for different types of resources by URI schema."""
 
+from __future__ import annotations
+
 import importlib
 import os
 import typing as t
