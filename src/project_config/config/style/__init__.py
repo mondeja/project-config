@@ -27,7 +27,6 @@ PluginType = type
 # https://docs.python.org/3/library/typing.html#typing.TypedDict
 StyleType = t.Dict[str, t.List[t.Any]]
 StyleLoaderIterator = t.Iterator[t.Union[StyleType, str]]
-StyleUrlsPrefetcherIterator = t.Iterator[str]
 
 
 class Style:
