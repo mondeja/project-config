@@ -82,21 +82,21 @@ targets = [
 [tool.project-config]
 style = [
   # Basic Python styles: use poetry
-  "gh://mondeja/project-config-styles/python/base.json5",
+  "../project-config-styles/python/base.json5",
   # Minimum Python version
-  "gh://mondeja/project-config-styles/python/version/min-37.json5",
+  "../project-config-styles/python/version/min-37.json5",
   # Double quotes: formatting with Black
-  "gh://mondeja/project-config-styles/python/double-quotes.json5",
+  "../project-config-styles/python/double-quotes.json5",
   # Maximum line length
-  "gh://mondeja/project-config-styles/python/line-length-80.json5",
+  "../project-config-styles/python/line-length-80.json5",
   # Testing styles: use pytest
-  "gh://mondeja/project-config-styles/python/tests.json5",
+  "../project-config-styles/python/tests.json5",
   # Documentation styles: use Sphinx with Readthedocs theme
-  "gh://mondeja/project-config-styles/python/sphinx.json5",
-  "gh://mondeja/project-config-styles/python/google-docstrings.json5",
-  "gh://mondeja/project-config-styles/python/readthedocs.json5",
+  "../project-config-styles/python/sphinx.json5",
+  "../project-config-styles/python/google-docstrings.json5",
+  "../project-config-styles/python/readthedocs.json5",
   # Type checking with mypy
-  "gh://mondeja/project-config-styles/python/mypy.json5",
+  "../project-config-styles/python/mypy.json5",
 ]
 cache = "2 days"
 
@@ -139,7 +139,14 @@ use_parentheses = true
 combine_as_imports = true
 include_trailing_comma = true
 known_tests = "tests"
-sections = ["STDLIB", "THIRDPARTY", "FIRSTPARTY", "TESTS", "LOCALFOLDER"]
+sections = [
+  "FUTURE",
+  "STDLIB",
+  "THIRDPARTY",
+  "FIRSTPARTY",
+  "TESTS",
+  "LOCALFOLDER"
+]
 py_version = 37
 remove_redundant_aliases = true
 extra_standard_library = [
@@ -152,7 +159,6 @@ extra_standard_library = [
   "tomllib",
   "wsgiref.types",
 ]
-add_imports = "from __future__ import annotations"
 
 [tool.black]
 line-length = 80
