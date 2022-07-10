@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import operator
+import os
 import pprint
 import re
 import shlex
@@ -330,6 +331,10 @@ class JMESPathProjectConfigFunctions(JMESPathFunctions):
     @jmespath_func_signature({"types": ["array"]})
     def _func_from_items(self, value: t.List[t.Any]) -> t.Dict[str, t.Any]:
         return {str(key): subv for key, subv in value}
+
+    @jmespath_func_signature()
+    def _func_rootdir_name(self) -> str:
+        return os.path.basename(os.environ["PROJECT_CONFIG_ROOTDIR"])
 
     locals().update(
         dict(

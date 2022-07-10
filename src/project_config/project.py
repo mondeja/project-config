@@ -82,6 +82,9 @@ class Project:
             self.rootdir,
         )
 
+        # set rootdir as an internal environment variable to be used by plugins
+        os.environ["PROJECT_CONFIG_ROOTDIR"] = self.rootdir
+
     def _check_files_existence(
         self,
         files: TreeNodeFiles,
