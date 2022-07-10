@@ -1,0 +1,8 @@
+{
+  rules: [
+    {
+      files: [".project-config.toml"],
+      JMESPathsMatch: [["regex_match('[a-z0-9-]+$', rootdir_name())", true]],
+    },
+  ],
+}
