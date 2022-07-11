@@ -657,7 +657,7 @@ the rule. For example, the next configuration would not raise errors:
 
          {"bar": {"baz": 7}}
 
-You can also specify your custom :doc:`../in-depth/serialization` to use for opening
+You can also override the :doc:`../in-depth/serialization` to use for opening
 other files using ``file/path.ext?serializer`` syntax. For example, to open a Python
 file line by line:
 
