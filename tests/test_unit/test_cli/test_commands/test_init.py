@@ -120,3 +120,20 @@ cache = "5 minutes"
         assert style_file.exists()
 
         assert run(["check"]) == 0
+
+
+def test_toml_file_already_exists_and_section_found(tmp_path, chdir, capsys):
+    with chdir(tmp_path):
+        file = tmp_path / "pyproject.toml"
+        file.write_text(
+            '[tool.project-config]\nstyle = ["style.json5"]\n'
+            'cache = "5 minutes"\n',
+        )
+        assert run(["init", "-c", "pyproject.toml"]) == 1
+
+        out, err = capsys.readouterr()
+        assert out == ""
+        assert err == (
+            "The configuration for project-config has already been"
+            " initialized at pyproject.toml[tool.project-config]\n"
+        )
