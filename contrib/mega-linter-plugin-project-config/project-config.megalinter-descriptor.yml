@@ -1,0 +1,24 @@
+descriptor_id: PROJECT_CONFIG
+descriptor_type: tooling_format
+descriptor_flavors:
+  - all_flavors
+file_extensions:
+  - '*'
+active_only_if_file_found:
+  - .project-config.toml
+  - pyproject.toml
+linters:
+  - linter_name: project-config
+    linter_url: https://mondeja.github.io/project-config/
+    name: PROJECT_CONFIG
+    install:
+      dockerfile:
+        - RUN pip install project-config
+    examples:
+      - project-config check
+    cli_help_arg_name: --help
+    cli_lint_errors_count: regex_sum
+    cli_lint_errors_regex: '  - '
+    cli_lint_extra_args:
+      - check
+    linter_spdx_license: BSD-3-Clause
