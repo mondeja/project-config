@@ -129,7 +129,10 @@ def _get_serializer(
             raise SerializerError(
                 _file_can_not_be_serialized_as_object_error(
                     url,
-                    f"Preferred serializer '{prefer_serializer}' not supported",
+                    (
+                        f"\nPreferred serializer '{prefer_serializer}'"
+                        " not supported"
+                    ),
                 ),
             )
     else:

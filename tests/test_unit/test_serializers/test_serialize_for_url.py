@@ -100,6 +100,17 @@ def test_serialize_for_url(url, string, expected_result):
             ),
             id=".json-parsing-error",
         ),
+        pytest.param(
+            "https://example.com/file.json?impossible-other-serializer",
+            "{}",
+            SerializerError,
+            (
+                "'https://example.com/file.json' can't be serialized as a"
+                " valid object:\nPreferred serializer"
+                " 'impossible-other-serializer' not supported"
+            ),
+            id=".json?invalid-preferred-serializer",
+        ),
     ),
 )
 def test_serialize_for_url_errors(
