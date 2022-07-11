@@ -19,7 +19,7 @@ linters:
     lint_all_files: true
     cli_lint_mode: project
     cli_lint_errors_count: regex_lines
-    cli_lint_errors_regex: ^\s\s-\s.+
+    cli_lint_errors_regex: '  - .+'
     cli_help_arg_name: --help
     cli_lint_extra_args:
       - check
