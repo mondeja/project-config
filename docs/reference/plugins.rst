@@ -186,6 +186,13 @@ convenient functions defined by the plugin internally:
 
       Allow to pass ``flags`` optional argument as an integer.
 
+.. function:: regex_sub(pattern: str, repl: str, string: str[, count: int=0[, flags: int=0]]) -> str
+
+   Replace using a regular expression against a string using the Python's
+   built-in :py:func:`re.sub` function.
+
+   .. versionadded:: 0.5.0
+
 .. function:: op(source: type, operation: str, target: type) -> bool
 
    Applies the operator `operator` between the two values using the operators
