@@ -86,6 +86,7 @@ def fetch(url: str, **kwargs: t.Any) -> FetchResult:
         raise FetchError(f"'{url}' file not found")
     except ProjectConfigTimeoutError as exc:
         raise FetchError(exc.message)
+
     try:
         return serialize_for_url(url, string, prefer_serializer=serializer_name)
     except SerializerError as exc:

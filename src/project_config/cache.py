@@ -26,6 +26,7 @@ class Cache:
     """Wrapper for a unique :py:class:`diskcache.Cache` instance."""
 
     _cache = diskcache.Cache(_directory())
+    _expiration_time = 30
 
     def __init__(self) -> None:  # pragma: no cover
         raise NotImplementedError("Cache is a not instanceable interface.")
@@ -35,7 +36,7 @@ class Cache:
         return cls._cache.set(
             *args,
             **dict(
-                expire=cls._expiration_time,  # type: ignore
+                expire=cls._expiration_time,
                 **kwargs,
             ),
         )

@@ -13,18 +13,18 @@ from project_config.fetchers import FetchError, fetch
     ("path", "content", "expected_result", "expected_error_message"),
     (
         pytest.param(
-            "download/foo.json",
+            "foo.json",
             {"rules": []},
             True,
             None,
             id=".json",
         ),
         pytest.param(
-            "download/bar.json",
+            "bar.json",
             "foo",
             FetchError,
             (
-                "http://127.0.0.1:9997/download/bar.json?content=foo'"
+                "'http://127.0.0.1:9997/download/foo/bar.json'"
                 " can't be serialized as a valid object:"
                 " Expecting value: line 1 column 1 (char 0)"
             ),
@@ -51,8 +51,8 @@ def test_fetch_file(
         content if isinstance(content, str) else json.dumps(content)
     )
     url = (
-        f"{TEST_SERVER_URL}/{path}?content="
-        f"{urllib.parse.quote(serialized_content)}"
+        f"{TEST_SERVER_URL}/download/"
+        f"{urllib.parse.quote(serialized_content)}/{path}"
     )
 
     if expected_error_message:
@@ -60,7 +60,7 @@ def test_fetch_file(
             expected_result,
             match=re.escape(expected_error_message),
         ):
-            fetch(url, timeout=0, sleep=0)
+            fetch(url, timeout=0.3, sleep=0)
     else:
-        result = fetch(url, timeout=0, sleep=0)
+        result = fetch(url, timeout=1, sleep=0)
         assert result == expected_result
