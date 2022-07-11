@@ -21,7 +21,7 @@ Installation
       .. code-block:: yaml
 
          - repo: https://github.com/mondeja/project-config
-           rev: v0.5.0
+           rev: v0.6.0
            hooks:
              - id: project-config
 
@@ -30,6 +30,6 @@ Installation
       .. code-block:: yaml
 
          PLUGINS:
-           - https://raw.githubusercontent.com/mondeja/project-config/v0.5.0/contrib/mega-linter-plugin-project-config/project-config.megalinter-descriptor.yml
+           - https://raw.githubusercontent.com/mondeja/project-config/v0.6.0/contrib/mega-linter-plugin-project-config/project-config.megalinter-descriptor.yml
          ENABLE_LINTERS:
            - PROJECT_CONFIG

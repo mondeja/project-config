@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "project-config"
-version = "0.5.0"
+version = "0.6.0"
 description = "Reproducible configuration across projects."
 authors = ["Álvaro Mondéjar Rubio <mondejar1994@gmail.com>"]
 license = "BSD-3-Clause"
