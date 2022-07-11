@@ -530,6 +530,11 @@ convenient functions defined by the plugin internally:
 
    .. versionadded:: 0.5.0
 
+.. function:: rootdir_name() -> str
+
+   Returns the name if the root directory of the project (passed in :ref:`project-config---rootdir`
+   CLI option or defined in ``cli.rootdir`` :doc:`configuration option <./config>`).
+
 .. _JMES paths: https://jmespath.org
 .. _JMESPath builtin functions: https://jmespath.org/proposals/functions.html#built-in-functions
 
