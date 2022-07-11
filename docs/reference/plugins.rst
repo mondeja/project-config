@@ -657,6 +657,34 @@ the rule. For example, the next configuration would not raise errors:
 
          {"bar": {"baz": 7}}
 
+You can also specify your custom :doc:`../in-depth/serialization` to use for opening
+other files using ``file/path.ext?serializer`` syntax. For example, to open a Python
+file line by line:
+
+.. tabs::
+
+   .. tab:: file.py
+
+      .. code-block:: py
+
+         foo = True
+         bar = False
+
+   .. tab:: style.json5
+
+      .. code-block:: js
+
+         {
+           rules: [
+             {
+               files: ["file.py"],  // just asserts that the file exists
+               crossJMESPathsMatch: [
+                 ["null", ["file.py?text", "[0]"], "[1]", "foo = True"],
+               ]
+             }
+           ]
+         }
+
 .. versionadded:: 0.4.0
 
 ifJMESPathsMatch

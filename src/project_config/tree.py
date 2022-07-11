@@ -8,7 +8,10 @@ import typing as t
 from dataclasses import dataclass
 
 from project_config.fetchers import fetch
-from project_config.serializers import serialize_for_url
+from project_config.serializers import (
+    guess_preferred_serializer,
+    serialize_for_url,
+)
 
 
 TreeDirectory = t.Iterator[str]
@@ -46,7 +49,7 @@ class Tree:
 
     .. code-block:: python
 
-       instance = tree.serialize_file(fpath)
+       instance = fpath, tree.serialize_file(fpath)
 
     If you are not inside a context were you have the content
     of the files (a common scenario for conditional actions)
@@ -172,6 +175,8 @@ class Tree:
         Returns:
             object: Object-serialized version of the file.
         """
+        fpath, serializer_name = guess_preferred_serializer(fpath)
+
         normalized_fpath = self.normalize_path(fpath)
         try:
             result = self.serialized_files_cache[normalized_fpath]
@@ -184,9 +189,10 @@ class Tree:
             result = serialize_for_url(
                 fpath,
                 fcontent,  # type: ignore
+                prefer_serializer=serializer_name,
             )
             self.serialized_files_cache[normalized_fpath] = result
-        return result
+        return fpath, result
 
     def fetch_file(self, url: str) -> t.Any:
         """Fetch a file from online or offline sources given a url or path.
