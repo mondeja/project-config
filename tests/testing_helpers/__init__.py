@@ -26,7 +26,7 @@ def build_testing_server():
     flask.cli.show_server_banner = lambda *args: None
 
     # create server
-    test_server = flask.Flask("http-request-codegen_tests")
+    test_server = flask.Flask("project-config_tests")
 
     @test_server.route("/ping", methods=["GET"])
     def ping():
@@ -34,20 +34,10 @@ def build_testing_server():
         response.mimetype = "text/plain"
         return response
 
-    @test_server.route("/download/<filename>", methods=["GET"])
-    def download_file(filename):
-        response = None
-        if flask.request.method == "GET":
-            response = flask.make_response(
-                flask.request.args.get("content"),
-                200,
-            )
-            response.mimetype = "text/plain"
-        else:
-            raise NotImplementedError(
-                f"Method {flask.request.method} not"
-                " implemented in Flask testing server",
-            )
+    @test_server.route("/download/<content>/<filename>", methods=["GET"])
+    def download_file(filename, content):
+        response = response = flask.make_response(content, 200)
+        response.mimetype = "text/plain"
         return response
 
     return test_server

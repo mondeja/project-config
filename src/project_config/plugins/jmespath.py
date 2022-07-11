@@ -585,7 +585,7 @@ class JMESPathPlugin:
                 }
                 continue
 
-            instance = tree.serialize_file(fpath)
+            _, instance = tree.serialize_file(fpath)
 
             for e, (expression, expected_value) in enumerate(value):
                 try:
@@ -713,7 +713,7 @@ class JMESPathPlugin:
                 continue
 
             try:
-                instance = tree.serialize_file(fpath)
+                _, instance = tree.serialize_file(fpath)
             except SerializerError as exc:
                 yield InterruptingError, {
                     "message": exc.message,
@@ -864,7 +864,7 @@ class JMESPathPlugin:
                     }
                     continue
 
-                files_instance = tree.serialize_file(fpath)
+                _, files_instance = tree.serialize_file(fpath)
 
                 try:
                     files_compiled_expression = (

@@ -1,0 +1,16 @@
+{
+  rules: [
+    {
+      files: ["pyproject.toml"],
+      hint: "The section '[foo]' must be defined before the section '[bar]'",
+      crossJMESPathsMatch: [
+        [
+          "null",
+          ["pyproject.toml?text", "@"],
+          "op(op([1], 'indexOf', '[foo]'), '<', op([1], 'indexOf', '[bar]'))",
+          true,
+        ],
+      ],
+    },
+  ],
+}

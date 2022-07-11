@@ -2,7 +2,11 @@ import re
 
 import pytest
 
-from project_config.serializers import SerializerError, serialize_for_url
+from project_config.serializers import (
+    SerializerError,
+    guess_preferred_serializer,
+    serialize_for_url,
+)
 
 
 @pytest.mark.parametrize(
@@ -56,10 +60,20 @@ from project_config.serializers import SerializerError, serialize_for_url
             {"__file__": "file.py", "foo": "bar", "baz": 1},
             id=".py",
         ),
+        pytest.param(
+            "https://example.com/file.py?text",
+            "foo = 'bar'\nbaz = 1",
+            ["foo = 'bar'", "baz = 1"],
+            id=".py?text",
+        ),
     ),
 )
 def test_serialize_for_url(url, string, expected_result):
-    assert serialize_for_url(url, string) == expected_result
+    url, serializer_name = guess_preferred_serializer(url)
+    assert (
+        serialize_for_url(url, string, prefer_serializer=serializer_name)
+        == expected_result
+    )
 
 
 @pytest.mark.parametrize(
@@ -86,6 +100,17 @@ def test_serialize_for_url(url, string, expected_result):
             ),
             id=".json-parsing-error",
         ),
+        pytest.param(
+            "https://example.com/file.json?impossible-other-serializer",
+            "{}",
+            SerializerError,
+            (
+                "'https://example.com/file.json' can't be serialized as a"
+                " valid object:\nPreferred serializer"
+                " 'impossible-other-serializer' not supported"
+            ),
+            id=".json?invalid-preferred-serializer",
+        ),
     ),
 )
 def test_serialize_for_url_errors(
@@ -94,8 +119,9 @@ def test_serialize_for_url_errors(
     expected_exception_class,
     expected_exception_message,
 ):
+    url, serializer_name = guess_preferred_serializer(url)
     with pytest.raises(
         expected_exception_class,
         match=re.escape(expected_exception_message),
     ):
-        serialize_for_url(url, string)
+        serialize_for_url(url, string, prefer_serializer=serializer_name)

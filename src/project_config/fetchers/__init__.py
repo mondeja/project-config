@@ -15,6 +15,7 @@ from project_config.exceptions import (
 from project_config.serializers import (
     SerializerError,
     SerializerResult,
+    guess_preferred_serializer,
     serialize_for_url,
 )
 from project_config.utils.http import ProjectConfigTimeoutError
@@ -69,6 +70,8 @@ def fetch(url: str, **kwargs: t.Any) -> FetchResult:
     Args:
         url (str): The URL of the resource to fetch.
     """
+    url, serializer_name = guess_preferred_serializer(url)
+
     url_parts = urllib.parse.urlsplit(url)
     scheme = _get_scheme_from_urlparts(url_parts)
     try:
@@ -83,8 +86,9 @@ def fetch(url: str, **kwargs: t.Any) -> FetchResult:
         raise FetchError(f"'{url}' file not found")
     except ProjectConfigTimeoutError as exc:
         raise FetchError(exc.message)
+
     try:
-        return serialize_for_url(url, string)
+        return serialize_for_url(url, string, prefer_serializer=serializer_name)
     except SerializerError as exc:
         raise FetchError(exc.message)
 

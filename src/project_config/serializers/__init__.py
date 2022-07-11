@@ -114,14 +114,34 @@ def _identify_serializer(filename: str) -> SerializerDefinitionsType:
     return serializer if serializer is not None else serializers_fallback
 
 
-def _get_serializer(url: str) -> SerializerFunction:
+def _get_serializer(
+    url: str,
+    prefer_serializer: t.Optional[str] = None,
+) -> SerializerFunction:
     url_parts = urllib.parse.urlsplit(url)
-    ext = os.path.splitext(url_parts.path)[-1]
-    try:
-        serializer = serializers[ext]
-    except KeyError:
-        # try to guess the file type with identify
-        serializer = _identify_serializer(os.path.basename(url_parts.path))
+
+    if prefer_serializer is not None:
+        if f".{prefer_serializer}" in serializers:
+            serializer = serializers[f".{prefer_serializer}"]
+        elif f".{prefer_serializer}" == ".text":
+            serializer = serializers_fallback
+        else:
+            raise SerializerError(
+                _file_can_not_be_serialized_as_object_error(
+                    url,
+                    (
+                        f"\nPreferred serializer '{prefer_serializer}'"
+                        " not supported"
+                    ),
+                ),
+            )
+    else:
+        ext = os.path.splitext(url_parts.path)[-1]
+        try:
+            serializer = serializers[ext]
+        except KeyError:
+            # try to guess the file type with identify
+            serializer = _identify_serializer(os.path.basename(url_parts.path))
 
     # prepare serializer function
     serializer_definition, module = None, None
@@ -176,6 +196,24 @@ def _get_serializer(url: str) -> SerializerFunction:
     return functools.partial(loader_function, **function_kwargs)
 
 
+def guess_preferred_serializer(url: str) -> t.Tuple[str, t.Optional[str]]:
+    """Guess preferred serializer for URL.
+
+    Args:
+        url (str): URL to guess serializer for.
+
+    Returns:
+        str: Preferred serializer.
+    """
+    try:
+        # forcing new serializer to get content
+        url, serializer_name = url.rsplit("?", maxsplit=1)
+    except ValueError:
+        return url, None
+    else:
+        return url, serializer_name
+
+
 def _file_can_not_be_serialized_as_object_error(
     url: str,
     error_message: str,
@@ -183,7 +221,11 @@ def _file_can_not_be_serialized_as_object_error(
     return f"'{url}' can't be serialized as a valid object:{error_message}"
 
 
-def serialize_for_url(url: str, string: str) -> SerializerResult:
+def serialize_for_url(
+    url: str,
+    string: str,
+    prefer_serializer: t.Optional[str] = None,
+) -> SerializerResult:
     """Serializes to JSON a string according to the given URI.
 
     Args:
@@ -198,7 +240,9 @@ def serialize_for_url(url: str, string: str) -> SerializerResult:
     """
     try:
         # serialize
-        result = _get_serializer(url)(string)
+        result = _get_serializer(url, prefer_serializer=prefer_serializer)(
+            string,
+        )
     except Exception:
         # handle exceptions in third party packages without importing them
         exc_class, exc, _ = sys.exc_info()
