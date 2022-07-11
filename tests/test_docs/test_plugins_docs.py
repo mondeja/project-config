@@ -1,19 +1,27 @@
 import os
 
+from jmespath.functions import Functions as JMESPathFunctions
 from testing_helpers import rootdir
 
 from project_config.plugins import Plugins
+from project_config.plugins.jmespath import jmespath_options
+
+
+PLUGINS_REFERENCE_FILEPATH = os.path.join(
+    rootdir,
+    "docs",
+    "reference",
+    "plugins.rst",
+)
+
+
+def get_plugins_reference_lines():
+    with open(PLUGINS_REFERENCE_FILEPATH, encoding="utf-8") as f:
+        return f.read().splitlines()
 
 
 def test_plugin_actions_documented():
-    reference_filepath = os.path.join(
-        rootdir,
-        "docs",
-        "reference",
-        "plugins.rst",
-    )
-    with open(reference_filepath, encoding="utf-8") as f:
-        reference_lines = f.read().splitlines()
+    reference_lines = get_plugins_reference_lines()
 
     line_index = 0
     current_plugin, current_action_name = {}, None
@@ -63,3 +71,39 @@ def test_plugin_actions_documented():
             assert action_name in plugin_doc_actions_data
             assert plugin_doc_actions_data[action_name]["has_examples"]
             assert plugin_doc_actions_data[action_name]["has_versionadded"]
+
+
+def test_jmespath_custom_functions_documented():
+    """Assert that all JMESPath custom functions are documented."""
+    original_jmespath_functions = dir(JMESPathFunctions())
+
+    custom_function_names = []
+    for method_name in dir(jmespath_options.custom_functions):
+        if method_name.startswith("_func_") and (
+            method_name not in original_jmespath_functions
+        ):
+            custom_function_names.append(method_name[6:])
+
+    _inside_jmespath = False
+    documented_function_names = []
+
+    line_index = 0
+    reference_lines = get_plugins_reference_lines()
+    while True:
+        try:
+            line = reference_lines[line_index]
+        except IndexError:
+            break
+        if not _inside_jmespath and line == "jmespath":
+            _inside_jmespath = True
+            line_index += 2
+            continue
+        elif _inside_jmespath:
+            if line.startswith("****"):
+                break
+            elif line.startswith(".. function::"):
+                function_name = line.split(" ")[2].split("(")[0]
+                documented_function_names.append(function_name)
+        line_index += 1
+
+    assert sorted(custom_function_names) == sorted(documented_function_names)
