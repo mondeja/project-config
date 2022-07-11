@@ -1,0 +1,365 @@
+********
+Examples
+********
+
+Basic usage
+===========
+
+The file `.gitignore` must have a line with the content ``/dist/``.
+
+.. tabs::
+
+   .. tab:: .project-config.toml
+
+      .. code-block:: toml
+
+         style = "style.json"
+
+   .. tab:: .gitignore
+
+      .. code-block:: text
+
+         /dist/
+
+   .. tab:: style.json
+
+      .. code-block:: json
+
+         {
+           "rules": [
+             {
+               "files": [".gitignore"],
+               "includeLines": ["/dist/"]
+             }
+           ]
+         }
+
+Project config self configuration
+=================================
+
+**project-config** is defining a valid configuration,
+forcing the definition of ``styles`` as an array for styles and
+a valid ``cache`` value.
+
+.. tabs::
+
+   .. tab:: .project-config.toml
+
+      .. code-block:: toml
+
+         style = ["style.json5"]
+         cache = "5 minutes"
+
+   .. tab:: style.json5
+
+      .. code-block:: js
+
+         {
+           rules: [
+             {
+               files: [".project-config.toml"],
+               JMESPathsMatch: [
+                 // `style` must be defined in the file
+                 ["contains(keys(@), 'style')", true],
+                 // `style` must be an array
+                 ["type(style)", "array"],
+                 // at least one style configured
+                 ["op(length(style), '>', `0`)", true],
+
+                 // configure cache explicitly
+                 ["contains(keys(@), 'cache')", true],
+                 // cache must have a valid value
+                 [
+                   "regex_match('^(\\d+ ((seconds?)|(minutes?)|(hours?)|(days?)|(weeks?)))|(never)$', cache)",
+                   true,
+                 ],
+               ],
+             },
+           ],
+         }
+
+Files absence
+=============
+
+The files `readme.md` and `index.md` must not exist.
+
+.. tabs::
+
+   .. tab:: .project-config.toml
+
+      .. code-block:: toml
+
+         style = "style.yaml"
+
+   .. tab:: style.yaml
+
+      .. code-block:: yaml
+
+         rules:
+           - files:
+               not:
+                 readme.md: Users are more used to seeing README.md file name in uppercase
+             hint: Rename 'readme.md' to 'README.md'
+           - files:
+               not:
+                 - index.md
+
+Conditionals
+============
+
+If `.gitignore` includes the line ``__pycache__/`` a `pyproject.toml`
+file must be present.
+
+.. tabs::
+
+   .. tab:: .project-config.toml
+
+      .. code-block:: toml
+
+         style = "style.json"
+
+   .. tab:: .gitignore
+
+      .. code-block:: text
+
+         __pycache__/
+
+   .. tab:: style.json
+
+      .. code-block:: json
+
+         {
+           "rules": [
+             {
+               "ifIncludeLines": {
+                 ".gitignore": ["__pycache__/"]
+               },
+               "files": ["pyproject.toml"]
+             }
+           ]
+         }
+
+   .. tab:: pyproject.toml
+
+      .. code-block:: toml
+
+
+
+Conditionals files existence
+============================
+
+* 1st rule: if the directory `src/` exists, the file `pyproject.toml` must exists too.
+* 2nd rule: if the file `pyproject.toml` exists, a Python file must be present in the root directory.
+
+.. tabs::
+
+   .. tab:: .project-config.toml
+
+      .. code-block:: toml
+
+         style = "style.json5"
+
+   .. tab:: style.json5
+
+      .. code-block:: js
+
+         {
+           rules: [
+             {
+               files: ["pyproject.toml"],
+               ifFilesExist: ["src/"],
+             },
+             {
+               files: ["*.py"],
+               ifFilesExist: ["pyproject.toml"],
+             },
+           ],
+         }
+
+   .. tab:: pyproject.toml
+
+      .. code-block:: toml
+
+
+
+   .. tab:: src/
+
+      .. code-block:: text
+
+
+
+   .. tab:: file.py
+
+      .. code-block:: python
+
+
+
+Compare values between serializable files
+=========================================
+
+The version defined in ``__version__`` inside a Python script must match
+the metadata defined in `pyproject.toml` file.
+
+.. tabs::
+
+   .. tab:: .project-config.toml
+
+      .. code-block:: toml
+
+         style = "style.toml"
+
+   .. tab:: pyproject.toml
+
+      .. code-block:: toml
+
+         [tool.poetry]
+         version = "1.0.0"
+
+   .. tab:: style.toml
+
+      .. code-block:: toml
+
+         [[rules]]
+         files = ["pyproject.toml"]
+         crossJMESPathsMatch = [
+           [
+             "tool.poetry.version",
+             ["script.py", "__version__"],
+             "op([0], '==', [1])",
+             true,
+           ],
+         ]
+
+   .. tab:: script.py
+
+      .. code-block:: python
+
+         """Simple script."""
+
+         __version__ = "1.0.0"
+
+JMESPath against online sources
+===============================
+
+Check that the ``license`` field of *package.json* file is defined with
+a valid OSI approved SPDX license identifier.
+
+.. tabs::
+
+   .. tab:: .project-config.toml
+
+      .. code-block:: toml
+
+         style = "style.json5"
+
+   .. tab:: style.json5
+
+      .. code-block:: js
+
+         {
+           rules: [
+             {
+               files: ["package.json"],
+               crossJMESPathsMatch: [
+                 [
+                   "license",
+                   [
+                     "gh://spdx/license-list-data@v3.17/json/licenses.json",
+                     "licenses[?isOsiApproved] | [?isDeprecatedLicenseId == `false`].licenseId",
+                   ],
+                   "contains([1], [0])",
+                   true,
+                 ],
+               ],
+             },
+           ],
+         }
+
+   .. tab:: package.json
+
+      .. code-block:: json
+
+         {
+           "license": "BSD-3-Clause"
+         }
+
+Assert root directory name
+==========================
+
+Check that the name of the directory that is the root of the project
+matches against certain regular expression.
+
+.. tabs::
+
+   .. tab:: .project-config.toml
+
+      .. code-block:: toml
+
+         style = "style.json5"
+
+   .. tab:: style.json5
+
+      .. code-block:: js
+
+         {
+           rules: [
+             {
+               files: [".project-config.toml"],
+               JMESPathsMatch: [["regex_match('[a-z0-9-]+$', rootdir_name())", true]],
+             },
+           ],
+         }
+
+TOML sections order
+===================
+
+Check that the section ``[foo]`` of a TOML file is placed before the section ``[bar]``.
+
+.. tabs::
+
+   .. tab:: .project-config.toml
+
+      .. code-block:: toml
+
+         style = "style.json5"
+
+   .. tab:: pyproject.toml
+
+      .. code-block:: toml
+
+         [foo]
+         name = "foo"
+
+         [bar]
+         name = "bar"
+
+   .. tab:: style.json5
+
+      .. code-block:: js
+
+         {
+           rules: [
+             {
+               files: ["pyproject.toml"],
+               hint: "The section '[foo]' must be defined before the section '[bar]'",
+               crossJMESPathsMatch: [
+                 [
+                   "null",
+                   ["pyproject.toml?text", "@"],
+                   "op(op([1], 'indexOf', '[foo]'), '<', op([1], 'indexOf', '[bar]'))",
+                   true,
+                 ],
+               ],
+             },
+           ],
+         }
+
+.. raw:: html
+
+   <hr>
+
+.. tip::
+
+   For more complex examples check my own styles at `mondeja/project-config-styles`_.
+
+   .. _mondeja/project-config-styles: https://github.com/mondeja/project-config-styles

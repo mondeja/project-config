@@ -1,0 +1,8 @@
+project\_config.tests.pytest\_plugin.helpers module
+===================================================
+
+.. automodule:: project_config.tests.pytest_plugin.helpers
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
