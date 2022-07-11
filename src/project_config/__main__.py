@@ -220,20 +220,18 @@ def parse_cli_args_and_subargs(  # noqa: D103
     return args, subargs
 
 
-def parse_args(  # noqa: D103
-    argv: t.List[str],
-) -> t.Tuple[argparse.Namespace, argparse.Namespace]:
+def parse_args(argv: t.List[str]) -> argparse.Namespace:  # noqa: D103
     args, subargs = parse_cli_args_and_subargs(build_main_parser(), argv)
 
     if args.cache is False:
         os.environ["PROJECT_CONFIG_USE_CACHE"] = "false"
 
-    return args, subargs
+    return argparse.Namespace(**vars(args), **vars(subargs))
 
 
 def run(argv: t.List[str] = []) -> int:  # noqa: D103
     os.environ["PROJECT_CONFIG"] = "true"
-    args, subargs = parse_args(argv)
+    args = parse_args(argv)
 
     try:
         project = Project(
@@ -242,9 +240,7 @@ def run(argv: t.List[str] = []) -> int:  # noqa: D103
             args.reporter,
             args.color,
         )
-        getattr(project, args.command)(
-            argparse.Namespace(**vars(args), **vars(subargs)),
-        )
+        getattr(project, args.command)(args)
     except ProjectConfigException as exc:
         return _controlled_error(args.traceback, exc, exc.message)
     except FileNotFoundError as exc:  # pragma: no cover

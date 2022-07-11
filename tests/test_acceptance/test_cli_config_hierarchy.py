@@ -249,7 +249,7 @@ def test_cli_config_hierarchy(
     if not os.path.isdir(expected_rootdir):
         os.mkdir(expected_rootdir)
 
-    args, _ = parse_args(cli_args)
+    args = parse_args(cli_args)
 
     project = Project(
         args.config,
