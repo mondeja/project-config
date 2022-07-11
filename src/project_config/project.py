@@ -292,7 +292,7 @@ class Project:
     def show(self, args: argparse.Namespace) -> None:
         """Show configuration or fetched style for a project.
 
-        It will depend in the ``args.data`` property.
+        It will depend in the ``subargs.data`` property.
         """
         if args.data == "cache":
             from project_config.cache import Cache
@@ -323,3 +323,22 @@ class Project:
 
         if Cache.clean():
             sys.stdout.write("Cache removed successfully!\n")
+
+    def init(self, args: argparse.Namespace) -> None:
+        """Initialize the configuration for a project."""
+        from project_config.config import initialize_config
+
+        cwd = os.getcwd()
+        rootdir = (
+            cwd if getattr(args, "rootdir", None) is None else args.rootdir
+        )
+        config_path = initialize_config(
+            os.path.join(
+                rootdir,
+                getattr(args, "config", None) or ".project-config.toml",
+            ),
+        )
+        sys.stdout.write(
+            "Configuration initialized at"
+            f" {os.path.relpath(config_path, cwd)}\n",
+        )
