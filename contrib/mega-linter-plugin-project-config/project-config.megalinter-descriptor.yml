@@ -12,10 +12,11 @@ linters:
     linter_url: https://mondeja.github.io/project-config/
     name: PROJECT_CONFIG
     install:
-      dockerfile:
-        - RUN pip install project-config
+      pip:
+        - project-config
     examples:
       - project-config check
+    lint_all_files: true
     cli_help_arg_name: --help
     cli_lint_errors_count: regex_sum
     cli_lint_errors_regex: '  - '
