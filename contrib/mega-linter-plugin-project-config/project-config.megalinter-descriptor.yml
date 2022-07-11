@@ -17,9 +17,10 @@ linters:
     examples:
       - project-config check
     lint_all_files: true
+    cli_lint_mode: list_of_files
     cli_help_arg_name: --help
-    cli_lint_errors_count: regex_sum
-    cli_lint_errors_regex: '  - '
+    cli_lint_errors_count: regex_count
+    cli_lint_errors_regex: '  - .*'
     cli_lint_extra_args:
       - check
     linter_spdx_license: BSD-3-Clause
