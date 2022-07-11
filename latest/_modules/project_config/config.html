@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.config &mdash; project-config 0.5.0 documentation</title>
+  <title>project_config.config &mdash; project-config 0.6.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -32,7 +32,7 @@
             <a href="../../index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.5
+                0.6
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -108,6 +108,7 @@
 <span class="kn">from</span> <span class="nn">project_config.config.exceptions</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">ConfigurationFilesNotFound</span><span class="p">,</span>
     <span class="n">CustomConfigFileNotFound</span><span class="p">,</span>
+    <span class="n">ProjectConfigAlreadyInitialized</span><span class="p">,</span>
     <span class="n">ProjectConfigInvalidConfig</span><span class="p">,</span>
     <span class="n">ProjectConfigInvalidConfigSchema</span><span class="p">,</span>
     <span class="n">PyprojectTomlFoundButHasNoConfig</span><span class="p">,</span>
@@ -124,14 +125,16 @@
 <span class="n">ConfigType</span><span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span>
 
 
-<div class="viewcode-block" id="read_config_from_pyproject_toml"><a class="viewcode-back" href="../../dev/reference/project_config.config.html#project_config.config.read_config_from_pyproject_toml">[docs]</a><span class="k">def</span> <span class="nf">read_config_from_pyproject_toml</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">]:</span>
+<div class="viewcode-block" id="read_config_from_pyproject_toml"><a class="viewcode-back" href="../../dev/reference/project_config.config.html#project_config.config.read_config_from_pyproject_toml">[docs]</a><span class="k">def</span> <span class="nf">read_config_from_pyproject_toml</span><span class="p">(</span>
+    <span class="n">filepath</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;pyproject.toml&quot;</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Read the configuration from the `pyproject.toml` file.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        object: ``None`` if not found, configuration data otherwise.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">tomllib</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">tomllib_package_name</span><span class="p">)</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;pyproject.toml&quot;</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="n">pyproject_toml</span> <span class="o">=</span> <span class="n">tomllib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
     <span class="k">if</span> <span class="s2">&quot;tool&quot;</span> <span class="ow">in</span> <span class="n">pyproject_toml</span> <span class="ow">and</span> <span class="s2">&quot;project-config&quot;</span> <span class="ow">in</span> <span class="n">pyproject_toml</span><span class="p">[</span><span class="s2">&quot;tool&quot;</span><span class="p">]:</span>
         <span class="k">return</span> <span class="n">pyproject_toml</span><span class="p">[</span><span class="s2">&quot;tool&quot;</span><span class="p">][</span><span class="s2">&quot;project-config&quot;</span><span class="p">]</span>
@@ -418,6 +421,113 @@
 
     <span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dict_</span><span class="o">.</span><span class="fm">__setitem__</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="initialize_config"><a class="viewcode-back" href="../../dev/reference/project_config.config.html#project_config.config.initialize_config">[docs]</a><span class="k">def</span> <span class="nf">initialize_config</span><span class="p">(</span><span class="n">config_filepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Initialize the configuration.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        config_filepath (str): Path to the file in which the configuration will</span>
+<span class="sd">            be stored.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: Path to the configuration.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">config_dirpath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">config_filepath</span><span class="p">)),</span>
+    <span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">config_dirpath</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">config_filepath</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">config_filepath</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+    <span class="n">style_filepath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config_dirpath</span><span class="p">,</span> <span class="s2">&quot;style.json5&quot;</span><span class="p">)</span>
+
+    <span class="n">config_file_basename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">config_filepath</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">create_default_style_file</span><span class="p">(</span><span class="n">config_prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;@&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Create the default style file if it does not exist.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">config_prefix</span> <span class="o">==</span> <span class="s2">&quot;@&quot;</span><span class="p">:</span>
+
+            <span class="k">def</span> <span class="nf">key_matcher</span><span class="p">(</span><span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">key</span>
+
+        <span class="k">else</span><span class="p">:</span>
+
+            <span class="k">def</span> <span class="nf">key_matcher</span><span class="p">(</span><span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+                <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;tool.</span><span class="se">\\</span><span class="s1">&quot;project-config</span><span class="se">\\</span><span class="s1">&quot;.</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1">&#39;</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">style_filepath</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+                <span class="sd">&#39;&#39;&#39;{</span>
+<span class="sd">  rules: [</span>
+<span class="sd">    {</span>
+<span class="sd">      files: [&quot;&#39;&#39;&#39;</span>
+                <span class="o">+</span> <span class="n">config_file_basename</span>
+                <span class="o">+</span> <span class="s2">&quot;&quot;&quot;&quot;],</span>
+<span class="s2">      JMESPathsMatch: [</span>
+<span class="s2">        [&quot;contains(keys(&quot;&quot;&quot;</span>
+                <span class="o">+</span> <span class="n">config_prefix</span>
+                <span class="o">+</span> <span class="s2">&quot;&quot;&quot;), &#39;style&#39;)&quot;, true],</span>
+<span class="s2">        [&quot;type(&quot;&quot;&quot;</span>
+                <span class="o">+</span> <span class="n">key_matcher</span><span class="p">(</span><span class="s2">&quot;style&quot;</span><span class="p">)</span>
+                <span class="o">+</span> <span class="s2">&quot;&quot;&quot;)&quot;, &quot;array&quot;],</span>
+<span class="s2">        [&quot;contains(keys(&quot;&quot;&quot;</span>
+                <span class="o">+</span> <span class="n">config_prefix</span>
+                <span class="o">+</span> <span class="s2">&quot;&quot;&quot;), &#39;cache&#39;)&quot;, true],</span>
+<span class="s2">        [</span>
+<span class="s2">          &quot;regex_match(&#39;(</span><span class="se">\\\\</span><span class="s2">d+ ((seconds?)|(minutes?)|(hours?)|(days?)|(weeks?)))|(never)$&#39;, &quot;&quot;&quot;</span>  <span class="c1"># noqa: E501,</span>
+                <span class="o">+</span> <span class="n">key_matcher</span><span class="p">(</span><span class="s2">&quot;cache&quot;</span><span class="p">)</span>
+                <span class="o">+</span> <span class="s2">&quot;&quot;&quot;)&quot;,</span>
+<span class="s2">          true,</span>
+<span class="s2">        ],</span>
+<span class="s2">      ]</span>
+<span class="s2">    }</span>
+<span class="s2">  ]</span>
+<span class="s2">}</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">build_config_string</span><span class="p">(</span><span class="n">pyproject_toml</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">pyproject_toml</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">+=</span> <span class="s2">&quot;[tool.project-config]</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s1">style = [&quot;style.json5&quot;]</span><span class="se">\n</span><span class="s1">cache = &quot;5 minutes&quot;</span><span class="se">\n</span><span class="s1">&#39;</span>
+
+    <span class="k">def</span> <span class="nf">add_config_string_to_file</span><span class="p">(</span><span class="n">string</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">config_filepath</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">config_lines</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">config_lines</span><span class="p">:</span>
+            <span class="n">add_separator</span> <span class="o">=</span> <span class="n">config_lines</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">add_separator</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">config_filepath</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">add_separator</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">config_file_basename</span> <span class="o">==</span> <span class="s2">&quot;pyproject.toml&quot;</span><span class="p">:</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">read_config_from_pyproject_toml</span><span class="p">(</span><span class="n">config_filepath</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">config</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ProjectConfigAlreadyInitialized</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">config_filepath</span><span class="si">}</span><span class="s2">[tool.project-config]&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="n">add_config_string_to_file</span><span class="p">(</span><span class="n">build_config_string</span><span class="p">(</span><span class="n">pyproject_toml</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+
+        <span class="n">create_default_style_file</span><span class="p">(</span><span class="n">config_prefix</span><span class="o">=</span><span class="s1">&#39;tool.</span><span class="se">\\</span><span class="s1">&quot;project-config</span><span class="se">\\</span><span class="s1">&quot;&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">config_filepath</span><span class="si">}</span><span class="s2">[tool.project-config]&quot;</span>
+
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">config_filepath</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">config_filepath</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">():</span>
+                <span class="k">raise</span> <span class="n">ProjectConfigAlreadyInitialized</span><span class="p">(</span><span class="n">config_filepath</span><span class="p">)</span>
+
+    <span class="n">add_config_string_to_file</span><span class="p">(</span><span class="n">build_config_string</span><span class="p">())</span>
+    <span class="n">create_default_style_file</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">config_filepath</span></div>
 </pre></div>
 
            </div>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.fetchers &mdash; project-config 0.5.0 documentation</title>
+  <title>project_config.fetchers &mdash; project-config 0.6.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -32,7 +32,7 @@
             <a href="../../index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.5
+                0.6
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -111,6 +111,7 @@
 <span class="kn">from</span> <span class="nn">project_config.serializers</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">SerializerError</span><span class="p">,</span>
     <span class="n">SerializerResult</span><span class="p">,</span>
+    <span class="n">guess_preferred_serializer</span><span class="p">,</span>
     <span class="n">serialize_for_url</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">project_config.utils.http</span> <span class="kn">import</span> <span class="n">ProjectConfigTimeoutError</span>
@@ -165,6 +166,8 @@
 <span class="sd">    Args:</span>
 <span class="sd">        url (str): The URL of the resource to fetch.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">url</span><span class="p">,</span> <span class="n">serializer_name</span> <span class="o">=</span> <span class="n">guess_preferred_serializer</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+
     <span class="n">url_parts</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">urlsplit</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
     <span class="n">scheme</span> <span class="o">=</span> <span class="n">_get_scheme_from_urlparts</span><span class="p">(</span><span class="n">url_parts</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
@@ -179,8 +182,9 @@
         <span class="k">raise</span> <span class="n">FetchError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">&#39; file not found&quot;</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">ProjectConfigTimeoutError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">FetchError</span><span class="p">(</span><span class="n">exc</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+
     <span class="k">try</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">serialize_for_url</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">string</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">serialize_for_url</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">string</span><span class="p">,</span> <span class="n">prefer_serializer</span><span class="o">=</span><span class="n">serializer_name</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">SerializerError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">FetchError</span><span class="p">(</span><span class="n">exc</span><span class="o">.</span><span class="n">message</span><span class="p">)</span></div>
 

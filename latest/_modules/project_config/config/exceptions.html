@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.config.exceptions &mdash; project-config 0.5.0 documentation</title>
+  <title>project_config.config.exceptions &mdash; project-config 0.6.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
@@ -32,7 +32,7 @@
             <a href="../../../index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.5
+                0.6
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -99,6 +99,7 @@
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
+<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">typing</span> <span class="k">as</span> <span class="nn">t</span>
 
 <span class="kn">from</span> <span class="nn">project_config.exceptions</span> <span class="kn">import</span> <span class="n">ProjectConfigException</span>
@@ -156,6 +157,16 @@
             <span class="s2">&quot;- pyproject.toml file has been found but has not a&quot;</span>
             <span class="s2">&quot; [tool.project-config] section</span><span class="se">\n</span><span class="s2">&quot;</span>
             <span class="s2">&quot;- .project-config.toml has not been found&quot;</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ProjectConfigAlreadyInitialized"><a class="viewcode-back" href="../../../dev/reference/project_config.config.exceptions.html#project_config.config.exceptions.ProjectConfigAlreadyInitialized">[docs]</a><span class="k">class</span> <span class="nc">ProjectConfigAlreadyInitialized</span><span class="p">(</span><span class="n">ProjectConfigException</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The project-config has already been initialized.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="s2">&quot;The configuration for project-config has already been&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot; initialized at </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">config_path</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
         <span class="p">)</span></div>
 </pre></div>
 

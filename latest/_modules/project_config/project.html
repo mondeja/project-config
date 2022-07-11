@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.project &mdash; project-config 0.5.0 documentation</title>
+  <title>project_config.project &mdash; project-config 0.6.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -32,7 +32,7 @@
             <a href="../../index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.5
+                0.6
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -176,7 +176,10 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">reporter_</span><span class="p">[</span><span class="s2">&quot;kwargs&quot;</span><span class="p">],</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">rootdir</span><span class="p">,</span>
-        <span class="p">)</span></div>
+        <span class="p">)</span>
+
+        <span class="c1"># set rootdir as an internal environment variable to be used by plugins</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;PROJECT_CONFIG_ROOTDIR&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rootdir</span></div>
 
 <div class="viewcode-block" id="Project._check_files_existence"><a class="viewcode-back" href="../../dev/reference/project_config.project.html#project_config.project.Project._check_files_existence">[docs]</a>    <span class="k">def</span> <span class="nf">_check_files_existence</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -385,7 +388,7 @@
 <div class="viewcode-block" id="Project.show"><a class="viewcode-back" href="../../dev/reference/project_config.project.html#project_config.project.Project.show">[docs]</a>    <span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Show configuration or fetched style for a project.</span>
 
-<span class="sd">        It will depend in the ``args.data`` property.</span>
+<span class="sd">        It will depend in the ``subargs.data`` property.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">data</span> <span class="o">==</span> <span class="s2">&quot;cache&quot;</span><span class="p">:</span>
             <span class="kn">from</span> <span class="nn">project_config.cache</span> <span class="kn">import</span> <span class="n">Cache</span>
@@ -415,7 +418,26 @@
         <span class="kn">from</span> <span class="nn">project_config.cache</span> <span class="kn">import</span> <span class="n">Cache</span>
 
         <span class="k">if</span> <span class="n">Cache</span><span class="o">.</span><span class="n">clean</span><span class="p">():</span>
-            <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Cache removed successfully!</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div></div>
+            <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Cache removed successfully!</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Project.init"><a class="viewcode-back" href="../../dev/reference/project_config.project.html#project_config.project.Project.init">[docs]</a>    <span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Initialize the configuration for a project.&quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">project_config.config</span> <span class="kn">import</span> <span class="n">initialize_config</span>
+
+        <span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+        <span class="n">rootdir</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">cwd</span> <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="s2">&quot;rootdir&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">args</span><span class="o">.</span><span class="n">rootdir</span>
+        <span class="p">)</span>
+        <span class="n">config_path</span> <span class="o">=</span> <span class="n">initialize_config</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="n">rootdir</span><span class="p">,</span>
+                <span class="nb">getattr</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="s2">&quot;config&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;.project-config.toml&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+            <span class="s2">&quot;Configuration initialized at&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">config_path</span><span class="p">,</span> <span class="n">cwd</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="p">)</span></div></div>
 </pre></div>
 
            </div>

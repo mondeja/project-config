@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project-config CLI &mdash; project-config 0.5.0 documentation</title>
+  <title>project-config CLI &mdash; project-config 0.6.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -34,7 +34,7 @@
             <a href="../index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.5
+                0.6
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -104,7 +104,7 @@
 <p><p>Validate the configuration of your project against the configured styles.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">project</span><span class="o">-</span><span class="n">config</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">T</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">c</span> <span class="n">CONFIG</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">root</span> <span class="n">ROOTDIR</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">r</span> <span class="n">NAME</span><span class="p">[:</span><span class="n">FORMAT</span><span class="p">];</span><span class="n">OPTION</span><span class="o">=</span><span class="n">VALUE</span><span class="p">]</span>
                <span class="p">[</span><span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">color</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">cache</span><span class="p">]</span>
-               <span class="p">{</span><span class="n">check</span><span class="p">,</span><span class="n">show</span><span class="p">,</span><span class="n">clean</span><span class="p">}</span>
+               <span class="p">{</span><span class="n">check</span><span class="p">,</span><span class="n">show</span><span class="p">,</span><span class="n">clean</span><span class="p">,</span><span class="n">init</span><span class="p">}</span>
 </pre></div>
 </div>
 <section id="project-config-positional-arguments">
@@ -130,6 +130,7 @@
 <p class="rubric">Commands</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">project-config</span> <span class="pre">check</span></code> - Check the styles of the current project.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">project-config</span> <span class="pre">init</span></code> - Initialize a minimal style for the current project.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">project-config</span> <span class="pre">show</span> <span class="pre">config</span></code> - Show the configuration.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">project-config</span> <span class="pre">show</span> <span class="pre">style</span></code> - Show the collected styles merged into the final one.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">project-config</span> <span class="pre">show</span> <span class="pre">plugins</span></code> - Show all available plugins with their actions.</p></li>
@@ -198,6 +199,19 @@ that can be used to apply JMESPath queries to JSON reports produced by
 </div>
 <p>Show your styles after collecting all in YAML format:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>project-config show style -r yaml
+</pre></div>
+</div>
+<p>Initialize a minimal configuration:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>project-config init
+</pre></div>
+</div>
+<p>Initialize a minimal configuration storing the configuration inside a <cite>pyproject.toml</cite> file:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>project-config init --config pyproject.toml
+</pre></div>
+</div>
+<p>Initialize a minimal configuration storing the configuration in a custom file located
+in a relative project root directory:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>project-config init --config styles-configuration.toml --rootdir my/subdir
 </pre></div>
 </div>
 </section>

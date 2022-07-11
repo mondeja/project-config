@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.project module &mdash; project-config 0.5.0 documentation</title>
+  <title>project_config.project module &mdash; project-config 0.6.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -34,7 +34,7 @@
             <a href="../../index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.5
+                0.6
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -199,6 +199,12 @@ the CLI.</p>
 <span class="sig-name descname"><span class="pre">config_path</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></em><a class="headerlink" href="#project_config.project.Project.config_path" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="project_config.project.Project.init">
+<span class="sig-name descname"><span class="pre">init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/argparse.html#argparse.Namespace" title="(in Python v3.10)"><span class="pre">argparse.Namespace</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../_modules/project_config/project.html#Project.init"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.project.Project.init" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize the configuration for a project.</p>
+</dd></dl>
+
 <dl class="py attribute">
 <dt class="sig sig-object py" id="project_config.project.Project.reporter_">
 <span class="sig-name descname"><span class="pre">reporter_</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#project_config.project.Project.reporter_" title="Permalink to this definition"></a></dt>
@@ -213,7 +219,7 @@ the CLI.</p>
 <dt class="sig sig-object py" id="project_config.project.Project.show">
 <span class="sig-name descname"><span class="pre">show</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/argparse.html#argparse.Namespace" title="(in Python v3.10)"><span class="pre">argparse.Namespace</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../_modules/project_config/project.html#Project.show"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.project.Project.show" title="Permalink to this definition"></a></dt>
 <dd><p>Show configuration or fetched style for a project.</p>
-<p>It will depend in the <code class="docutils literal notranslate"><span class="pre">args.data</span></code> property.</p>
+<p>It will depend in the <code class="docutils literal notranslate"><span class="pre">subargs.data</span></code> property.</p>
 </dd></dl>
 
 </dd></dl>

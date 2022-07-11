@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.plugins.jmespath &mdash; project-config 0.5.0 documentation</title>
+  <title>project_config.plugins.jmespath &mdash; project-config 0.6.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
@@ -32,7 +32,7 @@
             <a href="../../../index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.5
+                0.6
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -100,6 +100,7 @@
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">import</span> <span class="nn">operator</span>
+<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">pprint</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">shlex</span>
@@ -428,6 +429,10 @@
     <span class="k">def</span> <span class="nf">_func_from_items</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">]:</span>
         <span class="k">return</span> <span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">):</span> <span class="n">subv</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">subv</span> <span class="ow">in</span> <span class="n">value</span><span class="p">}</span></div>
 
+<div class="viewcode-block" id="JMESPathProjectConfigFunctions._func_rootdir_name"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_rootdir_name">[docs]</a>    <span class="nd">@jmespath_func_signature</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">_func_rootdir_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;PROJECT_CONFIG_ROOTDIR&quot;</span><span class="p">])</span></div>
+
     <span class="nb">locals</span><span class="p">()</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
         <span class="nb">dict</span><span class="p">(</span>
             <span class="p">{</span>
@@ -677,7 +682,7 @@
                 <span class="p">}</span>
                 <span class="k">continue</span>
 
-            <span class="n">instance</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">serialize_file</span><span class="p">(</span><span class="n">fpath</span><span class="p">)</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">instance</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">serialize_file</span><span class="p">(</span><span class="n">fpath</span><span class="p">)</span>
 
             <span class="k">for</span> <span class="n">e</span><span class="p">,</span> <span class="p">(</span><span class="n">expression</span><span class="p">,</span> <span class="n">expected_value</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
                 <span class="k">try</span><span class="p">:</span>
@@ -805,7 +810,7 @@
                 <span class="k">continue</span>
 
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">instance</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">serialize_file</span><span class="p">(</span><span class="n">fpath</span><span class="p">)</span>
+                <span class="n">_</span><span class="p">,</span> <span class="n">instance</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">serialize_file</span><span class="p">(</span><span class="n">fpath</span><span class="p">)</span>
             <span class="k">except</span> <span class="n">SerializerError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
                 <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
                     <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">exc</span><span class="o">.</span><span class="n">message</span><span class="p">,</span>
@@ -956,7 +961,7 @@
                     <span class="p">}</span>
                     <span class="k">continue</span>
 
-                <span class="n">files_instance</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">serialize_file</span><span class="p">(</span><span class="n">fpath</span><span class="p">)</span>
+                <span class="n">_</span><span class="p">,</span> <span class="n">files_instance</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">serialize_file</span><span class="p">(</span><span class="n">fpath</span><span class="p">)</span>
 
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">files_compiled_expression</span> <span class="o">=</span> <span class="p">(</span>

@@ -16,6 +16,7 @@ project-config CLI
 .. rubric:: Commands
 
 * ``project-config check`` - Check the styles of the current project.
+* ``project-config init`` - Initialize a minimal style for the current project.
 * ``project-config show config`` - Show the configuration.
 * ``project-config show style`` - Show the collected styles merged into the final one.
 * ``project-config show plugins`` - Show all available plugins with their actions.
@@ -121,5 +122,24 @@ Show your styles after collecting all in YAML format:
 .. code-block:: sh
 
    project-config show style -r yaml
+
+Initialize a minimal configuration:
+
+.. code-block:: sh
+
+   project-config init
+
+Initialize a minimal configuration storing the configuration inside a `pyproject.toml` file:
+
+.. code-block:: sh
+
+   project-config init --config pyproject.toml
+
+Initialize a minimal configuration storing the configuration in a custom file located
+in a relative project root directory:
+
+.. code-block:: sh
+
+   project-config init --config styles-configuration.toml --rootdir my/subdir
 
 .. _jmespath Python library: https://pypi.org/project/jmespath/

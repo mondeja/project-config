@@ -283,6 +283,77 @@ a valid OSI approved SPDX license identifier.
            "license": "BSD-3-Clause"
          }
 
+Assert root directory name
+==========================
+
+Check that the name of the directory that is the root of the project
+matches against certain regular expression.
+
+.. tabs::
+
+   .. tab:: .project-config.toml
+
+      .. code-block:: toml
+
+         style = "style.json5"
+
+   .. tab:: style.json5
+
+      .. code-block:: js
+
+         {
+           rules: [
+             {
+               files: [".project-config.toml"],
+               JMESPathsMatch: [["regex_match('[a-z0-9-]+$', rootdir_name())", true]],
+             },
+           ],
+         }
+
+TOML sections order
+===================
+
+Check that the section ``[foo]`` of a TOML file is placed before the section ``[bar]``.
+
+.. tabs::
+
+   .. tab:: .project-config.toml
+
+      .. code-block:: toml
+
+         style = "style.json5"
+
+   .. tab:: pyproject.toml
+
+      .. code-block:: toml
+
+         [foo]
+         name = "foo"
+
+         [bar]
+         name = "bar"
+
+   .. tab:: style.json5
+
+      .. code-block:: js
+
+         {
+           rules: [
+             {
+               files: ["pyproject.toml"],
+               hint: "The section '[foo]' must be defined before the section '[bar]'",
+               crossJMESPathsMatch: [
+                 [
+                   "null",
+                   ["pyproject.toml?text", "@"],
+                   "op(op([1], 'indexOf', '[foo]'), '<', op([1], 'indexOf', '[bar]'))",
+                   true,
+                 ],
+               ],
+             },
+           ],
+         }
+
 .. raw:: html
 
    <hr>
