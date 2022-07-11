@@ -12,6 +12,7 @@ from project_config.compat import TypeAlias, tomllib_package_name
 from project_config.config.exceptions import (
     ConfigurationFilesNotFound,
     CustomConfigFileNotFound,
+    ProjectConfigAlreadyInitialized,
     ProjectConfigInvalidConfig,
     ProjectConfigInvalidConfigSchema,
     PyprojectTomlFoundButHasNoConfig,
@@ -28,14 +29,16 @@ CONFIG_CACHE_REGEX = (
 ConfigType: TypeAlias = t.Dict[str, t.Union[str, t.List[str]]]
 
 
-def read_config_from_pyproject_toml() -> t.Optional[t.Any]:
+def read_config_from_pyproject_toml(
+    filepath: str = "pyproject.toml",
+) -> t.Optional[t.Any]:
     """Read the configuration from the `pyproject.toml` file.
 
     Returns:
         object: ``None`` if not found, configuration data otherwise.
     """
     tomllib = importlib.import_module(tomllib_package_name)
-    with open("pyproject.toml", "rb") as f:
+    with open(filepath, "rb") as f:
         pyproject_toml = tomllib.load(f)
     if "tool" in pyproject_toml and "project-config" in pyproject_toml["tool"]:
         return pyproject_toml["tool"]["project-config"]
@@ -322,3 +325,110 @@ class Config:
 
     def __setitem__(self, key: str, value: t.Any) -> None:
         self.dict_.__setitem__(key, value)
+
+
+def initialize_config(config_filepath: str) -> str:
+    """Initialize the configuration.
+
+    Args:
+        config_filepath (str): Path to the file in which the configuration will
+            be stored.
+
+    Returns:
+        str: Path to the configuration.
+    """
+    config_dirpath = os.path.join(
+        os.path.abspath(os.path.dirname(config_filepath)),
+    )
+    os.makedirs(config_dirpath, exist_ok=True)
+
+    if not os.path.isfile(config_filepath):
+        with open(config_filepath, "w") as f:
+            f.write("")
+
+    style_filepath = os.path.join(config_dirpath, "style.json5")
+
+    config_file_basename = os.path.basename(config_filepath)
+
+    def create_default_style_file(config_prefix: str = "@") -> None:
+        """Create the default style file if it does not exist."""
+        if config_prefix == "@":
+
+            def key_matcher(key: str) -> str:
+                return key
+
+        else:
+
+            def key_matcher(key: str) -> str:
+                return f'tool.\\"project-config\\".{key}'
+
+        with open(style_filepath, "w") as f:
+            f.write(
+                '''{
+  rules: [
+    {
+      files: ["'''
+                + config_file_basename
+                + """"],
+      JMESPathsMatch: [
+        ["contains(keys("""
+                + config_prefix
+                + """), 'style')", true],
+        ["type("""
+                + key_matcher("style")
+                + """)", "array"],
+        ["contains(keys("""
+                + config_prefix
+                + """), 'cache')", true],
+        [
+          "regex_match('(\\\\d+ ((seconds?)|(minutes?)|(hours?)|(days?)|(weeks?)))|(never)$', """  # noqa: E501,
+                + key_matcher("cache")
+                + """)",
+          true,
+        ],
+      ]
+    }
+  ]
+}
+""",
+            )
+
+    def build_config_string(pyproject_toml: bool = False) -> str:
+        result = ""
+        if pyproject_toml:
+            result += "[tool.project-config]\n"
+        return f'{result}style = ["style.json5"]\ncache = "5 minutes"\n'
+
+    def add_config_string_to_file(string: str) -> None:
+        with open(config_filepath, encoding="utf-8") as f:
+            config_lines = f.read().splitlines()
+        if config_lines:
+            add_separator = config_lines[-1] != ""
+        else:
+            add_separator = False
+
+        with open(config_filepath, "a") as f:
+            if add_separator:
+                f.write("\n")
+            f.write(string)
+
+    if config_file_basename == "pyproject.toml":
+        config = read_config_from_pyproject_toml(config_filepath)
+        if config:
+            raise ProjectConfigAlreadyInitialized(
+                f"{config_filepath}[tool.project-config]",
+            )
+
+        add_config_string_to_file(build_config_string(pyproject_toml=True))
+
+        create_default_style_file(config_prefix='tool.\\"project-config\\"')
+        return f"{config_filepath}[tool.project-config]"
+
+    if os.path.isfile(config_filepath):
+        with open(config_filepath, encoding="utf-8") as f:
+            if f.read():
+                raise ProjectConfigAlreadyInitialized(config_filepath)
+
+    add_config_string_to_file(build_config_string())
+    create_default_style_file()
+    return config_filepath

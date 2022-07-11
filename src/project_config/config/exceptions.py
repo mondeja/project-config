@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import typing as t
 
 from project_config.exceptions import ProjectConfigException
@@ -59,4 +60,14 @@ class PyprojectTomlFoundButHasNoConfig(ProjectConfigInvalidConfig):
             "- pyproject.toml file has been found but has not a"
             " [tool.project-config] section\n"
             "- .project-config.toml has not been found",
+        )
+
+
+class ProjectConfigAlreadyInitialized(ProjectConfigException):
+    """The project-config has already been initialized."""
+
+    def __init__(self, config_path: str) -> None:
+        super().__init__(
+            "The configuration for project-config has already been"
+            f" initialized at {os.path.relpath(config_path, os.getcwd())}",
         )
