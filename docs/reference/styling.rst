@@ -30,7 +30,7 @@ with at least one object.
 Unique mandatory field for all rules. It specifies the subject of the rule,
 that is, the files for which the verbs will be applied.
 
-It must be either an array of strings or an object with an unique key ``not``.----
+It must be either an array of strings or an object with an unique key ``not``.
 
 Defining ``files`` as an array of strings enforce the existence of these files.
 If they don't exist, no actions will be executed. The existence of these files

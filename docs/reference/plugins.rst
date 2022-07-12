@@ -153,6 +153,8 @@ of files, so only files that can be serialized can be targetted (see
 You can use in expressions all `JMESPath builtin functions`_ plus a set of
 convenient functions defined by the plugin internally:
 
+.. rubric:: Functions
+
 .. function:: regex_match(pattern: str, string: str[, flags: int=0]) -> bool
 
    Match a regular expression against a string using the Python's built-in
@@ -542,8 +544,120 @@ convenient functions defined by the plugin internally:
    Returns the name if the root directory of the project (passed in :ref:`project-config---rootdir`
    CLI option or defined in ``cli.rootdir`` :doc:`configuration option <./config>`).
 
+.. function:: update(base: dict, next: dict) -> dict
+
+   Update the ``base`` object with the ``next`` object using Python's builtin
+   :py:meth:`dict.update`.
+
+   Returns the updated ``base`` object.
+
+   .. versionadded:: 0.7.0
+
+.. function:: insert(base: list, index: int, item: t.Any) -> list
+
+   Insert a ``item`` at the given ``index`` in the array ``base``.
+
+   Returns the updated ``base`` array.
+
+   .. versionadded:: 0.7.0
+
+.. function:: deepmerge(base: dict, next: dict, strategy : str | list = "conservative_merger") -> dict
+
+   Merge the ``base`` and ``next`` objects using the library :py:mod:`deepmerge`.
+
+   Returns the updated ``base`` object.
+
+   The argument of ``strategy`` controls how the objects are merged. It can accept
+   strings with `deepmerge strategy names`_:
+
+   .. rubric:: Example
+
+   .. code-block:: js
+
+      deepmerge(@, `{"foo": "bar"}`, 'always_merger')
+
+   Or an array with 3 values, the same that takes the class :py:class:`deepmerge.merger.Merger`
+   as arguments:
+
+   * ``type_strategies``
+   * ``fallback_strategies``
+   * ``type_conflict_strategies``
+
+   .. rubric:: Example
+
+   .. code-block:: js
+
+      deepmerge(
+         @,
+         `{"foo": ["bar"]}`,
+         `[[["list", "append"], ["dict": "merge"]], ["override"], ["override"]]`
+      )
+
+   .. versionadded:: 0.7.0
+
 .. _JMES paths: https://jmespath.org
-.. _JMESPath builtin functions: https://jmespath.org/proposals/functions.html#built-in-functions
+.. _JMESPath builtin functions: https://jmespath.org/specification.html#built-in-functions
+.. _deepmerge strategy names: https://deepmerge.readthedocs.io/en/latest/strategies.html#builtin-strategies
+
+.. rubric:: Fix queries
+
+The verbs of the jmespath plugin can fix files by applying a JMESPath
+query over the previous content of the files. The fix-queries arguments
+are always optional.
+
+If no fix-query is provided, **project-config** will attempt to build an expected
+node tree instance to update the content parsing the other queries arguments
+and the expected value.
+
+The query will be a syntax like (example merging objects):
+
+.. code-block:: js
+
+   deepmerge(@, `{ "foo": "bar" }`)
+
+Where ``@`` is the previous content of the file.
+
+The result from this JMESPath expression will be the next content of the file.
+So these transformer functions like :py:func:`deepmerge`, :py:func:`insert` or
+:py:func:`update` allow you to edit your files with total flexibility.
+
+.. rubric:: Automatic fixes
+
+Queries that are simple can be automatically fixed by the plugin. For example,
+a constant query with their expected value:
+
+.. tabs::
+
+   .. tab:: package.json (before)
+
+      .. code-block:: js
+
+         {
+            "name": "my-project"
+         }
+
+   .. tab:: package.json (after)
+
+      .. code-block:: js
+
+         {
+            "name": "my-project",
+            "license": "BSD-3-Clause"
+         }
+
+   .. tab:: style.json5 (rule)
+
+      .. code-block:: js
+
+         files: ["package.json"],
+         JMESPathsMatch: [["license", "BSD-3-Clause"]]
+
+Currently, is possible to automatically fix the following cases:
+
+* Query to constant.
+* Query to constant in nested objects.
+* Expression using the ``type`` function like ``type(foo.bar)`` with expected value as ``'array'`` (creates ``{foo: {bar: []}}`` nodes if doesn't exists before).
+* Indexed expressions with indexes like ``type(foo[0].bar)`` with expected value as ``'object'`` (prepends, ``{bar: {}}`` to the array ``bar``, creating it if does not exists).
 
 JMESPathsMatch
 ==============
@@ -586,6 +700,10 @@ The `.editorconfig` file must have the next content:
    }
 
 .. versionadded:: 0.1.0
+
+.. versionchanged:: 0.7.0
+
+   The verb also accepts fix queries as third item of rows.
 
 crossJMESPathsMatch
 ===================

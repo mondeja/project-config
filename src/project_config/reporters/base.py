@@ -116,6 +116,11 @@ class BaseFormattedReporter(BaseReporter, abc.ABC):
     """Reporter that requires formatted fields."""
 
     @abc.abstractmethod
+    def format_fixed(self, output: str) -> str:  # pragma: no cover
+        """File name formatter."""
+        raise NotImplementedError
+
+    @abc.abstractmethod
     def format_file(self, fname: str) -> str:  # pragma: no cover
         """File name formatter."""
         raise NotImplementedError
@@ -164,6 +169,9 @@ self_format_noop: t.Callable[[type, str], str] = lambda s, v: v
 
 class BaseNoopFormattedReporter(BaseFormattedReporter):
     """Reporter that requires formatted fields without format."""
+
+    def format_fixed(self, output: str) -> str:
+        return output
 
     def format_file(self, fname: str) -> str:  # noqa: D102
         return fname
@@ -256,6 +264,9 @@ class BaseColorReporter(BaseFormattedReporter):
         if errors:
             raise InvalidColors(errors)
         return normalized_colors
+
+    def format_fixed(self, output: str) -> str:
+        return bold_color(output, self.colors.get("fixed", "green"))
 
     def format_file(self, fname: str) -> str:  # noqa: D102
         return bold_color(fname, self.colors.get("file", "light_red"))

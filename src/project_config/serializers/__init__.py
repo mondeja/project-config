@@ -29,7 +29,7 @@ class SerializerFunction(Protocol):
 
     def __call__(  # noqa: D102
         self,
-        string: str,
+        value: t.Any,
         **kwargs: t.Any,
     ) -> SerializerResult:  # pragma: no cover
         ...
@@ -56,53 +56,76 @@ class SerializerDefinitionType(TypedDict):
 SerializerDefinitionsType: TypeAlias = t.List[SerializerDefinitionType]
 
 serializers: t.Dict[str, SerializerDefinitionsType] = {
-    ".json": [{"module": "json"}],
-    ".json5": [{"module": "pyjson5"}, {"module": "json5"}],
-    ".yaml": [
-        {
-            # Implementation notes:
-            #
-            # PyYaml is currently using the Yaml 1.1 specification,
-            # which converts some words like `on` and `off` to `True`
-            # and `False`. This leads to problems, for example, checking
-            # `on.` objects in Github workflows.
-            #
-            # There is an issue open to track the progress to support
-            # YAML 1.2 at https://github.com/yaml/pyyaml/issues/486
-            #
-            # Comparison of v1.1 vs v1.2 at:
-            # https://perlpunk.github.io/yaml-test-schema/schemas.html
-            #
-            # "module": "yaml",
-            # "function": "load",
-            # "function_kwargs": {
-            #    "Loader": {
-            #        "module": "yaml",
-            #        "object": "CSafeLoader",
-            #        "object_fallback": "SafeLoader",
-            #    },
-            # },
-            #
-            # So we use ruamel.yaml, which supports v1.2 by default
-            "module": "project_config.serializers.yaml",
-        },
-    ],
-    ".toml": [{"module": tomllib_package_name}],
-    ".ini": [{"module": "project_config.serializers.ini"}],
-    ".editorconfig": [{"module": "project_config.serializers.editorconfig"}],
-    ".py": [
-        {
-            "module": "project_config.serializers.python",
-            "function_kwargs_from_url_path": lambda path: {
-                "namespace": {"__file__": path},
+    ".json": (
+        [{"module": "json"}],  # loads
+        [{"module": "json"}],  # dumps
+    ),
+    ".json5": (
+        [{"module": "pyjson5"}, {"module": "json5"}],
+        [{"module": "pyjson5"}, {"module": "json5"}],
+    ),
+    ".yaml": (
+        [
+            {
+                # Implementation notes:
+                #
+                # PyYaml is currently using the Yaml 1.1 specification,
+                # which converts some words like `on` and `off` to `True`
+                # and `False`. This leads to problems, for example, checking
+                # `on.` objects in Github workflows.
+                #
+                # There is an issue open to track the progress to support
+                # YAML 1.2 at https://github.com/yaml/pyyaml/issues/486
+                #
+                # Comparison of v1.1 vs v1.2 at:
+                # https://perlpunk.github.io/yaml-test-schema/schemas.html
+                #
+                # "module": "yaml",
+                # "function": "load",
+                # "function_kwargs": {
+                #    "Loader": {
+                #        "module": "yaml",
+                #        "object": "CSafeLoader",
+                #        "object_fallback": "SafeLoader",
+                #    },
+                # },
+                #
+                # So we use ruamel.yaml, which supports v1.2 by default
+                "module": "project_config.serializers.yaml",
             },
-        },
-    ],
+        ],
+        [{"module": "project_config.serializers.yaml"}],
+    ),
+    ".toml": (
+        [{"module": "project_config.serializers.toml"}],
+        [{"module": "tomlkit"}],
+    ),
+    ".ini": (
+        [{"module": "project_config.serializers.ini"}],
+        [{"module": "project_config.serializers.ini"}],
+    ),
+    ".editorconfig": (
+        [{"module": "project_config.serializers.editorconfig"}],
+        [{"module": "project_config.serializers.editorconfig"}],
+    ),
+    ".py": (
+        [
+            {
+                "module": "project_config.serializers.python",
+                "function_kwargs_from_url_path": lambda path: {
+                    "namespace": {"__file__": path},
+                },
+            },
+        ],
+        [{"module": "project_config.serializers.python"}],
+    ),
 }
 
-serializers_fallback: SerializerDefinitionsType = [
-    {"module": "project_config.serializers.text"},
-]
+serializers_fallback: SerializerDefinitionsType = (
+    [{"module": "project_config.serializers.text"}],
+    [{"module": "project_config.serializers.text"}],
+)
+
 
 
 def _identify_serializer(filename: str) -> SerializerDefinitionsType:
@@ -117,6 +140,8 @@ def _identify_serializer(filename: str) -> SerializerDefinitionsType:
 def _get_serializer(
     url: str,
     prefer_serializer: t.Optional[str] = None,
+    loader_function_name: str = "loads",
+    serializers=serializers,
 ) -> SerializerFunction:
     url_parts = urllib.parse.urlsplit(url)
 
@@ -142,7 +167,7 @@ def _get_serializer(
         except KeyError:
             # try to guess the file type with identify
             serializer = _identify_serializer(os.path.basename(url_parts.path))
-
+    serializer = serializer[0 if loader_function_name == "loads" else 1]
     # prepare serializer function
     serializer_definition, module = None, None
     for i, serializer_def in enumerate(serializer):
@@ -162,7 +187,7 @@ def _get_serializer(
 
     loader_function: SerializerFunction = getattr(
         module,
-        serializer_definition.get("function", "loads"),
+        serializer_definition.get("function", loader_function_name),
     )
 
     function_kwargs: SerializerFunctionKwargs = {}
@@ -219,6 +244,28 @@ def _file_can_not_be_serialized_as_object_error(
     error_message: str,
 ) -> str:
     return f"'{url}' can't be serialized as a valid object:{error_message}"
+
+
+def deserialize_for_url(
+    url: str,
+    content: t.Any,
+    prefer_serializer: t.Optional[str] = None,
+) -> str:
+    """Deserialize content for URL.
+
+    Args:
+        url (str): URL to deserialize content for.
+        content (Any): Content to deserialize.
+        prefer_serializer (str): Preferred serializer.
+
+    Returns:
+        str: Deserialized content.
+    """
+    return _get_serializer(
+        url,
+        prefer_serializer=prefer_serializer,
+        loader_function_name="dumps",
+    )(content)
 
 
 def serialize_for_url(

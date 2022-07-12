@@ -168,7 +168,7 @@ def build_main_parser() -> argparse.ArgumentParser:  # noqa: D103
     )
     parser.add_argument(
         "command",
-        choices=["check", "show", "clean", "init"],
+        choices=["check", "fix", "show", "clean", "init"],
         help="Command to execute.",
     )
 
@@ -239,8 +239,10 @@ def run(argv: t.List[str] = []) -> int:  # noqa: D103
             args.rootdir,
             args.reporter,
             args.color,
+            fix=args.command == "fix",
         )
-        getattr(project, args.command)(args)
+        method_name = "check" if args.command == "fix" else args.command
+        getattr(project, method_name)(args)
     except ProjectConfigException as exc:
         return _controlled_error(args.traceback, exc, exc.message)
     except FileNotFoundError as exc:  # pragma: no cover

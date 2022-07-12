@@ -7,6 +7,7 @@ import pprint
 import typing as t
 
 from project_config import (
+    ActionsContext,
     Error,
     InterruptingError,
     Results,
@@ -38,6 +39,7 @@ class InclusionPlugin:
         value: t.List[str],
         tree: Tree,
         rule: Rule,
+        context: ActionsContext,
     ) -> Results:
         if not isinstance(value, list):
             yield InterruptingError, {
@@ -107,6 +109,7 @@ class InclusionPlugin:
         value: t.Dict[str, t.List[str]],
         tree: Tree,
         rule: Rule,
+        context: ActionsContext,
     ) -> Results:
         if not isinstance(value, dict):
             yield InterruptingError, {
@@ -205,7 +208,12 @@ class InclusionPlugin:
                     checked_lines.append(clean_line)
 
     @staticmethod
-    def excludeContent(value: t.List[str], tree: Tree, rule: Rule) -> Results:
+    def excludeContent(
+        value: t.List[str],
+        tree: Tree,
+        rule: Rule,
+        context: ActionsContext,
+    ) -> Results:
         if not isinstance(value, list):
             yield InterruptingError, {
                 "message": "The contents to exclude must be of type array",

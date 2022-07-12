@@ -17,11 +17,17 @@ import pytest
 from project_config.tests.pytest_plugin.helpers import (
     FilesType,
     RootdirType,
+    assert_expected_files,
     create_files,
     create_tree,
     get_reporter_class_from_module,
 )
-from project_config.types import ErrorDict, Rule, StrictResultType
+from project_config.types import (
+    ActionsContext,
+    ErrorDict,
+    Rule,
+    StrictResultType,
+)
 
 
 def project_config_plugin_action_asserter(
@@ -35,6 +41,8 @@ def project_config_plugin_action_asserter(
     additional_files: t.Optional[FilesType] = None,
     assert_case_method_name: bool = True,
     deprecated: bool = False,
+    fix: bool = False,
+    expected_files: t.Optional[FilesType] = None,
 ) -> None:
     """Convenient function to test a plugin action.
 
@@ -55,6 +63,12 @@ def project_config_plugin_action_asserter(
             Follows the same format as ``files``.
         assert_case_method_name (bool): If ``True``, the method name will
             be checked to match against camelCase or PascalCase style.
+        deprecated (bool): If ``True``, the action must raise a deprecation
+            warning.
+        fix (bool): If ``True``, the action will be called with the ``fix``
+            mode active. Use ``expected_files`` to check the content of the
+            files after the fix is applyed.
+        expected_files (dict): Dictionary of expected files.
 
     .. rubric:: Example
 
@@ -129,6 +143,7 @@ def project_config_plugin_action_asserter(
                 value,
                 create_tree(files, rootdir, cache_files=True),
                 rule,
+                ActionsContext(fix=fix),
             ),
         )
 
@@ -164,6 +179,9 @@ def project_config_plugin_action_asserter(
     ) in zip(results, expected_results):
         assert result_type == expected_result_type, result_value
         assert result_value == expected_result_value
+
+    if expected_files:
+        assert_expected_files(expected_files, rootdir)
 
 
 @pytest.fixture  # type: ignore

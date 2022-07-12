@@ -9,6 +9,7 @@ from dataclasses import dataclass
 
 from project_config.fetchers import fetch
 from project_config.serializers import (
+    deserialize_for_url,
     guess_preferred_serializer,
     serialize_for_url,
 )
@@ -215,3 +216,25 @@ class Tree:
             result = fetch(url)  # type: ignore
             self.serialized_files_cache[url] = result
         return result
+
+    def edit_serialized_file(self, fpath: str, new_content: t.Any) -> None:
+        """Edit a file in the cache.
+
+        Args:
+            fpath (str): Path to the file to edit.
+            new_content (object): New content for the file.
+        """
+        fpath, serializer_name = guess_preferred_serializer(fpath)
+
+        normalized_fpath = self.normalize_path(fpath)
+        self.serialized_files_cache[normalized_fpath] = new_content
+
+        new_content_string = deserialize_for_url(
+            fpath,
+            new_content,
+            prefer_serializer=serializer_name,
+        )
+        self.files_cache[normalized_fpath] = new_content_string
+
+        with open(fpath, "w", encoding="utf-8") as f:
+            f.write(new_content_string)

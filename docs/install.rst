@@ -25,7 +25,7 @@ Installation
            hooks:
              - id: project-config
 
-   .. tab:: Megalinter plugin
+   .. tab:: MegaLinter plugin
 
       .. code-block:: yaml
 

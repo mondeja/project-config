@@ -21,8 +21,10 @@ class BaseDefaultReporter(BaseFormattedReporter):
         for file, errors in self.errors.items():
             report += f"{self.format_file(file)}\n"
             for error in errors:
-                error_message = self.format_error_message(
-                    error["message"],
+                error_message = (
+                    f'{self.format_metachar("-")} '
+                    f'{self.format_fixed("(FIXED) ") if error.get("fixed") else ""}'
+                    f'{self.format_error_message(error["message"])}'
                 )
                 report += (
                     f"  {error_message}"
@@ -118,17 +120,6 @@ class BaseDefaultReporter(BaseFormattedReporter):
 class DefaultReporter(BaseNoopFormattedReporter, BaseDefaultReporter):
     """Default black/white reporter."""
 
-    def format_error_message(self, error_message: str) -> str:
-        """Default reporter error messages formatter."""
-        return f"- {error_message}"
-
 
 class DefaultColorReporter(BaseColorReporter, BaseDefaultReporter):
     """Default color reporter."""
-
-    def format_error_message(self, error_message: str) -> str:
-        """Default reporter colorized error messages formatter."""
-        return (
-            f"{super().format_metachar('-')}"
-            f" {super().format_error_message(error_message)}"
-        )

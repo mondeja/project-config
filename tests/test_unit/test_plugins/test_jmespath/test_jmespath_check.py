@@ -712,7 +712,7 @@ def test_JMESPathsMatch(
     (
         pytest.param(
             {},
-            [],  # must be a dict
+            [],
             None,
             [
                 (

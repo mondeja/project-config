@@ -23,3 +23,20 @@ def loads(string: str) -> t.Dict[str, t.Any]:
         for option in ini.options(section):
             result[section][option] = ini.get(section, option)
     return result
+
+
+def dumps(object: t.Any) -> str:
+    """Converts a JSON object to an INI file string.
+
+    Args:
+        object (dict): JSON object to convert.
+
+    Returns:
+        str: Conversion result.
+    """
+    ini = configparser.ConfigParser()
+    for section, options in object.items():
+        ini.add_section(section)
+        for option, value in options.items():
+            ini.set(section, option, value)
+    return str(ini)

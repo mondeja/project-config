@@ -15,3 +15,15 @@ def loads(string: str) -> t.List[str]:
         list: Array of lines created from string splitting.
     """
     return string.splitlines()
+
+
+def dumps(object: t.List[str]) -> str:
+    """Converts an array of lines to a string.
+
+    Args:
+        object: The array of lines to convert.
+
+    Returns:
+        str: The string created from joining the array of lines.
+    """
+    return "\n".join(object)

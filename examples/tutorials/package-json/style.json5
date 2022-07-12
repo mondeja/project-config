@@ -1,0 +1,10 @@
+{
+  rules: [
+    {
+      files: ["package.json"],
+      JMESPathsMatch: [
+        ["license", "BSD-3-Clause"],
+      ]
+    },
+  ],
+}
