@@ -170,7 +170,7 @@ self_format_noop: t.Callable[[type, str], str] = lambda s, v: v
 class BaseNoopFormattedReporter(BaseFormattedReporter):
     """Reporter that requires formatted fields without format."""
 
-    def format_fixed(self, output: str) -> str:
+    def format_fixed(self, output: str) -> str:  # noqa: D102
         return output
 
     def format_file(self, fname: str) -> str:  # noqa: D102
@@ -265,7 +265,7 @@ class BaseColorReporter(BaseFormattedReporter):
             raise InvalidColors(errors)
         return normalized_colors
 
-    def format_fixed(self, output: str) -> str:
+    def format_fixed(self, output: str) -> str:  # noqa: D102
         return bold_color(output, self.colors.get("fixed", "green"))
 
     def format_file(self, fname: str) -> str:  # noqa: D102

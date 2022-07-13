@@ -1,0 +1,16 @@
+{
+  "string_constant": "my-string",
+  "number_constant": 42,
+  "boolean_constant": true,
+  "an_object": {
+    "a_nested_array": [],
+    "a_nested_object": {},
+    "a_nested_empty_string": "",
+    "deepmerged_array": [1, 2, 3, 4, ["to-the-deep"]]
+  },
+  "an_array": [77],
+  "conditional_constant": "enabled",
+  "other_string_constant": "my-other-string",
+  "other_boolean_constant": false,
+  "deepmerged_string": "deep string"
+}

@@ -8,10 +8,12 @@ multiple projects.
 .. toctree::
    :maxdepth: 2
    :caption: Quickstart
+   :glob:
 
    install
    basic-usage
    examples
+   tutorials/index
 
 .. toctree::
    :maxdepth: 3

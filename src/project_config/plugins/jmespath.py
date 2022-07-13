@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import builtins
+import copy
 import json
 import operator
 import os
@@ -360,10 +361,10 @@ class JMESPathProjectConfigFunctions(JMESPathFunctions):
     def _func_deepmerge(
         self,
         base: t.Any,
-        next: t.Any,
+        nxt: t.Any,
         *args: t.Any,
-    ):
-        # TODO: if base and next are strings use merge with other
+    ) -> t.Any:
+        # TODO: if base and nxt are strings use merge with other
         #   strategies such as prepend or append text.
         if len(args) > 0:
             strategies: t.Union[
@@ -377,18 +378,22 @@ class JMESPathProjectConfigFunctions(JMESPathFunctions):
                 merger = BUILTIN_DEEPMERGE_STRATEGIES[strategies]
             except KeyError:
                 raise OriginalJMESPathError(
-                    f"Invalid strategy '{strategies}' passed to deepmerge() function,"
-                    f" expected one of: {', '.join(list(BUILTIN_DEEPMERGE_STRATEGIES))}",
+                    f"Invalid strategy '{strategies}' passed to deepmerge()"
+                    " function, expected one of:"
+                    f" {', '.join(list(BUILTIN_DEEPMERGE_STRATEGIES))}",
                 )
         else:
             type_strategies = []
-            for key, value in strategies[0]:
-                if key not in BUILTIN_TYPES:
+            for key, value in strategies[0]:  # type: ignore
+                if key not in BUILTIN_TYPES:  # type: ignore
                     raise OriginalJMESPathError(
-                        f"Invalid type passed to deepmerge() function in strategies array,"
-                        f" expected one of: {', '.join(BUILTIN_TYPES)}",
+                        f"Invalid type passed to deepmerge() function in"
+                        " strategies array, expected one of:"
+                        f" {', '.join(BUILTIN_TYPES)}",
                     )
-                type_strategies.append((getattr(builtins, key), value))
+                type_strategies.append(  # type: ignore
+                    (getattr(builtins, key), value),
+                )
 
             # TODO: cache merge objects by strategies used
             merger = deepmerge.Merger(
@@ -396,16 +401,16 @@ class JMESPathProjectConfigFunctions(JMESPathFunctions):
                 *strategies[1:],
             )
 
-        merger.merge(base, next)
+        merger.merge(base, nxt)
         return base
 
     @jmespath_func_signature({"types": ["object"]}, {"types": ["object"]})
     def _func_update(
         self,
         base: t.Dict[str, t.Any],
-        next: t.Dict[str, t.Any],
+        nxt: t.Dict[str, t.Any],
     ) -> t.Dict[str, t.Any]:
-        base.update(next)
+        base.update(nxt)
         return base
 
     @jmespath_func_signature(
@@ -420,6 +425,33 @@ class JMESPathProjectConfigFunctions(JMESPathFunctions):
         item: t.Any,
     ) -> t.List[t.Any]:
         base.insert(index, item)
+        return base
+
+    @jmespath_func_signature(
+        {"types": ["object"]},
+        {"types": ["string"]},
+        {"types": []},
+    )
+    def _func_set(
+        self,
+        base: t.Dict[str, t.Any],
+        key: str,
+        value: t.Any,
+    ) -> t.Dict[str, t.Any]:
+        base[key] = value
+        return base
+
+    @jmespath_func_signature(
+        {"types": ["object"]},
+        {"types": ["string"]},
+    )
+    def _func_unset(
+        self,
+        base: t.Dict[str, t.Any],
+        key: str,
+    ) -> t.Dict[str, t.Any]:
+        if key in base:
+            del base[key]
         return base
 
     locals().update(
@@ -614,44 +646,47 @@ def _evaluate_JMESPath_or_expected_value_error(
 
 
 def _build_fixer_function(
-    compiled_expression,
-    instance,
-    fpath,
-    tree,
-) -> t.Callable[[], None]:
-    def _wrapper() -> None:
+    compiled_expression: JMESPathParsedResult,
+    instance: t.Any,
+    fpath: str,
+    tree: Tree,
+) -> t.Callable[[], bool]:
+    def _wrapper() -> bool:
         # TODO: raise errors
         new_content = _evaluate_JMESPath(
             compiled_expression,
             instance,
         )
-        tree.edit_serialized_file(fpath, new_content)
+        return tree.edit_serialized_file(fpath, new_content)
 
     return _wrapper
 
 
-REVERSE_JMESPATH_TYPE_PYOBJECT: t.Dict[str, t.Any] = {
+REVERSE_JMESPATH_TYPE_PYOBJECT: t.Dict[t.Optional[str], t.Any] = {
     "string": "",
     "number": 0,
     "object": {},
     "array": [],
     "null": None,
+    None: None,
 }
 
 
-def build_reverse_jmes_type_object(jmespath_type: str) -> t.Any:
+def _build_reverse_jmes_type_object(jmespath_type: str) -> t.Any:
     return REVERSE_JMESPATH_TYPE_PYOBJECT[jmespath_type]
 
 
-def _smart_fixer_query(compiled_expression, expected_value):
+def _smart_fixer_query(
+    compiled_expression: JMESPathParsedResult,
+    expected_value: t.Any,
+) -> str:
     fixer_expression = ""
 
     parser = Parser()
-    ast = parser.parse(compiled_expression.expression).parsed
+    # TODO: add types to JMESPath parser in typeshed
+    ast = parser.parse(compiled_expression.expression).parsed  # type: ignore
 
     merge_strategy = "conservative_merger"
-
-    temporal_object = {}
 
     if (
         ast["type"] == "index_expression"
@@ -663,29 +698,30 @@ def _smart_fixer_query(compiled_expression, expected_value):
             f" `{json.dumps(expected_value)}`)"
         )
     if ast["type"] == "field":
-        temporal_object = {ast["value"]: expected_value}
-        return f"deepmerge(@, `{json.dumps(temporal_object)}`)"
+        key = ast["value"]
+        return f"set(@, '{key}' `{json.dumps(expected_value)}`)"
     elif ast["type"] == "function_expression" and ast["value"] == "type":
         if expected_value not in REVERSE_JMESPATH_TYPE_PYOBJECT:
-            return
+            return ""
+        temporal_object = {}
         if (
             len(ast.get("children")) == 1
             and ast["children"][0]["type"] == "field"
         ):
             temporal_object = {
-                ast["children"][0]["value"]: build_reverse_jmes_type_object(
+                ast["children"][0]["value"]: _build_reverse_jmes_type_object(
                     expected_value,
                 ),
             }
         else:
-            deep = []
+            deep: t.List[t.Any] = []
 
-            def iterate_expressions(
-                expressions,
-                temporal_object,
-                merge_strategy,
-                deep,
-            ) -> t.Dict[str, t.Any]:
+            def _iterate_expressions(
+                expressions: t.List[t.Any],
+                temporal_object: t.Any,
+                merge_strategy: t.Any,
+                deep: t.List[t.Any],
+            ) -> t.Tuple[t.List[t.Any], t.Any, t.Any]:
 
                 for iexp, fexp in enumerate(reversed(expressions)):
                     _last_field_type_iexp = (
@@ -699,7 +735,7 @@ def _smart_fixer_query(compiled_expression, expected_value):
                             tmp_deep,
                             temporal_object,
                             merge_strategy,
-                        ) = iterate_expressions(
+                        ) = _iterate_expressions(
                             fexp["children"],
                             temporal_object,
                             merge_strategy,
@@ -714,7 +750,7 @@ def _smart_fixer_query(compiled_expression, expected_value):
                     _obj = {}
                     for di, d in enumerate(deep):
                         if di == 0 and _last_field_type_iexp:
-                            _obj = build_reverse_jmes_type_object(
+                            _obj = _build_reverse_jmes_type_object(
                                 expected_value,
                             )
                         if isinstance(d, str):
@@ -733,15 +769,19 @@ def _smart_fixer_query(compiled_expression, expected_value):
                                 ["override"],
                                 ["override"],
                             ]
-                            _obj = [_obj]
+                            _obj = [_obj]  # type: ignore
                     temporal_object = _obj
 
                 return (deep, temporal_object, merge_strategy)
 
             for child in ast.get("children"):
                 if child["type"] == "subexpression":
-                    expressions = [exp for exp in child.get("children")]
-                    _, temporal_object, merge_strategy = iterate_expressions(
+                    expressions = list(child.get("children", []))
+                    (
+                        _,
+                        temporal_object,
+                        merge_strategy,
+                    ) = _iterate_expressions(
                         expressions,
                         temporal_object,
                         merge_strategy,
@@ -824,7 +864,8 @@ class JMESPathPlugin:
                     }
                     return
 
-        for f, (fpath, fcontent) in enumerate(tree.files):
+        files = copy.copy(tree.files)
+        for f, (fpath, fcontent) in enumerate(files):
             if fcontent is None:
                 continue
             elif not isinstance(fcontent, str):
@@ -882,13 +923,15 @@ class JMESPathPlugin:
                             )
                         if fixer_query:
                             # TODO: raise errors
-                            _build_fixer_function(
+                            diff = _build_fixer_function(
                                 _compile_JMESPath_expression(fixer_query),
                                 instance,
                                 fpath,
                                 tree,
                             )()
                             fixed = True
+                            if not diff:
+                                continue
                         else:
                             fixed = False
                     else:

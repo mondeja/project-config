@@ -16,6 +16,7 @@
         [
           "regex_match('^(\\d+ ((seconds?)|(minutes?)|(hours?)|(days?)|(weeks?)))|(never)$', cache)",
           true,
+          "set(@, 'cache', '5 minutes')",
         ],
       ],
     },

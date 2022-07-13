@@ -41,6 +41,8 @@ class InclusionPlugin:
         rule: Rule,
         context: ActionsContext,
     ) -> Results:
+        # TODO: allow to fix this rule serializing files as text
+        #   (array of lines)
         if not isinstance(value, list):
             yield InterruptingError, {
                 "message": "The value must be of type array",
@@ -214,6 +216,8 @@ class InclusionPlugin:
         rule: Rule,
         context: ActionsContext,
     ) -> Results:
+        # TODO: allow to fix this rule passing a JMESPath as plain text
+        #   (content as string)
         if not isinstance(value, list):
             yield InterruptingError, {
                 "message": "The contents to exclude must be of type array",

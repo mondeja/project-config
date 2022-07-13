@@ -29,15 +29,13 @@ def loads(string: str, namespace: Namespace = {}) -> Namespace:
     return namespace
 
 
-def dumps(object: Namespace) -> str:
+def dumps(obj: Namespace) -> str:
     """Converts a namespace to a Python script.
 
     Args:
-        object (dict): Namespace to convert.
+        obj (dict): Namespace to convert.
 
     Returns:
         str: Python script.
     """
-    return (
-        "\n".join(f"{key} = {value!r}" for key, value in object.items()) + "\n"
-    )
+    return "\n".join(f"{key} = {value!r}" for key, value in obj.items()) + "\n"

@@ -11,13 +11,7 @@ import urllib.parse
 
 from identify import identify
 
-from project_config.compat import (
-    NotRequired,
-    Protocol,
-    TypeAlias,
-    TypedDict,
-    tomllib_package_name,
-)
+from project_config.compat import NotRequired, Protocol, TypeAlias, TypedDict
 from project_config.exceptions import ProjectConfigException
 
 
@@ -55,10 +49,13 @@ class SerializerDefinitionType(TypedDict):
 
 SerializerDefinitionsType: TypeAlias = t.List[SerializerDefinitionType]
 
-serializers: t.Dict[str, SerializerDefinitionsType] = {
+serializers: t.Dict[
+    str,
+    t.Tuple[SerializerDefinitionsType, SerializerDefinitionsType],
+] = {
     ".json": (
-        [{"module": "json"}],  # loads
-        [{"module": "json"}],  # dumps
+        [{"module": "project_config.serializers.json_"}],  # loads
+        [{"module": "project_config.serializers.json_"}],  # dumps
     ),
     ".json5": (
         [{"module": "pyjson5"}, {"module": "json5"}],
@@ -121,27 +118,28 @@ serializers: t.Dict[str, SerializerDefinitionsType] = {
     ),
 }
 
-serializers_fallback: SerializerDefinitionsType = (
+serializers_fallback: t.Tuple[
+    SerializerDefinitionsType,
+    SerializerDefinitionsType,
+] = (
     [{"module": "project_config.serializers.text"}],
     [{"module": "project_config.serializers.text"}],
 )
 
 
-
 def _identify_serializer(filename: str) -> SerializerDefinitionsType:
-    serializer = None
-    for tag in identify.tags_from_filename(filename):
-        if f".{tag}" in serializers:
-            serializer = serializers[f".{tag}"]
+    tag = None
+    for tag_ in identify.tags_from_filename(filename):
+        if f".{tag_}" in serializers:
+            tag = tag_
             break
-    return serializer if serializer is not None else serializers_fallback
+    return tag if tag is not None else "text"
 
 
 def _get_serializer(
     url: str,
     prefer_serializer: t.Optional[str] = None,
     loader_function_name: str = "loads",
-    serializers=serializers,
 ) -> SerializerFunction:
     url_parts = urllib.parse.urlsplit(url)
 
@@ -166,7 +164,23 @@ def _get_serializer(
             serializer = serializers[ext]
         except KeyError:
             # try to guess the file type with identify
-            serializer = _identify_serializer(os.path.basename(url_parts.path))
+            serializer_name = _identify_serializer(
+                os.path.basename(url_parts.path),
+            )
+            if serializer_name == "text":
+                serializer = serializers_fallback
+            elif f".{serializer_name}" in serializers:
+                serializer = serializers[f".{serializer_name}"]
+            else:
+                raise SerializerError(
+                    _file_can_not_be_serialized_as_object_error(
+                        url,
+                        (
+                            f"\nSerializer detected as '{serializer_name}'"
+                            " not supported"
+                        ),
+                    ),
+                )
     serializer = serializer[0 if loader_function_name == "loads" else 1]
     # prepare serializer function
     serializer_definition, module = None, None
@@ -180,10 +194,6 @@ def _get_serializer(
         else:
             serializer_definition = serializer_def
             break
-    serializer_definition = t.cast(
-        SerializerDefinitionType,
-        serializer_definition,
-    )
 
     loader_function: SerializerFunction = getattr(
         module,
@@ -234,7 +244,11 @@ def guess_preferred_serializer(url: str) -> t.Tuple[str, t.Optional[str]]:
         # forcing new serializer to get content
         url, serializer_name = url.rsplit("?", maxsplit=1)
     except ValueError:
-        return url, None
+        url_parts = urllib.parse.urlsplit(url)
+        ext = os.path.splitext(url_parts.path)[-1].lstrip(".")
+        if f".{ext}" in serializers:
+            return url, ext
+        return url, _identify_serializer(os.path.basename(url_parts.path))
     else:
         return url, serializer_name
 
@@ -298,7 +312,7 @@ def serialize_for_url(
             "json",  # json.serializer.JSONDecodeError
             "pyjson5",  # pyjson5.Json5IllegalCharacter
             "tomli",  # tomli.TOMLDecodeError
-            # "tomlkit",  # tomlkit.exceptions.UnexpectedEofError
+            "tomlkit",  # tomlkit.exceptions.UnexpectedEofError
         ):
             raise SerializerError(
                 _file_can_not_be_serialized_as_object_error(
@@ -316,3 +330,15 @@ def serialize_for_url(
             )
         raise  # pragma: no cover
     return result
+
+
+def build_empty_file_for_serializer(serializer_name: str) -> str:
+    """Build empty file for serializer.
+
+    Args:
+        serializer_name (str): Serializer name.
+
+    Returns:
+        str: Empty file for serializer.
+    """
+    return "{}" if serializer_name == "json" else ""

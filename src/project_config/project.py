@@ -13,7 +13,11 @@ from project_config.config import Config
 from project_config.constants import Error, InterruptingError, ResultValue
 from project_config.plugins import InvalidPluginFunction, Plugins
 from project_config.reporters import get_reporter
-from project_config.tree import Tree, TreeNodeFiles
+from project_config.serializers import (
+    build_empty_file_for_serializer,
+    guess_preferred_serializer,
+)
+from project_config.tree import Tree
 from project_config.types import ActionsContext, Rule
 
 
@@ -94,20 +98,28 @@ class Project:
 
     def _check_files_existence(
         self,
-        files: TreeNodeFiles,
+        files: t.List[t.Tuple[str, t.Any]],
         rule_index: int,
     ) -> None:
         for f, (fpath, fcontent) in enumerate(files):
             ftype = "directory" if fpath.endswith(("/", os.sep)) else "file"
-            fixed_fpaths = []
             if fcontent is None:  # file or directory does not exist
                 if self.fix:
                     if ftype == "directory":
                         os.makedirs(fpath, exist_ok=True)
+                        self.tree.cache_files([fpath])
                     else:
-                        with open(fpath, "w") as fd:
-                            fd.write("")
-                    fixed_fpaths.append(fpath)
+                        _, serializer_name = guess_preferred_serializer(fpath)
+                        new_content = (
+                            ""
+                            if not serializer_name
+                            else build_empty_file_for_serializer(
+                                serializer_name,
+                            )
+                        )
+                        with open(fpath, "w", encoding="utf-8") as fd:
+                            fd.write(new_content)
+                        self.tree.cache_files([fpath])
                 self.reporter.report_error(
                     {
                         "message": f"Expected existing {ftype} does not exists",
@@ -116,8 +128,6 @@ class Project:
                         "fixed": self.fix,
                     },
                 )
-            if fixed_fpaths:
-                self.tree.cache_files(fixed_fpaths)
 
     def _check_files_absence(
         self,

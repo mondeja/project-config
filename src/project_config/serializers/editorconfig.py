@@ -106,15 +106,15 @@ def loads(string: str) -> EditorConfigConfigType:
     return result
 
 
-def dumps(object: t.Any) -> str:
+def dumps(obj: t.Any) -> str:
     """Converts a JSON object to a .editorconfig configuration file string.
 
     Args:
-        object (Any): JSON object.
+        obj (Any): JSON object.
     """
     result = ""
 
-    for key, value in object.items():
+    for key, value in obj.items():
         if key == "":
             for optname, optvalue in value.items():
                 result += f"{optname} = {optvalue}\n"

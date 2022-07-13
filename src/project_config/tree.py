@@ -76,7 +76,7 @@ class Tree:
         #
         # TODO: this type becomes recursive, in the future, define it properly
         # https://github.com/python/mypy/issues/731
-        self.files_cache: t.Dict[str, t.Any] = {}
+        self.files_cache: t.Dict[str, t.Tuple[bool, t.Optional[str]]] = {}
 
         # cache for serialized version of files
         #
@@ -85,7 +85,7 @@ class Tree:
         self.serialized_files_cache: t.Dict[str, str] = {}
 
         # latest cached files
-        self.files: TreeNodeFiles = []
+        self._files: TreeNodeFiles = []
 
     def normalize_path(self, fpath: str) -> str:
         """Normalize a path given his relative path to the root directory.
@@ -108,22 +108,29 @@ class Tree:
             str: Normalized absolute path.
         """
         normalized_fpath = self.normalize_path(fpath)
-        if normalized_fpath not in self.files_cache:
-            if os.path.isfile(normalized_fpath):
-                with open(normalized_fpath, encoding="utf-8") as f:
-                    self.files_cache[normalized_fpath] = f.read()
-            elif os.path.isdir(normalized_fpath):
-                # recursive generation
-                self.files_cache[normalized_fpath] = self._generator(
+
+        if os.path.isfile(normalized_fpath):
+            with open(normalized_fpath, encoding="utf-8") as f:
+                self.files_cache[normalized_fpath] = (False, f.read())
+        elif os.path.isdir(normalized_fpath):
+            # recursive generation
+            self.files_cache[normalized_fpath] = (
+                True,
+                self._generator(
                     self.normalize_path(fname)
                     for fname in os.listdir(normalized_fpath)
-                )
-            else:
-                # file or directory does not exist
-                self.files_cache[normalized_fpath] = None
+                ),
+            )
+        else:
+            # file or directory does not exist
+            self.files_cache[normalized_fpath] = (False, None)
+
         return normalized_fpath
 
-    def _generator(self, fpaths: FilePathsArgument) -> TreeNodeFilesIterator:
+    def _generator(
+        self,
+        fpaths: FilePathsArgument,
+    ) -> t.Iterable[t.Tuple[str, t.Optional[str]]]:
         for fpath_or_glob in fpaths:
             # try to get all existing files from glob
             #
@@ -135,13 +142,15 @@ class Tree:
             fpaths_from_glob = glob.glob(fpath_or_glob)
             if fpaths_from_glob:
                 for fpath in fpaths_from_glob:
-                    yield fpath, self.files_cache[self._cache_file(fpath)]
+                    yield self.normalize_path(fpath), self.files_cache[
+                        self._cache_file(fpath)
+                    ][1]
             else:
-                yield fpath_or_glob, self.files_cache[
+                yield self.normalize_path(fpath_or_glob), self.files_cache[
                     self._cache_file(fpath_or_glob)
-                ]
+                ][1]
 
-    def get_file_content(self, fpath: str) -> TreeNode:
+    def get_file_content(self, fpath: str) -> str:
         """Returns the content of a file given his relative path.
 
         This method is tipically used by ``if`` plugin action conditionals
@@ -151,15 +160,40 @@ class Tree:
         Args:
             fpath (str): Path to the file relative to the root directory.
         """
-        return self.files_cache[self._cache_file(fpath)]  # type: ignore
+        return self.files_cache[self._cache_file(fpath)][1]  # type: ignore
 
-    def cache_files(self, fpaths: FilePathsArgument) -> None:
+    def cache_files(self, fpaths: t.List[str]) -> None:
         """Cache a set of files given their paths.
 
         Args:
             fpaths (list): Paths to the files to store in cache.
         """
-        self.files = list(self._generator(fpaths))
+        self._files = list(self._generator(fpaths))  # type: ignore
+
+        for fpath, _content in self._files:
+            if _content is None:
+                if fpath in self.serialized_files_cache:
+                    self.serialized_files_cache.pop(fpath)
+
+    @property
+    def files(self) -> t.List[t.Tuple[str, str]]:
+        """Returns an array of the current cached files for a rule action.
+
+        Returns:
+            list: Array of tuples with the relative path to the file
+                ``rootdir`` as the first item and the content of the file
+                as the second one.
+        """
+        result = []
+        for fpath, _content in self._files:
+            result.append(
+                (
+                    os.path.relpath(fpath, self.rootdir)
+                    + ("/" if self.files_cache[fpath][0] else ""),
+                    _content,
+                ),
+            )
+        return result  # type: ignore
 
     def serialize_file(self, fpath: str) -> t.Any:
         """Returns the object-serialized version of a file.
@@ -187,6 +221,7 @@ class Tree:
                 raise FileNotFoundError(
                     f"No such file or directory: '{fpath}'",
                 )
+
             result = serialize_for_url(
                 fpath,
                 fcontent,  # type: ignore
@@ -215,18 +250,23 @@ class Tree:
         except KeyError:
             result = fetch(url)  # type: ignore
             self.serialized_files_cache[url] = result
+
         return result
 
-    def edit_serialized_file(self, fpath: str, new_content: t.Any) -> None:
+    def edit_serialized_file(self, fpath: str, new_content: t.Any) -> bool:
         """Edit a file in the cache.
 
         Args:
             fpath (str): Path to the file to edit.
             new_content (object): New content for the file.
+
+        Returns:
+            bool: True if the file content has changed, False otherwise.
         """
         fpath, serializer_name = guess_preferred_serializer(fpath)
 
         normalized_fpath = self.normalize_path(fpath)
+        previous_content_string = self.get_file_content(fpath)
         self.serialized_files_cache[normalized_fpath] = new_content
 
         new_content_string = deserialize_for_url(
@@ -234,7 +274,10 @@ class Tree:
             new_content,
             prefer_serializer=serializer_name,
         )
-        self.files_cache[normalized_fpath] = new_content_string
+        self.files_cache[normalized_fpath] = (False, new_content_string)
 
-        with open(fpath, "w", encoding="utf-8") as f:
-            f.write(new_content_string)
+        if previous_content_string != new_content_string:
+            with open(fpath, "w", encoding="utf-8") as f:
+                f.write(new_content_string)
+            return True
+        return False

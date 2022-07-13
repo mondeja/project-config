@@ -41,17 +41,6 @@ from project_config.fetchers import FetchError, fetch
         pytest.param(
             "foo.json",
             "foo.json",
-            "",
-            None,
-            (
-                "'foo.json' can't be serialized as a valid object:"
-                " Expecting value: line 1 column 1 (char 0)"
-            ),
-            id=".json (empty)",
-        ),
-        pytest.param(
-            "foo.json",
-            "foo.json",
             "{foo}",
             None,
             (
@@ -148,9 +137,9 @@ from project_config.fetchers import FetchError, fetch
             None,
             (
                 "'foo.toml' can't be serialized as a valid object:"
-                ' Expected "\'" (at end of document)'
+                " Unexpected end of file at line 1 col 10"
             ),
-            id=".toml (invalid JSON)",
+            id=".toml (invalid object)",
         ),
         pytest.param(
             "foo.json",

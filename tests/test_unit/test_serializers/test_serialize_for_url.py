@@ -81,16 +81,6 @@ def test_serialize_for_url(url, string, expected_result):
     (
         pytest.param(
             "https://example.com/file.json",
-            "",
-            SerializerError,
-            (
-                "'https://example.com/file.json' can't be serialized as a"
-                " valid object: Expecting value: line 1 column 1 (char 0)"
-            ),
-            id=".json-empty",
-        ),
-        pytest.param(
-            "https://example.com/file.json",
             "{",
             SerializerError,
             (

@@ -1,8 +1,18 @@
+import json
 
 import pytest
 
 from project_config import Error
 from project_config.plugins.jmespath import JMESPathPlugin
+
+
+JSON_2_INDENTED = lambda string: (  # noqa: E731
+    json.dumps(
+        json.loads(string),
+        indent=2,
+    )
+    + "\n"
+)
 
 
 @pytest.mark.parametrize(
@@ -23,7 +33,7 @@ from project_config.plugins.jmespath import JMESPathPlugin
                         "definition": ".JMESPathsMatch[0]",
                         "file": "package.json",
                         "message": (
-                            'JMESPath \'foo\' does not match. Expected'
+                            "JMESPath 'foo' does not match. Expected"
                             " 'bar', returned 'baz'"
                         ),
                         "fixed": True,
@@ -31,13 +41,13 @@ from project_config.plugins.jmespath import JMESPathPlugin
                 ),
             ],
             {
-                "package.json": '{"foo": "bar"}',
+                "package.json": JSON_2_INDENTED('{"foo": "bar"}'),
             },
             id="constant-expression-smart",
         ),
         pytest.param(
             {
-                "package.json": '[]',
+                "package.json": "[]",
             },
             [
                 ["[0]", "foo"],
@@ -50,7 +60,7 @@ from project_config.plugins.jmespath import JMESPathPlugin
                         "definition": ".JMESPathsMatch[0]",
                         "file": "package.json",
                         "message": (
-                            'JMESPath \'[0]\' does not match. Expected'
+                            "JMESPath '[0]' does not match. Expected"
                             " 'foo', returned None"
                         ),
                         "fixed": True,
@@ -58,13 +68,13 @@ from project_config.plugins.jmespath import JMESPathPlugin
                 ),
             ],
             {
-                "package.json": '["foo"]',
+                "package.json": JSON_2_INDENTED('["foo"]'),
             },
             id="constant-expression-index-smart",
         ),
         pytest.param(
             {
-                "package.json": '{}',
+                "package.json": "{}",
             },
             [
                 [
@@ -80,7 +90,7 @@ from project_config.plugins.jmespath import JMESPathPlugin
                         "definition": ".JMESPathsMatch[0]",
                         "file": "package.json",
                         "message": (
-                            'JMESPath \'type(foo)\' does not match. Expected'
+                            "JMESPath 'type(foo)' does not match. Expected"
                             " 'string', returned 'null'"
                         ),
                         "fixed": True,
@@ -88,7 +98,7 @@ from project_config.plugins.jmespath import JMESPathPlugin
                 ),
             ],
             {
-                "package.json": '{"foo": ""}',
+                "package.json": JSON_2_INDENTED('{"foo": ""}'),
             },
             id="typeof-expression-smart",
         ),
@@ -98,9 +108,9 @@ from project_config.plugins.jmespath import JMESPathPlugin
             },
             [
                 [
-                    "type(tool.\"project-config\")",
+                    'type(tool."project-config")',
                     "object",
-                    'deepmerge(@, `{"tool": {"project-config": {}}}`)'
+                    'deepmerge(@, `{"tool": {"project-config": {}}}`)',
                 ],
             ],
             None,
@@ -111,7 +121,8 @@ from project_config.plugins.jmespath import JMESPathPlugin
                         "definition": ".JMESPathsMatch[0]",
                         "file": "pyproject.toml",
                         "message": (
-                            'JMESPath \'type(tool."project-config")\' does not match. Expected'
+                            "JMESPath 'type(tool.\"project-config\")'"
+                            " does not match. Expected"
                             " 'object', returned 'null'"
                         ),
                         "fixed": True,
@@ -120,8 +131,8 @@ from project_config.plugins.jmespath import JMESPathPlugin
             ],
             {
                 "pyproject.toml": (
-                    '[tool.poetry]\nname = "foo"\n\n'
-                    '[tool.project-config]\n'
+                    '[tool]\n[tool.poetry]\nname = "foo"\n\n'
+                    "[tool.project-config]\n"
                 ),
             },
             id="typeof-deepmerge-subexpressions-default",
@@ -132,7 +143,7 @@ from project_config.plugins.jmespath import JMESPathPlugin
             },
             [
                 [
-                    "type(tool.\"project-config\")",
+                    'type(tool."project-config")',
                     "object",
                 ],
             ],
@@ -144,7 +155,8 @@ from project_config.plugins.jmespath import JMESPathPlugin
                         "definition": ".JMESPathsMatch[0]",
                         "file": "pyproject.toml",
                         "message": (
-                            'JMESPath \'type(tool."project-config")\' does not match. Expected'
+                            "JMESPath 'type(tool.\"project-config\")'"
+                            " does not match. Expected"
                             " 'object', returned 'null'"
                         ),
                         "fixed": True,
@@ -153,19 +165,19 @@ from project_config.plugins.jmespath import JMESPathPlugin
             ],
             {
                 "pyproject.toml": (
-                    '[tool.poetry]\nname = "foo"\n\n'
-                    '[tool.project-config]\n'
+                    '[tool]\n[tool.poetry]\nname = "foo"\n\n'
+                    "[tool.project-config]\n"
                 ),
             },
             id="typeof-object-subexpressions-smart",
         ),
         pytest.param(
             {
-                "package.json": '{}\n',
+                "package.json": "{}\n",
             },
             [
                 [
-                    "type(foo.\"project-config\")",
+                    'type(foo."project-config")',
                     "array",
                 ],
             ],
@@ -177,7 +189,8 @@ from project_config.plugins.jmespath import JMESPathPlugin
                         "definition": ".JMESPathsMatch[0]",
                         "file": "package.json",
                         "message": (
-                            'JMESPath \'type(foo."project-config")\' does not match. Expected'
+                            "JMESPath 'type(foo.\"project-config\")'"
+                            " does not match. Expected"
                             " 'array', returned 'null'"
                         ),
                         "fixed": True,
@@ -185,19 +198,19 @@ from project_config.plugins.jmespath import JMESPathPlugin
                 ),
             ],
             {
-                "package.json": (
-                    '{"foo": {"project-config": []}}'
+                "package.json": JSON_2_INDENTED(
+                    '{"foo": {"project-config": []}}',
                 ),
             },
             id="typeof-array-subexpressions-smart",
         ),
         pytest.param(
             {
-                "package.json": '{}\n',
+                "package.json": "{}\n",
             },
             [
                 [
-                    "type(foo.\"project-config\")",
+                    'type(foo."project-config")',
                     "string",
                 ],
             ],
@@ -209,7 +222,8 @@ from project_config.plugins.jmespath import JMESPathPlugin
                         "definition": ".JMESPathsMatch[0]",
                         "file": "package.json",
                         "message": (
-                            'JMESPath \'type(foo."project-config")\' does not match. Expected'
+                            "JMESPath 'type(foo.\"project-config\")'"
+                            " does not match. Expected"
                             " 'string', returned 'null'"
                         ),
                         "fixed": True,
@@ -217,8 +231,8 @@ from project_config.plugins.jmespath import JMESPathPlugin
                 ),
             ],
             {
-                "package.json": (
-                    '{"foo": {"project-config": ""}}'
+                "package.json": JSON_2_INDENTED(
+                    '{"foo": {"project-config": ""}}',
                 ),
             },
             id="typeof-string-subexpressions-smart",
@@ -241,27 +255,26 @@ from project_config.plugins.jmespath import JMESPathPlugin
                         "definition": ".JMESPathsMatch[0]",
                         "file": "package.json",
                         "message": (
-                            'JMESPath \'type(foo[0].bar)\' does not match. Expected'
-                            " 'string', returned 'boolean'"
+                            "JMESPath 'type(foo[0].bar)' does not match."
+                            " Expected 'string', returned 'boolean'"
                         ),
                         "fixed": True,
                     },
                 ),
             ],
             {
-                "package.json": (
-                    '{"foo": [{"bar": ""}, {"bar": true}]}'
+                "package.json": JSON_2_INDENTED(
+                    '{"foo": [{"bar": ""}, {"bar": true}]}',
                 ),
             },
             id="typeof-string-subexpressions-indexes-smart",
         ),
-
         # TODO:
         # type() with array queries: [*], [0]
         # Constants: "".root' -> true
         # contains() in arrays
         # contains(keys()) in objects
-    )
+    ),
 )
 def test_JMESPathsMatch_fix(
     files,

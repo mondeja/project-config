@@ -32,8 +32,8 @@ def test_Tree_generator(tmp_path):
     assert tree.files_cache == {}  # files are cached when used
     assert isinstance(files, types.GeneratorType)
 
-    assert next(files) == (path.name, expected_content)
-    assert tree.files_cache == {str(path): expected_content}
+    assert next(files) == (str(path), expected_content)
+    assert tree.files_cache == {str(path): (False, expected_content)}
 
     with pytest.raises(StopIteration):
         next(files)
@@ -48,7 +48,7 @@ def test_Tree_file_caching(tmp_path):
     tree = Tree(tmp_path)
     tree.files_cache = TreeFilesCacheListenerMock()
 
-    expected_files = {str(path): expected_content}
+    expected_files = {str(path): (False, expected_content)}
     files1 = tree._generator([path.name])
     assert tree.files_cache == {}
     assert tree.files_cache.setitem_calls == 0
@@ -58,7 +58,7 @@ def test_Tree_file_caching(tmp_path):
 
     files2 = tree._generator([path.name])
     next(files2)
-    assert tree.files_cache.setitem_calls == 1  # no more __setitem__
+    assert tree.files_cache.setitem_calls == 2  # no more __setitem__
     assert tree.files_cache == expected_files
 
 
@@ -80,7 +80,7 @@ def test_Tree_directory(tmp_path):
     assert isinstance(directory_generator, types.GeneratorType)
 
     fpath, fcontent = next(directory_generator)
-    assert fpath == dir_path.name
+    assert fpath == str(dir_path)
     assert isinstance(fcontent, collections.abc.Iterable)
     assert tree.files_cache.setitem_calls == 1
 
@@ -145,10 +145,10 @@ def test_glob(tmp_path, chdir):
 
         def assert_file(_fpath, _fcontent):
             if _fcontent == "bar":
-                assert str(_fpath) == str(bar_path.relative_to(tmp_path))
+                assert str(_fpath) == str(bar_path)
                 assert _fcontent == "bar"
             else:
-                assert str(_fpath) == str(baz_path.relative_to(tmp_path))
+                assert str(_fpath) == str(baz_path)
                 assert _fcontent == "baz"
 
         fpath, fcontent = next(generator)
@@ -183,17 +183,17 @@ def test_glob_with_symlink(tmp_path, chdir):
         fpath1, fcontent = next(generator)
         if "source" in str(fpath1):
             # source and target files order are not the same between platforms
-            assert str(fpath1) == str(source_link_path.relative_to(tmp_path))
+            assert str(fpath1) == str(source_link_path)
         else:
-            assert str(fpath1) == str(target_link_path.relative_to(tmp_path))
+            assert str(fpath1) == str(target_link_path)
         assert fcontent == "target"
         assert tree.files_cache.setitem_calls == 1
 
         fpath2, fcontent = next(generator)
         if "source" in str(fpath2):
-            assert str(fpath2) == str(source_link_path.relative_to(tmp_path))
+            assert str(fpath2) == str(source_link_path)
         else:
-            assert str(fpath2) == str(target_link_path.relative_to(tmp_path))
+            assert str(fpath2) == str(target_link_path)
         assert fcontent == "target"
         assert tree.files_cache.setitem_calls == 2
 

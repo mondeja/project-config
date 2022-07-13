@@ -572,7 +572,7 @@ convenient functions defined by the plugin internally:
 
    .. rubric:: Example
 
-   .. code-block:: js
+   .. code-block:: text
 
       deepmerge(@, `{"foo": "bar"}`, 'always_merger')
 
@@ -585,13 +585,29 @@ convenient functions defined by the plugin internally:
 
    .. rubric:: Example
 
-   .. code-block:: js
+   .. code-block:: text
 
       deepmerge(
          @,
          `{"foo": ["bar"]}`,
          `[[["list", "append"], ["dict": "merge"]], ["override"], ["override"]]`
       )
+
+   .. versionadded:: 0.7.0
+
+.. function:: set(base: dict, key: str, value: t.Any) -> dict
+
+   Set the value of the ``key`` in the ``base`` object to ``value``.
+
+   Returns the updated ``base`` object.
+
+   .. versionadded:: 0.7.0
+
+.. function:: unset(base: dict, key: str) -> dict
+
+   If has it, remove the ``key`` from the ``base`` object.
+
+   Returns the updated ``base`` object.
 
    .. versionadded:: 0.7.0
 
@@ -611,7 +627,7 @@ and the expected value.
 
 The query will be a syntax like (example merging objects):
 
-.. code-block:: js
+.. code-block:: text
 
    deepmerge(@, `{ "foo": "bar" }`)
 
@@ -630,7 +646,7 @@ a constant query with their expected value:
 
    .. tab:: package.json (before)
 
-      .. code-block:: js
+      .. code-block:: json
 
          {
             "name": "my-project"
@@ -638,7 +654,7 @@ a constant query with their expected value:
 
    .. tab:: package.json (after)
 
-      .. code-block:: js
+      .. code-block:: json
 
          {
             "name": "my-project",
@@ -649,8 +665,10 @@ a constant query with their expected value:
 
       .. code-block:: js
 
-         files: ["package.json"],
-         JMESPathsMatch: [["license", "BSD-3-Clause"]]
+         {
+           files: ["package.json"],
+           JMESPathsMatch: [["license", "BSD-3-Clause"]]
+         }
 
 Currently, is possible to automatically fix the following cases:
 

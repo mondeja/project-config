@@ -3,8 +3,138 @@
     {
       files: ["package.json"],
       JMESPathsMatch: [
-        ["license", "BSD-3-Clause"],
-      ]
+        // name
+        // ----
+        //   check that the name of the package match a regular expression
+        //   or set it from the name of the root directory in `fix` mode
+        ["regex_match('[a-z0-9-]{3,}', name)", true, "rootdir_name()"],
+
+        // version
+        // -------
+        //   check that the version of the package match a regular expression
+        //   or set it to '0.1.0' in `fix` mode
+        ["regex_match('\\d+\\.\\d+\\.\\d+', version)", true, "0.1.0"],
+
+        // description
+        // -----------
+        //   check that the description field has been added or add with an empty
+        //   value in `fix` mode
+        ["type(description)", "string"],
+
+        // keywords
+        // --------
+        //   check that at least two keywords has been added, if fails create an empty
+        //   array in `fix` mode
+        [
+          "op(length(keywords), '>', `1`)",
+          true,
+          "deepmerge(@, {keywords: []})",
+        ],
+
+        // homepage
+        // --------
+        //   check that the homepage field is pointing to a valid URL to Github
+        //   or set it to 'https://github.com/mondeja/{rootdir_name}'
+        [
+          "op(op('https://www.github.com/mondeja/', '+', rootdir_name()), '==', homepage)",
+          true,
+          "set(@, 'homepage', op('https://www.github.com/mondeja/', '+', rootdir_name()))",
+        ],
+
+        // bugs
+        // ----
+        //   check that the bugs field is pointing to a valid URL to Github issue tracker
+        ["type(bugs)", "object"],
+        [
+          "op(op(op('https://www.github.com/mondeja/', '+', rootdir_name()), '+', '/issues'), '==', bugs.url)",
+          true,
+          "deepmerge(@, {bugs: {url: op(op('https://www.github.com/mondeja/', '+', rootdir_name()), '+', '/issues')}})",
+        ],
+
+        // funding
+        // -------
+        //   check that the funding key is added and has a `type` and `url` keys
+        ["type(funding)", "object"],
+        [
+          "type(funding.type)",
+          "string",
+          "deepmerge(@, {funding: {type: 'patreon'}})",
+        ],
+        [
+          "type(funding.url)",
+          "string",
+          "deepmerge(@, {funding: {url: 'https://www.patreon.com/my-account'}})",
+        ],
+
+        // repository
+        // ----------
+        //   check that the repository field is pointing to a valid URL to Github
+        ["type(repository)", "object"],
+        ["repository.type", "git", "deepmerge(@, {repository: {type: 'git'}})"],
+        [
+          "op(op(op('https://www.github.com/mondeja/', '+', rootdir_name()), '+', '.git'), '==', repository.url)",
+          true,
+          "deepmerge(@, {repository: {url: op(op('https://www.github.com/mondeja/', '+', rootdir_name()), '+', '.git')}})",
+        ],
+
+        // engines
+        // -------
+        ["type(engines)", "object"],
+        [
+          "contains(keys(engines), 'node')",
+          true,
+          "deepmerge(@, {engines: {node: '^14.15.0 || >=16.0.0'}})",
+        ],
+
+        // Remove invalid fields
+        // ---------------------
+        //   - engineStrict, engine-strict (removed in NPM v3)
+        [
+          "contains(keys(@), 'engineStrict')",
+          false,
+          "unset(@, 'engineStrict')",
+        ],
+        [
+          "contains(keys(@), 'engine-strict')",
+          false,
+          "unset(@, 'engine-strict')",
+        ],
+        //   - preferGlobal
+        [
+          "contains(keys(@), 'preferGlobal')",
+          false,
+          "unset(@, 'preferGlobal')",
+        ],
+
+        // private
+        // -------
+        //   set it explicitly: if not defined, set to `true`
+        ["type(private)", "boolean", "set(@, 'private', `true`)"],
+
+        // scripts
+        // -------
+        //   define a default `version` script to show the version of the program
+        ["type(scripts)", "object"],
+        [
+          "contains(keys(scripts), 'version')",
+          true,
+          "deepmerge(@, {scripts: {version: 'node -e \\'console.log(require(\"./package.json\").version)\\''}})",
+        ],
+      ],
+      crossJMESPathsMatch: [
+        [
+          // license
+          // -------
+          //   must be a valid SPDX OSI approved license identifier
+          "license",
+          [
+            "gh://spdx/license-list-data@v3.17/json/licenses.json",
+            "licenses[?isOsiApproved] | [?!isDeprecatedLicenseId].licenseId",
+          ],
+          "contains([1], [0])",
+          true,
+        ],
+      ],
     },
   ],
 }

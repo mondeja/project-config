@@ -17,13 +17,13 @@ def loads(string: str) -> t.List[str]:
     return string.splitlines()
 
 
-def dumps(object: t.List[str]) -> str:
+def dumps(obj: t.List[str]) -> str:
     """Converts an array of lines to a string.
 
     Args:
-        object: The array of lines to convert.
+        obj: The array of lines to convert.
 
     Returns:
         str: The string created from joining the array of lines.
     """
-    return "\n".join(object)
+    return "\n".join(obj)

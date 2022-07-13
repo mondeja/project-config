@@ -32,9 +32,11 @@ JSON
 JSON5
 *****
 
-* Loader: :py:func:`pyjson5.loads` (if installed) or `json5.loads`_.
+* Loader: :py:func:`pyjson5.loads` or `json5.loads`_ as fallback.
+* Dumper: :py:func:`pyjson5.dumps` or `json5.dumps`_ as fallback.
 
 .. _json5.loads: https://github.com/dpranke/pyjson5
+.. _json5.dumps: https://github.com/dpranke/pyjson5
 
 ***********
 YAML (v1.2)

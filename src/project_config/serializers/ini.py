@@ -25,7 +25,7 @@ def loads(string: str) -> t.Dict[str, t.Any]:
     return result
 
 
-def dumps(object: t.Any) -> str:
+def dumps(obj: t.Any) -> str:
     """Converts a JSON object to an INI file string.
 
     Args:
@@ -35,7 +35,7 @@ def dumps(object: t.Any) -> str:
         str: Conversion result.
     """
     ini = configparser.ConfigParser()
-    for section, options in object.items():
+    for section, options in obj.items():
         ini.add_section(section)
         for option, value in options.items():
             ini.set(section, option, value)

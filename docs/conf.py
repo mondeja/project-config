@@ -1,4 +1,6 @@
 """Configuration file for the Sphinx documentation builder."""
+
+import json
 import os
 import re
 import subprocess
@@ -119,25 +121,45 @@ if SPHINX_IS_RUNNING:
         # JSON5 lexer is not implemented
         # https://github.com/pygments/pygments/issues/1880
         "json5": "js",
+        "gitignore": "text",
+        "txt": "shell",
     }
+
+    def _pygments_lexer_by_extension(extension):
+        if not extension.endswith("/"):
+            if extension in PYGMENTS_LEXERS_FALLBACKS:
+                return PYGMENTS_LEXERS_FALLBACKS[extension]
+            elif extension:
+                return extension
+        return "text"
 
     def _parse_example_readme(readme_filepath):
         result = {"name": None, "body": ""}
-        with open(readme_filepath) as f:
-            readme_lines = f.readlines()
+        with open(readme_filepath, encoding="utf-8") as f:
+            readme_content = f.read()
         _inside_metadata = False
-        for line in readme_lines:
+        for line in readme_content.splitlines():
             if not _inside_metadata:
-                if line.replace("\r\n", "\n") == "..\n":
+                if line == "..":
                     _inside_metadata = True
                 else:
+                    if result["body"]:
+                        line = f" {line}"
                     result["body"] += line
             else:
                 if line.startswith("   "):
                     if line.lower().startswith("   name:"):
                         result["name"] = line.split(":", maxsplit=1)[-1].strip()
+                    elif line.lower().startswith("   bodyfiles:"):
+                        result["bodyfiles"] = json.loads(
+                            line.split(":", maxsplit=1)[-1].strip(),
+                        )
                 else:
                     _inside_metadata = False
+
+        if not result["body"].endswith("\n"):
+            result["body"] += "\n"
+
         return result
 
     def _parse_example_directory(example_dir):
@@ -179,10 +201,7 @@ if SPHINX_IS_RUNNING:
                 ).aliases[0]
             except Exception:
                 extension = filename.split(".")[-1]
-                try:
-                    code_block_language = PYGMENTS_LEXERS_FALLBACKS[extension]
-                except KeyError:
-                    code_block_language = "text"
+                code_block_language = _pygments_lexer_by_extension(extension)
 
             tabs_content += (
                 f"   .. tab:: {filename}\n\n"
@@ -201,9 +220,11 @@ if SPHINX_IS_RUNNING:
         examples_data, error_messages = [], []
         for example_dirname in sorted(os.listdir(examples_dir)):
             # ignore private examples (used mainly for acceptance tests)
-            if example_dirname.startswith("_"):
+            if not example_dirname[0].isdigit():
                 continue
             example_dir = os.path.join(examples_dir, example_dirname)
+            if not os.path.isdir(example_dir):
+                continue
             example_data = _parse_example_directory(example_dir)
 
             if not example_data.get("name"):
@@ -249,7 +270,54 @@ Examples
         with open(examples_page_path, "w") as f:
             f.write(examples_page_content)
 
+    def _create_tutorials_pages():
+        tutorials_dir = os.path.join(rootdir, "examples", "tutorials")
+        for tutorial_dirname in sorted(os.listdir(tutorials_dir)):
+            tutorial_dir = os.path.join(tutorials_dir, tutorial_dirname)
+            if not os.path.isdir(tutorial_dir):
+                continue
+            tutorial_data = _parse_example_directory(tutorial_dir)
+            tutorial_page_content = (
+                f'{tutorial_data["name"]}\n'
+                f'{"=" * len(tutorial_data["name"])}\n\n'
+            )
+            if tutorial_data["body"]:
+                tutorial_page_content += f'{tutorial_data["body"]}\n'
+            if "bodyfiles" in tutorial_data:
+                for bodyfile_name in tutorial_data["bodyfiles"]:
+                    code_block_lang = _pygments_lexer_by_extension(
+                        os.path.splitext(bodyfile_name)[-1].split(".")[-1],
+                    )
+                    with open(
+                        os.path.join(tutorial_dir, bodyfile_name),
+                        encoding="utf-8",
+                    ) as f:
+                        bodyfile_content = f.read().splitlines()
+                    tutorial_page_content += (
+                        f"\n\n.. code-block:: {code_block_lang}\n\n"
+                        + "\n".join(
+                            [
+                                f"   {line}" if line else ""
+                                for line in bodyfile_content
+                            ],
+                        )
+                    )
+            tutorial_page_content = tutorial_page_content.replace(
+                "\n\n\n",
+                "\n",
+            )
+            tutorial_page_path = os.path.join(
+                rootdir,
+                "docs",
+                "tutorials",
+                "pages",
+                f"{tutorial_dirname}.rst",
+            )
+            with open(tutorial_page_path, "w") as f:
+                f.write(tutorial_page_content)
+
     _create_examples_page()
+    _create_tutorials_pages()
 
 # ---------------------------------------------------------
 

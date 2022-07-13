@@ -1,0 +1,18 @@
+user@hostname:~/ rm -rf data.json src && project-config fix
+data.json
+  - (FIXED) JMESPath 'null' does not match. Expected True, returned None rules[1].JMESPathsMatch[0]
+  - (FIXED) JMESPath 'string_constant' does not match. Expected 'my-string', returned None rules[1].JMESPathsMatch[1]
+  - (FIXED) JMESPath 'number_constant' does not match. Expected 42, returned None rules[1].JMESPathsMatch[2]
+  - (FIXED) JMESPath 'boolean_constant' does not match. Expected True, returned None rules[1].JMESPathsMatch[3]
+  - (FIXED) JMESPath 'type(an_object)' does not match. Expected 'object', returned 'null' rules[1].JMESPathsMatch[5]
+  - (FIXED) JMESPath 'type(an_array)' does not match. Expected 'array', returned 'null' rules[1].JMESPathsMatch[6]
+  - (FIXED) JMESPath 'type(an_object.a_nested_array)' does not match. Expected 'array', returned 'null' rules[1].JMESPathsMatch[7]
+  - (FIXED) JMESPath 'type(an_object.a_nested_object)' does not match. Expected 'object', returned 'null' rules[1].JMESPathsMatch[8]
+  - (FIXED) JMESPath 'type(an_object.a_nested_empty_string)' does not match. Expected 'string', returned 'null' rules[1].JMESPathsMatch[9]
+  - (FIXED) JMESPath 'boolean_constant' does not match. Expected False, returned True rules[1].JMESPathsMatch[11]
+  - (FIXED) JMESPath 'contains(keys(@), 'conditional_constant')' does not match. Expected False, returned True rules[1].JMESPathsMatch[12]
+  - (FIXED) JMESPath 'contains(keys(@), 'conditional_constant')' does not match. Expected True, returned False rules[1].JMESPathsMatch[13]
+  - (FIXED) JMESPath 'boolean_constant' does not match. Expected False, returned True rules[1].JMESPathsMatch[14]
+  - (FIXED) JMESPath 'op(length(an_array), '>', `0`)' does not match. Expected True, returned False rules[1].JMESPathsMatch[15]
+  - (FIXED) JMESPath 'type(an_object.deepmerged_array)' does not match. Expected 'array', returned 'null' rules[1].JMESPathsMatch[16]
+  - JMESPath 'contains([1], [0])' does not match. Expected True, returned False rules[1].crossJMESPathsMatch[0]

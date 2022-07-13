@@ -1,3 +1,29 @@
 {
-  "name": "a-valid-project-name"
+  "name": "a-valid-project-name",
+  "version": "1.0.0",
+  "description": "",
+  "license": "BSD-3-Clause",
+  "keywords": [
+    "foo",
+    "bar"
+  ],
+  "homepage": "https://www.github.com/mondeja/package-json",
+  "bugs": {
+    "url": "https://www.github.com/mondeja/package-json/issues"
+  },
+  "funding": {
+    "type": "patreon",
+    "url": "https://www.patreon.com/my-account"
+  },
+  "repository": {
+    "url": "https://www.github.com/mondeja/package-json.git",
+    "type": "git"
+  },
+  "engines": {
+    "node": "^14.15.0 || >=16.0.0"
+  },
+  "private": true,
+  "scripts": {
+    "version": "node -e 'console.log(require(\"./package.json\").version)'"
+  }
 }
