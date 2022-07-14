@@ -1,5 +1,6 @@
 import os
 import shutil
+import sys
 
 import pytest
 from testing_helpers import mark_end2end, rootdir
@@ -78,6 +79,11 @@ def test_examples(
     capsys,
     tmp_path,
 ):
+    if os.path.basename(example_dir).startswith(
+        "_005-conditional-files-existence-fails",
+    ):
+        if "win" in sys.platform:
+            pytest.skip("This example is not supported on Windows")
     if interface == "CLI":
         with chdir(example_dir):
             exitcode = run(["--nocolor", "check"])
