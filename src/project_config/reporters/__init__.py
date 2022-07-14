@@ -86,6 +86,7 @@ def get_reporter(
     reporter_kwargs: t.Dict[str, t.Any],
     color: t.Optional[bool],
     rootdir: str,
+    only_hints: bool = False,
 ) -> t.Any:
     """Reporters factory.
 
@@ -96,6 +97,7 @@ def get_reporter(
             if is implemented, using the black/white version as
             a fallback.
         rootdir (str): Root directory of the project.
+        only_hints (bool): If ``True``, only hints will be reported.
     """
     try:
         if reporter_name in reporters:
@@ -138,6 +140,7 @@ def get_reporter(
             )
         Reporter = getattr(reporter_module, reporter_class_name)
 
+    reporter_kwargs.update({"only_hints": only_hints})
     return Reporter(rootdir, **reporter_kwargs)
 
 

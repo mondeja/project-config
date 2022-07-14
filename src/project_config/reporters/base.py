@@ -42,10 +42,12 @@ class BaseReporter(abc.ABC):
         self,
         rootdir: str,
         fmt: t.Optional[str] = None,
+        only_hints: bool = False,
     ):
         self.rootdir = rootdir
         self.errors: FilesErrors = {}
         self.format = fmt
+        self.only_hints = only_hints
 
         # configuration, styles...
         self.data: t.Dict[str, t.Any] = {}
@@ -108,6 +110,9 @@ class BaseReporter(abc.ABC):
 
         if file not in self.errors:
             self.errors[file] = []
+
+        if "hint" in error and self.only_hints:
+            error["message"] = error.pop("hint")
 
         self.errors[file].append(error)
 
