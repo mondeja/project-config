@@ -547,7 +547,7 @@ def compile_JMESPath_expression(expression: str) -> JMESPathParsedResult:
         expression (str): JMESPath expression to compile.
 
     Returns:
-        :py:class`jmespath.parser.ParsedResult`: JMESPath expression compiled.
+        :py:class:`jmespath.parser.ParsedResult`: JMESPath expression compiled.
     """
     return jmespath_compile(expression)
 
@@ -555,17 +555,18 @@ def compile_JMESPath_expression(expression: str) -> JMESPathParsedResult:
 def compile_JMESPath_expression_or_error(
     expression: str,
 ) -> JMESPathParsedResult:
-    """Compile a JMESPath expression or raise a :py:class:`project_config.utils.jmespath:JMESPathError`.
+    """Compile a JMESPath expression or raise a ``JMESPathError``.
 
     Args:
         expression (str): JMESPath expression to compile.
 
     Returns:
-        :py:class`jmespath.parser.ParsedResult`: JMESPath expression compiled.
+        :py:class:`jmespath.parser.ParsedResult`: JMESPath
+            expression compiled.
 
     Raises:
-        :py:class:`project_config.utils.jmespath:JMESPathError`: If the expression cannot be compiled.
-    """  # noqa: E501
+        ``JMESPathError``: If the expression cannot be compiled.
+    """
     try:
         return compile_JMESPath_expression(expression)
     except OriginalJMESPathError as exc:
@@ -583,7 +584,7 @@ def compile_JMESPath_or_expected_value_error(
     expression: str,
     expected_value: t.Any,
 ) -> JMESPathParsedResult:
-    """Compile a JMESPath expression or raise a :py:class:`project_config.utils.jmespath:JMESPathError`.
+    """Compile a JMESPath expression or raise a ``JMESPathError``.
 
     You can pass a expected value that was being expected in the error message.
 
@@ -592,10 +593,10 @@ def compile_JMESPath_or_expected_value_error(
         expected_value (t.Any): Value that was expected to match against expression.
 
     Returns:
-        :py:class`jmespath.parser.ParsedResult`: JMESPath expression compiled.
+        :py:class:`jmespath.parser.ParsedResult`: JMESPath expression compiled.
 
     Raises:
-        :py:class:`project_config.utils.jmespath:JMESPathError`: If the expression cannot be compiled.
+        ``JMESPathError``: If the expression cannot be compiled.
     """  # noqa: E501
     try:
         return compile_JMESPath_expression(expression)
@@ -616,7 +617,7 @@ def compile_JMESPath_or_expected_value_from_other_file_error(
     expected_value_file: str,
     expected_value_expression: str,
 ) -> JMESPathParsedResult:
-    """Compile a JMESPath expression or raise a :py:class:`project_config.utils.jmespath:JMESPathError`.
+    """Compile a JMESPath expression or raise a ``JMESPathError``.
 
     Show that the expression was being expected to match the value
     applying the expression to another file than the actual.
@@ -624,16 +625,16 @@ def compile_JMESPath_or_expected_value_from_other_file_error(
     Args:
         expression (str): JMESPath expression to compile.
         expected_value_file (str): File to the query is applied to.
-        expected_value_expression (str): Expected result value not satisfied
-            by the expression.
+        expected_value_expression (str): Expected result value not
+            satisfied by the expression.
 
     Returns:
-        :py:class`jmespath.parser.ParsedResult`: JMESPath expression compiled.
+        :py:class:`jmespath.parser.ParsedResult`: JMESPath
+             expression compiled.
 
     Raises:
-        :py:class:`project_config.utils.jmespath:JMESPathError`: If the
-        expression cannot be compiled.
-    """  # noqa: E501
+        ``JMESPathError``: If the expression cannot be compiled.
+    """
     try:
         return compile_JMESPath_expression(expression)
     except OriginalJMESPathError as exc:
@@ -657,7 +658,7 @@ def evaluate_JMESPath(
     """Evaluate a JMESPath expression against a instance.
 
     Args:
-        compiled_expression (:py:class`jmespath.parser.ParsedResult`): JMESPath
+        compiled_expression (:py:class:`jmespath.parser.ParsedResult`): JMESPath
             expression to evaluate.
         instance (any): Instance to evaluate the expression against.
 
@@ -665,8 +666,7 @@ def evaluate_JMESPath(
         any: Result of the evaluation.
 
     Raises:
-        :py:class:`project_config.utils.jmespath:JMESPathError`: If the
-            expression cannot be evaluated.
+        ``JMESPathError``: If the expression cannot be evaluated.
     """
     try:
         return compiled_expression.search(
@@ -690,13 +690,13 @@ def evaluate_JMESPath_or_expected_value_error(
     expected_value: t.Any,
     instance: t.Any,
 ) -> t.Any:
-    """Evaluate a JMESPath expression against a instance or raise a :py:class:`project_config.utils.jmespath:JMESPathError`.
+    """Evaluate a JMESPath expression against a instance or raise a ``JMESPathError``.
 
     You can pass a expected value that was being expected in the
     error message.
 
     Args:
-        compiled_expression (:py:class`jmespath.parser.ParsedResult`): JMESPath
+        compiled_expression (:py:class:`jmespath.parser.ParsedResult`): JMESPath
             expression to evaluate.
         expected_value (any): Value that was expected to match against expression.
         instance (any): Instance to evaluate the expression against.
@@ -705,7 +705,7 @@ def evaluate_JMESPath_or_expected_value_error(
         any: Result of the evaluation.
 
     Raises:
-        :py:class:`project_config.utils.jmespath:JMESPathError`: If the
+        ``JMESPathError``: If the
             expression cannot be evaluated.
     """  # noqa: E501
     try:
@@ -739,12 +739,11 @@ def fix_tree_serialized_file_by_jmespath(
     updated instance.
 
     Args:
-        compiled_expression (:py:class`jmespath.parser.ParsedResult`): JMESPath
+        compiled_expression (:py:class:`jmespath.parser.ParsedResult`): JMESPath
             expression to evaluate.
         instance (any): Instance to evaluate the expression against.
         fpath (str): Path to the file to fix.
-        tree (:py:class:`project_config.utils.tree:Tree`): Tree used to cache
-            the file.
+        tree (:py:class:`project_config.Tree`): Tree used to cache the file.
 
     Returns:
         bool: True if the file was fixed, False otherwise.
@@ -780,7 +779,7 @@ def smart_fixer_by_expected_value(
     match a expected value given the syntax of an expression.
 
     Args:
-        compiled_expression (:py:class`jmespath.parser.ParsedResult`): JMESPath
+        compiled_expression (:py:class:`jmespath.parser.ParsedResult`): JMESPath
             expression to evaluate.
         expected_value (any): Value that was expected to match against
             expression.
