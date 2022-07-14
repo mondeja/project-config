@@ -15,6 +15,7 @@ class ErrorDict(TypedDict):
     file: NotRequired[str]
     hint: NotRequired[str]
     fixed: NotRequired[bool]
+    fixable: NotRequired[bool]
 
 
 class Rule(TypedDict, total=False):

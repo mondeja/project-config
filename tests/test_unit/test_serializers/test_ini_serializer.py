@@ -3,6 +3,9 @@ import pytest
 from project_config.serializers.ini import dumps, loads
 
 
+SPACE = " "
+
+
 @pytest.mark.parametrize(
     ("string", "expected_result"),
     (
@@ -67,7 +70,7 @@ def test_ini_serializer(string, expected_result):
 foo = bar
 baz = 1
 qux ="""
-            + " "
+            + SPACE
             + """
 \ta
 \tb

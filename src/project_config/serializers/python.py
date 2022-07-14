@@ -77,7 +77,7 @@ def _pyobject_to_string(value: t.Any) -> str:
 
         result += delimiter + "]"
         return result
-    return value
+    return t.cast(str, value)
 
 
 def dumps(obj: t.Any) -> str:

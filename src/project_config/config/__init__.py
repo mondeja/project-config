@@ -352,7 +352,7 @@ def initialize_config(config_filepath: str) -> str:
 
     def create_default_style_file(
         config_prefix: str = "@",
-        prefix_jmespaths="",
+        prefix_jmespaths: str = "",
     ) -> None:
         """Create the default style file if it does not exist."""
         if config_prefix == "@":
@@ -367,8 +367,16 @@ def initialize_config(config_filepath: str) -> str:
             def key_matcher(key: str) -> str:
                 return f'tool.\\"project-config\\".{key}'
 
-            style_setter = "set(@, 'tool', set(tool, 'project-config', set(tool.\\\"project-config\\\", 'style', ['style.json5'])))"
-            cache_setter = "set(@, 'tool', set(tool, 'project-config', set(tool.\\\"project-config\\\", 'cache', '5 minutes')))"
+            style_setter = (
+                "set(@, 'tool', set(tool, 'project-config',"
+                ' set(tool.\\"project-config\\",'
+                " 'style', ['style.json5'])))"
+            )
+            cache_setter = (
+                "set(@, 'tool', set(tool, 'project-config',"
+                ' set(tool.\\"project-config\\",'
+                " 'cache', '5 minutes')))"
+            )
 
         with open(style_filepath, "w") as f:
             f.write(

@@ -172,9 +172,9 @@ class JMESPathPlugin:
                                 continue
                             else:
                                 fixed = True
-                                if not diff:
+                                if not diff:  # pragma: no cover
                                     continue
-                        else:
+                        else:  # pragma: no cover
                             fixed = False
                     else:
                         fixed = False

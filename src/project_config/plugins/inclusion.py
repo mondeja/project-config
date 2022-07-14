@@ -79,7 +79,8 @@ class InclusionPlugin:
                 line, fixer_query = line
 
                 if not isinstance(line, str) or not isinstance(
-                    fixer_query, str
+                    fixer_query,
+                    str,
                 ):
                     yield InterruptingError, {
                         "message": (
@@ -329,15 +330,19 @@ class InclusionPlugin:
                         content, fixer_query = content
 
                         if not isinstance(content, str) or not isinstance(
-                            fixer_query, str
+                            fixer_query,
+                            str,
                         ):
+                            content_query = pprint.pformat(
+                                [content, fixer_query],
+                            )
                             yield InterruptingError, {
                                 "message": (
-                                    "The '[content-to-exclude, fixer_query]' array"
-                                    f"  items '{pprint.pformat([content, fixer_query])}'"
+                                    "The '[content-to-exclude, fixer_query]'"
+                                    f" array  items '{content_query}'"
                                     " must be of type string"
                                 ),
-                                "definition": f".includeLines[{i}]",
+                                "definition": f".excludeContent[{i}]",
                             }
                             return
                 else:
@@ -383,7 +388,7 @@ class InclusionPlugin:
                                     "message": exc.message,
                                     "definition": f".excludeContent[{i}]",
                                 }
-                                continue
+                                return
 
                             _, instance = tree.serialize_file(fpath)
 
@@ -399,7 +404,7 @@ class InclusionPlugin:
                                     "message": exc.message,
                                     "definition": f".excludeContent[{i}]",
                                 }
-                                continue
+                                return
                             else:
                                 fixed = True
                                 if not diff:

@@ -203,12 +203,16 @@ def test_pyproject_toml_ini_is_fixable(tmp_path, chdir, capsys):
         out, err = capsys.readouterr()
         msg = f"{out}\n---\n{err}"
         assert err == "", msg
-        assert (
-            out
-            == "Configuration initialized at pyproject.toml[tool.project-config]\n"
+        assert out == (
+            "Configuration initialized at pyproject.toml"
+            "[tool.project-config]\n"
         ), msg
 
-        expected_pyproject_toml_content = '[tool.project-config]\nstyle = ["style.json5"]\ncache = "5 minutes"\n'
+        expected_pyproject_toml_content = (
+            "[tool.project-config]\n"
+            'style = ["style.json5"]\n'
+            'cache = "5 minutes"\n'
+        )
         assert (
             pyproject_toml_file.read_text() == expected_pyproject_toml_content
         )

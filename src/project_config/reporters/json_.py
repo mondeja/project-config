@@ -42,6 +42,8 @@ class JsonColorReporter(BaseColorReporter):
         message_key = self.format_key('"message"')
         definition_key = self.format_key('"definition"')
         hint_key = self.format_key('"hint"')
+        fixed_key = self.format_key('"fixed"')
+        fixable_key = self.format_key('"fixable"')
 
         space = " "
         if not self.format:
@@ -85,6 +87,24 @@ class JsonColorReporter(BaseColorReporter):
                         f'{hint_key}{self.format_metachar(":")}'
                         f" {hint}"
                     )
+                try:
+                    if error.pop("fixable"):
+                        if error.pop("fixed"):
+                            report += (
+                                f'{self.format_metachar(",")}'
+                                f"{newline6 or space}"
+                                f'{fixed_key}{self.format_metachar(":")}'
+                                f" {self.format_fixed('true')}"
+                            )
+                        else:
+                            report += (
+                                f'{self.format_metachar(",")}'
+                                f"{newline6 or space}"
+                                f'{fixable_key}{self.format_metachar(":")}'
+                                f" {self.format_fixed('true')}"
+                            )
+                except KeyError:
+                    pass
                 report += f"{newline4}{self.format_metachar('}')}"
                 if e < len(errors) - 1:
                     report += f'{self.format_metachar(",")}{newline4 or space}'

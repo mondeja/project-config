@@ -15,7 +15,7 @@ from project_config.compat import NotRequired, Protocol, TypeAlias, TypedDict
 from project_config.exceptions import ProjectConfigException
 
 
-SerializerResult = t.Dict[str, t.Any]
+SerializerResult = t.Any
 
 
 class SerializerFunction(Protocol):
@@ -127,8 +127,8 @@ serializers_fallback: t.Tuple[
 )
 
 
-def _identify_serializer(filename: str) -> SerializerDefinitionsType:
-    tag = None
+def _identify_serializer(filename: str) -> str:
+    tag: t.Optional[str] = None
     for tag_ in identify.tags_from_filename(filename):
         if f".{tag_}" in serializers:
             tag = tag_
@@ -181,12 +181,16 @@ def _get_serializer(
                         ),
                     ),
                 )
-    serializer = serializer[0 if loader_function_name == "loads" else 1]
+    serializer = serializer[  # type: ignore
+        0 if loader_function_name == "loads" else 1
+    ]
     # prepare serializer function
     serializer_definition, module = None, None
     for i, serializer_def in enumerate(serializer):
         try:
-            module = importlib.import_module(serializer_def["module"])
+            module = importlib.import_module(
+                serializer_def["module"],  # type: ignore
+            )
         except ImportError:  # pragma: no cover
             # if module for implementation is not importable, try next maybe
             if i > len(serializer) - 1:
@@ -197,7 +201,10 @@ def _get_serializer(
 
     loader_function: SerializerFunction = getattr(
         module,
-        serializer_definition.get("function", loader_function_name),
+        serializer_definition.get(  # type: ignore
+            "function",
+            loader_function_name,
+        ),
     )
 
     function_kwargs: SerializerFunctionKwargs = {}
@@ -221,9 +228,11 @@ def _get_serializer(
             function_kwargs[kwarg_name] = obj
     """
 
-    if "function_kwargs_from_url_path" in serializer_definition:
+    if "function_kwargs_from_url_path" in serializer_definition:  # type: ignore
         function_kwargs.update(
-            serializer_definition["function_kwargs_from_url_path"](
+            serializer_definition[  # type: ignore
+                "function_kwargs_from_url_path"
+            ](
                 os.path.basename(url_parts.path),
             ),
         )
@@ -264,7 +273,7 @@ def deserialize_for_url(
     url: str,
     content: t.Any,
     prefer_serializer: t.Optional[str] = None,
-) -> str:
+) -> t.Any:
     """Deserialize content for URL.
 
     Args:

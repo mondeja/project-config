@@ -3,7 +3,6 @@ import json
 import pytest
 
 from project_config import Error
-from project_config.__main__ import run
 from project_config.constants import InterruptingError
 from project_config.plugins.jmespath import JMESPathPlugin
 
@@ -292,17 +291,13 @@ JSON_2_INDENTED = lambda string: (  # noqa: E731
                 ),
             ],
             {
-                "package.json": JSON_2_INDENTED("{}"),
+                "package.json": "{}\n",
             },
             id="typeof-root-variable-manual",
         ),
         pytest.param(
-            {
-                "package.json": "[]",
-            },
-            [
-                ["type(@)", "object"],
-            ],
+            {"package.json": "[]"},
+            [["type(@)", "object"]],
             None,
             [
                 (
@@ -319,10 +314,119 @@ JSON_2_INDENTED = lambda string: (  # noqa: E731
                     },
                 ),
             ],
-            {
-                "package.json": JSON_2_INDENTED("{}"),
-            },
+            {"package.json": "{}\n"},
             id="typeof-root-variable-smart",
+        ),
+        pytest.param(
+            {"package.json": "{}"},
+            [
+                [
+                    "null",
+                    True,
+                    "deepmerge(@, `{}`, 'invalid-deepmerge-strategy')",
+                ],
+            ],
+            None,
+            [
+                (
+                    InterruptingError,
+                    {
+                        "definition": ".JMESPathsMatch[0][2]",
+                        "message": (
+                            'Invalid JMESPath "deepmerge(@, `{}`, '
+                            "'invalid-deepmerge-strategy')\". Raised"
+                            " JMESPath error: Invalid strategy"
+                            " 'invalid-deepmerge-strategy' passed"
+                            " to deepmerge() function, expected one of:"
+                            " always_merger, conservative_merger, "
+                            "merge_or_raise"
+                        ),
+                    },
+                ),
+            ],
+            {"package.json": "{}"},
+            id="deepmerge-invalid-strategy",
+        ),
+        pytest.param(
+            {"package.json": "{}"},
+            [
+                [
+                    "null",
+                    True,
+                    (
+                        "deepmerge(@, `{}`,"
+                        " [[['invalid-type', 'override']],"
+                        " ['override'], ['override']]"
+                        ")"
+                    ),
+                ],
+            ],
+            None,
+            [
+                (
+                    InterruptingError,
+                    {
+                        "definition": ".JMESPathsMatch[0][2]",
+                        "message": (
+                            "Invalid JMESPath"
+                            " (\"deepmerge(@, `{}`, [[['invalid-type',"
+                            " 'override']], ['override'], \"\n"
+                            " \"['override']])\"). Raised JMESPath"
+                            " error: Invalid type passed "
+                            "to deepmerge() function in strategies array,"
+                            " expected one of: str, bool, int, float,"
+                            " list, dict, set"
+                        ),
+                    },
+                ),
+            ],
+            {"package.json": "{}"},
+            id="deepmerge-invalid-builtin-type",
+        ),
+        pytest.param(
+            {"package.json": "{}"},
+            [
+                ["null", True, "`['"],
+            ],
+            None,
+            [
+                (
+                    InterruptingError,
+                    {
+                        "definition": ".JMESPathsMatch[0][2]",
+                        "message": (
+                            'Invalid JMESPath expression "`[\'". Raised'
+                            " JMESPath lexing error: Bad jmespath"
+                            " expression: Unclosed ` delimiter:\n`['\n^"
+                        ),
+                    },
+                ),
+            ],
+            {"package.json": "{}"},
+            id="fixer-query-compilation-error",
+        ),
+        pytest.param(
+            {"package.json": "{}"},
+            [
+                ["null", True, "contains(`1`, `1`)"],
+            ],
+            None,
+            [
+                (
+                    InterruptingError,
+                    {
+                        "definition": ".JMESPathsMatch[0][2]",
+                        "message": (
+                            "Invalid JMESPath 'contains(`1`, `1`)'. Raised"
+                            " JMESPath type error: In function contains(),"
+                            " invalid type for value: 1, expected one of:"
+                            " ['array', 'string'], received: \"number\""
+                        ),
+                    },
+                ),
+            ],
+            {"package.json": "{}"},
+            id="fixer-query-evaluation-error",
         ),
     ),
 )
@@ -425,71 +529,3 @@ def test_JMESPathsMatch_updater_functions(
         fix=True,
         expected_files=expected_files,
     )
-
-
-@pytest.mark.parametrize(
-    ("files", "value", "rule", "expected_stderr"),
-    (
-        pytest.param(
-            {"package.json": "{}"},
-            [
-                [
-                    "null",
-                    True,
-                    "deepmerge(@, `{}`, 'invalid-deepmerge-strategy')",
-                ],
-            ],
-            None,
-            (
-                "Raised JMESPath error: Invalid strategy"
-                " 'invalid-deepmerge-strategy' passed to deepmerge()"
-                " function, expected one of:"
-            ),
-            id="deepmerge-invalid-strategy",
-        ),
-        pytest.param(
-            {"package.json": "{}"},
-            [
-                [
-                    "null",
-                    True,
-                    (
-                        "deepmerge(@, `{}`,"
-                        " [[['invalid-type', 'override']], ['override'], ['override']]"
-                        ")"
-                    ),
-                ],
-            ],
-            None,
-            (
-                "Invalid type passed to deepmerge()"
-                " function in strategies array, expected one of:"
-            ),
-            id="deepmerge-invalid-builtin-type",
-        ),
-    ),
-)
-def test_JMESPathsMatch_fix_exceptions(
-    files,
-    value,
-    rule,
-    expected_stderr,
-    capsys,
-    tmp_path,
-    chdir,
-    create_files,
-):
-    files[".project-config.toml"] = 'style = "style.json"'
-    files["style.json"] = (
-        '{"rules": [{"files": ["package.json"], "JMESPathsMatch":'
-        + json.dumps(value)
-        + "}]}"
-    )
-    with chdir(tmp_path):
-        create_files(files, tmp_path)
-        exitcode = run(["fix", "--no-color"])
-        out, err = capsys.readouterr()
-        msg = f"{out}\n---\n{err}\n"
-        assert exitcode == 1, msg
-        assert expected_stderr in err, msg
-        assert out == "", msg

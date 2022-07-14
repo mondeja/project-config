@@ -109,7 +109,7 @@ intersphinx_mapping = {
     "deepmerge": ("https://deepmerge.readthedocs.io/en/latest/", None),
 }
 
-exclude_patterns = ["_examples"]
+exclude_patterns = ["_examples", "_build", "Thumbs.db", ".DS_Store"]
 
 # ----------------------------------------------------------------------------
 

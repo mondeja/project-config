@@ -54,6 +54,7 @@ def _common_generate_errors_report(
     format_error_message: FormatterDefinitionType,
     format_definition: FormatterDefinitionType,
     format_hint: FormatterDefinitionType,
+    format_fixed: FormatterDefinitionType,
 ) -> str:
     report = ""
     for file, errors in files_errors.items():
@@ -69,11 +70,21 @@ def _common_generate_errors_report(
                 f"{format_key('definition')} ="
                 f" {format_definition(json.dumps(error['definition']))}\n"
             )
+
             if "hint" in error:
                 report += (
                     f"{format_key('hint')} ="
                     f" {format_hint(json.dumps(error['hint']))}\n"
                 )
+            if error.get("fixable"):
+                if error.get("fixed"):
+                    report += (
+                        f"{format_key('fixed')} = {format_fixed('true')}\n"
+                    )
+                else:
+                    report += (
+                        f"{format_key('fixable')} = {format_fixed('true')}\n"
+                    )
             report += "\n"
     return report.rstrip("\n")
 
@@ -91,6 +102,7 @@ class TomlReporter(BaseNoopFormattedReporter):
             self.format_error_message,
             self.format_definition,
             self.format_hint,
+            self.format_fixed,
         )
 
     def generate_data_report(
@@ -125,6 +137,7 @@ class TomlColorReporter(BaseColorReporter):
             self.format_error_message,
             self.format_definition,
             self.format_hint,
+            self.format_fixed,
         )
 
     def generate_data_report(

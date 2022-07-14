@@ -56,6 +56,44 @@ message = "message 3"
 definition = "definition 3"''',
             id="complex",
         ),
+        pytest.param(
+            [
+                {
+                    "file": "foo.py",
+                    "message": "message1",
+                    "definition": "definition1",
+                    "fixable": False,
+                },
+                {
+                    "file": "foo.py",
+                    "message": "message2",
+                    "definition": "definition2",
+                    "fixable": True,
+                    "fixed": False,
+                    "hint": "A hint to solve it",
+                },
+                {
+                    "file": "foo.py",
+                    "message": "message3",
+                    "definition": "definition3",
+                    "fixable": True,
+                    "fixed": True,
+                },
+            ],
+            """[["foo.py"]]
+message = "message1"
+definition = "definition1"
+
+message = "message2"
+definition = "definition2"
+hint = "A hint to solve it"
+fixable = true
+
+message = "message3"
+definition = "definition3"
+fixed = true""",
+            id="fixed-fixable",
+        ),
     ),
 )
 def test_errors_report(errors, expected_result, assert_errors_report):

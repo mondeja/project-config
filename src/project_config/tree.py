@@ -114,7 +114,7 @@ class Tree:
                 self.files_cache[normalized_fpath] = (False, f.read())
         elif os.path.isdir(normalized_fpath):
             # recursive generation
-            self.files_cache[normalized_fpath] = (
+            self.files_cache[normalized_fpath] = (  # type: ignore
                 True,
                 self._generator(
                     self.normalize_path(fname)
@@ -224,7 +224,7 @@ class Tree:
 
             result = serialize_for_url(
                 fpath,
-                fcontent,  # type: ignore
+                fcontent,
                 prefer_serializer=serializer_name,
             )
             self.serialized_files_cache[normalized_fpath] = result
@@ -248,7 +248,7 @@ class Tree:
         try:
             result = self.serialized_files_cache[url]
         except KeyError:
-            result = fetch(url)  # type: ignore
+            result = fetch(url)
             self.serialized_files_cache[url] = result
 
         return result

@@ -48,6 +48,37 @@ bar.py
   - message 3 definition 3""",
             id="complex",
         ),
+        pytest.param(
+            [
+                {
+                    "file": "foo.py",
+                    "message": "message 1",
+                    "definition": "definition 1",
+                    "fixable": False,
+                },
+                {
+                    "file": "foo.py",
+                    "message": "message 2",
+                    "definition": "definition 2",
+                    "fixable": True,
+                    "fixed": False,
+                    "hint": "a hint to solve it",
+                },
+                {
+                    "file": "bar.py",
+                    "message": "message 3",
+                    "definition": "definition 3",
+                    "fixable": True,
+                    "fixed": True,
+                },
+            ],
+            """foo.py
+  - message 1 definition 1
+  - (FIXABLE) message 2 definition 2 a hint to solve it
+bar.py
+  - (FIXED) message 3 definition 3""",
+            id="fixed-fixable",
+        ),
     ),
 )
 def test_errors_report(errors, expected_result, assert_errors_report):

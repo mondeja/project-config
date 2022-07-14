@@ -46,7 +46,8 @@ from project_config.plugins.inclusion import InclusionPlugin
                     InterruptingError,
                     {
                         "message": (
-                            "The expected line '5' must be of type string or array"
+                            "The expected line '5' must be of type"
+                            " string or array"
                         ),
                         "definition": ".includeLines[1]",
                     },
@@ -458,7 +459,8 @@ def test_ifIncludeLines(
                     {
                         "definition": ".excludeContent[1]",
                         "message": (
-                            "The content to exclude '5' must be of type string or array"
+                            "The content to exclude '5' must be"
+                            " of type string or array"
                         ),
                         "file": "foo.ext",
                     },

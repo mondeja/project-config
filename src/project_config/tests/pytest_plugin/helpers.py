@@ -82,8 +82,11 @@ def assert_expected_files(  # noqa: D103
         else:
             assert os.path.exists(full_path)
             if content is not None:
-                with open(full_path, encoding="utf-8") as f:
-                    assert f.read() == content
+                try:
+                    with open(full_path, encoding="utf-8") as f:
+                        assert f.read() == content
+                except IsADirectoryError:
+                    continue
 
 
 def get_reporter_class_from_module(  # noqa: D103
