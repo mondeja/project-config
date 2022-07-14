@@ -7,6 +7,8 @@ import pathlib
 import types
 import typing as t
 
+import pytest
+
 from project_config.compat import TypeAlias
 from project_config.tree import Tree
 
@@ -86,6 +88,9 @@ def assert_expected_files(  # noqa: D103
                     with open(full_path, encoding="utf-8") as f:
                         assert f.read() == content
                 except IsADirectoryError:
+                    continue
+                except PermissionError:
+                    pytest.skip()
                     continue
 
 

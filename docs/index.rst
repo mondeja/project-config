@@ -8,7 +8,6 @@ multiple projects.
 .. toctree::
    :maxdepth: 2
    :caption: Quickstart
-   :glob:
 
    install
    basic-usage
