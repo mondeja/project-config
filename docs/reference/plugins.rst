@@ -234,6 +234,8 @@ convenient functions defined by the plugin internally:
 
    Return the result of the Python's variable `sys.platform`_.
 
+   .. versionadded:: 0.7.0
+
 .. function:: op(source: type, operation: str, target: type) -> bool
 
    Applies the operator `operator` between the two values using the operators
