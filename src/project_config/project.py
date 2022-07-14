@@ -104,7 +104,8 @@ class Project:
         for f, (fpath, fcontent) in enumerate(files):
             ftype = "directory" if fpath.endswith(("/", os.sep)) else "file"
             if fcontent is None:  # file or directory does not exist
-                self.fix
+
+                fixed = False
                 if self.fix:
                     if ftype == "directory":
                         os.makedirs(fpath, exist_ok=True)
@@ -123,13 +124,15 @@ class Project:
                                 fd.write(new_content)
                             self.tree.cache_files([fpath])
                         except OSError:
-                            pass
+                            fixed = False
+                        else:
+                            fixed = True
                 self.reporter.report_error(
                     {
                         "message": f"Expected existing {ftype} does not exists",
                         "file": fpath,
                         "definition": f"rules[{rule_index}].files[{f}]",
-                        "fixed": self.fix,
+                        "fixed": fixed,
                     },
                 )
 
