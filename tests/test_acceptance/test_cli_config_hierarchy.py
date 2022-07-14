@@ -232,6 +232,7 @@ def test_cli_config_hierarchy(
     minimal_valid_style,
 ):
 
+    expected_reporter["kwargs"].update({"only_hints": False})
     config_file = tmp_path / ".project-config.toml"
     config_file.write_text(f'style = "foo.json5"\n\n{config or ""}')
 
