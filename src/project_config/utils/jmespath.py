@@ -9,6 +9,7 @@ import os
 import pprint
 import re
 import shlex
+import sys
 import typing as t
 import warnings
 
@@ -458,6 +459,10 @@ class JMESPathProjectConfigFunctions(JMESPathFunctions):
         *args: t.Any,  # count
     ) -> str:
         return base.replace(old, new, *args)
+
+    @jmespath_func_signature()
+    def _func_os(self) -> str:
+        return sys.platform
 
     locals().update(
         dict(

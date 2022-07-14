@@ -1,3 +1,5 @@
+import sys
+
 import pytest
 from testing_helpers import mark_end2end
 
@@ -463,6 +465,13 @@ from project_config.plugins.jmespath import JMESPathPlugin
             None,
             [],
             id="from_items(object)",
+        ),
+        pytest.param(
+            {"foo.json": "{}"},
+            [["op(os(), '==', '" + sys.platform + "')", True]],
+            None,
+            [],
+            id="os()",
         ),
     ),
 )

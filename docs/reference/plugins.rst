@@ -230,6 +230,12 @@ convenient functions defined by the plugin internally:
 
    .. versionadded:: 0.5.0
 
+.. function:: os() -> str
+
+   Return the result of the Python's variable `sys.platform`_.
+
+   .. versionadded:: 0.7.0
+
 .. function:: op(source: type, operation: str, target: type) -> bool
 
    Applies the operator `operator` between the two values using the operators
@@ -658,6 +664,7 @@ convenient functions defined by the plugin internally:
 .. _JMES paths: https://jmespath.org
 .. _JMESPath builtin functions: https://jmespath.org/specification.html#built-in-functions
 .. _deepmerge strategy names: https://deepmerge.readthedocs.io/en/latest/strategies.html#builtin-strategies
+.. _sys.platform: https://docs.python.org/3/library/sys.html#sys.platform
 
 .. rubric:: Fix queries
 
