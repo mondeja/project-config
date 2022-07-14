@@ -83,6 +83,7 @@ project-config-tester = "project_config.tests.pytest_plugin.plugin"
 targets = [
   { file = "pyproject.toml", regex = "(version = [\"'])(\\d+\\.\\d+\\.\\d+)([\"'])" },
   { file = "docs/install.rst", regex = "(v)(\\d+\\.\\d+\\.\\d+)" },
+  { file = "contrib/mega-linter-plugin-project-config/project-config.megalinter-descriptor.yml" }
 ]
 
 [tool.project-config]
