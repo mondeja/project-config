@@ -104,6 +104,7 @@ class Project:
         for f, (fpath, fcontent) in enumerate(files):
             ftype = "directory" if fpath.endswith(("/", os.sep)) else "file"
             if fcontent is None:  # file or directory does not exist
+                self.fix
                 if self.fix:
                     if ftype == "directory":
                         os.makedirs(fpath, exist_ok=True)
@@ -117,9 +118,12 @@ class Project:
                                 serializer_name,
                             )
                         )
-                        with open(fpath, "w", encoding="utf-8") as fd:
-                            fd.write(new_content)
-                        self.tree.cache_files([fpath])
+                        try:
+                            with open(fpath, "w", encoding="utf-8") as fd:
+                                fd.write(new_content)
+                            self.tree.cache_files([fpath])
+                        except OSError:
+                            pass
                 self.reporter.report_error(
                     {
                         "message": f"Expected existing {ftype} does not exists",
