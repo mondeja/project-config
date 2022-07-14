@@ -3,6 +3,8 @@ import json
 import pytest
 
 from project_config import Error
+from project_config.__main__ import run
+from project_config.constants import InterruptingError
 from project_config.plugins.jmespath import JMESPathPlugin
 
 
@@ -23,6 +25,30 @@ JSON_2_INDENTED = lambda string: (  # noqa: E731
                 "package.json": '{"foo": "baz"}',
             },
             [
+                ["bar", "qux", True],
+            ],
+            None,
+            [
+                (
+                    InterruptingError,
+                    {
+                        "definition": ".JMESPathsMatch[0][2]",
+                        "message": (
+                            "The JMES path fixer query must be of type string"
+                        ),
+                    },
+                ),
+            ],
+            {
+                "package.json": '{"foo": "baz"}',
+            },
+            id="invalid-fixer-query-type",
+        ),
+        pytest.param(
+            {
+                "package.json": '{"foo": "baz"}',
+            },
+            [
                 ["foo", "bar"],
             ],
             None,
@@ -37,6 +63,7 @@ JSON_2_INDENTED = lambda string: (  # noqa: E731
                             " 'bar', returned 'baz'"
                         ),
                         "fixed": True,
+                        "fixable": True,
                     },
                 ),
             ],
@@ -64,6 +91,7 @@ JSON_2_INDENTED = lambda string: (  # noqa: E731
                             " 'foo', returned None"
                         ),
                         "fixed": True,
+                        "fixable": True,
                     },
                 ),
             ],
@@ -94,6 +122,7 @@ JSON_2_INDENTED = lambda string: (  # noqa: E731
                             " 'string', returned 'null'"
                         ),
                         "fixed": True,
+                        "fixable": True,
                     },
                 ),
             ],
@@ -126,6 +155,7 @@ JSON_2_INDENTED = lambda string: (  # noqa: E731
                             " 'object', returned 'null'"
                         ),
                         "fixed": True,
+                        "fixable": True,
                     },
                 ),
             ],
@@ -136,40 +166,6 @@ JSON_2_INDENTED = lambda string: (  # noqa: E731
                 ),
             },
             id="typeof-deepmerge-subexpressions-default",
-        ),
-        pytest.param(
-            {
-                "pyproject.toml": '[tool.poetry]\nname = "foo"\n',
-            },
-            [
-                [
-                    'type(tool."project-config")',
-                    "object",
-                ],
-            ],
-            None,
-            [
-                (
-                    Error,
-                    {
-                        "definition": ".JMESPathsMatch[0]",
-                        "file": "pyproject.toml",
-                        "message": (
-                            "JMESPath 'type(tool.\"project-config\")'"
-                            " does not match. Expected"
-                            " 'object', returned 'null'"
-                        ),
-                        "fixed": True,
-                    },
-                ),
-            ],
-            {
-                "pyproject.toml": (
-                    '[tool]\n[tool.poetry]\nname = "foo"\n\n'
-                    "[tool.project-config]\n"
-                ),
-            },
-            id="typeof-object-subexpressions-smart",
         ),
         pytest.param(
             {
@@ -194,6 +190,7 @@ JSON_2_INDENTED = lambda string: (  # noqa: E731
                             " 'array', returned 'null'"
                         ),
                         "fixed": True,
+                        "fixable": True,
                     },
                 ),
             ],
@@ -227,6 +224,7 @@ JSON_2_INDENTED = lambda string: (  # noqa: E731
                             " 'string', returned 'null'"
                         ),
                         "fixed": True,
+                        "fixable": True,
                     },
                 ),
             ],
@@ -259,6 +257,7 @@ JSON_2_INDENTED = lambda string: (  # noqa: E731
                             " Expected 'string', returned 'boolean'"
                         ),
                         "fixed": True,
+                        "fixable": True,
                     },
                 ),
             ],
@@ -269,11 +268,62 @@ JSON_2_INDENTED = lambda string: (  # noqa: E731
             },
             id="typeof-string-subexpressions-indexes-smart",
         ),
-        # TODO:
-        # type() with array queries: [*], [0]
-        # Constants: "".root' -> true
-        # contains() in arrays
-        # contains(keys()) in objects
+        pytest.param(
+            {
+                "package.json": "[]",
+            },
+            [
+                ["type(@)", "object", "`{}`"],
+            ],
+            None,
+            [
+                (
+                    Error,
+                    {
+                        "definition": ".JMESPathsMatch[0]",
+                        "file": "package.json",
+                        "message": (
+                            "JMESPath 'type(@)' does not match."
+                            " Expected 'object', returned 'array'"
+                        ),
+                        "fixed": True,
+                        "fixable": True,
+                    },
+                ),
+            ],
+            {
+                "package.json": JSON_2_INDENTED("{}"),
+            },
+            id="typeof-root-variable-manual",
+        ),
+        pytest.param(
+            {
+                "package.json": "[]",
+            },
+            [
+                ["type(@)", "object"],
+            ],
+            None,
+            [
+                (
+                    Error,
+                    {
+                        "definition": ".JMESPathsMatch[0]",
+                        "file": "package.json",
+                        "message": (
+                            "JMESPath 'type(@)' does not match."
+                            " Expected 'object', returned 'array'"
+                        ),
+                        "fixed": True,
+                        "fixable": True,
+                    },
+                ),
+            ],
+            {
+                "package.json": JSON_2_INDENTED("{}"),
+            },
+            id="typeof-root-variable-smart",
+        ),
     ),
 )
 def test_JMESPathsMatch_fix(
@@ -294,3 +344,152 @@ def test_JMESPathsMatch_fix(
         fix=True,
         expected_files=expected_files,
     )
+
+
+@pytest.mark.parametrize(
+    ("files", "value", "rule", "expected_results", "expected_files"),
+    (
+        pytest.param(
+            {
+                "package.json": '{"foo": "baz"}',
+            },
+            [
+                ["null", True, "update(@, {bar: 'qux'})"],
+            ],
+            None,
+            [
+                (
+                    Error,
+                    {
+                        "definition": ".JMESPathsMatch[0]",
+                        "file": "package.json",
+                        "message": (
+                            "JMESPath 'null' does not match. Expected"
+                            " True, returned None"
+                        ),
+                        "fixed": True,
+                        "fixable": True,
+                    },
+                ),
+            ],
+            {
+                "package.json": JSON_2_INDENTED('{"foo": "baz", "bar": "qux"}'),
+            },
+            id="update()",
+        ),
+        pytest.param(
+            {
+                "package.json": '{"foo": "baz", "bar": 1}',
+            },
+            [
+                ["null", True, "unset(@, 'foo')"],
+            ],
+            None,
+            [
+                (
+                    Error,
+                    {
+                        "definition": ".JMESPathsMatch[0]",
+                        "file": "package.json",
+                        "message": (
+                            "JMESPath 'null' does not match. Expected"
+                            " True, returned None"
+                        ),
+                        "fixed": True,
+                        "fixable": True,
+                    },
+                ),
+            ],
+            {
+                "package.json": JSON_2_INDENTED('{"bar": 1}'),
+            },
+            id="unset()",
+        ),
+    ),
+)
+def test_JMESPathsMatch_updater_functions(
+    files,
+    value,
+    rule,
+    expected_results,
+    expected_files,
+    assert_project_config_plugin_action,
+):
+    assert_project_config_plugin_action(
+        JMESPathPlugin,
+        "JMESPathsMatch",
+        files,
+        value,
+        rule,
+        expected_results,
+        fix=True,
+        expected_files=expected_files,
+    )
+
+
+@pytest.mark.parametrize(
+    ("files", "value", "rule", "expected_stderr"),
+    (
+        pytest.param(
+            {"package.json": "{}"},
+            [
+                [
+                    "null",
+                    True,
+                    "deepmerge(@, `{}`, 'invalid-deepmerge-strategy')",
+                ],
+            ],
+            None,
+            (
+                "Raised JMESPath error: Invalid strategy"
+                " 'invalid-deepmerge-strategy' passed to deepmerge()"
+                " function, expected one of:"
+            ),
+            id="deepmerge-invalid-strategy",
+        ),
+        pytest.param(
+            {"package.json": "{}"},
+            [
+                [
+                    "null",
+                    True,
+                    (
+                        "deepmerge(@, `{}`,"
+                        " [[['invalid-type', 'override']], ['override'], ['override']]"
+                        ")"
+                    ),
+                ],
+            ],
+            None,
+            (
+                "Invalid type passed to deepmerge()"
+                " function in strategies array, expected one of:"
+            ),
+            id="deepmerge-invalid-builtin-type",
+        ),
+    ),
+)
+def test_JMESPathsMatch_fix_exceptions(
+    files,
+    value,
+    rule,
+    expected_stderr,
+    capsys,
+    tmp_path,
+    chdir,
+    create_files,
+):
+    files[".project-config.toml"] = 'style = "style.json"'
+    files["style.json"] = (
+        '{"rules": [{"files": ["package.json"], "JMESPathsMatch":'
+        + json.dumps(value)
+        + "}]}"
+    )
+    with chdir(tmp_path):
+        create_files(files, tmp_path)
+        exitcode = run(["fix", "--no-color"])
+        out, err = capsys.readouterr()
+        msg = f"{out}\n---\n{err}\n"
+        assert exitcode == 1, msg
+        assert expected_stderr in err, msg
+        assert out == "", msg

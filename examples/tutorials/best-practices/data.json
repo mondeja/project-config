@@ -1,16 +1,22 @@
 {
   "string_constant": "my-string",
   "number_constant": 42,
+  "devDependencies": {
+    "foo": "bar"
+  },
+  "dependencies": {
+    "foo": "bar"
+  },
   "boolean_constant": true,
   "an_object": {
     "a_nested_array": [],
     "a_nested_object": {},
     "a_nested_empty_string": "",
-    "deepmerged_array": [1, 2, 3, 4, ["to-the-deep"]]
+    "deepmerged_array": [1, 2, 3, 4, ["to-the-deep"], 6, 7, 8]
   },
-  "an_array": [77],
-  "conditional_constant": "enabled",
+  "an_array": [77, 77],
   "other_string_constant": "my-other-string",
   "other_boolean_constant": false,
-  "deepmerged_string": "deep string"
+  "deepmerged_string": "even deeper string",
+  "conditional_constant": "enabled"
 }

@@ -31,6 +31,7 @@ from project_config.plugins.jmespath import JMESPathPlugin
                             " returned False"
                         ),
                         "fixed": False,
+                        "fixable": False,
                     },
                 ),
             ],
@@ -59,6 +60,7 @@ from project_config.plugins.jmespath import JMESPathPlugin
                             " returned False"
                         ),
                         "fixed": False,
+                        "fixable": False,
                     },
                 ),
             ],
@@ -657,6 +659,7 @@ def test_JMESPath_custom_functions(
                         ),
                         "file": "foo.json",
                         "fixed": False,
+                        "fixable": False,
                     },
                 ),
             ],

@@ -3,6 +3,7 @@
 import json
 import os
 import re
+import shutil
 import subprocess
 import sys
 
@@ -107,6 +108,8 @@ intersphinx_mapping = {
     "pyjson5": ("https://pyjson5.readthedocs.io/en/latest/", None),
     "deepmerge": ("https://deepmerge.readthedocs.io/en/latest/", None),
 }
+
+exclude_patterns = ["_examples"]
 
 # ----------------------------------------------------------------------------
 
@@ -235,9 +238,7 @@ if SPHINX_IS_RUNNING:
             examples_data.append(example_data)
 
         if error_messages:
-            for error_message in error_messages:
-                sys.stderr.write(f"{error_message}\n")
-            raise SystemExit(1)
+            raise Exception("\n".join(error_messages))
 
         examples_page_content = """********
 Examples
@@ -318,6 +319,36 @@ Examples
 
     _create_examples_page()
     _create_tutorials_pages()
+
+    examples_dir = os.path.join(rootdir, "examples")
+    examples_docs_files_dir = os.path.join(rootdir, "docs", "_examples")
+    if not os.path.isdir(examples_docs_files_dir):
+        os.mkdir(examples_docs_files_dir)
+
+    examples_to_include = [11]
+    for example_num in examples_to_include:
+        if not any(
+            [
+                fname.lstrip("0").startswith(str(example_num))
+                for fname in os.listdir(examples_dir)
+            ],
+        ):
+            raise Exception(
+                "Non existing example files to include in the documentation",
+            )
+
+        for fname in os.listdir(examples_dir):
+            if not fname[0].isdigit():
+                continue
+
+            if fname.lstrip("0").startswith(str(example_num)):
+                src_dir = os.path.join(examples_dir, fname)
+                dst_dir = os.path.join(examples_docs_files_dir, fname)
+
+                if os.path.isdir(dst_dir):
+                    shutil.rmtree(dst_dir)
+                shutil.copytree(src_dir, dst_dir)
+
 
 # ---------------------------------------------------------
 

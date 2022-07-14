@@ -189,7 +189,7 @@ class Tree:
             result.append(
                 (
                     os.path.relpath(fpath, self.rootdir)
-                    + ("/" if self.files_cache[fpath][0] else ""),
+                    + ("/" if fpath.endswith("/") else ""),
                     _content,
                 ),
             )

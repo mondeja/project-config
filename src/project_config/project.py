@@ -236,7 +236,7 @@ class Project:
                 elif breakage_type == ResultValue:
                     if breakage_value is False:
                         raise ConditionalsFalseResult()
-                    else:
+                    else:  # pragma: no cover
                         break
                 else:
                     raise NotImplementedError(

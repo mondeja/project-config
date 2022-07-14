@@ -15,4 +15,6 @@ data.json
   - (FIXED) JMESPath 'boolean_constant' does not match. Expected False, returned True rules[1].JMESPathsMatch[14]
   - (FIXED) JMESPath 'op(length(an_array), '>', `0`)' does not match. Expected True, returned False rules[1].JMESPathsMatch[15]
   - (FIXED) JMESPath 'type(an_object.deepmerged_array)' does not match. Expected 'array', returned 'null' rules[1].JMESPathsMatch[16]
+  - (FIXED) JMESPath 'op(length(an_object.deepmerged_array), '<', `6`)' does not match. Expected False, returned True rules[1].JMESPathsMatch[18]
   - JMESPath 'contains([1], [0])' does not match. Expected True, returned False rules[1].crossJMESPathsMatch[0]
+  - JMESPath '[1]' does not match. Expected True, returned False rules[3].crossJMESPathsMatch[0] The field `dependencies` must preceed `devDependencies`

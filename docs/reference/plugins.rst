@@ -24,18 +24,53 @@ If the files don't include all lines specified as argument,
 it will raise a checking error. Newlines are ignored, so they
 should not be specified.
 
-.. rubric:: Example
+.. rubric:: Examples
 
-.. code-block:: js
+.. tabs::
 
-   {
-     rules: [
-       files: [".gitignore"],
-       includeLines: ["venv*/", "/dist/"]
-     ]
-   }
+   .. tab:: Automatic inclusion
+
+      Appends lines not already present in the file to the end.
+
+      .. code-block:: js
+
+         {
+           rules: [
+             files: [".gitignore"],
+             includeLines: ["venv*/", "/dist/"]
+           ]
+         }
+
+   .. tab:: Manual edition
+
+      You can define manually a JMESPath fix query if the line is an array
+      with the line and the fix query as items:
+
+      .. code-block:: js
+
+         {
+           rules: [
+             {
+               files: [".gitignore"],
+               hint: "The line 'dist/' must be included in .gitignore",
+               includeLines: [
+                 ["dist/", "op([?!contains(['/dist/', 'dist', 'dist/'], @)], '+', ['dist/'])"],
+                 "__pycache__/",
+               ]
+             }
+           ]
+         }
+
+      The returned value of the JMESPath fix query will be the new content
+      of the file, an array with a ``'\n'.join(lines)`` transformation of the
+      array of strings that represent the lines of the file.
 
 .. versionadded:: 0.1.0
+
+.. versionchanged:: 0.7.0
+
+   Accept arrays of ``[line, fixer_query]`` as items of the array
+   to edit manually the files using JMESPath queries.
 
 ifIncludeLines
 ==============
@@ -79,25 +114,19 @@ and line ending characters.
 
 .. rubric:: Example
 
-Don't allow code blocks in RST documentation files:
+.. include:: ../_examples/011-replace-codeblocks-langs/README.rst
+   :parser: rst
+   :start-line: 3
 
-* Bash is not a POSIX compliant shell.
-* Pygments' JSON5 lexer is not implemented yet.
-
-.. code-block:: js
-
-   {
-     rules: [
-       files: ["docs/**/*.rst"],
-       excludeContent: [
-         ".. code-block::  ",
-         ".. code-block:: bash",
-         ".. code-block:: json5",
-       ],
-     ]
-   }
+.. include:: ../_examples/011-replace-codeblocks-langs/style.json5
+   :literal:
 
 .. versionadded:: 0.3.0
+
+.. versionchanged:: 0.7.0
+
+   Accepts an array ``['content-to-exclude', fixer-query]`` for each item
+   in the array to perform editions in the file if the content is found.
 
 *********
 existence
@@ -115,28 +144,34 @@ considered a directory.
 
 .. rubric:: Examples
 
-If the directory `src/` exists, a `pyproject.toml` file must exist also:
+.. tabs::
 
-.. code-block:: js
+   .. tab:: If directory exists
 
-   {
-     rules: [
-       files: ["pyproject.toml"],
-       ifFilesExist: ["src/"],
-     ]
-   }
+      If the directory `src/` exists, a `pyproject.toml` file must exist also:
 
-If the file `.pre-commit-hooks.yaml` exists, must be declared as an array:
+      .. code-block:: js
 
-.. code-block:: js
+         {
+           rules: [
+             files: ["pyproject.toml"],
+             ifFilesExist: ["src/"],
+           ]
+         }
 
-   {
-     rules: [
-       files: [".pre-commit-hooks.yaml"],
-       ifFilesExist: [".pre-commit-hooks.yaml"],
-       JMESPathsMatch: [["type(@)", "array"]]
-     ]
-   }
+   .. tab:: If file exists
+
+      If the file `.pre-commit-hooks.yaml` exists, must be declared as an array:
+
+      .. code-block:: js
+
+         {
+           rules: [
+             files: [".pre-commit-hooks.yaml"],
+             ifFilesExist: [".pre-commit-hooks.yaml"],
+             JMESPathsMatch: [["type(@)", "array"]]
+           ]
+         }
 
 .. versionadded:: 0.4.0
 
@@ -608,6 +643,15 @@ convenient functions defined by the plugin internally:
    If has it, remove the ``key`` from the ``base`` object.
 
    Returns the updated ``base`` object.
+
+   .. versionadded:: 0.7.0
+
+.. function:: replace(base: str, old: str, new: str[, count: int | None = None])
+
+   Replace the ``old`` string with the ``new`` string in the ``base`` string
+   using the Python's built-in string method :py:meth:`str.replace`.
+
+   Returns the updated ``base`` string.
 
    .. versionadded:: 0.7.0
 

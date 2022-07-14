@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 import typing as t
 
 from project_config.compat import TypeAlias
@@ -29,7 +30,57 @@ def loads(string: str, namespace: Namespace = {}) -> Namespace:
     return namespace
 
 
-def dumps(obj: Namespace) -> str:
+def _pyobject_to_string(value: t.Any) -> str:
+    if isinstance(value, str):
+        escaped_value = re.sub(r"([\"])", r"\\\1", value)
+        return f'"{escaped_value}"'
+    if isinstance(value, bool):
+        return "True" if value else "False"
+    elif isinstance(value, type):
+        value = value.__name__
+    elif isinstance(value, dict):
+        if len(str(value)) > 60:
+            newline = "\n    "
+            delimiter = "\n"
+        else:
+            newline = " "
+            delimiter = ""
+        result = (
+            "{"
+            + (newline if newline != " " else "")
+            + f",{newline}".join(
+                f'"{key}": {str(_pyobject_to_string(item))}'
+                for key, item in value.items()
+            )
+        )
+        if newline != " ":
+            result += ","
+
+        result += delimiter + "}"
+        return result
+    elif isinstance(value, list):
+        if len(str(value)) > 60:
+            newline = "\n    "
+            delimiter = "\n"
+        else:
+            newline = " "
+            delimiter = ""
+        result = (
+            "["
+            + (newline if newline != " " else "")
+            + f",{newline}".join(
+                str(_pyobject_to_string(item)) for item in value
+            )
+        )
+        if newline != " ":
+            result += ","
+
+        result += delimiter + "]"
+        return result
+    return value
+
+
+def dumps(obj: t.Any) -> str:
     """Converts a namespace to a Python script.
 
     Args:
@@ -38,4 +89,8 @@ def dumps(obj: Namespace) -> str:
     Returns:
         str: Python script.
     """
-    return "\n".join(f"{key} = {value!r}" for key, value in obj.items()) + "\n"
+    result = ""
+    for key, value in obj.items():
+        result += f"{key} = {_pyobject_to_string(value)}\n"
+
+    return result

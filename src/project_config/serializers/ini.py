@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import configparser
+import io
 import typing as t
 
 
@@ -34,9 +35,11 @@ def dumps(obj: t.Any) -> str:
     Returns:
         str: Conversion result.
     """
-    ini = configparser.ConfigParser()
+    stream = io.StringIO()
+    ini = configparser.ConfigParser(interpolation=None)
     for section, options in obj.items():
         ini.add_section(section)
         for option, value in options.items():
             ini.set(section, option, value)
-    return str(ini)
+    ini.write(stream)
+    return stream.getvalue()

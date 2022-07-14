@@ -21,12 +21,14 @@ class BaseDefaultReporter(BaseFormattedReporter):
         for file, errors in self.errors.items():
             report += f"{self.format_file(file)}\n"
             for error in errors:
-                fixed = (
-                    self.format_fixed("(FIXED) ") if error.get("fixed") else ""
+                fixed_prefix = (
+                    "(FIXED) "
+                    if error.get("fixed")
+                    else ("(FIXABLE) " if error.get("fixable", False) else "")
                 )
                 error_message = (
                     f'{self.format_metachar("-")} '
-                    f"{fixed}"
+                    f"{self.format_fixed(fixed_prefix)}"
                     f'{self.format_error_message(error["message"])}'
                 )
                 report += (

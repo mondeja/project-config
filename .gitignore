@@ -13,3 +13,4 @@ docs/dev/reference/
 docs/examples.rst
 docs/tutorials/pages/*
 !docs/tutorials/pages/.keep
+docs/_examples/

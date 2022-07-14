@@ -33,12 +33,46 @@ that is, the files for which the verbs will be applied.
 It must be either an array of strings or an object with an unique key ``not``.
 
 Defining ``files`` as an array of strings enforce the existence of these files.
-If they don't exist, no actions will be executed. The existence of these files
-is mandatory for execute the rest of actions of the rule.
+If they don't exist will raise errors, and additionally created in ``fix`` mode.
+The existence of these files and directories is mandatory for execute the rest
+of actions of the rule.
 
 The items of ``files`` can also be globs to match a set of existent files.
 Keep in mind that if the files do not exist when the rule is executed, the
 glob itself will be treated as a file name and will be checked for existence.
+
+.. rubric:: Examples
+
+.. tabs::
+
+   .. tab:: Existence of files
+
+      .. code-block:: js
+
+         {
+           rules: [    // Files and directories are created in `fix` mode
+             {
+               files: [
+                 "src/",             // Enforce existence of directory
+                 "pyproject.toml",   // Enforce existence of file
+               ]
+             }
+           ]
+         }
+
+   .. tab:: Absence of files
+
+      .. code-block:: js
+
+         {
+           rules: [
+             files: {
+               not: {
+                 "setup.cfg": "Migrate the configuration to pyproject.toml"
+               }
+             }
+           ],
+         }
 
 Enforce files absence
 ---------------------

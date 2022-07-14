@@ -132,8 +132,8 @@ def test_fixed_files_dirs_are_recached(tmp_path, chdir, monkeypatch, capsys):
         assert (tmp_path / "README.md").read_text() == ""
         assert (tmp_path / ".gitignore").exists()
         assert (tmp_path / ".gitignore").read_text() == ""
-        assert (tmp_path / "src").is_dir()
         assert (tmp_path / "docs").is_dir()
+        assert (tmp_path / "src").is_dir()
 
     assert out == ""
     assert (

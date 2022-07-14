@@ -8,6 +8,48 @@ Configuration must be defined in TOML_ format in one of the next files:
 * `pyproject.toml` (inside a ``[tool.project-config]`` table)
 * A custom file passing ``-c``/``--config`` argument in the command line.
 
+.. tip::
+
+   You can use the ``project-config init`` command to initialize a minimal
+   configuration and JSON5 style file.
+
+   .. tabs::
+
+      .. tab:: Initialization
+
+         .. code-block:: sh
+
+            project-config init
+
+      .. tab:: .project-config.toml
+
+         .. code-block:: toml
+
+            style = ["style.json5"]
+            cache = "5 minutes"
+
+      .. tab:: style.json5
+
+         .. code-block:: js
+
+            {
+              rules: [
+                {
+                  files: [".project-config.toml"],
+                  JMESPathsMatch: [
+                    ["type(style)", "array"],
+                    ["op(length(style), '>', `0`)", true, "set(@, 'style', ['style.json5'])"],
+                    ["type(cache)", "string", "set(@, 'cache', '5 minutes')"],
+                    [
+                      "regex_match('(\\d+ ((seconds?)|(minutes?)|(hours?)|(days?)|(weeks?)))|(never)$', cache)",
+                      true,
+                      "5 minutes",
+                    ],
+                  ]
+                }
+              ]
+            }
+
 .. _TOML: https://toml.io/en/
 
 ``style`` (`string` or `string[]`)
@@ -85,3 +127,16 @@ Specifies if your want the output to be colored. Corresponds to the
 
 Custom colors used in the output of the CLI. Corresponds to the ``color=``
 argument of the :ref:`project-config---reporter` optional CLI argument.
+
+.. rubric:: Example
+
+.. code-block:: toml
+
+   # .project-config.toml
+   style = ["style.json5"]
+   cache = "5 minutes"
+
+   [cli]
+   color = false
+   reporter = "json"
+   rootdir = "src"
