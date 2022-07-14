@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "project-config"
-version = "0.6.0"
+version = "0.7.0"
 description = "Reproducible configuration across projects."
 authors = ["Álvaro Mondéjar Rubio <mondejar1994@gmail.com>"]
 license = "BSD-3-Clause"
@@ -43,6 +43,8 @@ diskcache = "^5"
 typing-extensions = "^4.3.0"
 requests = "^2.28.1"
 requests-futures = "^1.0.0"
+deepmerge = "^1.0.1"
+tomlkit = "^0.11.1"
 
 [tool.poetry.group.dev.dependencies]
 mondeja-bump = "*"
@@ -81,6 +83,7 @@ project-config-tester = "project_config.tests.pytest_plugin.plugin"
 targets = [
   { file = "pyproject.toml", regex = "(version = [\"'])(\\d+\\.\\d+\\.\\d+)([\"'])" },
   { file = "docs/install.rst", regex = "(v)(\\d+\\.\\d+\\.\\d+)" },
+  { file = "contrib/mega-linter-plugin-project-config/project-config.megalinter-descriptor.yml" }
 ]
 
 [tool.project-config]
@@ -107,7 +110,7 @@ cache = "2 days"
 [tool.poetry-exec-plugin.commands]
 t = "coverage run -m pytest"
 test = "coverage run -m pytest"
-"test:show" = """coverage run -m pytest &&
+"test:show" = """pysetenv PROJECT_CONFIG_TESTS_E2E=true coverage run -m pytest &&
 coverage html &&
 python -c 'import webbrowser as w;w.open("http://127.0.0.1:8088")' &&
 python -m http.server 8088 -b localhost -d htmlcov
@@ -219,4 +222,10 @@ flake8-docstrings = [
 pyflakes = [
   # Imported some constants in an example without using them
   "-F401",
+]
+
+[tool.flakeheaven.exceptions."examples/**/*.rst"]
+flake8-docstrings = [
+  # Allow examples without enough documentation
+  "-D100",
 ]

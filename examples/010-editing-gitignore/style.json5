@@ -1,0 +1,43 @@
+{
+  rules: [
+    {
+      files: [".gitignore"], // Enforce the existence of a '.gitignore' file
+      hint: "Enforced the line '__pycache__/' to be present in .gitignore file",
+      includeLines: ["__pycache__/"],
+    },
+    {
+      files: [".gitignore"],
+      hint: "As a directory 'tests/' has been found, enforced the line '.pytest_cache/' to be present in the '.gitignore' file",
+      ifFilesExist: ["tests/"],
+      includeLines: [".pytest_cache/"],
+    },
+    {
+      files: [".gitignore"],
+      hint: "Removed the line '.pytest_cache' from the '.gitignore' file as it is implicitly naming a directory",
+      JMESPathsMatch: [
+        ["contains(@, '.pytest_cache')", false, "[?@ != '.pytest_cache']"],
+      ],
+    },
+    {
+      files: [".gitignore"],
+      hint: "Enforce '*.egg-info/' at the end of the .gitignore if is not already present",
+      includeLines: [
+        [
+          "*.egg-info/",
+          "op([?!starts_with(@, '*.egg-info')], `+`, ['*.egg-info/'])",
+        ],
+      ],
+    },
+    {
+      files: [".gitignore"],
+      hint: "The line 'dist/' must be included in .gitignore",
+      includeLines: [
+        [
+          "dist/",
+          "op([?!contains(['/dist/', 'dist', 'dist/'], @)], '+', ['dist/'])",
+        ],
+        "__pycache__/",
+      ],
+    },
+  ],
+}

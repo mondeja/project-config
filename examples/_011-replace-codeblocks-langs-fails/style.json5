@@ -1,0 +1,21 @@
+{
+  rules: [
+    {
+      files: ["file.rst"],
+      excludeContent: [
+        [
+          ".. code-block::  ",
+          "map(&replace(@, 'code-block::  ', 'code-block:: '), @)",
+        ],
+        [
+          ".. code-block:: bash",
+          "map(&replace(@, 'code-block:: bash', 'code-block:: sh'), @)",
+        ],
+        [
+          ".. code-block:: json5",
+          "map(&replace(@, 'code-block:: json5', 'code-block:: js'), @)",
+        ],
+      ],
+    },
+  ],
+}

@@ -14,6 +14,8 @@ class ErrorDict(TypedDict):
     definition: str
     file: NotRequired[str]
     hint: NotRequired[str]
+    fixed: NotRequired[bool]
+    fixable: NotRequired[bool]
 
 
 class Rule(TypedDict, total=False):
@@ -30,8 +32,11 @@ StrictResultType: TypeAlias = t.Tuple[str, t.Union[bool, ErrorDict]]
 LazyGenericResultType: TypeAlias = t.Tuple[str, t.Any]
 Results: TypeAlias = t.Iterator[LazyGenericResultType]
 
-__all__ = (
-    "Rule",
-    "Results",
-    "ErrorDict",
-)
+
+class ActionsContext(t.NamedTuple):
+    """Context of global data passed to rule verbs."""
+
+    fix: bool
+
+
+__all__ = ("Rule", "Results", "ErrorDict", "ActionsContext")

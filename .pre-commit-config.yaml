@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/mondeja/project-config
-    rev: v0.5.0
+    rev: fix
     hooks:
       - id: project-config
   - repo: meta
@@ -54,9 +54,9 @@ repos:
           - --add-import
           - from __future__ import annotations
       - id: isort
-        name: isort-tests
-        alias: isort-tests
-        files: ^tests
+        name: isort-meta
+        alias: isort-meta
+        files: ^(docs|tests)
   - repo: https://github.com/flakeheaven/flakeheaven
     rev: 2.0.0
     hooks:

@@ -350,17 +350,33 @@ def initialize_config(config_filepath: str) -> str:
 
     config_file_basename = os.path.basename(config_filepath)
 
-    def create_default_style_file(config_prefix: str = "@") -> None:
+    def create_default_style_file(
+        config_prefix: str = "@",
+        prefix_jmespaths: str = "",
+    ) -> None:
         """Create the default style file if it does not exist."""
         if config_prefix == "@":
 
             def key_matcher(key: str) -> str:
                 return key
 
+            style_setter = "set(@, 'style', ['style.json5'])"
+            cache_setter = "set(@, 'cache', '5 minutes')"
         else:
 
             def key_matcher(key: str) -> str:
                 return f'tool.\\"project-config\\".{key}'
+
+            style_setter = (
+                "set(@, 'tool', set(tool, 'project-config',"
+                ' set(tool.\\"project-config\\",'
+                " 'style', ['style.json5'])))"
+            )
+            cache_setter = (
+                "set(@, 'tool', set(tool, 'project-config',"
+                ' set(tool.\\"project-config\\",'
+                " 'cache', '5 minutes')))"
+            )
 
         with open(style_filepath, "w") as f:
             f.write(
@@ -370,21 +386,31 @@ def initialize_config(config_filepath: str) -> str:
       files: ["'''
                 + config_file_basename
                 + """"],
-      JMESPathsMatch: [
-        ["contains(keys("""
-                + config_prefix
-                + """), 'style')", true],
-        ["type("""
+      JMESPathsMatch: [\n        """
+                + prefix_jmespaths
+                + """["type("""
                 + key_matcher("style")
                 + """)", "array"],
-        ["contains(keys("""
-                + config_prefix
-                + """), 'cache')", true],
+        ["op(length("""
+                + key_matcher("style")
+                + """), '>', `0`)", true, """
+                + '"'
+                + style_setter
+                + '"'
+                + """],
+        ["type("""
+                + key_matcher("cache")
+                + """)", "string", """
+                + '"'
+                + cache_setter
+                + '"'
+                + """],
         [
           "regex_match('(\\\\d+ ((seconds?)|(minutes?)|(hours?)|(days?)|(weeks?)))|(never)$', """  # noqa: E501,
                 + key_matcher("cache")
                 + """)",
           true,
+          "5 minutes",
         ],
       ]
     }
@@ -421,7 +447,14 @@ def initialize_config(config_filepath: str) -> str:
 
         add_config_string_to_file(build_config_string(pyproject_toml=True))
 
-        create_default_style_file(config_prefix='tool.\\"project-config\\"')
+        create_default_style_file(
+            config_prefix='tool.\\"project-config\\"',
+            prefix_jmespaths=(
+                '["type(tool)", "object"],'
+                '\n        ["type(tool.\\"project-config\\")", "object"],'
+                "\n        "
+            ),
+        )
         return f"{config_filepath}[tool.project-config]"
 
     if os.path.isfile(config_filepath):

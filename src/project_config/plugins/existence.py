@@ -5,7 +5,14 @@ from __future__ import annotations
 import os
 import typing as t
 
-from project_config import InterruptingError, Results, ResultValue, Rule, Tree
+from project_config import (
+    ActionsContext,
+    InterruptingError,
+    Results,
+    ResultValue,
+    Rule,
+    Tree,
+)
 
 
 class ExistencePlugin:
@@ -14,6 +21,7 @@ class ExistencePlugin:
         value: t.List[str],
         tree: Tree,
         rule: Rule,
+        context: ActionsContext,
     ) -> Results:
         if not isinstance(value, list):
             yield (

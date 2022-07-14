@@ -106,7 +106,7 @@ def resolve_url(url: str) -> t.Tuple[str, str]:
     scheme = _get_scheme_from_urlparts(url_parts)
     try:
         module = importlib.import_module(f"project_config.fetchers.{scheme}")
-    except ImportError:
+    except ImportError:  # pragma: no cover
         raise SchemeProtocolNotImplementedError(scheme, action="Resolving")
     return (
         getattr(module, "resolve_url", lambda url_parts_: url)(url_parts),

@@ -7,12 +7,18 @@ import pprint
 import typing as t
 
 from project_config import (
+    ActionsContext,
     Error,
     InterruptingError,
     Results,
     ResultValue,
     Rule,
     Tree,
+)
+from project_config.utils.jmespath import (
+    JMESPathError,
+    compile_JMESPath_expression_or_error,
+    fix_tree_serialized_file_by_jmespath,
 )
 
 
@@ -38,6 +44,7 @@ class InclusionPlugin:
         value: t.List[str],
         tree: Tree,
         rule: Rule,
+        context: ActionsContext,
     ) -> Results:
         if not isinstance(value, list):
             yield InterruptingError, {
@@ -54,11 +61,42 @@ class InclusionPlugin:
 
         expected_lines = []
         for i, line in enumerate(value):
-            if not isinstance(line, str):
+            fixer_query = ""
+
+            if isinstance(line, list):
+                # Fixer query expression
+                if len(line) != 2:
+                    yield InterruptingError, {
+                        "message": (
+                            "The '[expected-line, fixer_query]' array"
+                            f" '{pprint.pformat(line)}'"
+                            " must be of length 2"
+                        ),
+                        "definition": f".includeLines[{i}]",
+                    }
+                    return
+
+                line, fixer_query = line
+
+                if not isinstance(line, str) or not isinstance(
+                    fixer_query,
+                    str,
+                ):
+                    yield InterruptingError, {
+                        "message": (
+                            "The '[expected-line, fixer_query]' array items"
+                            f" '{pprint.pformat([line, fixer_query])}'"
+                            " must be of type string"
+                        ),
+                        "definition": f".includeLines[{i}]",
+                    }
+                    return
+
+            elif not isinstance(line, str):
                 yield InterruptingError, {
                     "message": (
                         f"The expected line '{pprint.pformat(line)}'"
-                        " must be of type string"
+                        " must be of type string or array"
                     ),
                     "definition": f".includeLines[{i}]",
                 }
@@ -96,10 +134,51 @@ class InclusionPlugin:
             fcontent_lines = fcontent.splitlines()
             for line_index, expected_line in enumerate(expected_lines):
                 if expected_line not in fcontent_lines:
+                    if context.fix:
+                        if not fixer_query:
+                            fixer_query = f"insert(@, `-1`, '{expected_line}')"
+
+                        try:
+                            compiled_fixer_query = (
+                                compile_JMESPath_expression_or_error(
+                                    fixer_query,
+                                )
+                            )
+                        except JMESPathError as exc:
+                            yield InterruptingError, {
+                                "message": exc.message,
+                                "definition": f".includeLines[{line_index}]",
+                            }
+                            continue
+
+                        _, instance = tree.serialize_file(fpath)
+
+                        try:
+                            diff = fix_tree_serialized_file_by_jmespath(
+                                compiled_fixer_query,
+                                instance,
+                                fpath,
+                                tree,
+                            )
+                        except JMESPathError as exc:
+                            yield InterruptingError, {
+                                "message": exc.message,
+                                "definition": f".includeLines[{line_index}]",
+                            }
+                            continue
+                        else:
+                            fixed = True
+                            if not diff:
+                                continue
+                    else:
+                        fixed = False
+
                     yield Error, {
                         "message": f"Expected line '{expected_line}' not found",
                         "file": fpath,
                         "definition": f".includeLines[{line_index}]",
+                        "fixed": fixed,
+                        "fixable": True,
                     }
 
     @staticmethod
@@ -107,6 +186,7 @@ class InclusionPlugin:
         value: t.Dict[str, t.List[str]],
         tree: Tree,
         rule: Rule,
+        context: ActionsContext,
     ) -> Results:
         if not isinstance(value, dict):
             yield InterruptingError, {
@@ -205,7 +285,14 @@ class InclusionPlugin:
                     checked_lines.append(clean_line)
 
     @staticmethod
-    def excludeContent(value: t.List[str], tree: Tree, rule: Rule) -> Results:
+    def excludeContent(
+        value: t.List[str],
+        tree: Tree,
+        rule: Rule,
+        context: ActionsContext,
+    ) -> Results:
+        # TODO: allow to fix this rule passing a JMESPath as plain text
+        #   (content as string)
         if not isinstance(value, list):
             yield InterruptingError, {
                 "message": "The contents to exclude must be of type array",
@@ -237,18 +324,40 @@ class InclusionPlugin:
             # Normalize newlines
             checked_content = []
             for i, content in enumerate(value):
-                if not isinstance(content, str):
+                fixer_query = ""
+                if isinstance(content, str) or isinstance(content, list):
+                    if isinstance(content, list):
+                        content, fixer_query = content
+
+                        if not isinstance(content, str) or not isinstance(
+                            fixer_query,
+                            str,
+                        ):
+                            content_query = pprint.pformat(
+                                [content, fixer_query],
+                            )
+                            yield InterruptingError, {
+                                "message": (
+                                    "The '[content-to-exclude, fixer_query]'"
+                                    f" array  items '{content_query}'"
+                                    " must be of type string"
+                                ),
+                                "definition": f".excludeContent[{i}]",
+                            }
+                            return
+                else:
                     yield InterruptingError, {
                         "message": (
                             "The content to exclude"
                             f" '{pprint.pformat(content)}'"
-                            " must be of type string"
+                            " must be of type string or array"
                         ),
                         "definition": f".excludeContent[{i}]",
                         "file": fpath,
                     }
                     return
-                elif not content:
+
+                if not content:
                     yield InterruptingError, {
                         "message": "The content to exclude must not be empty",
                         "definition": f".excludeContent[{i}]",
@@ -264,12 +373,53 @@ class InclusionPlugin:
                     return
 
                 if content in fcontent:
+                    if fixer_query:
+                        fixable = True
+                        fixed = False
+                        if context.fix:
+                            try:
+                                compiled_fixer_query = (
+                                    compile_JMESPath_expression_or_error(
+                                        fixer_query,
+                                    )
+                                )
+                            except JMESPathError as exc:
+                                yield InterruptingError, {
+                                    "message": exc.message,
+                                    "definition": f".excludeContent[{i}]",
+                                }
+                                return
+
+                            _, instance = tree.serialize_file(fpath)
+
+                            try:
+                                diff = fix_tree_serialized_file_by_jmespath(
+                                    compiled_fixer_query,
+                                    instance,
+                                    fpath,
+                                    tree,
+                                )
+                            except JMESPathError as exc:
+                                yield InterruptingError, {
+                                    "message": exc.message,
+                                    "definition": f".excludeContent[{i}]",
+                                }
+                                return
+                            else:
+                                fixed = True
+                                if not diff:
+                                    continue
+                    else:
+                        fixed = False
+                        fixable = False
                     yield Error, {
                         "message": (
                             f"Found expected content to exclude '{content}'"
                         ),
                         "file": fpath,
                         "definition": f".excludeContent[{i}]",
+                        "fixed": fixed,
+                        "fixable": fixable,
                     }
                 else:
                     checked_content.append(content)

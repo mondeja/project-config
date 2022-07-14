@@ -4,7 +4,7 @@ from jmespath.functions import Functions as JMESPathFunctions
 from testing_helpers import rootdir
 
 from project_config.plugins import Plugins
-from project_config.plugins.jmespath import jmespath_options
+from project_config.utils.jmespath import jmespath_options
 
 
 PLUGINS_REFERENCE_FILEPATH = os.path.join(

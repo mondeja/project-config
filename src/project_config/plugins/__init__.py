@@ -14,12 +14,15 @@ import typing as t
 from project_config.compat import TypeAlias, importlib_metadata
 from project_config.exceptions import ProjectConfigException
 from project_config.tree import Tree
-from project_config.types import Results, Rule
+from project_config.types import ActionsContext, Results, Rule
 
 
 PROJECT_CONFIG_PLUGINS_ENTRYPOINTS_GROUP = "project_config.plugins"
 
-PluginMethod: TypeAlias = t.Callable[[t.Any, Tree, Rule], Results]
+PluginMethod: TypeAlias = t.Callable[
+    [t.Any, Tree, Rule, t.Optional[ActionsContext]],
+    Results,
+]
 
 
 class InvalidPluginFunction(ProjectConfigException):

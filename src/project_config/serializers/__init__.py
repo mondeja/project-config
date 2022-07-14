@@ -11,17 +11,11 @@ import urllib.parse
 
 from identify import identify
 
-from project_config.compat import (
-    NotRequired,
-    Protocol,
-    TypeAlias,
-    TypedDict,
-    tomllib_package_name,
-)
+from project_config.compat import NotRequired, Protocol, TypeAlias, TypedDict
 from project_config.exceptions import ProjectConfigException
 
 
-SerializerResult = t.Dict[str, t.Any]
+SerializerResult = t.Any
 
 
 class SerializerFunction(Protocol):
@@ -29,7 +23,7 @@ class SerializerFunction(Protocol):
 
     def __call__(  # noqa: D102
         self,
-        string: str,
+        value: t.Any,
         **kwargs: t.Any,
     ) -> SerializerResult:  # pragma: no cover
         ...
@@ -55,68 +49,97 @@ class SerializerDefinitionType(TypedDict):
 
 SerializerDefinitionsType: TypeAlias = t.List[SerializerDefinitionType]
 
-serializers: t.Dict[str, SerializerDefinitionsType] = {
-    ".json": [{"module": "json"}],
-    ".json5": [{"module": "pyjson5"}, {"module": "json5"}],
-    ".yaml": [
-        {
-            # Implementation notes:
-            #
-            # PyYaml is currently using the Yaml 1.1 specification,
-            # which converts some words like `on` and `off` to `True`
-            # and `False`. This leads to problems, for example, checking
-            # `on.` objects in Github workflows.
-            #
-            # There is an issue open to track the progress to support
-            # YAML 1.2 at https://github.com/yaml/pyyaml/issues/486
-            #
-            # Comparison of v1.1 vs v1.2 at:
-            # https://perlpunk.github.io/yaml-test-schema/schemas.html
-            #
-            # "module": "yaml",
-            # "function": "load",
-            # "function_kwargs": {
-            #    "Loader": {
-            #        "module": "yaml",
-            #        "object": "CSafeLoader",
-            #        "object_fallback": "SafeLoader",
-            #    },
-            # },
-            #
-            # So we use ruamel.yaml, which supports v1.2 by default
-            "module": "project_config.serializers.yaml",
-        },
-    ],
-    ".toml": [{"module": tomllib_package_name}],
-    ".ini": [{"module": "project_config.serializers.ini"}],
-    ".editorconfig": [{"module": "project_config.serializers.editorconfig"}],
-    ".py": [
-        {
-            "module": "project_config.serializers.python",
-            "function_kwargs_from_url_path": lambda path: {
-                "namespace": {"__file__": path},
+serializers: t.Dict[
+    str,
+    t.Tuple[SerializerDefinitionsType, SerializerDefinitionsType],
+] = {
+    ".json": (
+        [{"module": "project_config.serializers.json_"}],  # loads
+        [{"module": "project_config.serializers.json_"}],  # dumps
+    ),
+    ".json5": (
+        [{"module": "pyjson5"}, {"module": "json5"}],
+        [{"module": "pyjson5"}, {"module": "json5"}],
+    ),
+    ".yaml": (
+        [
+            {
+                # Implementation notes:
+                #
+                # PyYaml is currently using the Yaml 1.1 specification,
+                # which converts some words like `on` and `off` to `True`
+                # and `False`. This leads to problems, for example, checking
+                # `on.` objects in Github workflows.
+                #
+                # There is an issue open to track the progress to support
+                # YAML 1.2 at https://github.com/yaml/pyyaml/issues/486
+                #
+                # Comparison of v1.1 vs v1.2 at:
+                # https://perlpunk.github.io/yaml-test-schema/schemas.html
+                #
+                # "module": "yaml",
+                # "function": "load",
+                # "function_kwargs": {
+                #    "Loader": {
+                #        "module": "yaml",
+                #        "object": "CSafeLoader",
+                #        "object_fallback": "SafeLoader",
+                #    },
+                # },
+                #
+                # So we use ruamel.yaml, which supports v1.2 by default
+                "module": "project_config.serializers.yaml",
             },
-        },
-    ],
+        ],
+        [{"module": "project_config.serializers.yaml"}],
+    ),
+    ".toml": (
+        [{"module": "project_config.serializers.toml"}],
+        [{"module": "tomlkit"}],
+    ),
+    ".ini": (
+        [{"module": "project_config.serializers.ini"}],
+        [{"module": "project_config.serializers.ini"}],
+    ),
+    ".editorconfig": (
+        [{"module": "project_config.serializers.editorconfig"}],
+        [{"module": "project_config.serializers.editorconfig"}],
+    ),
+    ".py": (
+        [
+            {
+                "module": "project_config.serializers.python",
+                "function_kwargs_from_url_path": lambda path: {
+                    "namespace": {"__file__": path},
+                },
+            },
+        ],
+        [{"module": "project_config.serializers.python"}],
+    ),
 }
 
-serializers_fallback: SerializerDefinitionsType = [
-    {"module": "project_config.serializers.text"},
-]
+serializers_fallback: t.Tuple[
+    SerializerDefinitionsType,
+    SerializerDefinitionsType,
+] = (
+    [{"module": "project_config.serializers.text"}],
+    [{"module": "project_config.serializers.text"}],
+)
 
 
-def _identify_serializer(filename: str) -> SerializerDefinitionsType:
-    serializer = None
-    for tag in identify.tags_from_filename(filename):
-        if f".{tag}" in serializers:
-            serializer = serializers[f".{tag}"]
+def _identify_serializer(filename: str) -> str:
+    tag: t.Optional[str] = None
+    for tag_ in identify.tags_from_filename(filename):
+        if f".{tag_}" in serializers:
+            tag = tag_
             break
-    return serializer if serializer is not None else serializers_fallback
+    return tag if tag is not None else "text"
 
 
 def _get_serializer(
     url: str,
     prefer_serializer: t.Optional[str] = None,
+    loader_function_name: str = "loads",
 ) -> SerializerFunction:
     url_parts = urllib.parse.urlsplit(url)
 
@@ -141,13 +164,33 @@ def _get_serializer(
             serializer = serializers[ext]
         except KeyError:
             # try to guess the file type with identify
-            serializer = _identify_serializer(os.path.basename(url_parts.path))
-
+            serializer_name = _identify_serializer(
+                os.path.basename(url_parts.path),
+            )
+            if serializer_name == "text":
+                serializer = serializers_fallback
+            elif f".{serializer_name}" in serializers:
+                serializer = serializers[f".{serializer_name}"]
+            else:
+                raise SerializerError(
+                    _file_can_not_be_serialized_as_object_error(
+                        url,
+                        (
+                            f"\nSerializer detected as '{serializer_name}'"
+                            " not supported"
+                        ),
+                    ),
+                )
+    serializer = serializer[  # type: ignore
+        0 if loader_function_name == "loads" else 1
+    ]
     # prepare serializer function
     serializer_definition, module = None, None
     for i, serializer_def in enumerate(serializer):
         try:
-            module = importlib.import_module(serializer_def["module"])
+            module = importlib.import_module(
+                serializer_def["module"],  # type: ignore
+            )
         except ImportError:  # pragma: no cover
             # if module for implementation is not importable, try next maybe
             if i > len(serializer) - 1:
@@ -155,14 +198,13 @@ def _get_serializer(
         else:
             serializer_definition = serializer_def
             break
-    serializer_definition = t.cast(
-        SerializerDefinitionType,
-        serializer_definition,
-    )
 
     loader_function: SerializerFunction = getattr(
         module,
-        serializer_definition.get("function", "loads"),
+        serializer_definition.get(  # type: ignore
+            "function",
+            loader_function_name,
+        ),
     )
 
     function_kwargs: SerializerFunctionKwargs = {}
@@ -186,9 +228,11 @@ def _get_serializer(
             function_kwargs[kwarg_name] = obj
     """
 
-    if "function_kwargs_from_url_path" in serializer_definition:
+    if "function_kwargs_from_url_path" in serializer_definition:  # type: ignore
         function_kwargs.update(
-            serializer_definition["function_kwargs_from_url_path"](
+            serializer_definition[  # type: ignore
+                "function_kwargs_from_url_path"
+            ](
                 os.path.basename(url_parts.path),
             ),
         )
@@ -209,7 +253,11 @@ def guess_preferred_serializer(url: str) -> t.Tuple[str, t.Optional[str]]:
         # forcing new serializer to get content
         url, serializer_name = url.rsplit("?", maxsplit=1)
     except ValueError:
-        return url, None
+        url_parts = urllib.parse.urlsplit(url)
+        ext = os.path.splitext(url_parts.path)[-1].lstrip(".")
+        if f".{ext}" in serializers:
+            return url, ext
+        return url, _identify_serializer(os.path.basename(url_parts.path))
     else:
         return url, serializer_name
 
@@ -219,6 +267,28 @@ def _file_can_not_be_serialized_as_object_error(
     error_message: str,
 ) -> str:
     return f"'{url}' can't be serialized as a valid object:{error_message}"
+
+
+def deserialize_for_url(
+    url: str,
+    content: t.Any,
+    prefer_serializer: t.Optional[str] = None,
+) -> t.Any:
+    """Deserialize content for URL.
+
+    Args:
+        url (str): URL to deserialize content for.
+        content (Any): Content to deserialize.
+        prefer_serializer (str): Preferred serializer.
+
+    Returns:
+        str: Deserialized content.
+    """
+    return _get_serializer(
+        url,
+        prefer_serializer=prefer_serializer,
+        loader_function_name="dumps",
+    )(content)
 
 
 def serialize_for_url(
@@ -251,7 +321,7 @@ def serialize_for_url(
             "json",  # json.serializer.JSONDecodeError
             "pyjson5",  # pyjson5.Json5IllegalCharacter
             "tomli",  # tomli.TOMLDecodeError
-            # "tomlkit",  # tomlkit.exceptions.UnexpectedEofError
+            "tomlkit",  # tomlkit.exceptions.UnexpectedEofError
         ):
             raise SerializerError(
                 _file_can_not_be_serialized_as_object_error(
@@ -269,3 +339,15 @@ def serialize_for_url(
             )
         raise  # pragma: no cover
     return result
+
+
+def build_empty_file_for_serializer(serializer_name: str) -> str:
+    """Build empty file for serializer.
+
+    Args:
+        serializer_name (str): Serializer name.
+
+    Returns:
+        str: Empty file for serializer.
+    """
+    return "{}" if serializer_name == "json" else ""

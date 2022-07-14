@@ -26,20 +26,24 @@ JSON
 ****
 
 * Loader: :py:func:`json.loads`.
+* Dumper: :py:func:`json.dumps`.
 
 *****
 JSON5
 *****
 
-* Loader: :py:func:`pyjson5.loads` (if installed) or `json5.loads`_.
+* Loader: :py:func:`pyjson5.loads` or `json5.loads`_ as fallback.
+* Dumper: :py:func:`pyjson5.dumps` or `json5.dumps`_ as fallback.
 
 .. _json5.loads: https://github.com/dpranke/pyjson5
+.. _json5.dumps: https://github.com/dpranke/pyjson5
 
 ***********
 YAML (v1.2)
 ***********
 
 * Loader: :py:func:`project_config.serializers.yaml.loads` (based on `ruamel.yaml`_).
+* Dumper: :py:func:`project_config.serializers.yaml.dumps` (based on `ruamel.yaml`_).
 * See `YAML supported types by version`_.
 
 .. _YAML supported types by version: https://perlpunk.github.io/yaml-test-schema/schemas.html
@@ -49,11 +53,14 @@ YAML (v1.2)
 TOML (v1)
 *********
 
-* Loader: `tomli.loads`_ (Python < 3.11) or `tomllib.loads`_.
+* Loader: `tomlkit.parse`_.
+* Dumper: `tomlkit.dumps`_.
 * See the `TOML v1 specification`_.
 
 .. _tomli.loads: https://github.com/hukkin/tomli#parse-a-toml-string
 .. _tomllib.loads: https://docs.python.org/3.11/library/tomllib.html#tomllib.loads
+.. _tomlkit.dumps: https://github.com/sdispater/tomlkit/blob/master/docs/quickstart.rst#modifying
+.. _tomlkit.parse: https://github.com/sdispater/tomlkit/blob/master/docs/quickstart.rst#parsing
 .. _TOML v1 specification: https://toml.io/en/v1.0.0
 
 ***
@@ -61,12 +68,14 @@ INI
 ***
 
 * Loader: :py:func:`project_config.serializers.ini.loads`.
+* Dumper: :py:func:`project_config.serializers.ini.dumps`.
 
 ************
 Editorconfig
 ************
 
 * Loader: :py:func:`project_config.serializers.editorconfig.loads`.
+* Dumper: :py:func:`project_config.serializers.editorconfig.dumps`.
 
 The `root` directive, if exists, will be added in a ``""`` object:
 
@@ -108,6 +117,7 @@ For Python files, the global namespace exposed is serialized after
 executing them.
 
 * Loader: :py:func:`project_config.serializers.python.loads`
+* Dumper: :py:func:`project_config.serializers.python.dumps`
 
 .. tabs::
 
@@ -139,6 +149,7 @@ Fallback for all serialized files. Just converts the string to an array
 of lines, excluding line endings.
 
 * Loader: :py:func:`project_config.serializers.text.loads`.
+* Dumper: :py:func:`project_config.serializers.text.dumps`.
 
 .. tabs::
 

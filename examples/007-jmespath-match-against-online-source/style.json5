@@ -7,7 +7,7 @@
           "license",
           [
             "gh://spdx/license-list-data@v3.17/json/licenses.json",
-            "licenses[?isOsiApproved] | [?isDeprecatedLicenseId == `false`].licenseId",
+            "licenses[?isOsiApproved] | [?!isDeprecatedLicenseId].licenseId",
           ],
           "contains([1], [0])",
           true,

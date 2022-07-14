@@ -2,6 +2,7 @@
   rules: [
     {
       files: [".project-config.toml"],
+      hint: "The name of the root directory must match the regex '[a-z0-9-]+$'",
       JMESPathsMatch: [["regex_match('[a-z0-9-]+$', rootdir_name())", true]],
     },
   ],

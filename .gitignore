@@ -11,3 +11,6 @@ docs/_build/
 docs/dev/reference/
 *.egg-info/
 docs/examples.rst
+docs/tutorials/pages/*
+!docs/tutorials/pages/.keep
+docs/_examples/

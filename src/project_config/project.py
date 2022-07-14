@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import os
+import shutil
 import sys
 import typing as t
 from dataclasses import dataclass
@@ -12,8 +13,12 @@ from project_config.config import Config
 from project_config.constants import Error, InterruptingError, ResultValue
 from project_config.plugins import InvalidPluginFunction, Plugins
 from project_config.reporters import get_reporter
-from project_config.tree import Tree, TreeNodeFiles
-from project_config.types import Rule
+from project_config.serializers import (
+    build_empty_file_for_serializer,
+    guess_preferred_serializer,
+)
+from project_config.tree import Tree
+from project_config.types import ActionsContext, Rule
 
 
 class InterruptCheck(Exception):
@@ -42,12 +47,15 @@ class Project:
         rootdir (str): Root directory of the project.
         reporter_ (dict): Reporter to use.
         color (bool): Colorized output in reporters.
+        fix (bool): Fix errors.
     """
 
     config_path: str
     rootdir: str
     reporter_: t.Dict[str, t.Any]
     color: bool
+    _actions_context: t.Optional[ActionsContext] = None
+    fix: bool = False
 
     def _load(
         self,
@@ -68,6 +76,7 @@ class Project:
             self.reporter_,
             self.rootdir,
         )
+        # TODO: Configure fix from config file
 
         if fetch_styles:
             self.config.load_style()
@@ -85,19 +94,39 @@ class Project:
         # set rootdir as an internal environment variable to be used by plugins
         os.environ["PROJECT_CONFIG_ROOTDIR"] = self.rootdir
 
+        self._actions_context = ActionsContext(fix=self.fix)
+
     def _check_files_existence(
         self,
-        files: TreeNodeFiles,
+        files: t.List[t.Tuple[str, t.Any]],
         rule_index: int,
     ) -> None:
         for f, (fpath, fcontent) in enumerate(files):
+            ftype = "directory" if fpath.endswith(("/", os.sep)) else "file"
             if fcontent is None:  # file or directory does not exist
-                ftype = "directory" if fpath.endswith(("/", os.sep)) else "file"
+
+                if self.fix:
+                    if ftype == "directory":
+                        os.makedirs(fpath, exist_ok=True)
+                        self.tree.cache_files([fpath])
+                    else:
+                        _, serializer_name = guess_preferred_serializer(fpath)
+                        new_content = (
+                            ""
+                            if not serializer_name
+                            else build_empty_file_for_serializer(
+                                serializer_name,
+                            )
+                        )
+                        with open(fpath, "w", encoding="utf-8") as fd:
+                            fd.write(new_content)
+                        self.tree.cache_files([fpath])
                 self.reporter.report_error(
                     {
                         "message": f"Expected existing {ftype} does not exists",
                         "file": fpath,
                         "definition": f"rules[{rule_index}].files[{f}]",
+                        "fixed": self.fix,
                     },
                 )
 
@@ -106,6 +135,7 @@ class Project:
         files: t.Union[t.List[str], t.Dict[str, str]],
         rule_index: int,
     ) -> None:
+        fixed_files = []
         if isinstance(files, dict):
             for fpath, reason in files.items():
                 normalized_fpath = os.path.join(self.rootdir, fpath)
@@ -116,6 +146,13 @@ class Project:
                     else os.path.isfile(normalized_fpath)
                 )
                 if exists:
+                    if self.fix:
+                        if ftype == "directory":
+                            shutil.rmtree(normalized_fpath)
+                        else:
+                            os.remove(normalized_fpath)
+                        fixed_files.append(fpath)
+
                     message = f"Expected absent {ftype} exists"
                     if reason:
                         message += f". {reason}"
@@ -128,6 +165,7 @@ class Project:
                             "definition": (
                                 f"rules[{rule_index}].files.not[{fpath}]"
                             ),
+                            "fixed": self.fix,
                         },
                     )
         else:
@@ -140,13 +178,23 @@ class Project:
                     else os.path.isfile(normalized_fpath)
                 )
                 if exists:
+                    if self.fix:
+                        if ftype == "directory":
+                            shutil.rmtree(normalized_fpath)
+                        else:
+                            os.remove(normalized_fpath)
+                        fixed_files.append(fpath)
                     self.reporter.report_error(
                         {
                             "message": f"Expected absent {ftype} exists",
                             "file": fpath,
                             "definition": f"rules[{rule_index}].files.not[{f}]",
+                            "fixed": self.fix,
                         },
                     )
+
+        if fixed_files:
+            self.tree.cache_files(fixed_files)
 
     def _process_conditionals_for_rule(
         self,
@@ -178,6 +226,7 @@ class Project:
                 rule[conditional],  # type: ignore
                 tree,
                 rule,
+                self._actions_context,
             ):
                 if breakage_type in (InterruptingError, Error):
                     breakage_value["definition"] = (
@@ -188,7 +237,7 @@ class Project:
                 elif breakage_type == ResultValue:
                     if breakage_value is False:
                         raise ConditionalsFalseResult()
-                    else:
+                    else:  # pragma: no cover
                         break
                 else:
                     raise NotImplementedError(
@@ -252,6 +301,7 @@ class Project:
                     rule[verb],
                     self.tree,
                     rule,
+                    self._actions_context,
                 ):
                     if breakage_type == Error:
                         # prepend rule index to definition, so plugins do not
@@ -259,10 +309,15 @@ class Project:
                         breakage_value["definition"] = (
                             f"rules[{r}]" + breakage_value["definition"]
                         )
+
+                        if not self.fix:
+                            breakage_value["fixed"] = False
+
                         # show hint if defined in the rule
                         if hint:
                             breakage_value["hint"] = hint
                         self.reporter.report_error(breakage_value)
+
                     elif breakage_type == InterruptingError:
                         breakage_value["definition"] = (
                             f"rules[{r}]" + breakage_value["definition"]

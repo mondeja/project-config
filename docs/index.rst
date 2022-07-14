@@ -12,6 +12,7 @@ multiple projects.
    install
    basic-usage
    examples
+   tutorials/index
 
 .. toctree::
    :maxdepth: 3

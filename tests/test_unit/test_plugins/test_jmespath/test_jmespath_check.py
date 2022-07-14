@@ -30,6 +30,8 @@ from project_config.plugins.jmespath import JMESPathPlugin
                             " does not match. Expected True,"
                             " returned False"
                         ),
+                        "fixed": False,
+                        "fixable": False,
                     },
                 ),
             ],
@@ -57,6 +59,8 @@ from project_config.plugins.jmespath import JMESPathPlugin
                             " does not match. Expected True,"
                             " returned False"
                         ),
+                        "fixed": False,
+                        "fixable": False,
                     },
                 ),
             ],
@@ -537,7 +541,7 @@ def test_JMESPath_custom_functions(
         ),
         pytest.param(
             {},
-            [["foo", "bar"], ["foo", "bar", "baz"]],
+            [["foo", "bar"], ["foo", "bar", "baz", "qux"]],
             None,
             [
                 (
@@ -545,7 +549,7 @@ def test_JMESPath_custom_functions(
                     {
                         "definition": ".JMESPathsMatch[1]",
                         "message": (
-                            "The JMES path match tuple must be of length 2"
+                            "The JMES path match tuple must be of length 2 or 3"
                         ),
                     },
                 ),
@@ -654,6 +658,8 @@ def test_JMESPath_custom_functions(
                             " Expected False, returned True"
                         ),
                         "file": "foo.json",
+                        "fixed": False,
+                        "fixable": False,
                     },
                 ),
             ],
@@ -712,7 +718,7 @@ def test_JMESPathsMatch(
     (
         pytest.param(
             {},
-            [],  # must be a dict
+            [],
             None,
             [
                 (
@@ -1473,7 +1479,7 @@ def test_ifJMESPathsMatch(
                     InterruptingError,
                     {
                         "definition": ".files[0]",
-                        "file": "foo",
+                        "file": "foo/",
                         "message": (
                             "A JMES path can not be applied to a directory"
                         ),

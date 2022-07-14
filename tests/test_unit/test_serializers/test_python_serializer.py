@@ -2,7 +2,7 @@ import os
 
 import pytest
 
-from project_config.serializers.python import loads
+from project_config.serializers.python import dumps, loads
 
 
 @pytest.mark.parametrize(
@@ -42,3 +42,73 @@ from project_config.serializers.python import loads
 def test_python_serializer(string, kwargs, expected_result, maybe_raises):
     with maybe_raises(expected_result):
         assert loads(string, **kwargs) == expected_result
+
+
+@pytest.mark.parametrize(
+    ("obj", "expected_result"),
+    (
+        pytest.param(
+            {"foo": "bar", "baz": 1},
+            'foo = "bar"\nbaz = 1\n',
+            id="basic",
+        ),
+        pytest.param(
+            {"foo": 1, "bar": 2, "baz": bool, "qux": "a string"},
+            'foo = 1\nbar = 2\nbaz = bool\nqux = "a string"\n',
+            id="type",
+        ),
+        pytest.param(
+            {"foo": 1, "bar": {"baz": bool, "qux": "a string"}},
+            'foo = 1\nbar = {"baz": bool, "qux": "a string"}\n',
+            id="dict",
+        ),
+        pytest.param(
+            {
+                "baz": [1, 2, 3, 4, 5, bool, True, "string"],
+                "bar": [
+                    1,
+                    2.321,
+                    True,
+                    None,
+                    False,
+                    str,
+                    "foo",
+                    "bar",
+                    "baz",
+                    "qux",
+                ],
+                "foo": {
+                    "bar": bool,
+                    "baz": "a string",
+                    "bbar": True,
+                    "bbaz": False,
+                    "nfoo": None,
+                },
+            },
+            """baz = [1, 2, 3, 4, 5, bool, True, "string"]
+bar = [
+    1,
+    2.321,
+    True,
+    None,
+    False,
+    str,
+    "foo",
+    "bar",
+    "baz",
+    "qux",
+]
+foo = {
+    "bar": bool,
+    "baz": "a string",
+    "bbar": True,
+    "bbaz": False,
+    "nfoo": None,
+}
+""",
+            id="list",
+        ),
+    ),
+)
+def test_python_deserializer(obj, expected_result):
+    assert dumps(obj) == expected_result

@@ -104,3 +104,40 @@ def loads(string: str) -> EditorConfigConfigType:
             continue
 
     return result
+
+
+def _pyobject_to_ini_str(obj: t.Any) -> str:
+    """Converts a Python object to a string.
+
+    Args:
+        obj (Any): Python object.
+
+    Returns:
+        str: String representation of the object.
+    """
+    if isinstance(obj, str):
+        if not obj:
+            return '""'
+    elif isinstance(obj, bool):
+        return "true" if obj else "false"
+    return str(obj)
+
+
+def dumps(obj: t.Any) -> str:
+    """Converts a JSON object to a .editorconfig configuration file string.
+
+    Args:
+        obj (Any): JSON object.
+    """
+    result = ""
+
+    for key, value in obj.items():
+        if key == "":
+            for optname, optvalue in value.items():
+                result += f"{optname} = {_pyobject_to_ini_str(optvalue)}\n"
+        else:
+            result += f"\n[{key}]\n"
+            for optname, optvalue in value.items():
+                result += f"{optname} = {_pyobject_to_ini_str(optvalue)}\n"
+
+    return result

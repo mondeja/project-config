@@ -7,6 +7,8 @@ import pathlib
 import types
 import typing as t
 
+import pytest
+
 from project_config.compat import TypeAlias
 from project_config.tree import Tree
 
@@ -45,8 +47,12 @@ def create_files(  # noqa: D103
             if os.path.isdir(full_path):
                 continue
 
-            with open(full_path, "w", encoding="utf-8") as f:
-                f.write(content)
+            try:
+                with open(full_path, "w", encoding="utf-8") as f:
+                    f.write(content)
+            except OSError:
+                # globs raising here in Windows
+                continue
 
 
 def create_tree(  # noqa: D103
@@ -64,6 +70,36 @@ def create_tree(  # noqa: D103
     return tree
 
 
+def assert_expected_files(  # noqa: D103
+    expected_files: FilesType,
+    rootdir: RootdirType,
+) -> None:
+    if isinstance(rootdir, pathlib.Path):
+        rootdir = str(rootdir)
+    _expected_files = (
+        expected_files.items()
+        if isinstance(expected_files, dict)
+        else expected_files
+    )
+    for fpath, content in _expected_files:
+        full_path = os.path.join(rootdir, fpath)
+        if content is False:
+            assert not os.path.exists(full_path)
+        else:
+            assert os.path.exists(full_path)
+            if content is not None:
+                try:
+                    with open(full_path, encoding="utf-8") as f:
+                        assert f.read() == content
+                except IsADirectoryError:
+                    continue
+                except PermissionError:
+                    pytest.skip()
+                    continue
+                except OSError:
+                    continue
+
+
 def get_reporter_class_from_module(  # noqa: D103
     reporter_module: types.ModuleType,
     color: bool,
@@ -77,6 +113,7 @@ def get_reporter_class_from_module(  # noqa: D103
             and "ColorReporter" not in object_name
         ):
             return getattr(reporter_module, object_name)  # type: ignore
+
     raise ValueError(
         f"No{' color' if color else ''} reporter class found in"
         f" module '{reporter_module.__name__}'",
@@ -84,6 +121,7 @@ def get_reporter_class_from_module(  # noqa: D103
 
 
 __all__ = (
+    "assert_expected_files",
     "create_files",
     "create_tree",
     "get_reporter_class_from_module",

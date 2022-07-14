@@ -1,7 +1,15 @@
 - id: project-config
   name: project-config
   entry: project-config check
-  description: Reproducible configuration across projects.
+  description: Check mode for project-config as a pre-commit hook.
+  language: python
+  types:
+    - text
+  pass_filenames: false
+- id: project-config-fix
+  name: project-config-fix
+  entry: project-config fix
+  description: Fix mode for project-config as a pre-commit hook.
   language: python
   types:
     - text

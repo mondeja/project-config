@@ -46,7 +46,8 @@ from project_config.plugins.inclusion import InclusionPlugin
                     InterruptingError,
                     {
                         "message": (
-                            "The expected line '5' must be of type string"
+                            "The expected line '5' must be of type"
+                            " string or array"
                         ),
                         "definition": ".includeLines[1]",
                     },
@@ -101,6 +102,8 @@ from project_config.plugins.inclusion import InclusionPlugin
                     {
                         "definition": ".includeLines[0]",
                         "file": "foo.ext",
+                        "fixed": False,
+                        "fixable": True,
                         "message": "Expected line 'bar' not found",
                     },
                 ),
@@ -456,7 +459,8 @@ def test_ifIncludeLines(
                     {
                         "definition": ".excludeContent[1]",
                         "message": (
-                            "The content to exclude '5' must be of type string"
+                            "The content to exclude '5' must be"
+                            " of type string or array"
                         ),
                         "file": "foo.ext",
                     },
@@ -533,6 +537,8 @@ def test_ifIncludeLines(
                         "definition": ".excludeContent[0]",
                         "file": "foo.ext",
                         "message": "Found expected content to exclude 'foo'",
+                        "fixable": False,
+                        "fixed": False,
                     },
                 ),
             ],

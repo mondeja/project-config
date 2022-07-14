@@ -57,6 +57,20 @@ class YamlColorReporter(BaseColorReporter):
                     f'{self.format_metachar(":")}'
                     f" {self.format_hint(line[10:])}\n"
                 )
+            elif line.startswith("    fixed"):  # hint
+                report += (
+                    f"   "
+                    f' {self.format_key("fixed")}'
+                    f'{self.format_metachar(":")}'
+                    f" {self.format_fixed('true')}\n"
+                )
+            elif line.startswith("    fixable"):  # hint
+                report += (
+                    f"   "
+                    f' {self.format_key("fixable")}'
+                    f'{self.format_metachar(":")}'
+                    f" {self.format_fixed('true')}\n"
+                )
             elif line:
                 report += (
                     f"{self.format_file(line[:-1])}"
