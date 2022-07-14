@@ -47,8 +47,12 @@ def create_files(  # noqa: D103
             if os.path.isdir(full_path):
                 continue
 
-            with open(full_path, "w", encoding="utf-8") as f:
-                f.write(content)
+            try:
+                with open(full_path, "w", encoding="utf-8") as f:
+                    f.write(content)
+            except OSError:
+                # globs raising here in Windows
+                continue
 
 
 def create_tree(  # noqa: D103
@@ -91,6 +95,8 @@ def assert_expected_files(  # noqa: D103
                     continue
                 except PermissionError:
                     pytest.skip()
+                    continue
+                except OSError:
                     continue
 
 
