@@ -1,6 +1,9 @@
+from testing_helpers import mark_unix_only
+
 from project_config.__main__ import run
 
 
+@mark_unix_only
 def test_file_not_exists_is_created(tmp_path, chdir, monkeypatch, capsys):
     monkeypatch.setenv("NO_COLOR", "true")
     (tmp_path / ".project-config.toml").write_text('style = "style.json5"')
@@ -28,6 +31,7 @@ def test_file_not_exists_is_created(tmp_path, chdir, monkeypatch, capsys):
     )
 
 
+@mark_unix_only
 def test_directory_not_exists_is_created(tmp_path, chdir, monkeypatch, capsys):
     monkeypatch.setenv("NO_COLOR", "true")
     (tmp_path / ".project-config.toml").write_text('style = "style.json5"')

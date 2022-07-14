@@ -1,4 +1,5 @@
 import os
+import sys
 import urllib.parse
 
 import flask
@@ -18,6 +19,11 @@ TEST_SERVER_HOST, TEST_SERVER_PORT = urllib.parse.urlsplit(
 mark_end2end = pytest.mark.skipif(
     not os.environ.get("PROJECT_CONFIG_TESTS_E2E"),
     reason="The environment variable PROJECT_CONFIG_TESTS_E2E is not set",
+)
+
+mark_unix_only = pytest.mark.skipif(
+    "sys" in sys.platform,
+    reason="Windows does not support this test",
 )
 
 
