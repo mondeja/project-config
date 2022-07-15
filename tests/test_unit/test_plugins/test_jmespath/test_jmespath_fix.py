@@ -429,10 +429,10 @@ JSON_2_INDENTED = lambda string: (  # noqa: E731
             id="fixer-query-evaluation-error",
         ),
         pytest.param(
-            {".editorconfig": "{}"},
+            {".editor.json": "{}"},
             [
-                ['"".root', True],
-                ['"*".end_of_line', "lf"],
+                ['"".boolean_value', True],
+                ['"*".string_value', "lf"],
             ],
             None,
             [
@@ -440,11 +440,11 @@ JSON_2_INDENTED = lambda string: (  # noqa: E731
                     Error,
                     {
                         "definition": ".JMESPathsMatch[0]",
-                        "file": ".editorconfig",
+                        "file": ".editor.json",
                         "fixable": True,
                         "fixed": True,
                         "message": (
-                            "JMESPath '\"\".root' does not match."
+                            "JMESPath '\"\".boolean_value' does not match."
                             " Expected True, returned None"
                         ),
                     },
@@ -453,17 +453,22 @@ JSON_2_INDENTED = lambda string: (  # noqa: E731
                     Error,
                     {
                         "definition": ".JMESPathsMatch[1]",
-                        "file": ".editorconfig",
+                        "file": ".editor.json",
                         "fixable": True,
                         "fixed": True,
                         "message": (
-                            "JMESPath '\"*\".end_of_line' does not match."
+                            "JMESPath '\"*\".string_value' does not match."
                             " Expected 'lf', returned None"
                         ),
                     },
                 ),
             ],
-            {".editorconfig": "root = true\n\n[*]\nend_of_line = lf\n"},
+            {
+                ".editor.json": JSON_2_INDENTED(
+                    '{"": {"boolean_value": true},'
+                    ' "*": {"string_value": "lf"}}',
+                ),
+            },
             id="fixer-query-subexpression-smart",
         ),
     ),

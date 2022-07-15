@@ -1,0 +1,20 @@
+{
+  rules: [
+    {
+      files: [".pre-commit-config.yaml"],
+      ifJMESPathsMatch: {
+        ".pre-commit-config.yaml": [
+          ["type(@)", "object"],
+          ["type(repos)", "array"],
+        ],
+      },
+      JMESPathsMatch: [
+        [
+          "length(repos[?repo=='https://github.com/editorconfig-checker/editorconfig-checker.python'])",
+          1,
+          "set(@, 'repos', insert(repos, `-1`, {rev: gh_tags('editorconfig-checker', 'editorconfig-checker.python', True)[0], repo: 'https://github.com/editorconfig-checker/editorconfig-checker.python', hooks: [{id: 'editorconfig-checker', name: 'editorconfig-checker', alias: 'ec'}]}))",
+        ],
+      ],
+    },
+  ],
+}
