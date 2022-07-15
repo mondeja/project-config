@@ -271,7 +271,7 @@ class Config:
         color: t.Optional[bool],
         reporter: t.Dict[str, t.Any],
         rootdir: str,
-    ) -> t.Tuple[t.Any, t.Dict[str, t.Any], t.Any]:
+    ) -> t.Tuple[t.Any, t.Dict[str, t.Any], t.Any, bool]:
         """Guess the final configuration merging file with CLI arguments."""
         # colorize output?
         color = self.cli.get("color") if color is True else color
@@ -314,10 +314,13 @@ class Config:
                 f"Root directory '{rootdir}' must be an existing directory",
             )
 
+        only_hints = self.cli.get("only_hints") is True
+
         return (
             color,
             reporter,
             self.rootdir,
+            only_hints,
         )
 
     def __getitem__(self, key: str) -> t.Any:

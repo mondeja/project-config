@@ -128,15 +128,40 @@ Specifies if your want the output to be colored. Corresponds to the
 Custom colors used in the output of the CLI. Corresponds to the ``color=``
 argument of the :ref:`project-config---reporter` optional CLI argument.
 
+``cli.only_hints`` (`boolean`)
+------------------------------
+
+Specifies if you want to only show the hints rather than the full error messages
+if rules have them. As default disabled.
+
 .. rubric:: Example
 
-.. code-block:: toml
+.. tabs::
 
-   # .project-config.toml
-   style = ["style.json5"]
-   cache = "5 minutes"
+   .. tab:: .project-config.toml
 
-   [cli]
-   color = false
-   reporter = "json"
-   rootdir = "src"
+      .. code-block:: toml
+
+         # .project-config.toml
+         style = ["style.json5"]
+         cache = "5 minutes"
+
+         [cli]
+         color = false
+         reporter = "json"
+         rootdir = "src"
+         only_hints = true
+
+   .. tab:: pyproject.toml
+
+      .. code-block:: toml
+
+         [tool.project-config]
+         style = ["style.json5"]
+         cache = "5 minutes"
+
+         [tool.project-config.cli]
+         color = false
+         reporter = "json"
+         rootdir = "src"
+         only_hints = true

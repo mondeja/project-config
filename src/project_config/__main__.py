@@ -167,6 +167,12 @@ def build_main_parser() -> argparse.ArgumentParser:  # noqa: D103
         ),
     )
     parser.add_argument(
+        "--only-hints",
+        dest="only_hints",
+        action="store_true",
+        help=("Only show the hint messages rather than complete errors."),
+    )
+    parser.add_argument(
         "command",
         choices=["check", "fix", "show", "clean", "init"],
         help="Command to execute.",
@@ -240,6 +246,7 @@ def run(argv: t.List[str] = []) -> int:  # noqa: D103
             args.reporter,
             args.color,
             fix=args.command == "fix",
+            only_hints=args.only_hints,
         )
         method_name = "check" if args.command == "fix" else args.command
         getattr(project, method_name)(args)

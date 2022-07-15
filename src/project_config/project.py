@@ -56,6 +56,7 @@ class Project:
     color: bool
     _actions_context: t.Optional[ActionsContext] = None
     fix: bool = False
+    only_hints: bool = False
 
     def _load(
         self,
@@ -71,6 +72,7 @@ class Project:
             self.color,
             self.reporter_,
             self.rootdir,
+            config_only_hints,
         ) = self.config.guess_from_cli_arguments(
             self.color,
             self.reporter_,
@@ -89,6 +91,7 @@ class Project:
             self.reporter_["kwargs"],
             self.color,
             self.rootdir,
+            only_hints=self.only_hints or config_only_hints,
         )
 
         # set rootdir as an internal environment variable to be used by plugins
