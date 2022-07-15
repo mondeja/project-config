@@ -52,7 +52,7 @@ Build documentation
 .. code-block:: sh
 
    poetry exec doc
-   # or better: `poetry exec doc:show`
+   # or `poetry exec doc:show`
 
 Release
 =======
