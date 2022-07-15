@@ -99,6 +99,20 @@ Optional field for all rules. It specifies a hint that will be displayed along
 the error message when a checking error occurred using the ``check`` command.
 It is specially useful for complex rules which could show abstract error messages.
 
+.. rubric:: Example
+
+.. code-block:: js
+
+   {
+     rules: [
+       {
+         files: [".project-config.toml"],
+         hint: "The name of the root directory must match the regex '[a-z0-9-]+$'",
+         JMESPathsMatch: [["regex_match('[a-z0-9-]+$', rootdir_name())", true]],
+       },
+     ],
+   }
+
 ************************
 ``extends`` (`string[]`)
 ************************
@@ -114,6 +128,19 @@ to their fetchers locations. So giving a style located at
 using ``extends: ["../other/file.json5"]`` inside the style
 ``gh://author/project/path/to/file.json5``.
 
+.. rubric:: Example
+
+.. code-block:: js
+
+   {
+     extends: ["../../base/style.json5", "gh://author/project/path/to/style.json5"],
+     rules: [
+       {
+         files: [".project-config.toml"],
+       },
+     ],
+   }
+
 .. _style-plugins:
 
 ************************
@@ -122,6 +149,20 @@ using ``extends: ["../other/file.json5"]`` inside the style
 
 Additional third party plugin names on which the rules of the style depend.
 Built-in plugins don't need to be defined here, as are loaded by default.
+
+.. rubric:: Example
+
+.. code-block:: js
+
+   {
+     plugins: ["foobar"],
+     rules: [
+       {
+         files: [".project-config.toml"],
+         verbFromFooBarPlugin: ["foo", "bar"],
+       },
+     ],
+   }
 
 .. seealso::
 

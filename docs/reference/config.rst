@@ -142,7 +142,6 @@ if rules have them. As default disabled.
 
       .. code-block:: toml
 
-         # .project-config.toml
          style = ["style.json5"]
          cache = "5 minutes"
 
