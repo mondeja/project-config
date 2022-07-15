@@ -40,7 +40,9 @@ def create_files(  # noqa: D103
             # passed as a list of tuples
             content = t.cast(str, content)
             # ensure parent path directory exists
-            parent_fpath, _ = os.path.splitext(full_path)
+            parent_fpath, ext = os.path.splitext(full_path)
+            if not ext:
+                parent_fpath = os.path.abspath(os.path.dirname(parent_fpath))
             if parent_fpath:
                 os.makedirs(parent_fpath, exist_ok=True)
 

@@ -1,5 +1,5 @@
 ..
-   Name: Autofixing a .editorconfig
+   Name: Autofixing .editorconfig
    Exitcode: 0
 
 If you run the next example using ``project-config fix`` subcommand

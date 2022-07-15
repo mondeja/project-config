@@ -428,6 +428,44 @@ JSON_2_INDENTED = lambda string: (  # noqa: E731
             {"package.json": "{}"},
             id="fixer-query-evaluation-error",
         ),
+        pytest.param(
+            {".editorconfig": "{}"},
+            [
+                ['"".root', True],
+                ['"*".end_of_line', "lf"],
+            ],
+            None,
+            [
+                (
+                    Error,
+                    {
+                        "definition": ".JMESPathsMatch[0]",
+                        "file": ".editorconfig",
+                        "fixable": True,
+                        "fixed": True,
+                        "message": (
+                            "JMESPath '\"\".root' does not match."
+                            " Expected True, returned None"
+                        ),
+                    },
+                ),
+                (
+                    Error,
+                    {
+                        "definition": ".JMESPathsMatch[1]",
+                        "file": ".editorconfig",
+                        "fixable": True,
+                        "fixed": True,
+                        "message": (
+                            "JMESPath '\"*\".end_of_line' does not match."
+                            " Expected 'lf', returned None"
+                        ),
+                    },
+                ),
+            ],
+            {".editorconfig": "root = true\n\n[*]\nend_of_line = lf\n"},
+            id="fixer-query-subexpression-smart",
+        ),
     ),
 )
 def test_JMESPathsMatch_fix(
