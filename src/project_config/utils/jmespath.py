@@ -464,6 +464,23 @@ class JMESPathProjectConfigFunctions(JMESPathFunctions):
     def _func_os(self) -> str:
         return sys.platform
 
+    # Github functions
+    @jmespath_func_signature(
+        {"types": ["string"]},
+        {"types": ["string"], "variadic": True},
+    )
+    def _func_gh_tags(
+        self, repo_owner: str, repo_name: str, *args: t.Any
+    ) -> t.List[str]:
+        from project_config.fetchers.github import get_latest_release_tags
+
+        kwargs = {}
+        if len(args):
+            kwargs["only_semver"] = args[0]
+
+        return get_latest_release_tags(repo_owner, repo_name, **kwargs)
+
+    # built-in Python's functions
     locals().update(
         dict(
             {

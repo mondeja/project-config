@@ -10,6 +10,9 @@ import urllib.parse
 from project_config.utils.http import GET
 
 
+SEMVER_REGEX = r"\d+\.\d+\.\d+"
+
+
 def _get_default_branch_from_repo_branches_html(
     repo_owner: str,
     repo_name: str,
@@ -103,3 +106,41 @@ def fetch(url_parts: urllib.parse.SplitResult, **kwargs: t.Any) -> str:
         str: The fetched resource content.
     """
     return GET(resolve_url(url_parts), **kwargs)
+
+
+def get_latest_release_tags(
+    repo_owner: str,
+    repo_name: str,
+    only_semver: bool = False,
+) -> t.List[str]:
+    """Get the latest release tag of a Github repository.
+
+    Args:
+        repo_owner (str): The Github repository owner.
+        repo_name (str): The Github repository name.
+        only_semver (bool): If True, only return a tag if it is a semver tag.
+
+    Returns:
+        str: The latest release tag.
+    """
+    result = GET(f"https://github.com/{repo_owner}/{repo_name}/tags")
+    regex = (
+        rf'/{re.escape(repo_owner)}/{re.escape(repo_name)}/releases/tag/([^"]+)'
+    )
+
+    response = []
+    tags = re.findall(regex, result)
+    for tag in tags:
+        if tag in response:
+            continue
+
+        cleaned_tag = re.sub("^[a-zA-Z-]+", "", tag)
+
+        if not cleaned_tag:
+            continue
+
+        if only_semver and not re.match(SEMVER_REGEX, cleaned_tag):
+            continue
+
+        response.append(tag)
+    return response

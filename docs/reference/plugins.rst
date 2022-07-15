@@ -188,7 +188,11 @@ of files, so only files that can be serialized can be targetted (see
 You can use in expressions all `JMESPath builtin functions`_ plus a set of
 convenient functions defined by the plugin internally:
 
-.. rubric:: Functions
+.. rubric:: Regex functions
+
+All functions whose name start with ``regex_`` are regex functions, which
+always takes the regex to apply as the first parameter following the Python's
+`regex standard library`_ syntax.
 
 .. function:: regex_match(pattern: str, string: str[, flags: int=0]) -> bool
 
@@ -230,11 +234,23 @@ convenient functions defined by the plugin internally:
 
    .. versionadded:: 0.5.0
 
+.. _regex standard library: https://docs.python.org/3/library/re.html
+
+
+.. rubric:: Utility functions
+
 .. function:: os() -> str
 
    Return the result of the Python's variable `sys.platform`_.
 
    .. versionadded:: 0.7.0
+
+.. function:: rootdir_name() -> str
+
+   Returns the name if the root directory of the project (passed in :ref:`project-config---rootdir`
+   CLI option or defined in ``cli.rootdir`` :doc:`configuration option <./config>`).
+
+   .. versionadded:: 0.6.0
 
 .. function:: op(source: type, operation: str, target: type) -> bool
 
@@ -323,24 +339,6 @@ convenient functions defined by the plugin internally:
 
    .. versionadded:: 0.5.0
 
-.. function:: capitalize(string: str) -> str
-
-   Capitalize the first letter of a string using :py:meth:`str.capitalize`.
-
-   .. versionadded:: 0.5.0
-
-.. function:: casefold(string: str) -> str
-
-   Return a casefolded copy of a string using :py:meth:`str.casefold`.
-
-   .. versionadded:: 0.5.0
-
-.. function:: center(string: str, width: int[, fillchar: str]) -> str
-
-   Return centered in a string of length ``width`` using :py:meth:`str.center`.
-
-   .. versionadded:: 0.5.0
-
 .. function:: count(value: str | list, sub: any[, start: int[, end: int]]) -> int
 
    Return the number of occurrences of ``sub`` in ``value`` using :py:meth:`str.count`.
@@ -357,14 +355,6 @@ convenient functions defined by the plugin internally:
    ``start`` and ``end``. If not found, ``-1`` is returned. If ``value`` is a string
    it uses internally the Python's built-in function :py:meth:`str.find`
    or :py:meth:`str.index` if ``value`` is an array.
-
-   .. versionadded:: 0.5.0
-
-.. function:: format(schema: str, *args: any) -> str
-
-   Return a string formatted using the Python's built-in :py:func:`format` function.
-   The variable ``schema`` only accepts numeric indexes delimited by braces ``{}``
-   for positional arguments in ``*args``.
 
    .. versionadded:: 0.5.0
 
@@ -441,12 +431,6 @@ convenient functions defined by the plugin internally:
 
    .. versionadded:: 0.5.0
 
-.. function:: ljust(string: str, width: int[, fillchar: str]) -> str
-
-   Return a left-justified version of the string using :py:meth:`str.ljust`.
-
-   .. versionadded:: 0.5.0
-
 .. function:: lower(string: str) -> str
 
    Return a lowercased version of the string using :py:meth:`str.lower`.
@@ -466,18 +450,6 @@ convenient functions defined by the plugin internally:
 
    .. versionadded:: 0.5.0
 
-.. function:: removeprefix(string: str, prefix: str) -> str
-
-   Return a string with the given prefix removed using :py:meth:`str.removeprefix`.
-
-   .. versionadded:: 0.5.0
-
-.. function:: removesuffix(string: str, suffix: str) -> str
-
-   Return a string with the given suffix removed using :py:meth:`str.removesuffix`.
-
-   .. versionadded:: 0.5.0
-
 .. function:: rfind(string: str | list, sub: any[, start: int[, end: int]]) -> int
 
    Return the highest index in ``value`` where subvalue ``sub`` is found.
@@ -485,12 +457,6 @@ convenient functions defined by the plugin internally:
    ``start`` and ``end``. If not found, ``-1`` is returned. If ``value`` is a string
    it uses internally the Python's built-in function :py:meth:`str.find`
    or :py:meth:`str.index` if ``value`` is an array.
-
-   .. versionadded:: 0.5.0
-
-.. function:: rjust(string: str, width: int[, fillchar: str]) -> str
-
-   Return a right-justified version of the string using :py:meth:`str.rjust`.
 
    .. versionadded:: 0.5.0
 
@@ -510,12 +476,6 @@ convenient functions defined by the plugin internally:
 
    .. versionadded:: 0.5.0
 
-.. function:: rstrip(string: str[, chars: str]) -> str
-
-   Return a right-stripped version of the string using :py:meth:`str.rstrip`.
-
-   .. versionadded:: 0.5.0
-
 .. function:: split(string: str[, sep: str[, maxsplit: int]]) -> list[str]
 
    Return a list of the words in the string, using ``sep`` as the delimiter string
@@ -528,12 +488,6 @@ convenient functions defined by the plugin internally:
 
    Return a list of the lines in the string, breaking at line boundaries using
    the method :py:meth:`str.splitlines`.
-
-   .. versionadded:: 0.5.0
-
-.. function:: strip(string: str[, chars: str]) -> str
-
-   Return a stripped version of the string using :py:meth:`str.strip`.
 
    .. versionadded:: 0.5.0
 
@@ -580,10 +534,11 @@ convenient functions defined by the plugin internally:
 
    .. versionadded:: 0.5.0
 
-.. function:: rootdir_name() -> str
+.. rubric:: Updater functions
 
-   Returns the name if the root directory of the project (passed in :ref:`project-config---rootdir`
-   CLI option or defined in ``cli.rootdir`` :doc:`configuration option <./config>`).
+The next functions take an value as the first argument, make some update
+on this ``base`` object and return it updated. Useful for fix queries when
+you need to return fixed contents for files.
 
 .. function:: update(base: dict, next: dict) -> dict
 
@@ -661,10 +616,90 @@ convenient functions defined by the plugin internally:
 
    .. versionadded:: 0.7.0
 
+.. function:: removeprefix(string: str, prefix: str) -> str
+
+   Return a string with the given prefix removed using :py:meth:`str.removeprefix`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: removesuffix(string: str, suffix: str) -> str
+
+   Return a string with the given suffix removed using :py:meth:`str.removesuffix`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: format(schema: str, *args: any) -> str
+
+   Return a string formatted using the Python's built-in :py:func:`format` function.
+   The variable ``schema`` only accepts numeric indexes delimited by braces ``{}``
+   for positional arguments in ``*args``.
+
+   .. versionadded:: 0.5.0
+
+.. function:: strip(string: str[, chars: str]) -> str
+
+   Return a stripped version of the string using :py:meth:`str.strip`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: rstrip(string: str[, chars: str]) -> str
+
+   Return a right-stripped version of the string using :py:meth:`str.rstrip`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: capitalize(string: str) -> str
+
+   Capitalize the first letter of a string using :py:meth:`str.capitalize`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: casefold(string: str) -> str
+
+   Return a casefolded copy of a string using :py:meth:`str.casefold`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: center(string: str, width: int[, fillchar: str]) -> str
+
+   Return centered in a string of length ``width`` using :py:meth:`str.center`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: ljust(string: str, width: int[, fillchar: str]) -> str
+
+   Return a left-justified version of the string using :py:meth:`str.ljust`.
+
+   .. versionadded:: 0.5.0
+
+.. function:: rjust(string: str, width: int[, fillchar: str]) -> str
+
+   Return a right-justified version of the string using :py:meth:`str.rjust`.
+
+   .. versionadded:: 0.5.0
+
 .. _JMES paths: https://jmespath.org
 .. _JMESPath builtin functions: https://jmespath.org/specification.html#built-in-functions
 .. _deepmerge strategy names: https://deepmerge.readthedocs.io/en/latest/strategies.html#builtin-strategies
 .. _sys.platform: https://docs.python.org/3/library/sys.html#sys.platform
+
+.. rubric:: Github functions
+
+The functions which name starts with `gh_` are functions that connect to
+only Github sources.
+
+.. function:: gh_tags(repo_owner: str, repo_name: str[, only_semver: bool = False]) -> list[str]
+
+   Return the list of tags of the Github repository, ordered from latest to oldest.
+
+   If you pass the third parameter as a ``true`` value, only the tags that
+   are following semantic versioning (even if they are prepended with some
+   text like ``v``) will be returned.
+
+   This function is really useful setting the ``rev`` properties in
+   `.pre-commit-config.yaml` file.
+
+   .. versionadded:: 0.7.1
 
 .. rubric:: Fix queries
 
