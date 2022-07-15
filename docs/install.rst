@@ -4,13 +4,15 @@ Installation
 
 .. tabs::
 
-   .. tab:: pip
+   .. tab:: Standalone
+
+      .. rubric:: pip
 
       .. code-block:: bash
 
          pip install project-config
 
-   .. tab:: poetry
+      .. rubric:: poetry
 
       .. code-block:: bash
 
@@ -18,12 +20,23 @@ Installation
 
    .. tab:: pre-commit
 
+      .. rubric:: check
+
       .. code-block:: yaml
 
          - repo: https://github.com/mondeja/project-config
            rev: v0.7.0
            hooks:
              - id: project-config
+
+      .. rubric:: fix
+
+      .. code-block:: yaml
+
+         - repo: https://github.com/mondeja/project-config
+           rev: v0.7.0
+           hooks:
+             - id: project-config-fix
 
    .. tab:: MegaLinter plugin
 
