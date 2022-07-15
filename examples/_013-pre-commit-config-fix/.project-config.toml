@@ -1,2 +1,1 @@
-style = ["style.json5"]
-cache = "5 minutes"
+style = "style.json5"

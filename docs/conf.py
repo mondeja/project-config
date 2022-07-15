@@ -147,7 +147,7 @@ if SPHINX_IS_RUNNING:
                     _inside_metadata = True
                 else:
                     if result["body"]:
-                        line = f" {line}"
+                        line = f" {line}\n"
                     result["body"] += line
             else:
                 if line.startswith("   "):
