@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.fetchers.github &mdash; project-config 0.7.0 documentation</title>
+  <title>project_config.fetchers.github &mdash; project-config 0.7.1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
@@ -108,6 +108,9 @@
 <span class="kn">from</span> <span class="nn">project_config.utils.http</span> <span class="kn">import</span> <span class="n">GET</span>
 
 
+<span class="n">SEMVER_REGEX</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;\d+\.\d+\.\d+&quot;</span>
+
+
 <div class="viewcode-block" id="_get_default_branch_from_repo_branches_html"><a class="viewcode-back" href="../../../dev/reference/project_config.fetchers.github.html#project_config.fetchers.github._get_default_branch_from_repo_branches_html">[docs]</a><span class="k">def</span> <span class="nf">_get_default_branch_from_repo_branches_html</span><span class="p">(</span>
     <span class="n">repo_owner</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">repo_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -201,6 +204,44 @@
 <span class="sd">        str: The fetched resource content.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">GET</span><span class="p">(</span><span class="n">resolve_url</span><span class="p">(</span><span class="n">url_parts</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_latest_release_tags"><a class="viewcode-back" href="../../../dev/reference/project_config.fetchers.github.html#project_config.fetchers.github.get_latest_release_tags">[docs]</a><span class="k">def</span> <span class="nf">get_latest_release_tags</span><span class="p">(</span>
+    <span class="n">repo_owner</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">repo_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">only_semver</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;Get the latest release tag of a Github repository.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        repo_owner (str): The Github repository owner.</span>
+<span class="sd">        repo_name (str): The Github repository name.</span>
+<span class="sd">        only_semver (bool): If True, only return a tag if it is a semver tag.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The latest release tag.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">GET</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;https://github.com/</span><span class="si">{</span><span class="n">repo_owner</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">repo_name</span><span class="si">}</span><span class="s2">/tags&quot;</span><span class="p">)</span>
+    <span class="n">regex</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="sa">rf</span><span class="s1">&#39;/</span><span class="si">{</span><span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">repo_owner</span><span class="p">)</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">repo_name</span><span class="p">)</span><span class="si">}</span><span class="s1">/releases/tag/([^&quot;]+)&#39;</span>
+    <span class="p">)</span>
+
+    <span class="n">response</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">tags</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">regex</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">tags</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">response</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+        <span class="n">cleaned_tag</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;^[a-zA-Z-]+&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">tag</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">cleaned_tag</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+        <span class="k">if</span> <span class="n">only_semver</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">SEMVER_REGEX</span><span class="p">,</span> <span class="n">cleaned_tag</span><span class="p">):</span>
+            <span class="k">continue</span>
+
+        <span class="n">response</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">response</span></div>
 </pre></div>
 
            </div>

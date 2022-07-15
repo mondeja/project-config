@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Examples &mdash; project-config 0.7.0 documentation</title>
+  <title>Examples &mdash; project-config 0.7.1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -61,6 +61,8 @@
 <li class="toctree-l2"><a class="reference internal" href="#toml-sections-order">TOML sections order</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#editing-a-gitignore-file">Editing a .gitignore file</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#replacing-code-blocks-languages-in-rst-documents">Replacing code blocks languages in RST documents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#autofixing-editorconfig">Autofixing .editorconfig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#setting-hooks-in-pre-commit-config-yaml">Setting hooks in .pre-commit-config.yaml</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials/index.html">Tutorials</a></li>
@@ -136,7 +138,7 @@
 </section>
 <section id="project-config-self-configuration">
 <h2>project-config self configuration<a class="headerlink" href="#project-config-self-configuration" title="Permalink to this headline"></a></h2>
-<p><strong>project-config</strong> is defining a valid configuration, forcing the definition of <code class="docutils literal notranslate"><span class="pre">styles</span></code> as an array for styles and a valid <code class="docutils literal notranslate"><span class="pre">cache</span></code> value.</p>
+<p>project-config is defining a valid configuration, forcing the definition of <code class="docutils literal notranslate"><span class="pre">styles</span></code> as an array for styles and a valid <code class="docutils literal notranslate"><span class="pre">cache</span></code> value.</p>
 <div class="sphinx-tabs docutils container">
 <div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-1-1-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-1-1-0" name="1-0" role="tab" tabindex="0">.project-config.toml</button><button aria-controls="panel-1-1-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-1-1-1" name="1-1" role="tab" tabindex="-1">style.json5</button></div><div aria-labelledby="tab-1-1-0" class="sphinx-tabs-panel" id="panel-1-1-0" name="1-0" role="tabpanel" tabindex="0"><div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="n">style</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s">&quot;style.json5&quot;</span><span class="p">]</span><span class="w"></span>
 <span class="n">cache</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;5 minutes&quot;</span><span class="w"></span>
@@ -218,9 +220,13 @@
 </section>
 <section id="conditionals-files-existence">
 <h2>Conditionals files existence<a class="headerlink" href="#conditionals-files-existence" title="Permalink to this headline"></a></h2>
-<ul class="simple">
-<li><p>1st rule: if the directory <cite>src/</cite> exists, the file <cite>pyproject.toml</cite> must exists too. * 2nd rule: if the file <cite>pyproject.toml</cite> exists, a Python file must be present in the root directory.</p></li>
+<dl class="simple">
+<dt>Follows the next rules:</dt><dd><ul class="simple">
+<li><p>If the directory <cite>src/</cite> exists, the file <cite>pyproject.toml</cite> must exists too.</p></li>
+<li><p>If the file <cite>pyproject.toml</cite> exists, a Python file must be present in the root directory.</p></li>
 </ul>
+</dd>
+</dl>
 <div class="sphinx-tabs docutils container">
 <div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-4-4-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-4-4-0" name="4-0" role="tab" tabindex="0">.project-config.toml</button><button aria-controls="panel-4-4-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-4-4-1" name="4-1" role="tab" tabindex="-1">style.json5</button><button aria-controls="panel-4-4-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-4-4-2" name="4-2" role="tab" tabindex="-1">pyproject.toml</button><button aria-controls="panel-4-4-3" aria-selected="false" class="sphinx-tabs-tab" id="tab-4-4-3" name="4-3" role="tab" tabindex="-1">src/</button><button aria-controls="panel-4-4-4" aria-selected="false" class="sphinx-tabs-tab" id="tab-4-4-4" name="4-4" role="tab" tabindex="-1">file.py</button></div><div aria-labelledby="tab-4-4-0" class="sphinx-tabs-panel" id="panel-4-4-0" name="4-0" role="tabpanel" tabindex="0"><div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="n">style</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;style.json5&quot;</span><span class="w"></span>
 </pre></div>
@@ -431,7 +437,13 @@ dist/
 </section>
 <section id="replacing-code-blocks-languages-in-rst-documents">
 <h2>Replacing code blocks languages in RST documents<a class="headerlink" href="#replacing-code-blocks-languages-in-rst-documents" title="Permalink to this headline"></a></h2>
-<p>Don’t allow code blocks in RST documentation files:  * Bash is not a POSIX compliant shell, use Shell lexer. * Pygments’ JSON5 lexer is not implemented yet, use Javascript lexer.</p>
+<dl class="simple">
+<dt>Don’t allow code blocks in RST documentation files:</dt><dd><ul class="simple">
+<li><p>Bash is not a POSIX compliant shell, use Shell lexer.</p></li>
+<li><p>Pygments’ JSON5 lexer is not implemented yet, use Javascript lexer.</p></li>
+</ul>
+</dd>
+</dl>
 <div class="sphinx-tabs docutils container">
 <div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-10-10-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-10-10-0" name="10-0" role="tab" tabindex="0">.project-config.toml</button><button aria-controls="panel-10-10-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-10-10-1" name="10-1" role="tab" tabindex="-1">file.rst</button><button aria-controls="panel-10-10-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-10-10-2" name="10-2" role="tab" tabindex="-1">style.json5</button></div><div aria-labelledby="tab-10-10-0" class="sphinx-tabs-panel" id="panel-10-10-0" name="10-0" role="tabpanel" tabindex="0"><div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="n">style</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;style.json5&quot;</span><span class="w"></span>
 </pre></div>
@@ -471,6 +483,115 @@ dist/
 <span class="w">    </span><span class="p">},</span><span class="w"></span>
 <span class="w">  </span><span class="p">],</span><span class="w"></span>
 <span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+</div></div>
+</section>
+<section id="autofixing-editorconfig">
+<h2>Autofixing .editorconfig<a class="headerlink" href="#autofixing-editorconfig" title="Permalink to this headline"></a></h2>
+<p>If you run the next example using <code class="docutils literal notranslate"><span class="pre">project-config</span> <span class="pre">fix</span></code> subcommand without creating an <cite>.editorconfig</cite> file it will be created and populated with the sections defined in the rule.</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-11-11-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-11-11-0" name="11-0" role="tab" tabindex="0">.project-config.toml</button><button aria-controls="panel-11-11-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-11-11-1" name="11-1" role="tab" tabindex="-1">style.json5</button><button aria-controls="panel-11-11-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-11-11-2" name="11-2" role="tab" tabindex="-1">.editorconfig</button></div><div aria-labelledby="tab-11-11-0" class="sphinx-tabs-panel" id="panel-11-11-0" name="11-0" role="tabpanel" tabindex="0"><div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="n">style</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;style.json5&quot;</span><span class="w"></span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-11-11-1" class="sphinx-tabs-panel" hidden="true" id="panel-11-11-1" name="11-1" role="tabpanel" tabindex="0"><div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.editorconfig&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">      </span><span class="nx">JMESPathsMatch</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">        </span><span class="p">[</span><span class="s2">&quot;type(@)&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">        </span><span class="p">[</span><span class="s1">&#39;type(&quot;&quot;)&#39;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">        </span><span class="p">[</span><span class="s1">&#39;&quot;&quot;.root&#39;</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">],</span><span class="w"></span>
+<span class="w">        </span><span class="p">[</span><span class="s1">&#39;&quot;*&quot;.end_of_line&#39;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;lf&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">        </span><span class="p">[</span><span class="s1">&#39;&quot;*&quot;.indent_style&#39;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;space&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">        </span><span class="p">[</span><span class="s1">&#39;&quot;*&quot;.charset&#39;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;utf-8&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">        </span><span class="p">[</span><span class="s1">&#39;&quot;*&quot;.trim_trailing_whitespace&#39;</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">],</span><span class="w"></span>
+<span class="w">      </span><span class="p">],</span><span class="w"></span>
+<span class="w">    </span><span class="p">},</span><span class="w"></span>
+<span class="w">  </span><span class="p">],</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-11-11-2" class="sphinx-tabs-panel" hidden="true" id="panel-11-11-2" name="11-2" role="tabpanel" tabindex="0"><div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="na">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">true</span><span class="w"></span>
+
+<span class="k">[*]</span><span class="w"></span>
+<span class="na">end_of_line</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">lf</span><span class="w"></span>
+<span class="na">indent_style</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">space</span><span class="w"></span>
+<span class="na">charset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">utf-8</span><span class="w"></span>
+<span class="na">trim_trailing_whitespace</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">true</span><span class="w"></span>
+</pre></div>
+</div>
+</div></div>
+</section>
+<section id="setting-hooks-in-pre-commit-config-yaml">
+<h2>Setting hooks in .pre-commit-config.yaml<a class="headerlink" href="#setting-hooks-in-pre-commit-config-yaml" title="Permalink to this headline"></a></h2>
+<p>Set a pre-commit hook for <code class="docutils literal notranslate"><span class="pre">editorconfig-checker</span></code> inside <cite>.pre-commit-config.yaml</cite> with manual fixes.</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-12-12-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-12-12-0" name="12-0" role="tab" tabindex="0">.project-config.toml</button><button aria-controls="panel-12-12-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-12-12-1" name="12-1" role="tab" tabindex="-1">style.json5</button><button aria-controls="panel-12-12-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-12-12-2" name="12-2" role="tab" tabindex="-1">.pre-commit-config.yaml</button></div><div aria-labelledby="tab-12-12-0" class="sphinx-tabs-panel" id="panel-12-12-0" name="12-0" role="tabpanel" tabindex="0"><div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="n">style</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;style.json5&quot;</span><span class="w"></span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-12-12-1" class="sphinx-tabs-panel" hidden="true" id="panel-12-12-1" name="12-1" role="tabpanel" tabindex="0"><div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.pre-commit-config.yaml&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">      </span><span class="nx">ifJMESPathsMatch</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="s2">&quot;.pre-commit-config.yaml&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">          </span><span class="p">[</span><span class="s2">&quot;type(@)&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">          </span><span class="p">[</span><span class="s2">&quot;type(repos)&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;array&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">        </span><span class="p">],</span><span class="w"></span>
+<span class="w">      </span><span class="p">},</span><span class="w"></span>
+<span class="w">      </span><span class="nx">JMESPathsMatch</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">        </span><span class="c1">// Projects must use editorconfig checker pre-commit hook</span><span class="w"></span>
+<span class="w">        </span><span class="c1">// to follow editorconfig rules. If the repo is not found in the list</span><span class="w"></span>
+<span class="w">        </span><span class="c1">// of repos at this point, it will be added:</span><span class="w"></span>
+<span class="w">        </span><span class="p">[</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;length(repos[?repo==&#39;https://github.com/editorconfig-checker/editorconfig-checker.python&#39;])&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="mf">1</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;set(@, &#39;repos&#39;, insert(repos, `-1`, {rev: gh_tags(&#39;editorconfig-checker&#39;, &#39;editorconfig-checker.python&#39;, True)[0], repo: &#39;https://github.com/editorconfig-checker/editorconfig-checker.python&#39;, hooks: [{id: &#39;editorconfig-checker&#39;, name: &#39;editorconfig-checker&#39;, alias: &#39;ec&#39;}]}))&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="p">],</span><span class="w"></span>
+
+<span class="w">        </span><span class="c1">//</span><span class="w"></span>
+<span class="w">        </span><span class="c1">// After it we can check that the fields have been successfully added:</span><span class="w"></span>
+<span class="w">        </span><span class="c1">//</span><span class="w"></span>
+<span class="w">        </span><span class="p">[</span><span class="w"></span>
+<span class="w">          </span><span class="c1">// the &#39;rev&#39; key must match the X.Y.Z regex pattern</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;regex_match(&#39;^\\d+\\.\\d+\\.\\d+$&#39;, repos[?repo==&#39;https://github.com/editorconfig-checker/editorconfig-checker.python&#39;] | [0].rev)&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="kc">true</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="p">],</span><span class="w"></span>
+<span class="w">        </span><span class="p">[</span><span class="w"></span>
+<span class="w">          </span><span class="c1">// must contain hooks</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;type(repos[?repo==&#39;https://github.com/editorconfig-checker/editorconfig-checker.python&#39;] | [0].hooks)&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;array&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="p">],</span><span class="w"></span>
+
+<span class="w">        </span><span class="p">[</span><span class="w"></span>
+<span class="w">          </span><span class="c1">// the hook has an `id` field with &#39;editorconfig-checker&#39; value</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;contains(repos[?repo==&#39;https://github.com/editorconfig-checker/editorconfig-checker.python&#39;] | [0].hooks[*].id, &#39;editorconfig-checker&#39;)&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="kc">true</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="p">],</span><span class="w"></span>
+<span class="w">        </span><span class="p">[</span><span class="w"></span>
+<span class="w">          </span><span class="c1">// the hook has a `name` field with &#39;editorconfig-checker&#39; value</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;repos[?repo==&#39;https://github.com/editorconfig-checker/editorconfig-checker.python&#39;] | [0].hooks[?id==&#39;editorconfig-checker&#39;] | [0].name&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;editorconfig-checker&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="p">],</span><span class="w"></span>
+<span class="w">        </span><span class="p">[</span><span class="w"></span>
+<span class="w">          </span><span class="c1">// the hook has an `alias` field with &#39;c&#39; value</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;repos[?repo==&#39;https://github.com/editorconfig-checker/editorconfig-checker.python&#39;] | [0].hooks[?id==&#39;editorconfig-checker&#39;] | [0].alias&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;ec&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="p">],</span><span class="w"></span>
+<span class="w">      </span><span class="p">],</span><span class="w"></span>
+<span class="w">    </span><span class="p">},</span><span class="w"></span>
+<span class="w">  </span><span class="p">],</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-12-12-2" class="sphinx-tabs-panel" hidden="true" id="panel-12-12-2" name="12-2" role="tabpanel" tabindex="0"><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">repos</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">hooks</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ec</span><span class="w"></span>
+<span class="w">        </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">editorconfig-checker</span><span class="w"></span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">editorconfig-checker</span><span class="w"></span>
+<span class="w">    </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/editorconfig-checker/editorconfig-checker.python</span><span class="w"></span>
+<span class="w">    </span><span class="nt">rev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2.4.0</span><span class="w"></span>
 </pre></div>
 </div>
 </div></div>

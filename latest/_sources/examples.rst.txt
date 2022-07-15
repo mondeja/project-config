@@ -37,7 +37,7 @@ The file `.gitignore` must have a line with the content ``/dist/``.
 project-config self configuration
 =================================
 
-**project-config** is defining a valid configuration, forcing the definition of ``styles`` as an array for styles and a valid ``cache`` value.
+project-config is defining a valid configuration, forcing the definition of ``styles`` as an array for styles and a valid ``cache`` value.
 
 .. tabs::
 
@@ -146,7 +146,9 @@ If `.gitignore` includes the line ``__pycache__/`` a `pyproject.toml` file must 
 Conditionals files existence
 ============================
 
-* 1st rule: if the directory `src/` exists, the file `pyproject.toml` must exists too. * 2nd rule: if the file `pyproject.toml` exists, a Python file must be present in the root directory.
+Follows the next rules: 
+   * If the directory `src/` exists, the file `pyproject.toml` must exists too.
+   * If the file `pyproject.toml` exists, a Python file must be present in the root directory.
 
 .. tabs::
 
@@ -423,7 +425,9 @@ Enforce the existence of certain lines in a `.gitignore` file.
 Replacing code blocks languages in RST documents
 ================================================
 
-Don't allow code blocks in RST documentation files:  * Bash is not a POSIX compliant shell, use Shell lexer. * Pygments' JSON5 lexer is not implemented yet, use Javascript lexer.
+Don't allow code blocks in RST documentation files: 
+ * Bash is not a POSIX compliant shell, use Shell lexer.
+ * Pygments' JSON5 lexer is not implemented yet, use Javascript lexer.
 
 .. tabs::
 
@@ -475,6 +479,135 @@ Don't allow code blocks in RST documentation files:  * Bash is not a POSIX compl
              },
            ],
          }
+
+Autofixing .editorconfig
+========================
+
+If you run the next example using ``project-config fix`` subcommand without creating an `.editorconfig` file it will be created and populated with the sections defined in the rule.
+
+.. tabs::
+
+   .. tab:: .project-config.toml
+
+      .. code-block:: toml
+
+         style = "style.json5"
+
+   .. tab:: style.json5
+
+      .. code-block:: js
+
+         {
+           rules: [
+             {
+               files: [".editorconfig"],
+               JMESPathsMatch: [
+                 ["type(@)", "object"],
+                 ['type("")', "object"],
+                 ['"".root', true],
+                 ['"*".end_of_line', "lf"],
+                 ['"*".indent_style', "space"],
+                 ['"*".charset', "utf-8"],
+                 ['"*".trim_trailing_whitespace', true],
+               ],
+             },
+           ],
+         }
+
+   .. tab:: .editorconfig
+
+      .. code-block:: ini
+
+         root = true
+
+         [*]
+         end_of_line = lf
+         indent_style = space
+         charset = utf-8
+         trim_trailing_whitespace = true
+
+Setting hooks in .pre-commit-config.yaml
+========================================
+
+Set a pre-commit hook for ``editorconfig-checker`` inside `.pre-commit-config.yaml` with manual fixes.
+
+.. tabs::
+
+   .. tab:: .project-config.toml
+
+      .. code-block:: toml
+
+         style = "style.json5"
+
+   .. tab:: style.json5
+
+      .. code-block:: js
+
+         {
+           rules: [
+             {
+               files: [".pre-commit-config.yaml"],
+               ifJMESPathsMatch: {
+                 ".pre-commit-config.yaml": [
+                   ["type(@)", "object"],
+                   ["type(repos)", "array"],
+                 ],
+               },
+               JMESPathsMatch: [
+                 // Projects must use editorconfig checker pre-commit hook
+                 // to follow editorconfig rules. If the repo is not found in the list
+                 // of repos at this point, it will be added:
+                 [
+                   "length(repos[?repo=='https://github.com/editorconfig-checker/editorconfig-checker.python'])",
+                   1,
+                   "set(@, 'repos', insert(repos, `-1`, {rev: gh_tags('editorconfig-checker', 'editorconfig-checker.python', True)[0], repo: 'https://github.com/editorconfig-checker/editorconfig-checker.python', hooks: [{id: 'editorconfig-checker', name: 'editorconfig-checker', alias: 'ec'}]}))",
+                 ],
+
+                 //
+                 // After it we can check that the fields have been successfully added:
+                 //
+                 [
+                   // the 'rev' key must match the X.Y.Z regex pattern
+                   "regex_match('^\\d+\\.\\d+\\.\\d+$', repos[?repo=='https://github.com/editorconfig-checker/editorconfig-checker.python'] | [0].rev)",
+                   true,
+                 ],
+                 [
+                   // must contain hooks
+                   "type(repos[?repo=='https://github.com/editorconfig-checker/editorconfig-checker.python'] | [0].hooks)",
+                   "array",
+                 ],
+
+                 [
+                   // the hook has an `id` field with 'editorconfig-checker' value
+                   "contains(repos[?repo=='https://github.com/editorconfig-checker/editorconfig-checker.python'] | [0].hooks[*].id, 'editorconfig-checker')",
+                   true,
+                 ],
+                 [
+                   // the hook has a `name` field with 'editorconfig-checker' value
+                   "repos[?repo=='https://github.com/editorconfig-checker/editorconfig-checker.python'] | [0].hooks[?id=='editorconfig-checker'] | [0].name",
+                   "editorconfig-checker",
+                 ],
+                 [
+                   // the hook has an `alias` field with 'c' value
+                   "repos[?repo=='https://github.com/editorconfig-checker/editorconfig-checker.python'] | [0].hooks[?id=='editorconfig-checker'] | [0].alias",
+                   "ec",
+                 ],
+               ],
+             },
+           ],
+         }
+
+   .. tab:: .pre-commit-config.yaml
+
+      .. code-block:: yaml
+
+         repos:
+           - hooks:
+               - alias: ec
+                 id: editorconfig-checker
+                 name: editorconfig-checker
+             repo: https://github.com/editorconfig-checker/editorconfig-checker.python
+             rev: 2.4.0
 
 .. raw:: html
 

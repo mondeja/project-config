@@ -1,7 +1,8 @@
 Best practices
 ==============
 
-Is important to write your rules in a way that can be automatically fixable by **project-config** itself without defining a fix query.  The next style file is documented showing best practices to follow when writing a style file and other helpful common patterns:
+Is important to write your rules in a way that can be automatically fixable by **project-config** itself without defining a fix query. 
+ The next style file is documented showing best practices to follow when writing a style file and other helpful common patterns:
 
 .. code-block:: js
 
@@ -18,8 +19,9 @@ Is important to write your rules in a way that can be automatically fixable by *
 
          // Using JMESPath we can query serialized files to expect
          // that certain conditions match or edit theirs contents:
+         //
          JMESPathsMatch: [
-           // note that you can fix the same assertion automatically
+           // note that you can fix a value automatically
            // querying the type of the root object `@` (FIXABLE):
            ["type(@)", "object"],
 
@@ -28,9 +30,13 @@ Is important to write your rules in a way that can be automatically fixable by *
            // to trigger all other assertions as errors (MANUAL FIX)
            ["null", true, "`{}`"],
            //
-           // note that I'm comparing ``null == true``, so this error
+           // Note that I'm comparing ``null == true``, so this error
            // will be raised always. You can use this pattern to create
            // entire sections of files programatically.
+           //
+           // Take a look at how I'm adding a third item in the array to
+           // make an edition of the file. The value returned by this
+           // third JMESPath expression will be the new content of the file.
 
            // Specify that a value must be a certain constant (FIXABLE):
            ["string_constant", "my-string"],
@@ -50,6 +56,7 @@ Is important to write your rules in a way that can be automatically fixable by *
            ["type(an_object.a_nested_object.a_subnested_null)", "null"],
 
            // You can make your own editions manually by specifying a fix query.
+           //
            // For example, here if `boolean_constant` is `true`, the value
            // of `conditional_contant` will be setted as 'enabled' (MANUAL FIX):
            [
@@ -61,14 +68,15 @@ Is important to write your rules in a way that can be automatically fixable by *
            // object with a field updated, 'conditional_constant' in this case
            // setted to 'enabled'.
            //
-           // You can use `unset()` to delete keys from objects:
+           // You can use `unset()` to delete keys from objects (MANUAL FIX):
            [
-             // Note that this expression will be always treated as an
-             // error and fixed because the previous is setting
-             // `conditional_constant` to `enabled` (MANUAL FIX):
              "contains(keys(@), 'conditional_constant')",
              false,
              "unset(@, 'conditional_constant')",
+             // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             // Note that this expression will be always treated as an
+             // error and fixed because the previous is setting
+             // `conditional_constant` to `enabled`:
            ],
            [
              "contains(keys(@), 'conditional_constant')",
@@ -85,8 +93,9 @@ Is important to write your rules in a way that can be automatically fixable by *
            ],
 
            // The function `insert()` can be used to insert an element in an array.
+           //
            // If `an_array` is empty, set `an_array` in the root object (`@`) to be
-           // an empty array with the value `77` prepended at index 0 (MANUAL FIX):
+           // the previous `an_array` with the value `77` prepended at index 0 (MANUAL FIX):
            [
              "op(length(an_array), '>', `1`)",
              true,
@@ -115,16 +124,18 @@ Is important to write your rules in a way that can be automatically fixable by *
            //
            // The strategies can be defined for each type differently passing an array
            // to the third argument with an array of three arrays:
+           //
            // `[ [["<type>", ["<strategy>", ...]]... ], ["<strategy>", ...], ["<strategy>", ...]]`
            //
            // For example:
            //
            // `[ [['array', ['prepend']], ['object', ['merge']]], ['override'], ['override'] ]`
-           //       ^            ^
-           //       |            |
-           // The arrays will insert new items at the beginning of previous arrays
-           // and objects will merge the new values with the previous ones,
-           // for all the other types override the previous values and for types that enter
+           //     ^^^^^^^^^^^^^^^^^^^^^                           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+           //       |            |                                                     |
+           // The arrays will insert new items at the beginning of previous arrays     |
+           // and objects will merge the new values with the previous ones.            |
+           //                                                                          |
+           // For all the other types override the previous values and for types that enter
            // in conflict when merging override the previous values too.
          ],
 
@@ -152,12 +163,13 @@ Is important to write your rules in a way that can be automatically fixable by *
            // which allows to query remote files located in Github repositories
            // with the syntax `gh://<owner>/<repository>(@v<version>)?/<path>`
            // (note that the `@v<version>` part is optional).
-
+           //
            // So the previous expressions means that `license` from the 'data.json',
-           // represented in the final `contains()` argument as `[0]`; must be inside
+           // represented in the final `contains()` argument as `[0]`: must be inside
            // an array of OSI approved and non deprecated SPDX license identifiers
            // obtained from the online source (`[1]`), as is defined for the final
-           // `true` expected value
+           // expected value `true`.
+           //
          ],
        },
        {
@@ -172,7 +184,7 @@ Is important to write your rules in a way that can be automatically fixable by *
          //
          // You can use `includeLines` to force the inclusion of a line.
          // For example, if you want to ensure that the file `.gitignore`
-         // has the line 'dist/':
+         // has the line 'dist/' (FIXABLE):
          includeLines: ["dist/"],
          //
          // TIP: Use `hint` field of rules to show a better error message
@@ -183,15 +195,16 @@ Is important to write your rules in a way that can be automatically fixable by *
          ifFilesExist: [".project-config.toml"],
        },
        {
-         // A section must preceed another
-         // ------------------------------
+         // A line must preceed another
+         // ---------------------------
          //
          files: ["data.json"],
 
          // If you want to ensure that a line is preceded by another in a text file,
-         // you can use `crossJMESPathsMatch` with the `text` serializer. For example,
-         // I want that the `dependencies` field in the 'data.json' file to be
-         // defined before `devDependencies`:
+         // you can use `crossJMESPathsMatch` with the `text` serializer.
+
+         // For example, I want that the `dependencies` field in the 'data.json'
+         // file to be defined before `devDependencies`:
          crossJMESPathsMatch: [
            [
              "@",
