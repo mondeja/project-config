@@ -43,7 +43,7 @@ So I've created **project-config** inspired by `nitpick`_. In fact, the
 configuration follows the same pattern, but the plugin system and the concept
 of :doc:`./serialization` is quite different. The main differences are:
 
-* `nitpick`_ enforces the definition configuration values as constants using TOML files, but **project-config** just make assertions executing certain rules. This approach allows to check more things but turns the implementation of a ``fix`` command more difficult, though not impossible.
+* `nitpick`_ enforces the definition configuration values as constants using TOML files, but **project-config** allows to fix them in different ways.
 * `nitpick`_ has a serious limitation about how to query object structures, which has given rise to the monstrosity of `Special configurations <https://nitpick.readthedocs.io/en/latest/styles.html?highlight=pre-commit#special-configurations>`_, while **project-config** deals with this problem using `JMESPath`_.
 
 .. _nitpick: https://nitpick.readthedocs.io/en/latest/

@@ -22,7 +22,7 @@ Test
 .. code-block:: sh
 
    poetry exec test
-   # or just `poetry exec t`
+   # or `poetry exec t`
 
 Show coverage report
 --------------------
@@ -52,7 +52,7 @@ Build documentation
 .. code-block:: sh
 
    poetry exec doc
-   # or better: `poetry exec doc:show`
+   # or `poetry exec doc:show`
 
 Release
 =======
