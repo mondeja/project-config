@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Basic usage &mdash; project-config 0.6.0 documentation</title>
+  <title>Basic usage &mdash; project-config 0.7.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -35,7 +35,7 @@
             <a href="index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.6
+                0.7
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -50,6 +50,7 @@
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Basic usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/index.html">Tutorials</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul>
@@ -130,6 +131,15 @@ warns indicating that the file does not include the line:</p>
 </pre></div>
 </div>
 <p>If you include the line, it will not warn exiting with 0 code.</p>
+<p class="rubric">Autofixing</p>
+<p>This example is automatically fixable executing <cite>project-config fix</cite>
+when the file <cite>.gitignore</cite> is even unexistent.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ project-config fix
+.gitignore
+  - <span class="o">(</span>FIXED<span class="o">)</span> Expected existing file does not exists rules<span class="o">[</span><span class="m">0</span><span class="o">]</span>.files<span class="o">[</span><span class="m">0</span><span class="o">]</span>
+  - <span class="o">(</span>FIXED<span class="o">)</span> Expected line <span class="s1">&#39;/dist/&#39;</span> not found rules<span class="o">[</span><span class="m">0</span><span class="o">]</span>.includeLines<span class="o">[</span><span class="m">0</span><span class="o">]</span>
+</pre></div>
+</div>
 </section>
 
 

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Styling &mdash; project-config 0.6.0 documentation</title>
+  <title>Styling &mdash; project-config 0.7.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -19,6 +19,7 @@
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/tabs.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -34,7 +35,7 @@
             <a href="../index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.6
+                0.7
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -49,6 +50,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../basic-usage.html">Basic usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul class="current">
@@ -130,13 +132,40 @@ with at least one object.</p>
 <h3><code class="docutils literal notranslate"><span class="pre">files</span></code> (<cite>string[]</cite> or <cite>object{not{} | not[]}</cite>)<a class="headerlink" href="#files-string-or-object-not-not" title="Permalink to this headline"></a></h3>
 <p>Unique mandatory field for all rules. It specifies the subject of the rule,
 that is, the files for which the verbs will be applied.</p>
-<p>It must be either an array of strings or an object with an unique key <code class="docutils literal notranslate"><span class="pre">not</span></code>.—-</p>
+<p>It must be either an array of strings or an object with an unique key <code class="docutils literal notranslate"><span class="pre">not</span></code>.</p>
 <p>Defining <code class="docutils literal notranslate"><span class="pre">files</span></code> as an array of strings enforce the existence of these files.
-If they don’t exist, no actions will be executed. The existence of these files
-is mandatory for execute the rest of actions of the rule.</p>
+If they don’t exist will raise errors, and additionally created in <code class="docutils literal notranslate"><span class="pre">fix</span></code> mode.
+The existence of these files and directories is mandatory for execute the rest
+of actions of the rule.</p>
 <p>The items of <code class="docutils literal notranslate"><span class="pre">files</span></code> can also be globs to match a set of existent files.
 Keep in mind that if the files do not exist when the rule is executed, the
 glob itself will be treated as a file name and will be checked for existence.</p>
+<p class="rubric">Examples</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">Existence of files</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">Absence of files</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w">    </span><span class="c1">// Files and directories are created in `fix` mode</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">        </span><span class="s2">&quot;src/&quot;</span><span class="p">,</span><span class="w">             </span><span class="c1">// Enforce existence of directory</span><span class="w"></span>
+<span class="w">        </span><span class="s2">&quot;pyproject.toml&quot;</span><span class="p">,</span><span class="w">   </span><span class="c1">// Enforce existence of file</span><span class="w"></span>
+<span class="w">      </span><span class="p">]</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="p">]</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">    </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="nx">not</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="s2">&quot;setup.cfg&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Migrate the configuration to pyproject.toml&quot;</span><span class="w"></span>
+<span class="w">      </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="p">],</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+</div></div>
 <section id="enforce-files-absence">
 <h4>Enforce files absence<a class="headerlink" href="#enforce-files-absence" title="Permalink to this headline"></a></h4>
 <p>Defining <code class="docutils literal notranslate"><span class="pre">files</span></code> as an object, it must be an unique key <code class="docutils literal notranslate"><span class="pre">not</span></code>. The value
@@ -161,6 +190,18 @@ as this has no sense. The attempt will raise an error validating the style.</p>
 <p>Optional field for all rules. It specifies a hint that will be displayed along
 the error message when a checking error occurred using the <code class="docutils literal notranslate"><span class="pre">check</span></code> command.
 It is specially useful for complex rules which could show abstract error messages.</p>
+<p class="rubric">Example</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.project-config.toml&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">      </span><span class="nx">hint</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;The name of the root directory must match the regex &#39;[a-z0-9-]+$&#39;&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="nx">JMESPathsMatch</span><span class="o">:</span><span class="w"> </span><span class="p">[[</span><span class="s2">&quot;regex_match(&#39;[a-z0-9-]+$&#39;, rootdir_name())&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">]],</span><span class="w"></span>
+<span class="w">    </span><span class="p">},</span><span class="w"></span>
+<span class="w">  </span><span class="p">],</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
 </section>
 </section>
 <section id="extends-string">
@@ -174,11 +215,34 @@ to their fetchers locations. So giving a style located at
 <code class="docutils literal notranslate"><span class="pre">extends</span></code> to a resource located at <code class="docutils literal notranslate"><span class="pre">gh://author/project/path/other/file.json5</span></code>
 using <code class="docutils literal notranslate"><span class="pre">extends:</span> <span class="pre">[&quot;../other/file.json5&quot;]</span></code> inside the style
 <code class="docutils literal notranslate"><span class="pre">gh://author/project/path/to/file.json5</span></code>.</p>
+<p class="rubric">Example</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="k">extends</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;../../base/style.json5&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;gh://author/project/path/to/style.json5&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.project-config.toml&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">    </span><span class="p">},</span><span class="w"></span>
+<span class="w">  </span><span class="p">],</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
 </section>
 <section id="plugins-string">
 <span id="style-plugins"></span><h2><code class="docutils literal notranslate"><span class="pre">plugins</span></code> (<cite>string[]</cite>)<a class="headerlink" href="#plugins-string" title="Permalink to this headline"></a></h2>
 <p>Additional third party plugin names on which the rules of the style depend.
 Built-in plugins don’t need to be defined here, as are loaded by default.</p>
+<p class="rubric">Example</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">plugins</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;foobar&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.project-config.toml&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">      </span><span class="nx">verbFromFooBarPlugin</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;foo&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;bar&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">    </span><span class="p">},</span><span class="w"></span>
+<span class="w">  </span><span class="p">],</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <p><a class="reference internal" href="../dev/plugins.html"><span class="doc">Writing third party plugins</span></a></p>

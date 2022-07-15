@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.config &mdash; project-config 0.6.0 documentation</title>
+  <title>project_config.config &mdash; project-config 0.7.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -32,7 +32,7 @@
             <a href="../../index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.6
+                0.7
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -47,6 +47,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../basic-usage.html">Basic usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul>
@@ -367,7 +368,7 @@
         <span class="n">color</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">],</span>
         <span class="n">reporter</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">],</span>
         <span class="n">rootdir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">],</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">]:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">],</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Guess the final configuration merging file with CLI arguments.&quot;&quot;&quot;</span>
         <span class="c1"># colorize output?</span>
         <span class="n">color</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cli</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;color&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">color</span> <span class="ow">is</span> <span class="kc">True</span> <span class="k">else</span> <span class="n">color</span>
@@ -410,10 +411,13 @@
                 <span class="sa">f</span><span class="s2">&quot;Root directory &#39;</span><span class="si">{</span><span class="n">rootdir</span><span class="si">}</span><span class="s2">&#39; must be an existing directory&quot;</span><span class="p">,</span>
             <span class="p">)</span>
 
+        <span class="n">only_hints</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cli</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;only_hints&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">True</span>
+
         <span class="k">return</span> <span class="p">(</span>
             <span class="n">color</span><span class="p">,</span>
             <span class="n">reporter</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">rootdir</span><span class="p">,</span>
+            <span class="n">only_hints</span><span class="p">,</span>
         <span class="p">)</span></div>
 
     <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">:</span>
@@ -446,17 +450,33 @@
 
     <span class="n">config_file_basename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">config_filepath</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">create_default_style_file</span><span class="p">(</span><span class="n">config_prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;@&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">create_default_style_file</span><span class="p">(</span>
+        <span class="n">config_prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;@&quot;</span><span class="p">,</span>
+        <span class="n">prefix_jmespaths</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Create the default style file if it does not exist.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">config_prefix</span> <span class="o">==</span> <span class="s2">&quot;@&quot;</span><span class="p">:</span>
 
             <span class="k">def</span> <span class="nf">key_matcher</span><span class="p">(</span><span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">key</span>
 
+            <span class="n">style_setter</span> <span class="o">=</span> <span class="s2">&quot;set(@, &#39;style&#39;, [&#39;style.json5&#39;])&quot;</span>
+            <span class="n">cache_setter</span> <span class="o">=</span> <span class="s2">&quot;set(@, &#39;cache&#39;, &#39;5 minutes&#39;)&quot;</span>
         <span class="k">else</span><span class="p">:</span>
 
             <span class="k">def</span> <span class="nf">key_matcher</span><span class="p">(</span><span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
                 <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;tool.</span><span class="se">\\</span><span class="s1">&quot;project-config</span><span class="se">\\</span><span class="s1">&quot;.</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1">&#39;</span>
+
+            <span class="n">style_setter</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="s2">&quot;set(@, &#39;tool&#39;, set(tool, &#39;project-config&#39;,&quot;</span>
+                <span class="s1">&#39; set(tool.</span><span class="se">\\</span><span class="s1">&quot;project-config</span><span class="se">\\</span><span class="s1">&quot;,&#39;</span>
+                <span class="s2">&quot; &#39;style&#39;, [&#39;style.json5&#39;])))&quot;</span>
+            <span class="p">)</span>
+            <span class="n">cache_setter</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="s2">&quot;set(@, &#39;tool&#39;, set(tool, &#39;project-config&#39;,&quot;</span>
+                <span class="s1">&#39; set(tool.</span><span class="se">\\</span><span class="s1">&quot;project-config</span><span class="se">\\</span><span class="s1">&quot;,&#39;</span>
+                <span class="s2">&quot; &#39;cache&#39;, &#39;5 minutes&#39;)))&quot;</span>
+            <span class="p">)</span>
 
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">style_filepath</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
@@ -466,21 +486,31 @@
 <span class="sd">      files: [&quot;&#39;&#39;&#39;</span>
                 <span class="o">+</span> <span class="n">config_file_basename</span>
                 <span class="o">+</span> <span class="s2">&quot;&quot;&quot;&quot;],</span>
-<span class="s2">      JMESPathsMatch: [</span>
-<span class="s2">        [&quot;contains(keys(&quot;&quot;&quot;</span>
-                <span class="o">+</span> <span class="n">config_prefix</span>
-                <span class="o">+</span> <span class="s2">&quot;&quot;&quot;), &#39;style&#39;)&quot;, true],</span>
-<span class="s2">        [&quot;type(&quot;&quot;&quot;</span>
+<span class="s2">      JMESPathsMatch: [</span><span class="se">\n</span><span class="s2">        &quot;&quot;&quot;</span>
+                <span class="o">+</span> <span class="n">prefix_jmespaths</span>
+                <span class="o">+</span> <span class="s2">&quot;&quot;&quot;[&quot;type(&quot;&quot;&quot;</span>
                 <span class="o">+</span> <span class="n">key_matcher</span><span class="p">(</span><span class="s2">&quot;style&quot;</span><span class="p">)</span>
                 <span class="o">+</span> <span class="s2">&quot;&quot;&quot;)&quot;, &quot;array&quot;],</span>
-<span class="s2">        [&quot;contains(keys(&quot;&quot;&quot;</span>
-                <span class="o">+</span> <span class="n">config_prefix</span>
-                <span class="o">+</span> <span class="s2">&quot;&quot;&quot;), &#39;cache&#39;)&quot;, true],</span>
+<span class="s2">        [&quot;op(length(&quot;&quot;&quot;</span>
+                <span class="o">+</span> <span class="n">key_matcher</span><span class="p">(</span><span class="s2">&quot;style&quot;</span><span class="p">)</span>
+                <span class="o">+</span> <span class="s2">&quot;&quot;&quot;), &#39;&gt;&#39;, `0`)&quot;, true, &quot;&quot;&quot;</span>
+                <span class="o">+</span> <span class="s1">&#39;&quot;&#39;</span>
+                <span class="o">+</span> <span class="n">style_setter</span>
+                <span class="o">+</span> <span class="s1">&#39;&quot;&#39;</span>
+                <span class="o">+</span> <span class="s2">&quot;&quot;&quot;],</span>
+<span class="s2">        [&quot;type(&quot;&quot;&quot;</span>
+                <span class="o">+</span> <span class="n">key_matcher</span><span class="p">(</span><span class="s2">&quot;cache&quot;</span><span class="p">)</span>
+                <span class="o">+</span> <span class="s2">&quot;&quot;&quot;)&quot;, &quot;string&quot;, &quot;&quot;&quot;</span>
+                <span class="o">+</span> <span class="s1">&#39;&quot;&#39;</span>
+                <span class="o">+</span> <span class="n">cache_setter</span>
+                <span class="o">+</span> <span class="s1">&#39;&quot;&#39;</span>
+                <span class="o">+</span> <span class="s2">&quot;&quot;&quot;],</span>
 <span class="s2">        [</span>
 <span class="s2">          &quot;regex_match(&#39;(</span><span class="se">\\\\</span><span class="s2">d+ ((seconds?)|(minutes?)|(hours?)|(days?)|(weeks?)))|(never)$&#39;, &quot;&quot;&quot;</span>  <span class="c1"># noqa: E501,</span>
                 <span class="o">+</span> <span class="n">key_matcher</span><span class="p">(</span><span class="s2">&quot;cache&quot;</span><span class="p">)</span>
                 <span class="o">+</span> <span class="s2">&quot;&quot;&quot;)&quot;,</span>
 <span class="s2">          true,</span>
+<span class="s2">          &quot;5 minutes&quot;,</span>
 <span class="s2">        ],</span>
 <span class="s2">      ]</span>
 <span class="s2">    }</span>
@@ -517,7 +547,14 @@
 
         <span class="n">add_config_string_to_file</span><span class="p">(</span><span class="n">build_config_string</span><span class="p">(</span><span class="n">pyproject_toml</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
 
-        <span class="n">create_default_style_file</span><span class="p">(</span><span class="n">config_prefix</span><span class="o">=</span><span class="s1">&#39;tool.</span><span class="se">\\</span><span class="s1">&quot;project-config</span><span class="se">\\</span><span class="s1">&quot;&#39;</span><span class="p">)</span>
+        <span class="n">create_default_style_file</span><span class="p">(</span>
+            <span class="n">config_prefix</span><span class="o">=</span><span class="s1">&#39;tool.</span><span class="se">\\</span><span class="s1">&quot;project-config</span><span class="se">\\</span><span class="s1">&quot;&#39;</span><span class="p">,</span>
+            <span class="n">prefix_jmespaths</span><span class="o">=</span><span class="p">(</span>
+                <span class="s1">&#39;[&quot;type(tool)&quot;, &quot;object&quot;],&#39;</span>
+                <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">        [&quot;type(tool.</span><span class="se">\\</span><span class="s1">&quot;project-config</span><span class="se">\\</span><span class="s1">&quot;)&quot;, &quot;object&quot;],&#39;</span>
+                <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">        &quot;</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">config_filepath</span><span class="si">}</span><span class="s2">[tool.project-config]&quot;</span>
 
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">config_filepath</span><span class="p">):</span>

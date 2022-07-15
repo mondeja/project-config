@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.plugins.existence &mdash; project-config 0.6.0 documentation</title>
+  <title>project_config.plugins.existence &mdash; project-config 0.7.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
@@ -32,7 +32,7 @@
             <a href="../../../index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.6
+                0.7
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -47,6 +47,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../basic-usage.html">Basic usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/index.html">Tutorials</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul>
@@ -102,7 +103,14 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">typing</span> <span class="k">as</span> <span class="nn">t</span>
 
-<span class="kn">from</span> <span class="nn">project_config</span> <span class="kn">import</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="n">Results</span><span class="p">,</span> <span class="n">ResultValue</span><span class="p">,</span> <span class="n">Rule</span><span class="p">,</span> <span class="n">Tree</span>
+<span class="kn">from</span> <span class="nn">project_config</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ActionsContext</span><span class="p">,</span>
+    <span class="n">InterruptingError</span><span class="p">,</span>
+    <span class="n">Results</span><span class="p">,</span>
+    <span class="n">ResultValue</span><span class="p">,</span>
+    <span class="n">Rule</span><span class="p">,</span>
+    <span class="n">Tree</span><span class="p">,</span>
+<span class="p">)</span>
 
 
 <div class="viewcode-block" id="ExistencePlugin"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.existence.html#project_config.plugins.existence.ExistencePlugin">[docs]</a><span class="k">class</span> <span class="nc">ExistencePlugin</span><span class="p">:</span>
@@ -111,6 +119,7 @@
         <span class="n">value</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
         <span class="n">tree</span><span class="p">:</span> <span class="n">Tree</span><span class="p">,</span>
         <span class="n">rule</span><span class="p">:</span> <span class="n">Rule</span><span class="p">,</span>
+        <span class="n">context</span><span class="p">:</span> <span class="n">ActionsContext</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Results</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
             <span class="k">yield</span> <span class="p">(</span>

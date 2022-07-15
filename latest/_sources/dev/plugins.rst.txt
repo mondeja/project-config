@@ -50,26 +50,28 @@ methods. For example:
 .. code-block:: python
 
    from typing import Any
-   from project_config import Tree, Rule, Results
+   from project_config import ActionsContext, Tree, Rule, Results
 
    class PluginClass:
        @staticmethod
-       def verb(  # any public method that do not start with 'if' is a verb
+       def verb(  # public method names which do not start with 'if' are verbs
            value: Any,
            tree: Tree,
            rule: Rule,
+           context: ActionsContext,
        ) -> Results:
            ...
 
        @staticmethod
-       def ifConditional(  # a conditional starts with 'if'
+       def ifConditional(  # conditional starts with 'if'
            value: Any,
            tree: Tree,
            rule: Rule,
+           context: ActionsContext,
        ) -> Results:
            ...
 
-.. function:: action(value: typing.Any, tree: project_config.tree.Tree, rule: project_config.types.Rule) -> project_config.types.Results
+.. function:: action(value: typing.Any, tree: project_config.tree.Tree, rule: project_config.types.Rule, context: project_config.types.ActionsContext) -> project_config.types.Results
 
    Action definition.
 
@@ -79,6 +81,8 @@ methods. For example:
    :type tree: :py:class:`project_config.tree.Tree`
    :param rule: Complete rule dictionary in which the action is being executed.
    :type rule: :py:class:`project_config.types.Rule`
+   :param context: Context of the actions. It has a property ``fix`` which is used to determine if the user has enabled the `fix` mode in the current execution.
+   :type context: :py:class:`project_config.types.ActionsContext`
 
    :yield: Checking results.
    :rtype: :py:class:`project_config.types.Results`
@@ -112,7 +116,6 @@ values can change between versions:
    * :py:class:`project_config.plugins.inclusion.InclusionPlugin`
    * :py:class:`project_config.plugins.existence.ExistencePlugin`
    * :py:class:`project_config.plugins.jmespath.JMESPathPlugin`
-
 
 Testing plugins
 ===============

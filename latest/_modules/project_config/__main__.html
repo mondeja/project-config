@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.__main__ &mdash; project-config 0.6.0 documentation</title>
+  <title>project_config.__main__ &mdash; project-config 0.7.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -32,7 +32,7 @@
             <a href="../../index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.6
+                0.7
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -47,6 +47,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../basic-usage.html">Basic usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul>
@@ -263,8 +264,14 @@
         <span class="p">),</span>
     <span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--only-hints&quot;</span><span class="p">,</span>
+        <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;only_hints&quot;</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Only show the hint messages rather than complete errors.&quot;</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
         <span class="s2">&quot;command&quot;</span><span class="p">,</span>
-        <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;check&quot;</span><span class="p">,</span> <span class="s2">&quot;show&quot;</span><span class="p">,</span> <span class="s2">&quot;clean&quot;</span><span class="p">,</span> <span class="s2">&quot;init&quot;</span><span class="p">],</span>
+        <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;check&quot;</span><span class="p">,</span> <span class="s2">&quot;fix&quot;</span><span class="p">,</span> <span class="s2">&quot;show&quot;</span><span class="p">,</span> <span class="s2">&quot;clean&quot;</span><span class="p">,</span> <span class="s2">&quot;init&quot;</span><span class="p">],</span>
         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Command to execute.&quot;</span><span class="p">,</span>
     <span class="p">)</span>
 
@@ -335,8 +342,11 @@
             <span class="n">args</span><span class="o">.</span><span class="n">rootdir</span><span class="p">,</span>
             <span class="n">args</span><span class="o">.</span><span class="n">reporter</span><span class="p">,</span>
             <span class="n">args</span><span class="o">.</span><span class="n">color</span><span class="p">,</span>
+            <span class="n">fix</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">command</span> <span class="o">==</span> <span class="s2">&quot;fix&quot;</span><span class="p">,</span>
+            <span class="n">only_hints</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">only_hints</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="nb">getattr</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">command</span><span class="p">)(</span><span class="n">args</span><span class="p">)</span>
+        <span class="n">method_name</span> <span class="o">=</span> <span class="s2">&quot;check&quot;</span> <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">command</span> <span class="o">==</span> <span class="s2">&quot;fix&quot;</span> <span class="k">else</span> <span class="n">args</span><span class="o">.</span><span class="n">command</span>
+        <span class="nb">getattr</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">method_name</span><span class="p">)(</span><span class="n">args</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">ProjectConfigException</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">_controlled_error</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">traceback</span><span class="p">,</span> <span class="n">exc</span><span class="p">,</span> <span class="n">exc</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">FileNotFoundError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>

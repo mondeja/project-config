@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.types &mdash; project-config 0.6.0 documentation</title>
+  <title>project_config.types &mdash; project-config 0.7.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -32,7 +32,7 @@
             <a href="../../index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.6
+                0.7
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -47,6 +47,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../basic-usage.html">Basic usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul>
@@ -109,7 +110,9 @@
     <span class="n">message</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">definition</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">file</span><span class="p">:</span> <span class="n">NotRequired</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
-    <span class="n">hint</span><span class="p">:</span> <span class="n">NotRequired</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span></div>
+    <span class="n">hint</span><span class="p">:</span> <span class="n">NotRequired</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">fixed</span><span class="p">:</span> <span class="n">NotRequired</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span>
+    <span class="n">fixable</span><span class="p">:</span> <span class="n">NotRequired</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="Rule"><a class="viewcode-back" href="../../dev/reference/project_config.types.html#project_config.Rule">[docs]</a><span class="k">class</span> <span class="nc">Rule</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -126,11 +129,14 @@
 <span class="n">LazyGenericResultType</span><span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">]</span>
 <span class="n">Results</span><span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">Iterator</span><span class="p">[</span><span class="n">LazyGenericResultType</span><span class="p">]</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="s2">&quot;Rule&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;Results&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;ErrorDict&quot;</span><span class="p">,</span>
-<span class="p">)</span>
+
+<div class="viewcode-block" id="ActionsContext"><a class="viewcode-back" href="../../dev/reference/project_config.types.html#project_config.ActionsContext">[docs]</a><span class="k">class</span> <span class="nc">ActionsContext</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">NamedTuple</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Context of global data passed to rule verbs.&quot;&quot;&quot;</span>
+
+    <span class="n">fix</span><span class="p">:</span> <span class="nb">bool</span></div>
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;Rule&quot;</span><span class="p">,</span> <span class="s2">&quot;Results&quot;</span><span class="p">,</span> <span class="s2">&quot;ErrorDict&quot;</span><span class="p">,</span> <span class="s2">&quot;ActionsContext&quot;</span><span class="p">)</span>
 </pre></div>
 
            </div>

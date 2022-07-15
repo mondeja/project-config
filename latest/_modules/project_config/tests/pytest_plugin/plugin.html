@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.tests.pytest_plugin.plugin &mdash; project-config 0.6.0 documentation</title>
+  <title>project_config.tests.pytest_plugin.plugin &mdash; project-config 0.7.0 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
@@ -32,7 +32,7 @@
             <a href="../../../../index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.6
+                0.7
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
@@ -47,6 +47,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../basic-usage.html">Basic usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/index.html">Tutorials</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul>
@@ -113,11 +114,17 @@
 <span class="kn">from</span> <span class="nn">project_config.tests.pytest_plugin.helpers</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">FilesType</span><span class="p">,</span>
     <span class="n">RootdirType</span><span class="p">,</span>
+    <span class="n">assert_expected_files</span><span class="p">,</span>
     <span class="n">create_files</span><span class="p">,</span>
     <span class="n">create_tree</span><span class="p">,</span>
     <span class="n">get_reporter_class_from_module</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">project_config.types</span> <span class="kn">import</span> <span class="n">ErrorDict</span><span class="p">,</span> <span class="n">Rule</span><span class="p">,</span> <span class="n">StrictResultType</span>
+<span class="kn">from</span> <span class="nn">project_config.types</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ActionsContext</span><span class="p">,</span>
+    <span class="n">ErrorDict</span><span class="p">,</span>
+    <span class="n">Rule</span><span class="p">,</span>
+    <span class="n">StrictResultType</span><span class="p">,</span>
+<span class="p">)</span>
 
 
 <div class="viewcode-block" id="project_config_plugin_action_asserter"><a class="viewcode-back" href="../../../../dev/reference/project_config.tests.pytest_plugin.plugin.html#project_config.tests.pytest_plugin.project_config_plugin_action_asserter">[docs]</a><span class="k">def</span> <span class="nf">project_config_plugin_action_asserter</span><span class="p">(</span>
@@ -131,6 +138,8 @@
     <span class="n">additional_files</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">FilesType</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">assert_case_method_name</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">deprecated</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">fix</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">expected_files</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">FilesType</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Convenient function to test a plugin action.</span>
 
@@ -151,6 +160,12 @@
 <span class="sd">            Follows the same format as ``files``.</span>
 <span class="sd">        assert_case_method_name (bool): If ``True``, the method name will</span>
 <span class="sd">            be checked to match against camelCase or PascalCase style.</span>
+<span class="sd">        deprecated (bool): If ``True``, the action must raise a deprecation</span>
+<span class="sd">            warning.</span>
+<span class="sd">        fix (bool): If ``True``, the action will be called with the ``fix``</span>
+<span class="sd">            mode active. Use ``expected_files`` to check the content of the</span>
+<span class="sd">            files after the fix is applyed.</span>
+<span class="sd">        expected_files (dict): Dictionary of expected files.</span>
 
 <span class="sd">    .. rubric:: Example</span>
 
@@ -225,6 +240,7 @@
                 <span class="n">value</span><span class="p">,</span>
                 <span class="n">create_tree</span><span class="p">(</span><span class="n">files</span><span class="p">,</span> <span class="n">rootdir</span><span class="p">,</span> <span class="n">cache_files</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
                 <span class="n">rule</span><span class="p">,</span>
+                <span class="n">ActionsContext</span><span class="p">(</span><span class="n">fix</span><span class="o">=</span><span class="n">fix</span><span class="p">),</span>
             <span class="p">),</span>
         <span class="p">)</span>
 
@@ -259,7 +275,10 @@
         <span class="p">(</span><span class="n">expected_result_type</span><span class="p">,</span> <span class="n">expected_result_value</span><span class="p">),</span>
     <span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">expected_results</span><span class="p">):</span>
         <span class="k">assert</span> <span class="n">result_type</span> <span class="o">==</span> <span class="n">expected_result_type</span><span class="p">,</span> <span class="n">result_value</span>
-        <span class="k">assert</span> <span class="n">result_value</span> <span class="o">==</span> <span class="n">expected_result_value</span></div>
+        <span class="k">assert</span> <span class="n">result_value</span> <span class="o">==</span> <span class="n">expected_result_value</span>
+
+    <span class="k">if</span> <span class="n">expected_files</span><span class="p">:</span>
+        <span class="n">assert_expected_files</span><span class="p">(</span><span class="n">expected_files</span><span class="p">,</span> <span class="n">rootdir</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="assert_project_config_plugin_action"><a class="viewcode-back" href="../../../../dev/reference/project_config.tests.pytest_plugin.plugin.html#project_config.tests.pytest_plugin.assert_project_config_plugin_action">[docs]</a><span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>  <span class="c1"># type: ignore</span>

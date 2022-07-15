@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Plugins &mdash; project-config 0.6.0 documentation</title>
+  <title>Plugins &mdash; project-config 0.7.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -35,7 +35,7 @@
             <a href="../index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.6
+                0.7
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -50,6 +50,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../basic-usage.html">Basic usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul class="current">
@@ -132,7 +133,9 @@
 <p>If the files don’t include all lines specified as argument,
 it will raise a checking error. Newlines are ignored, so they
 should not be specified.</p>
-<p class="rubric">Example</p>
+<p class="rubric">Examples</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">Automatic inclusion</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">Manual edition</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><p>Appends lines not already present in the file to the end.</p>
 <div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
 <span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
 <span class="w">    </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.gitignore&quot;</span><span class="p">],</span><span class="w"></span>
@@ -141,8 +144,32 @@ should not be specified.</p>
 <span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
+</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><p>You can define manually a JMESPath fix query if the line is an array
+with the line and the fix query as items:</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.gitignore&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">      </span><span class="nx">hint</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;The line &#39;dist/&#39; must be included in .gitignore&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="nx">includeLines</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">        </span><span class="p">[</span><span class="s2">&quot;dist/&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;op([?!contains([&#39;/dist/&#39;, &#39;dist&#39;, &#39;dist/&#39;], @)], &#39;+&#39;, [&#39;dist/&#39;])&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">        </span><span class="s2">&quot;__pycache__/&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="p">]</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="p">]</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+<p>The returned value of the JMESPath fix query will be the new content
+of the file, an array with a <code class="docutils literal notranslate"><span class="pre">'\n'.join(lines)</span></code> transformation of the
+array of strings that represent the lines of the file.</p>
+</div></div>
 <div class="versionadded">
 <p><span class="versionmodified added">New in version 0.1.0.</span></p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 0.7.0: </span>Accept arrays of <code class="docutils literal notranslate"><span class="pre">[line,</span> <span class="pre">fixer_query]</span></code> as items of the array
+to edit manually the files using JMESPath queries.</p>
 </div>
 </section>
 <section id="ifincludelines">
@@ -180,23 +207,38 @@ and line ending characters.</p>
 <p class="rubric">Example</p>
 <p>Don’t allow code blocks in RST documentation files:</p>
 <ul class="simple">
-<li><p>Bash is not a POSIX compliant shell.</p></li>
-<li><p>Pygments’ JSON5 lexer is not implemented yet.</p></li>
+<li><p>Bash is not a POSIX compliant shell, use Shell lexer.</p></li>
+<li><p>Pygments’ JSON5 lexer is not implemented yet, use Javascript lexer.</p></li>
 </ul>
-<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
-<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
-<span class="w">    </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;docs/**/*.rst&quot;</span><span class="p">],</span><span class="w"></span>
-<span class="w">    </span><span class="nx">excludeContent</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
-<span class="w">      </span><span class="s2">&quot;.. code-block::  &quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">      </span><span class="s2">&quot;.. code-block:: bash&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">      </span><span class="s2">&quot;.. code-block:: json5&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="p">],</span><span class="w"></span>
-<span class="w">  </span><span class="p">]</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="n">rules</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="n">files</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;file.rst&quot;</span><span class="p">],</span>
+      <span class="n">excludeContent</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">[</span>
+          <span class="s2">&quot;.. code-block::  &quot;</span><span class="p">,</span>
+          <span class="s2">&quot;map(&amp;replace(@, &#39;code-block::  &#39;, &#39;code-block:: &#39;), @)&quot;</span><span class="p">,</span>
+        <span class="p">],</span>
+        <span class="p">[</span>
+          <span class="s2">&quot;.. code-block:: bash&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;map(&amp;replace(@, &#39;code-block:: bash&#39;, &#39;code-block:: sh&#39;), @)&quot;</span><span class="p">,</span>
+        <span class="p">],</span>
+        <span class="p">[</span>
+          <span class="s2">&quot;.. code-block:: json5&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;map(&amp;replace(@, &#39;code-block:: json5&#39;, &#39;code-block:: js&#39;), @)&quot;</span><span class="p">,</span>
+        <span class="p">],</span>
+      <span class="p">],</span>
+    <span class="p">},</span>
+  <span class="p">],</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <div class="versionadded">
 <p><span class="versionmodified added">New in version 0.3.0.</span></p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 0.7.0: </span>Accepts an array <code class="docutils literal notranslate"><span class="pre">['content-to-exclude',</span> <span class="pre">fixer-query]</span></code> for each item
+in the array to perform editions in the file if the content is found.</p>
 </div>
 </section>
 </section>
@@ -209,7 +251,8 @@ and line ending characters.</p>
 <p>Accepts an array of paths. If a path ends with <code class="docutils literal notranslate"><span class="pre">/</span></code> character it is
 considered a directory.</p>
 <p class="rubric">Examples</p>
-<p>If the directory <cite>src/</cite> exists, a <cite>pyproject.toml</cite> file must exist also:</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-1-1-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-1-1-0" name="1-0" role="tab" tabindex="0">If directory exists</button><button aria-controls="panel-1-1-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-1-1-1" name="1-1" role="tab" tabindex="-1">If file exists</button></div><div aria-labelledby="tab-1-1-0" class="sphinx-tabs-panel" id="panel-1-1-0" name="1-0" role="tabpanel" tabindex="0"><p>If the directory <cite>src/</cite> exists, a <cite>pyproject.toml</cite> file must exist also:</p>
 <div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
 <span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
 <span class="w">    </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;pyproject.toml&quot;</span><span class="p">],</span><span class="w"></span>
@@ -218,7 +261,7 @@ considered a directory.</p>
 <span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
-<p>If the file <cite>.pre-commit-hooks.yaml</cite> exists, must be declared as an array:</p>
+</div><div aria-labelledby="tab-1-1-1" class="sphinx-tabs-panel" hidden="true" id="panel-1-1-1" name="1-1" role="tabpanel" tabindex="0"><p>If the file <cite>.pre-commit-hooks.yaml</cite> exists, must be declared as an array:</p>
 <div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
 <span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
 <span class="w">    </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.pre-commit-hooks.yaml&quot;</span><span class="p">],</span><span class="w"></span>
@@ -228,6 +271,7 @@ considered a directory.</p>
 <span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
+</div></div>
 <div class="versionadded">
 <p><span class="versionmodified added">New in version 0.4.0.</span></p>
 </div>
@@ -239,8 +283,9 @@ considered a directory.</p>
 <p>The actions of this plugin operates against object-serialized versions
 of files, so only files that can be serialized can be targetted (see
 <a class="reference internal" href="../in-depth/serialization.html#objects-serialization"><span class="std std-ref">Objects serialization</span></a>).</p>
-<p>You can use in expressions all <a class="reference external" href="https://jmespath.org/proposals/functions.html#built-in-functions">JMESPath builtin functions</a> plus a set of
+<p>You can use in expressions all <a class="reference external" href="https://jmespath.org/specification.html#built-in-functions">JMESPath builtin functions</a> plus a set of
 convenient functions defined by the plugin internally:</p>
+<p class="rubric">Functions</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="regex_match">
 <span class="sig-name descname"><span class="pre">regex_match</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pattern:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">string:</span> <span class="pre">str</span></span></em><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">flags:</span> <span class="pre">int=0</span></span></em><span class="optional">]</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#regex_match" title="Permalink to this definition"></a></dt>
@@ -289,6 +334,15 @@ are defined. If no results are found, returns an empty array.</p>
 built-in <a class="reference external" href="https://docs.python.org/3/library/re.html#re.sub" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">re.sub()</span></code></a> function.</p>
 <div class="versionadded">
 <p><span class="versionmodified added">New in version 0.5.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="os">
+<span class="sig-name descname"><span class="pre">os</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></span><a class="headerlink" href="#os" title="Permalink to this definition"></a></dt>
+<dd><p>Return the result of the Python’s variable <a class="reference external" href="https://docs.python.org/3/library/sys.html#sys.platform">sys.platform</a>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.7.0.</span></p>
 </div>
 </dd></dl>
 
@@ -775,6 +829,133 @@ If the iterable is an object, the value is converted before using <a class="refe
 CLI option or defined in <code class="docutils literal notranslate"><span class="pre">cli.rootdir</span></code> <a class="reference internal" href="config.html"><span class="doc">configuration option</span></a>).</p>
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">next</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a></span></span><a class="headerlink" href="#update" title="Permalink to this definition"></a></dt>
+<dd><p>Update the <code class="docutils literal notranslate"><span class="pre">base</span></code> object with the <code class="docutils literal notranslate"><span class="pre">next</span></code> object using Python’s builtin
+<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict.update" title="(in Python v3.10)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">dict.update()</span></code></a>.</p>
+<p>Returns the updated <code class="docutils literal notranslate"><span class="pre">base</span></code> object.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.7.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="insert">
+<span class="sig-name descname"><span class="pre">insert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><span class="pre">list</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">item</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">t.Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><span class="pre">list</span></a></span></span><a class="headerlink" href="#insert" title="Permalink to this definition"></a></dt>
+<dd><p>Insert a <code class="docutils literal notranslate"><span class="pre">item</span></code> at the given <code class="docutils literal notranslate"><span class="pre">index</span></code> in the array <code class="docutils literal notranslate"><span class="pre">base</span></code>.</p>
+<p>Returns the updated <code class="docutils literal notranslate"><span class="pre">base</span></code> array.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.7.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="deepmerge">
+<span class="sig-name descname"><span class="pre">deepmerge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">next</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">strategy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><span class="pre">list</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'conservative_merger'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a></span></span><a class="headerlink" href="#deepmerge" title="Permalink to this definition"></a></dt>
+<dd><p>Merge the <code class="docutils literal notranslate"><span class="pre">base</span></code> and <code class="docutils literal notranslate"><span class="pre">next</span></code> objects using the library <a class="reference internal" href="#deepmerge" title="deepmerge"><code class="xref py py-mod docutils literal notranslate"><span class="pre">deepmerge</span></code></a>.</p>
+<p>Returns the updated <code class="docutils literal notranslate"><span class="pre">base</span></code> object.</p>
+<p>The argument of <code class="docutils literal notranslate"><span class="pre">strategy</span></code> controls how the objects are merged. It can accept
+strings with <a class="reference external" href="https://deepmerge.readthedocs.io/en/latest/strategies.html#builtin-strategies">deepmerge strategy names</a>:</p>
+<p class="rubric">Example</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>deepmerge(@, `{&quot;foo&quot;: &quot;bar&quot;}`, &#39;always_merger&#39;)
+</pre></div>
+</div>
+<p>Or an array with 3 values, the same that takes the class <a class="reference external" href="https://deepmerge.readthedocs.io/en/latest/api.html#deepmerge.merger.Merger" title="(in deepmerge v0.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">deepmerge.merger.Merger</span></code></a>
+as arguments:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">type_strategies</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fallback_strategies</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">type_conflict_strategies</span></code></p></li>
+</ul>
+<p class="rubric">Example</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>deepmerge(
+   @,
+   `{&quot;foo&quot;: [&quot;bar&quot;]}`,
+   `[[[&quot;list&quot;, &quot;append&quot;], [&quot;dict&quot;: &quot;merge&quot;]], [&quot;override&quot;], [&quot;override&quot;]]`
+)
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.7.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="set">
+<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">t.Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a></span></span><a class="headerlink" href="#set" title="Permalink to this definition"></a></dt>
+<dd><p>Set the value of the <code class="docutils literal notranslate"><span class="pre">key</span></code> in the <code class="docutils literal notranslate"><span class="pre">base</span></code> object to <code class="docutils literal notranslate"><span class="pre">value</span></code>.</p>
+<p>Returns the updated <code class="docutils literal notranslate"><span class="pre">base</span></code> object.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.7.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unset">
+<span class="sig-name descname"><span class="pre">unset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a></span></span><a class="headerlink" href="#unset" title="Permalink to this definition"></a></dt>
+<dd><p>If has it, remove the <code class="docutils literal notranslate"><span class="pre">key</span></code> from the <code class="docutils literal notranslate"><span class="pre">base</span></code> object.</p>
+<p>Returns the updated <code class="docutils literal notranslate"><span class="pre">base</span></code> object.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.7.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="replace">
+<span class="sig-name descname"><span class="pre">replace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">old:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new:</span> <span class="pre">str</span></span></em><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">count:</span> <span class="pre">int</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#replace" title="Permalink to this definition"></a></dt>
+<dd><p>Replace the <code class="docutils literal notranslate"><span class="pre">old</span></code> string with the <code class="docutils literal notranslate"><span class="pre">new</span></code> string in the <code class="docutils literal notranslate"><span class="pre">base</span></code> string
+using the Python’s built-in string method <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str.replace" title="(in Python v3.10)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">str.replace()</span></code></a>.</p>
+<p>Returns the updated <code class="docutils literal notranslate"><span class="pre">base</span></code> string.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.7.0.</span></p>
+</div>
+</dd></dl>
+
+<p class="rubric">Fix queries</p>
+<p>The verbs of the jmespath plugin can fix files by applying a JMESPath
+query over the previous content of the files. The fix-queries arguments
+are always optional.</p>
+<p>If no fix-query is provided, <strong>project-config</strong> will attempt to build an expected
+node tree instance to update the content parsing the other queries arguments
+and the expected value.</p>
+<p>The query will be a syntax like (example merging objects):</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>deepmerge(@, `{ &quot;foo&quot;: &quot;bar&quot; }`)
+</pre></div>
+</div>
+<p>Where <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> is the previous content of the file.</p>
+<p>The result from this JMESPath expression will be the next content of the file.
+So these transformer functions like <a class="reference internal" href="#deepmerge" title="deepmerge"><code class="xref py py-func docutils literal notranslate"><span class="pre">deepmerge()</span></code></a>, <a class="reference internal" href="#insert" title="insert"><code class="xref py py-func docutils literal notranslate"><span class="pre">insert()</span></code></a> or
+<a class="reference internal" href="#update" title="update"><code class="xref py py-func docutils literal notranslate"><span class="pre">update()</span></code></a> allow you to edit your files with total flexibility.</p>
+<p class="rubric">Automatic fixes</p>
+<p>Queries that are simple can be automatically fixed by the plugin. For example,
+a constant query with their expected value:</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-2-2-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-2-2-0" name="2-0" role="tab" tabindex="0">package.json (before)</button><button aria-controls="panel-2-2-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-2-2-1" name="2-1" role="tab" tabindex="-1">package.json (after)</button><button aria-controls="panel-2-2-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-2-2-2" name="2-2" role="tab" tabindex="-1">style.json5 (rule)</button></div><div aria-labelledby="tab-2-2-0" class="sphinx-tabs-panel" id="panel-2-2-0" name="2-0" role="tabpanel" tabindex="0"><div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
+<span class="w">   </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my-project&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-2-2-1" class="sphinx-tabs-panel" hidden="true" id="panel-2-2-1" name="2-1" role="tabpanel" tabindex="0"><div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
+<span class="w">   </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my-project&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">   </span><span class="nt">&quot;license&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;BSD-3-Clause&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-2-2-2" class="sphinx-tabs-panel" hidden="true" id="panel-2-2-2" name="2-2" role="tabpanel" tabindex="0"><div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;package.json&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">  </span><span class="nx">JMESPathsMatch</span><span class="o">:</span><span class="w"> </span><span class="p">[[</span><span class="s2">&quot;license&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;BSD-3-Clause&quot;</span><span class="p">]]</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+</div></div>
+<p>Currently, is possible to automatically fix the following cases:</p>
+<ul class="simple">
+<li><p>Query to constant.</p></li>
+<li><p>Query to constant in nested objects.</p></li>
+<li><p>Expression using the <code class="docutils literal notranslate"><span class="pre">type</span></code> function like <code class="docutils literal notranslate"><span class="pre">type(foo.bar)</span></code> with expected value as <code class="docutils literal notranslate"><span class="pre">'array'</span></code> (creates <code class="docutils literal notranslate"><span class="pre">{foo:</span> <span class="pre">{bar:</span> <span class="pre">[]}}</span></code> nodes if doesn’t exists before).</p></li>
+<li><p>Indexed expressions with indexes like <code class="docutils literal notranslate"><span class="pre">type(foo[0].bar)</span></code> with expected value as <code class="docutils literal notranslate"><span class="pre">'object'</span></code> (prepends, <code class="docutils literal notranslate"><span class="pre">{bar:</span> <span class="pre">{}}</span></code> to the array <code class="docutils literal notranslate"><span class="pre">bar</span></code>, creating it if does not exists).</p></li>
+</ul>
 <section id="jmespathsmatch">
 <h3>JMESPathsMatch<a class="headerlink" href="#jmespathsmatch" title="Permalink to this headline"></a></h3>
 <p>Compares a set of JMESPath expressions against results.</p>
@@ -810,6 +991,9 @@ tuples passed as value. If a result don’t match, report an error.</p>
 </div>
 <div class="versionadded">
 <p><span class="versionmodified added">New in version 0.1.0.</span></p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 0.7.0: </span>The verb also accepts fix queries as third item of rows.</p>
 </div>
 </section>
 <section id="crossjmespathsmatch">
@@ -864,7 +1048,7 @@ defined in th file <cite>pyproject.toml</cite>, field <code class="docutils lite
 <code class="docutils literal notranslate"><span class="pre">files</span></code> and <code class="docutils literal notranslate"><span class="pre">final</span></code> expressions to each file in <code class="docutils literal notranslate"><span class="pre">files</span></code> property of
 the rule. For example, the next configuration would not raise errors:</p>
 <div class="sphinx-tabs docutils container">
-<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">style.json5</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">foo.json</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-3-3-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-3-3-0" name="3-0" role="tab" tabindex="0">style.json5</button><button aria-controls="panel-3-3-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-3-3-1" name="3-1" role="tab" tabindex="-1">foo.json</button></div><div aria-labelledby="tab-3-3-0" class="sphinx-tabs-panel" id="panel-3-3-0" name="3-0" role="tabpanel" tabindex="0"><div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
 <span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
 <span class="w">    </span><span class="p">{</span><span class="w"></span>
 <span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;foo.json&quot;</span><span class="p">],</span><span class="w"></span>
@@ -876,7 +1060,7 @@ the rule. For example, the next configuration would not raise errors:</p>
 <span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
-</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="nt">&quot;bar&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;baz&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="p">}}</span><span class="w"></span>
+</div><div aria-labelledby="tab-3-3-1" class="sphinx-tabs-panel" hidden="true" id="panel-3-3-1" name="3-1" role="tabpanel" tabindex="0"><div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="nt">&quot;bar&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;baz&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="p">}}</span><span class="w"></span>
 </pre></div>
 </div>
 </div></div>
@@ -884,11 +1068,11 @@ the rule. For example, the next configuration would not raise errors:</p>
 other files using <code class="docutils literal notranslate"><span class="pre">file/path.ext?serializer</span></code> syntax. For example, to open a Python
 file line by line:</p>
 <div class="sphinx-tabs docutils container">
-<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-1-1-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-1-1-0" name="1-0" role="tab" tabindex="0">file.py</button><button aria-controls="panel-1-1-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-1-1-1" name="1-1" role="tab" tabindex="-1">style.json5</button></div><div aria-labelledby="tab-1-1-0" class="sphinx-tabs-panel" id="panel-1-1-0" name="1-0" role="tabpanel" tabindex="0"><div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">foo</span> <span class="o">=</span> <span class="kc">True</span>
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-4-4-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-4-4-0" name="4-0" role="tab" tabindex="0">file.py</button><button aria-controls="panel-4-4-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-4-4-1" name="4-1" role="tab" tabindex="-1">style.json5</button></div><div aria-labelledby="tab-4-4-0" class="sphinx-tabs-panel" id="panel-4-4-0" name="4-0" role="tabpanel" tabindex="0"><div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">foo</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="n">bar</span> <span class="o">=</span> <span class="kc">False</span>
 </pre></div>
 </div>
-</div><div aria-labelledby="tab-1-1-1" class="sphinx-tabs-panel" hidden="true" id="panel-1-1-1" name="1-1" role="tabpanel" tabindex="0"><div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
+</div><div aria-labelledby="tab-4-4-1" class="sphinx-tabs-panel" hidden="true" id="panel-4-4-1" name="4-1" role="tabpanel" tabindex="0"><div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
 <span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
 <span class="w">    </span><span class="p">{</span><span class="w"></span>
 <span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;file.py&quot;</span><span class="p">],</span><span class="w">  </span><span class="c1">// just asserts that the file exists</span><span class="w"></span>

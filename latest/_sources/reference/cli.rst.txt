@@ -16,6 +16,7 @@ project-config CLI
 .. rubric:: Commands
 
 * ``project-config check`` - Check the styles of the current project.
+* ``project-config fix`` - Fix the files of the current project.
 * ``project-config init`` - Initialize a minimal style for the current project.
 * ``project-config show config`` - Show the configuration.
 * ``project-config show style`` - Show the collected styles merged into the final one.
@@ -71,13 +72,15 @@ see :ref:`dev/reporters:Writing third party reporters` for more information.
 The reporter output affects the output of the next commands:
 
 * ``project-config check``
+* ``project-config fix``
 * ``project-config show config``
 * ``project-config show style``
 * ``project-config show plugins``
 
 .. note::
 
-   Keep in mind that errors shown by ``check`` command are redirected to STDERR.
+   Keep in mind that errors shown by ``check`` and ``fix`` commands are redirected
+   to STDERR.
 
    Colorized output can't be serialized, so if you want to postprocess the report
    in the command line use always the :ref:`project-config---no-color` flag or set
@@ -122,6 +125,12 @@ Show your styles after collecting all in YAML format:
 .. code-block:: sh
 
    project-config show style -r yaml
+
+Fix the styles for the current project:
+
+.. code-block:: sh
+
+   project-config fix
 
 Initialize a minimal configuration:
 

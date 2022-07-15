@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Configuration &mdash; project-config 0.6.0 documentation</title>
+  <title>Configuration &mdash; project-config 0.7.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -19,6 +19,7 @@
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/tabs.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -34,7 +35,7 @@
             <a href="../index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.6
+                0.7
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -49,6 +50,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../basic-usage.html">Basic usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul class="current">
@@ -61,6 +63,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#cli-reporter-string"><code class="docutils literal notranslate"><span class="pre">cli.reporter</span></code> (<cite>string</cite>)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#cli-color-boolean"><code class="docutils literal notranslate"><span class="pre">cli.color</span></code> (<cite>boolean</cite>)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#cli-colors-object"><code class="docutils literal notranslate"><span class="pre">cli.colors</span></code> (<cite>object</cite>)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cli-only-hints-boolean"><code class="docutils literal notranslate"><span class="pre">cli.only_hints</span></code> (<cite>boolean</cite>)</a></li>
 </ul>
 </li>
 </ul>
@@ -114,6 +117,39 @@
 <li><p><cite>pyproject.toml</cite> (inside a <code class="docutils literal notranslate"><span class="pre">[tool.project-config]</span></code> table)</p></li>
 <li><p>A custom file passing <code class="docutils literal notranslate"><span class="pre">-c</span></code>/<code class="docutils literal notranslate"><span class="pre">--config</span></code> argument in the command line.</p></li>
 </ul>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>You can use the <code class="docutils literal notranslate"><span class="pre">project-config</span> <span class="pre">init</span></code> command to initialize a minimal
+configuration and JSON5 style file.</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">Initialization</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">.project-config.toml</button><button aria-controls="panel-0-0-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-2" name="0-2" role="tab" tabindex="-1">style.json5</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>project-config init
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="n">style</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s">&quot;style.json5&quot;</span><span class="p">]</span><span class="w"></span>
+<span class="n">cache</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;5 minutes&quot;</span><span class="w"></span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-0-0-2" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-2" name="0-2" role="tabpanel" tabindex="0"><div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.project-config.toml&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">      </span><span class="nx">JMESPathsMatch</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">        </span><span class="p">[</span><span class="s2">&quot;type(style)&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;array&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">        </span><span class="p">[</span><span class="s2">&quot;op(length(style), &#39;&gt;&#39;, `0`)&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;set(@, &#39;style&#39;, [&#39;style.json5&#39;])&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">        </span><span class="p">[</span><span class="s2">&quot;type(cache)&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;set(@, &#39;cache&#39;, &#39;5 minutes&#39;)&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">        </span><span class="p">[</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;regex_match(&#39;(\\d+ ((seconds?)|(minutes?)|(hours?)|(days?)|(weeks?)))|(never)$&#39;, cache)&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="kc">true</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;5 minutes&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="p">],</span><span class="w"></span>
+<span class="w">      </span><span class="p">]</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="p">]</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+</div></div>
+</div>
 <section id="style-string-or-string">
 <h2><code class="docutils literal notranslate"><span class="pre">style</span></code> (<cite>string</cite> or <cite>string[]</cite>)<a class="headerlink" href="#style-string-or-string" title="Permalink to this headline"></a></h2>
 <p>It is the unique mandatory field. At least one style with one rule must
@@ -181,6 +217,35 @@ optional CLI argument.</p>
 <h3><code class="docutils literal notranslate"><span class="pre">cli.colors</span></code> (<cite>object</cite>)<a class="headerlink" href="#cli-colors-object" title="Permalink to this headline"></a></h3>
 <p>Custom colors used in the output of the CLI. Corresponds to the <code class="docutils literal notranslate"><span class="pre">color=</span></code>
 argument of the <a class="reference internal" href="cli.html#project-config---reporter"><span class="std std-ref">project-config --reporter</span></a> optional CLI argument.</p>
+</section>
+<section id="cli-only-hints-boolean">
+<h3><code class="docutils literal notranslate"><span class="pre">cli.only_hints</span></code> (<cite>boolean</cite>)<a class="headerlink" href="#cli-only-hints-boolean" title="Permalink to this headline"></a></h3>
+<p>Specifies if you want to only show the hints rather than the full error messages
+if rules have them. As default disabled.</p>
+<p class="rubric">Example</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-1-1-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-1-1-0" name="1-0" role="tab" tabindex="0">.project-config.toml</button><button aria-controls="panel-1-1-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-1-1-1" name="1-1" role="tab" tabindex="-1">pyproject.toml</button></div><div aria-labelledby="tab-1-1-0" class="sphinx-tabs-panel" id="panel-1-1-0" name="1-0" role="tabpanel" tabindex="0"><div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="n">style</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s">&quot;style.json5&quot;</span><span class="p">]</span><span class="w"></span>
+<span class="n">cache</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;5 minutes&quot;</span><span class="w"></span>
+
+<span class="k">[cli]</span><span class="w"></span>
+<span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="w"></span>
+<span class="n">reporter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;json&quot;</span><span class="w"></span>
+<span class="n">rootdir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;src&quot;</span><span class="w"></span>
+<span class="n">only_hints</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="w"></span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-1-1-1" class="sphinx-tabs-panel" hidden="true" id="panel-1-1-1" name="1-1" role="tabpanel" tabindex="0"><div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[tool.project-config]</span><span class="w"></span>
+<span class="n">style</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s">&quot;style.json5&quot;</span><span class="p">]</span><span class="w"></span>
+<span class="n">cache</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;5 minutes&quot;</span><span class="w"></span>
+
+<span class="k">[tool.project-config.cli]</span><span class="w"></span>
+<span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="w"></span>
+<span class="n">reporter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;json&quot;</span><span class="w"></span>
+<span class="n">rootdir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;src&quot;</span><span class="w"></span>
+<span class="n">only_hints</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="w"></span>
+</pre></div>
+</div>
+</div></div>
 </section>
 </section>
 </section>

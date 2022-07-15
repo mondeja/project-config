@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project-config CLI &mdash; project-config 0.6.0 documentation</title>
+  <title>project-config CLI &mdash; project-config 0.7.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -23,7 +23,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Configuration" href="config.html" />
-    <link rel="prev" title="Examples" href="../examples.html" /> 
+    <link rel="prev" title="Linting a package.json file" href="../tutorials/pages/package-json.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -34,7 +34,7 @@
             <a href="../index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.6
+                0.7
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -49,6 +49,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../basic-usage.html">Basic usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul class="current">
@@ -103,8 +104,8 @@
 <h1>project-config CLI<a class="headerlink" href="#project-config-cli" title="Permalink to this headline"></a></h1>
 <p><p>Validate the configuration of your project against the configured styles.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">project</span><span class="o">-</span><span class="n">config</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">T</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">c</span> <span class="n">CONFIG</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">root</span> <span class="n">ROOTDIR</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">r</span> <span class="n">NAME</span><span class="p">[:</span><span class="n">FORMAT</span><span class="p">];</span><span class="n">OPTION</span><span class="o">=</span><span class="n">VALUE</span><span class="p">]</span>
-               <span class="p">[</span><span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">color</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">cache</span><span class="p">]</span>
-               <span class="p">{</span><span class="n">check</span><span class="p">,</span><span class="n">show</span><span class="p">,</span><span class="n">clean</span><span class="p">,</span><span class="n">init</span><span class="p">}</span>
+               <span class="p">[</span><span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">color</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">cache</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">only</span><span class="o">-</span><span class="n">hints</span><span class="p">]</span>
+               <span class="p">{</span><span class="n">check</span><span class="p">,</span><span class="n">fix</span><span class="p">,</span><span class="n">show</span><span class="p">,</span><span class="n">clean</span><span class="p">,</span><span class="n">init</span><span class="p">}</span>
 </pre></div>
 </div>
 <section id="project-config-positional-arguments">
@@ -124,12 +125,14 @@
 <li><p id="project-config--r"><span id="project-config---reporter"></span><a class="reference internal" href="#project-config--r" title="project-config -r"><strong><code class="docutils literal notranslate"><span class="pre">-r</span></code></strong></a> <code class="docutils literal notranslate"><span class="pre">NAME[:FORMAT];OPTION=VALUE</span></code>, <a class="reference internal" href="#project-config---reporter" title="project-config --reporter"><strong><code class="docutils literal notranslate"><span class="pre">--reporter</span></code></strong></a> <code class="docutils literal notranslate"><span class="pre">NAME[:FORMAT];OPTION=VALUE</span></code> - Reporter for generated output when failed. Possible values are <code class="docutils literal notranslate"><span class="pre">'default'</span></code>, <code class="docutils literal notranslate"><span class="pre">'json'</span></code>, <code class="docutils literal notranslate"><span class="pre">'json:pretty'</span></code>, <code class="docutils literal notranslate"><span class="pre">'json:pretty4'</span></code>, <code class="docutils literal notranslate"><span class="pre">'toml'</span></code>, <code class="docutils literal notranslate"><span class="pre">'yaml'</span></code>, <code class="docutils literal notranslate"><span class="pre">'table:fancy_grid'</span></code>, <code class="docutils literal notranslate"><span class="pre">'table:fancy_outline'</span></code>, <code class="docutils literal notranslate"><span class="pre">'table:github'</span></code>, <code class="docutils literal notranslate"><span class="pre">'table:grid'</span></code>, <code class="docutils literal notranslate"><span class="pre">'table:html'</span></code>, <code class="docutils literal notranslate"><span class="pre">'table:jira'</span></code>, <code class="docutils literal notranslate"><span class="pre">'table:latex'</span></code>, <code class="docutils literal notranslate"><span class="pre">'table:latex_booktabs'</span></code>, <code class="docutils literal notranslate"><span class="pre">'table:latex_longtable'</span></code>, <code class="docutils literal notranslate"><span class="pre">'table:latex_raw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'table:mediawiki'</span></code>, <code class="docutils literal notranslate"><span class="pre">'table:moinmoin'</span></code>, <code class="docutils literal notranslate"><span class="pre">'table:orgtbl'</span></code>, <code class="docutils literal notranslate"><span class="pre">'table:pipe'</span></code>, <code class="docutils literal notranslate"><span class="pre">'table:plain'</span></code>, <code class="docutils literal notranslate"><span class="pre">'table:presto'</span></code>, <code class="docutils literal notranslate"><span class="pre">'table:pretty'</span></code>, <code class="docutils literal notranslate"><span class="pre">'table:psql'</span></code>, <code class="docutils literal notranslate"><span class="pre">'table:rst'</span></code>, <code class="docutils literal notranslate"><span class="pre">'table:simple'</span></code>, <code class="docutils literal notranslate"><span class="pre">'table:textile'</span></code>, <code class="docutils literal notranslate"><span class="pre">'table:tsv'</span></code>, <code class="docutils literal notranslate"><span class="pre">'table:unsafehtml'</span></code>, <code class="docutils literal notranslate"><span class="pre">'table:youtrack'</span></code>. Additionally, options can be passed to the reporter appending <code class="docutils literal notranslate"><span class="pre">';'</span></code> to the end of the reporter id with the syntax <code class="docutils literal notranslate"><span class="pre">'&lt;OPTION&gt;=&lt;JSON</span> <span class="pre">VALUE&gt;'</span></code>. Console reporters can take an argument <code class="docutils literal notranslate"><span class="pre">'color'</span></code> which accepts a JSON object to customize the colors for parts of the report like files, for example: table:simple;color=``{”file”:”blue”}``. (default: <code class="docutils literal notranslate"><span class="pre">{}</span></code>)</p></li>
 <li><p id="project-config---no-color"><span id="project-config---nocolor"></span><a class="reference internal" href="#project-config---no-color" title="project-config --no-color"><strong><code class="docutils literal notranslate"><span class="pre">--no-color</span></code></strong></a>, <a class="reference internal" href="#project-config---nocolor" title="project-config --nocolor"><strong><code class="docutils literal notranslate"><span class="pre">--nocolor</span></code></strong></a> - Disable colored output. You can also set a value in the environment variable NO_COLOR.</p></li>
 <li><p id="project-config---no-cache"><span id="project-config---nocache"></span><a class="reference internal" href="#project-config---no-cache" title="project-config --no-cache"><strong><code class="docutils literal notranslate"><span class="pre">--no-cache</span></code></strong></a>, <a class="reference internal" href="#project-config---nocache" title="project-config --nocache"><strong><code class="docutils literal notranslate"><span class="pre">--nocache</span></code></strong></a> - Disable cache for the current execution. You can also set the value <code class="docutils literal notranslate"><span class="pre">'false'</span></code> in the environment variable PROJECT_CONFIG_USE_CACHE.</p></li>
+<li><p id="project-config---only-hints"><a class="reference internal" href="#project-config---only-hints" title="project-config --only-hints"><strong><code class="docutils literal notranslate"><span class="pre">--only-hints</span></code></strong></a> - Only show the hint messages rather than complete errors.</p></li>
 </ul>
 </section>
 </p>
 <p class="rubric">Commands</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">project-config</span> <span class="pre">check</span></code> - Check the styles of the current project.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">project-config</span> <span class="pre">fix</span></code> - Fix the files of the current project.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">project-config</span> <span class="pre">init</span></code> - Initialize a minimal style for the current project.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">project-config</span> <span class="pre">show</span> <span class="pre">config</span></code> - Show the configuration.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">project-config</span> <span class="pre">show</span> <span class="pre">style</span></code> - Show the collected styles merged into the final one.</p></li>
@@ -161,13 +164,15 @@ see <a class="reference internal" href="../dev/reporters.html#writing-third-part
 <p>The reporter output affects the output of the next commands:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">project-config</span> <span class="pre">check</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">project-config</span> <span class="pre">fix</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">project-config</span> <span class="pre">show</span> <span class="pre">config</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">project-config</span> <span class="pre">show</span> <span class="pre">style</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">project-config</span> <span class="pre">show</span> <span class="pre">plugins</span></code></p></li>
 </ul>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Keep in mind that errors shown by <code class="docutils literal notranslate"><span class="pre">check</span></code> command are redirected to STDERR.</p>
+<p>Keep in mind that errors shown by <code class="docutils literal notranslate"><span class="pre">check</span></code> and <code class="docutils literal notranslate"><span class="pre">fix</span></code> commands are redirected
+to STDERR.</p>
 <p>Colorized output can’t be serialized, so if you want to postprocess the report
 in the command line use always the <a class="reference internal" href="#project-config---no-color"><span class="std std-ref">project-config --no-color</span></a> flag or set
 the environment variable <code class="docutils literal notranslate"><span class="pre">NO_COLOR</span></code>.</p>
@@ -201,6 +206,10 @@ that can be used to apply JMESPath queries to JSON reports produced by
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>project-config show style -r yaml
 </pre></div>
 </div>
+<p>Fix the styles for the current project:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>project-config fix
+</pre></div>
+</div>
 <p>Initialize a minimal configuration:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>project-config init
 </pre></div>
@@ -221,7 +230,7 @@ in a relative project root directory:</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="../examples.html" class="btn btn-neutral float-left" title="Examples" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../tutorials/pages/package-json.html" class="btn btn-neutral float-left" title="Linting a package.json file" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="config.html" class="btn btn-neutral float-right" title="Configuration" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

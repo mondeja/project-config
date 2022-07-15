@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Objects serialization &mdash; project-config 0.6.0 documentation</title>
+  <title>Objects serialization &mdash; project-config 0.7.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -35,7 +35,7 @@
             <a href="../index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.6
+                0.7
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -50,6 +50,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../basic-usage.html">Basic usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul>
@@ -125,25 +126,29 @@ using <a class="reference external" href="https://github.com/pre-commit/identify
 <h2>JSON<a class="headerlink" href="#json" title="Permalink to this headline"></a></h2>
 <ul class="simple">
 <li><p>Loader: <a class="reference external" href="https://docs.python.org/3/library/json.html#json.loads" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">json.loads()</span></code></a>.</p></li>
+<li><p>Dumper: <a class="reference external" href="https://docs.python.org/3/library/json.html#json.dumps" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">json.dumps()</span></code></a>.</p></li>
 </ul>
 </section>
 <section id="json5">
 <h2>JSON5<a class="headerlink" href="#json5" title="Permalink to this headline"></a></h2>
 <ul class="simple">
-<li><p>Loader: <a class="reference external" href="https://pyjson5.readthedocs.io/en/latest/decoder.html#pyjson5.loads" title="(in PyJSON5 v1.6.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">pyjson5.loads()</span></code></a> (if installed) or <a class="reference external" href="https://github.com/dpranke/pyjson5">json5.loads</a>.</p></li>
+<li><p>Loader: <a class="reference external" href="https://pyjson5.readthedocs.io/en/latest/decoder.html#pyjson5.loads" title="(in PyJSON5 v1.6.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">pyjson5.loads()</span></code></a> or <a class="reference external" href="https://github.com/dpranke/pyjson5">json5.loads</a> as fallback.</p></li>
+<li><p>Dumper: <a class="reference external" href="https://pyjson5.readthedocs.io/en/latest/encoder.html#pyjson5.dumps" title="(in PyJSON5 v1.6.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">pyjson5.dumps()</span></code></a> or <a class="reference external" href="https://github.com/dpranke/pyjson5">json5.dumps</a> as fallback.</p></li>
 </ul>
 </section>
 <section id="yaml-v1-2">
 <h2>YAML (v1.2)<a class="headerlink" href="#yaml-v1-2" title="Permalink to this headline"></a></h2>
 <ul class="simple">
 <li><p>Loader: <a class="reference internal" href="../dev/reference/project_config.serializers.yaml.html#project_config.serializers.yaml.loads" title="project_config.serializers.yaml.loads"><code class="xref py py-func docutils literal notranslate"><span class="pre">project_config.serializers.yaml.loads()</span></code></a> (based on <a class="reference external" href="https://yaml.readthedocs.io/en/latest">ruamel.yaml</a>).</p></li>
+<li><p>Dumper: <a class="reference internal" href="../dev/reference/project_config.serializers.yaml.html#project_config.serializers.yaml.dumps" title="project_config.serializers.yaml.dumps"><code class="xref py py-func docutils literal notranslate"><span class="pre">project_config.serializers.yaml.dumps()</span></code></a> (based on <a class="reference external" href="https://yaml.readthedocs.io/en/latest">ruamel.yaml</a>).</p></li>
 <li><p>See <a class="reference external" href="https://perlpunk.github.io/yaml-test-schema/schemas.html">YAML supported types by version</a>.</p></li>
 </ul>
 </section>
 <section id="toml-v1">
 <h2>TOML (v1)<a class="headerlink" href="#toml-v1" title="Permalink to this headline"></a></h2>
 <ul class="simple">
-<li><p>Loader: <a class="reference external" href="https://github.com/hukkin/tomli#parse-a-toml-string">tomli.loads</a> (Python &lt; 3.11) or <a class="reference external" href="https://docs.python.org/3.11/library/tomllib.html#tomllib.loads">tomllib.loads</a>.</p></li>
+<li><p>Loader: <a class="reference external" href="https://github.com/sdispater/tomlkit/blob/master/docs/quickstart.rst#parsing">tomlkit.parse</a>.</p></li>
+<li><p>Dumper: <a class="reference external" href="https://github.com/sdispater/tomlkit/blob/master/docs/quickstart.rst#modifying">tomlkit.dumps</a>.</p></li>
 <li><p>See the <a class="reference external" href="https://toml.io/en/v1.0.0">TOML v1 specification</a>.</p></li>
 </ul>
 </section>
@@ -151,12 +156,14 @@ using <a class="reference external" href="https://github.com/pre-commit/identify
 <h2>INI<a class="headerlink" href="#ini" title="Permalink to this headline"></a></h2>
 <ul class="simple">
 <li><p>Loader: <a class="reference internal" href="../dev/reference/project_config.serializers.ini.html#project_config.serializers.ini.loads" title="project_config.serializers.ini.loads"><code class="xref py py-func docutils literal notranslate"><span class="pre">project_config.serializers.ini.loads()</span></code></a>.</p></li>
+<li><p>Dumper: <a class="reference internal" href="../dev/reference/project_config.serializers.ini.html#project_config.serializers.ini.dumps" title="project_config.serializers.ini.dumps"><code class="xref py py-func docutils literal notranslate"><span class="pre">project_config.serializers.ini.dumps()</span></code></a>.</p></li>
 </ul>
 </section>
 <section id="editorconfig">
 <h2>Editorconfig<a class="headerlink" href="#editorconfig" title="Permalink to this headline"></a></h2>
 <ul class="simple">
 <li><p>Loader: <a class="reference internal" href="../dev/reference/project_config.serializers.editorconfig.html#project_config.serializers.editorconfig.loads" title="project_config.serializers.editorconfig.loads"><code class="xref py py-func docutils literal notranslate"><span class="pre">project_config.serializers.editorconfig.loads()</span></code></a>.</p></li>
+<li><p>Dumper: <a class="reference internal" href="../dev/reference/project_config.serializers.editorconfig.html#project_config.serializers.editorconfig.dumps" title="project_config.serializers.editorconfig.dumps"><code class="xref py py-func docutils literal notranslate"><span class="pre">project_config.serializers.editorconfig.dumps()</span></code></a>.</p></li>
 </ul>
 <p>The <cite>root</cite> directive, if exists, will be added in a <code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code> object:</p>
 <div class="sphinx-tabs docutils container">
@@ -190,6 +197,7 @@ using <a class="reference external" href="https://github.com/pre-commit/identify
 executing them.</p>
 <ul class="simple">
 <li><p>Loader: <a class="reference internal" href="../dev/reference/project_config.serializers.python.html#project_config.serializers.python.loads" title="project_config.serializers.python.loads"><code class="xref py py-func docutils literal notranslate"><span class="pre">project_config.serializers.python.loads()</span></code></a></p></li>
+<li><p>Dumper: <a class="reference internal" href="../dev/reference/project_config.serializers.python.html#project_config.serializers.python.dumps" title="project_config.serializers.python.dumps"><code class="xref py py-func docutils literal notranslate"><span class="pre">project_config.serializers.python.dumps()</span></code></a></p></li>
 </ul>
 <div class="sphinx-tabs docutils container">
 <div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-1-1-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-1-1-0" name="1-0" role="tab" tabindex="0">foo.py</button><button aria-controls="panel-1-1-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-1-1-1" name="1-1" role="tab" tabindex="-1">object</button></div><div aria-labelledby="tab-1-1-0" class="sphinx-tabs-panel" id="panel-1-1-0" name="1-0" role="tabpanel" tabindex="0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">bar</span> <span class="o">=</span> <span class="s2">&quot;baz&quot;</span>
@@ -214,6 +222,7 @@ of scripts only when the tool is running.</p>
 of lines, excluding line endings.</p>
 <ul class="simple">
 <li><p>Loader: <a class="reference internal" href="../dev/reference/project_config.serializers.text.html#project_config.serializers.text.loads" title="project_config.serializers.text.loads"><code class="xref py py-func docutils literal notranslate"><span class="pre">project_config.serializers.text.loads()</span></code></a>.</p></li>
+<li><p>Dumper: <a class="reference internal" href="../dev/reference/project_config.serializers.text.html#project_config.serializers.text.dumps" title="project_config.serializers.text.dumps"><code class="xref py py-func docutils literal notranslate"><span class="pre">project_config.serializers.text.dumps()</span></code></a>.</p></li>
 </ul>
 <div class="sphinx-tabs docutils container">
 <div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-2-2-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-2-2-0" name="2-0" role="tab" tabindex="0">foo.txt</button><button aria-controls="panel-2-2-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-2-2-1" name="2-1" role="tab" tabindex="-1">object</button></div><div aria-labelledby="tab-2-2-0" class="sphinx-tabs-panel" id="panel-2-2-0" name="2-0" role="tabpanel" tabindex="0"><div class="highlight-text notranslate"><div class="highlight"><pre><span></span>bar

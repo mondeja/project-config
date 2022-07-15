@@ -15,12 +15,6 @@ The file `.gitignore` must have a line with the content ``/dist/``.
 
          style = "style.json"
 
-   .. tab:: .gitignore
-
-      .. code-block:: text
-
-         /dist/
-
    .. tab:: style.json
 
       .. code-block:: json
@@ -34,12 +28,16 @@ The file `.gitignore` must have a line with the content ``/dist/``.
            ]
          }
 
-Project config self configuration
+   .. tab:: .gitignore
+
+      .. code-block:: text
+
+         /dist/
+
+project-config self configuration
 =================================
 
-**project-config** is defining a valid configuration,
-forcing the definition of ``styles`` as an array for styles and
-a valid ``cache`` value.
+**project-config** is defining a valid configuration, forcing the definition of ``styles`` as an array for styles and a valid ``cache`` value.
 
 .. tabs::
 
@@ -72,6 +70,7 @@ a valid ``cache`` value.
                  [
                    "regex_match('^(\\d+ ((seconds?)|(minutes?)|(hours?)|(days?)|(weeks?)))|(never)$', cache)",
                    true,
+                   "set(@, 'cache', '5 minutes')",
                  ],
                ],
              },
@@ -107,8 +106,7 @@ The files `readme.md` and `index.md` must not exist.
 Conditionals
 ============
 
-If `.gitignore` includes the line ``__pycache__/`` a `pyproject.toml`
-file must be present.
+If `.gitignore` includes the line ``__pycache__/`` a `pyproject.toml` file must be present.
 
 .. tabs::
 
@@ -117,12 +115,6 @@ file must be present.
       .. code-block:: toml
 
          style = "style.json"
-
-   .. tab:: .gitignore
-
-      .. code-block:: text
-
-         __pycache__/
 
    .. tab:: style.json
 
@@ -139,6 +131,12 @@ file must be present.
            ]
          }
 
+   .. tab:: .gitignore
+
+      .. code-block:: text
+
+         __pycache__/
+
    .. tab:: pyproject.toml
 
       .. code-block:: toml
@@ -148,8 +146,7 @@ file must be present.
 Conditionals files existence
 ============================
 
-* 1st rule: if the directory `src/` exists, the file `pyproject.toml` must exists too.
-* 2nd rule: if the file `pyproject.toml` exists, a Python file must be present in the root directory.
+* 1st rule: if the directory `src/` exists, the file `pyproject.toml` must exists too. * 2nd rule: if the file `pyproject.toml` exists, a Python file must be present in the root directory.
 
 .. tabs::
 
@@ -197,8 +194,7 @@ Conditionals files existence
 Compare values between serializable files
 =========================================
 
-The version defined in ``__version__`` inside a Python script must match
-the metadata defined in `pyproject.toml` file.
+The version defined in ``__version__`` inside a Python script must match the metadata defined in `pyproject.toml` file.
 
 .. tabs::
 
@@ -241,8 +237,7 @@ the metadata defined in `pyproject.toml` file.
 JMESPath against online sources
 ===============================
 
-Check that the ``license`` field of *package.json* file is defined with
-a valid OSI approved SPDX license identifier.
+Check that the ``license`` field of *package.json* file is defined with a valid OSI approved SPDX license identifier.
 
 .. tabs::
 
@@ -265,7 +260,7 @@ a valid OSI approved SPDX license identifier.
                    "license",
                    [
                      "gh://spdx/license-list-data@v3.17/json/licenses.json",
-                     "licenses[?isOsiApproved] | [?isDeprecatedLicenseId == `false`].licenseId",
+                     "licenses[?isOsiApproved] | [?!isDeprecatedLicenseId].licenseId",
                    ],
                    "contains([1], [0])",
                    true,
@@ -286,8 +281,7 @@ a valid OSI approved SPDX license identifier.
 Assert root directory name
 ==========================
 
-Check that the name of the directory that is the root of the project
-matches against certain regular expression.
+Check that the name of the directory that is the root of the project matches against certain regular expression.
 
 .. tabs::
 
@@ -305,6 +299,7 @@ matches against certain regular expression.
            rules: [
              {
                files: [".project-config.toml"],
+               hint: "The name of the root directory must match the regex '[a-z0-9-]+$'",
                JMESPathsMatch: [["regex_match('[a-z0-9-]+$', rootdir_name())", true]],
              },
            ],
@@ -348,6 +343,133 @@ Check that the section ``[foo]`` of a TOML file is placed before the section ``[
                    ["pyproject.toml?text", "@"],
                    "op(op([1], 'indexOf', '[foo]'), '<', op([1], 'indexOf', '[bar]'))",
                    true,
+                 ],
+               ],
+             },
+           ],
+         }
+
+Editing a .gitignore file
+=========================
+
+Enforce the existence of certain lines in a `.gitignore` file.
+
+.. tabs::
+
+   .. tab:: .project-config.toml
+
+      .. code-block:: toml
+
+         style = "style.json5"
+
+   .. tab:: style.json5
+
+      .. code-block:: js
+
+         {
+           rules: [
+             {
+               files: [".gitignore"], // Enforce the existence of a '.gitignore' file
+               hint: "Enforced the line '__pycache__/' to be present in .gitignore file",
+               includeLines: ["__pycache__/"],
+             },
+             {
+               files: [".gitignore"],
+               hint: "As a directory 'tests/' has been found, enforced the line '.pytest_cache/' to be present in the '.gitignore' file",
+               ifFilesExist: ["tests/"],
+               includeLines: [".pytest_cache/"],
+             },
+             {
+               files: [".gitignore"],
+               hint: "Removed the line '.pytest_cache' from the '.gitignore' file as it is implicitly naming a directory",
+               JMESPathsMatch: [
+                 ["contains(@, '.pytest_cache')", false, "[?@ != '.pytest_cache']"],
+               ],
+             },
+             {
+               files: [".gitignore"],
+               hint: "Enforce '*.egg-info/' at the end of the .gitignore if is not already present",
+               includeLines: [
+                 [
+                   "*.egg-info/",
+                   "op([?!starts_with(@, '*.egg-info')], `+`, ['*.egg-info/'])",
+                 ],
+               ],
+             },
+             {
+               files: [".gitignore"],
+               hint: "The line 'dist/' must be included in .gitignore",
+               includeLines: [
+                 [
+                   "dist/",
+                   "op([?!contains(['/dist/', 'dist', 'dist/'], @)], '+', ['dist/'])",
+                 ],
+                 "__pycache__/",
+               ],
+             },
+           ],
+         }
+
+   .. tab:: .gitignore
+
+      .. code-block:: text
+
+         .pytest_cache/
+         __pycache__/
+         *.egg-info/
+         /dist/
+         dist/
+
+Replacing code blocks languages in RST documents
+================================================
+
+Don't allow code blocks in RST documentation files:  * Bash is not a POSIX compliant shell, use Shell lexer. * Pygments' JSON5 lexer is not implemented yet, use Javascript lexer.
+
+.. tabs::
+
+   .. tab:: .project-config.toml
+
+      .. code-block:: toml
+
+         style = "style.json5"
+
+   .. tab:: file.rst
+
+      .. code-block:: restructuredtext
+
+         .. code-block:: python
+
+            foo = "bar"
+
+         .. code-block:: js
+
+            {}
+
+         .. code-block:: sh
+
+            #!/bin/sh
+            curl -X POST http://localhost:8080/api/v1/users
+
+   .. tab:: style.json5
+
+      .. code-block:: js
+
+         {
+           rules: [
+             {
+               files: ["file.rst"],
+               excludeContent: [
+                 [
+                   ".. code-block::  ",
+                   "map(&replace(@, 'code-block::  ', 'code-block:: '), @)",
+                 ],
+                 [
+                   ".. code-block:: bash",
+                   "map(&replace(@, 'code-block:: bash', 'code-block:: sh'), @)",
+                 ],
+                 [
+                   ".. code-block:: json5",
+                   "map(&replace(@, 'code-block:: json5', 'code-block:: js'), @)",
                  ],
                ],
              },

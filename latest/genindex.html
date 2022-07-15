@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Index &mdash; project-config 0.6.0 documentation</title>
+  <title>Index &mdash; project-config 0.7.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -32,7 +32,7 @@
             <a href="index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.6
+                0.7
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -47,6 +47,7 @@
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="basic-usage.html">Basic usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/index.html">Tutorials</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul>
@@ -160,11 +161,21 @@
         <li><a href="dev/reference/project_config.serializers.html#project_config.serializers.SerializerFunction._abc_impl">(project_config.serializers.SerializerFunction attribute)</a>
 </li>
       </ul></li>
+      <li><a href="dev/reference/project_config.project.html#project_config.project.Project._actions_context">_actions_context (project_config.project.Project attribute)</a>
+</li>
       <li><a href="dev/reference/project_config.config.style.html#project_config.config.style.Style._add_new_rules_plugins_to_style">_add_new_rules_plugins_to_style() (project_config.config.style.Style method)</a>
 </li>
       <li><a href="dev/reference/project_config.plugins.html#project_config.plugins.Plugins._add_plugin_to_cache">_add_plugin_to_cache() (project_config.plugins.Plugins method)</a>
 </li>
+      <li><a href="dev/reference/project_config.html#project_config.ActionsContext._asdict">_asdict() (project_config.ActionsContext method)</a>
+
+      <ul>
+        <li><a href="dev/reference/project_config.types.html#project_config.types.ActionsContext._asdict">(project_config.types.ActionsContext method)</a>
+</li>
+      </ul></li>
       <li><a href="dev/reference/project_config.fetchers.github.html#project_config.fetchers.github._build_raw_githubusercontent_url">_build_raw_githubusercontent_url() (in module project_config.fetchers.github)</a>
+</li>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath._build_reverse_jmes_type_object">_build_reverse_jmes_type_object() (in module project_config.utils.jmespath)</a>
 </li>
       <li><a href="dev/reference/project_config.cache.html#project_config.cache.Cache._cache">_cache (project_config.cache.Cache attribute)</a>
 </li>
@@ -188,39 +199,27 @@
       </ul></li>
       <li><a href="dev/reference/project_config.reporters.table.html#project_config.reporters.table._common_generate_rows">_common_generate_rows() (in module project_config.reporters.table)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath._compile_JMESPath_expression">_compile_JMESPath_expression() (in module project_config.plugins.jmespath)</a>
-</li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath._compile_JMESPath_expression_or_error">_compile_JMESPath_expression_or_error() (in module project_config.plugins.jmespath)</a>
-</li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath._compile_JMESPath_or_expected_value_error">_compile_JMESPath_or_expected_value_error() (in module project_config.plugins.jmespath)</a>
-</li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath._compile_JMESPath_or_expected_value_from_other_file_error">_compile_JMESPath_or_expected_value_from_other_file_error() (in module project_config.plugins.jmespath)</a>
-</li>
       <li><a href="dev/reference/project_config.__main__.html#project_config.__main__._controlled_error">_controlled_error() (in module project_config.__main__)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath._create_find_function_for_string_or_array">_create_find_function_for_string_or_array() (in module project_config.plugins.jmespath)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath._create_find_function_for_string_or_array">_create_find_function_for_string_or_array() (in module project_config.utils.jmespath)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath._create_is_function_for_string">_create_is_function_for_string() (in module project_config.plugins.jmespath)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath._create_is_function_for_string">_create_is_function_for_string() (in module project_config.utils.jmespath)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath._create_just_function_for_string">_create_just_function_for_string() (in module project_config.plugins.jmespath)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath._create_just_function_for_string">_create_just_function_for_string() (in module project_config.utils.jmespath)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath._create_partition_function_for_string">_create_partition_function_for_string() (in module project_config.plugins.jmespath)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath._create_partition_function_for_string">_create_partition_function_for_string() (in module project_config.utils.jmespath)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath._create_removeaffix_function_for_string">_create_removeaffix_function_for_string() (in module project_config.plugins.jmespath)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath._create_removeaffix_function_for_string">_create_removeaffix_function_for_string() (in module project_config.utils.jmespath)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath._create_simple_transform_function_for_string">_create_simple_transform_function_for_string() (in module project_config.plugins.jmespath)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath._create_simple_transform_function_for_string">_create_simple_transform_function_for_string() (in module project_config.utils.jmespath)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath._create_split_function_for_string">_create_split_function_for_string() (in module project_config.plugins.jmespath)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath._create_split_function_for_string">_create_split_function_for_string() (in module project_config.utils.jmespath)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath._create_strip_function_for_string">_create_strip_function_for_string() (in module project_config.plugins.jmespath)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath._create_strip_function_for_string">_create_strip_function_for_string() (in module project_config.utils.jmespath)</a>
 </li>
       <li><a href="dev/reference/project_config.plugins.inclusion.html#project_config.plugins.inclusion._directories_not_accepted_as_inputs_error">_directories_not_accepted_as_inputs_error() (in module project_config.plugins.inclusion)</a>
 </li>
       <li><a href="dev/reference/project_config.cache.html#project_config.cache._directory">_directory() (in module project_config.cache)</a>
-</li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath._evaluate_JMESPath">_evaluate_JMESPath() (in module project_config.plugins.jmespath)</a>
-</li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath._evaluate_JMESPath_or_expected_value_error">_evaluate_JMESPath_or_expected_value_error() (in module project_config.plugins.jmespath)</a>
 </li>
       <li><a href="dev/reference/project_config.cache.html#project_config.cache.Cache._expiration_time">_expiration_time (project_config.cache.Cache attribute)</a>
 </li>
@@ -228,107 +227,145 @@
 </li>
       <li><a href="dev/reference/project_config.plugins.html#project_config.plugins.Plugins._extract_actions_from_plugin_module">_extract_actions_from_plugin_module() (project_config.plugins.Plugins method)</a>
 </li>
+      <li><a href="dev/reference/project_config.html#project_config.ActionsContext._field_defaults">_field_defaults (project_config.ActionsContext attribute)</a>
+
+      <ul>
+        <li><a href="dev/reference/project_config.types.html#project_config.types.ActionsContext._field_defaults">(project_config.types.ActionsContext attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="dev/reference/project_config.html#project_config.ActionsContext._field_types">_field_types (project_config.ActionsContext attribute)</a>
+
+      <ul>
+        <li><a href="dev/reference/project_config.types.html#project_config.types.ActionsContext._field_types">(project_config.types.ActionsContext attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="dev/reference/project_config.html#project_config.ActionsContext._fields">_fields (project_config.ActionsContext attribute)</a>
+
+      <ul>
+        <li><a href="dev/reference/project_config.types.html#project_config.types.ActionsContext._fields">(project_config.types.ActionsContext attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="dev/reference/project_config.html#project_config.ActionsContext._fields_defaults">_fields_defaults (project_config.ActionsContext attribute)</a>
+
+      <ul>
+        <li><a href="dev/reference/project_config.types.html#project_config.types.ActionsContext._fields_defaults">(project_config.types.ActionsContext attribute)</a>
+</li>
+      </ul></li>
       <li><a href="dev/reference/project_config.serializers.html#project_config.serializers._file_can_not_be_serialized_as_object_error">_file_can_not_be_serialized_as_object_error() (in module project_config.serializers)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_capitalize">_func_capitalize() (project_config.plugins.jmespath.JMESPathProjectConfigFunctions method)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_capitalize">_func_capitalize() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_casefold">_func_casefold() (project_config.plugins.jmespath.JMESPathProjectConfigFunctions method)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_casefold">_func_casefold() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_center">_func_center() (project_config.plugins.jmespath.JMESPathProjectConfigFunctions method)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_center">_func_center() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_count">_func_count() (project_config.plugins.jmespath.JMESPathProjectConfigFunctions method)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_count">_func_count() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_enumerate">_func_enumerate() (project_config.plugins.jmespath.JMESPathProjectConfigFunctions method)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_deepmerge">_func_deepmerge() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_find">_func_find() (project_config.plugins.jmespath.JMESPathProjectConfigFunctions method)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_enumerate">_func_enumerate() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_format">_func_format() (project_config.plugins.jmespath.JMESPathProjectConfigFunctions method)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_find">_func_find() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_from_items">_func_from_items() (project_config.plugins.jmespath.JMESPathProjectConfigFunctions method)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_format">_func_format() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_isalnum">_func_isalnum() (project_config.plugins.jmespath.JMESPathProjectConfigFunctions method)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_from_items">_func_from_items() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_isalpha">_func_isalpha() (project_config.plugins.jmespath.JMESPathProjectConfigFunctions method)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_insert">_func_insert() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_isascii">_func_isascii() (project_config.plugins.jmespath.JMESPathProjectConfigFunctions method)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_isalnum">_func_isalnum() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_isdecimal">_func_isdecimal() (project_config.plugins.jmespath.JMESPathProjectConfigFunctions method)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_isalpha">_func_isalpha() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_isdigit">_func_isdigit() (project_config.plugins.jmespath.JMESPathProjectConfigFunctions method)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_isascii">_func_isascii() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_isidentifier">_func_isidentifier() (project_config.plugins.jmespath.JMESPathProjectConfigFunctions method)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_isdecimal">_func_isdecimal() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_islower">_func_islower() (project_config.plugins.jmespath.JMESPathProjectConfigFunctions method)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_isdigit">_func_isdigit() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_isnumeric">_func_isnumeric() (project_config.plugins.jmespath.JMESPathProjectConfigFunctions method)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_isidentifier">_func_isidentifier() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
+</li>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_islower">_func_islower() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
+</li>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_isnumeric">_func_isnumeric() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
+</li>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_isprintable">_func_isprintable() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_isprintable">_func_isprintable() (project_config.plugins.jmespath.JMESPathProjectConfigFunctions method)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_isspace">_func_isspace() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_isspace">_func_isspace() (project_config.plugins.jmespath.JMESPathProjectConfigFunctions method)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_istitle">_func_istitle() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_istitle">_func_istitle() (project_config.plugins.jmespath.JMESPathProjectConfigFunctions method)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_isupper">_func_isupper() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_isupper">_func_isupper() (project_config.plugins.jmespath.JMESPathProjectConfigFunctions method)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_ljust">_func_ljust() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_ljust">_func_ljust() (project_config.plugins.jmespath.JMESPathProjectConfigFunctions method)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_lower">_func_lower() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_lower">_func_lower() (project_config.plugins.jmespath.JMESPathProjectConfigFunctions method)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_lstrip">_func_lstrip() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_lstrip">_func_lstrip() (project_config.plugins.jmespath.JMESPathProjectConfigFunctions method)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_op">_func_op() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_op">_func_op() (project_config.plugins.jmespath.JMESPathProjectConfigFunctions method)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_os">_func_os() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_partition">_func_partition() (project_config.plugins.jmespath.JMESPathProjectConfigFunctions method)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_partition">_func_partition() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_range">_func_range() (project_config.plugins.jmespath.JMESPathProjectConfigFunctions method)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_range">_func_range() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_regex_match">_func_regex_match() (project_config.plugins.jmespath.JMESPathProjectConfigFunctions method)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_regex_match">_func_regex_match() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_regex_matchall">_func_regex_matchall() (project_config.plugins.jmespath.JMESPathProjectConfigFunctions method)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_regex_matchall">_func_regex_matchall() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_regex_search">_func_regex_search() (project_config.plugins.jmespath.JMESPathProjectConfigFunctions method)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_regex_search">_func_regex_search() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_regex_sub">_func_regex_sub() (project_config.plugins.jmespath.JMESPathProjectConfigFunctions method)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_regex_sub">_func_regex_sub() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_removeprefix">_func_removeprefix() (project_config.plugins.jmespath.JMESPathProjectConfigFunctions method)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_removeprefix">_func_removeprefix() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_removesuffix">_func_removesuffix() (project_config.plugins.jmespath.JMESPathProjectConfigFunctions method)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_removesuffix">_func_removesuffix() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_rfind">_func_rfind() (project_config.plugins.jmespath.JMESPathProjectConfigFunctions method)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_replace">_func_replace() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_rjust">_func_rjust() (project_config.plugins.jmespath.JMESPathProjectConfigFunctions method)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_rfind">_func_rfind() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_rootdir_name">_func_rootdir_name() (project_config.plugins.jmespath.JMESPathProjectConfigFunctions method)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_rjust">_func_rjust() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_round">_func_round() (project_config.plugins.jmespath.JMESPathProjectConfigFunctions method)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_rootdir_name">_func_rootdir_name() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_rpartition">_func_rpartition() (project_config.plugins.jmespath.JMESPathProjectConfigFunctions method)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_round">_func_round() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_rsplit">_func_rsplit() (project_config.plugins.jmespath.JMESPathProjectConfigFunctions method)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_rpartition">_func_rpartition() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_rstrip">_func_rstrip() (project_config.plugins.jmespath.JMESPathProjectConfigFunctions method)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_rsplit">_func_rsplit() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_shlex_join">_func_shlex_join() (project_config.plugins.jmespath.JMESPathProjectConfigFunctions method)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_rstrip">_func_rstrip() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_shlex_split">_func_shlex_split() (project_config.plugins.jmespath.JMESPathProjectConfigFunctions method)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_set">_func_set() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_split">_func_split() (project_config.plugins.jmespath.JMESPathProjectConfigFunctions method)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_shlex_join">_func_shlex_join() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_splitlines">_func_splitlines() (project_config.plugins.jmespath.JMESPathProjectConfigFunctions method)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_shlex_split">_func_shlex_split() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_strip">_func_strip() (project_config.plugins.jmespath.JMESPathProjectConfigFunctions method)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_split">_func_split() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_swapcase">_func_swapcase() (project_config.plugins.jmespath.JMESPathProjectConfigFunctions method)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_splitlines">_func_splitlines() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_title">_func_title() (project_config.plugins.jmespath.JMESPathProjectConfigFunctions method)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_strip">_func_strip() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_to_items">_func_to_items() (project_config.plugins.jmespath.JMESPathProjectConfigFunctions method)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_swapcase">_func_swapcase() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_upper">_func_upper() (project_config.plugins.jmespath.JMESPathProjectConfigFunctions method)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_title">_func_title() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions._func_zfill">_func_zfill() (project_config.plugins.jmespath.JMESPathProjectConfigFunctions method)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_to_items">_func_to_items() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
+</li>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_unset">_func_unset() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
+</li>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_update">_func_update() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
+</li>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_upper">_func_upper() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
+</li>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_zfill">_func_zfill() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
 </li>
       <li><a href="dev/reference/project_config.html#project_config.Tree._generator">_generator() (project_config.Tree method)</a>
 
@@ -362,6 +399,12 @@
 </li>
       <li><a href="dev/reference/project_config.config.style.html#project_config.config.style.Style._load_styles_from_config">_load_styles_from_config() (project_config.config.style.Style method)</a>
 </li>
+      <li><a href="dev/reference/project_config.html#project_config.ActionsContext._make">_make() (project_config.ActionsContext class method)</a>
+
+      <ul>
+        <li><a href="dev/reference/project_config.types.html#project_config.types.ActionsContext._make">(project_config.types.ActionsContext class method)</a>
+</li>
+      </ul></li>
       <li><a href="dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseColorReporter._normalize_colors">_normalize_colors() (project_config.reporters.base.BaseColorReporter method)</a>
 </li>
       <li><a href="dev/reference/project_config.reporters.toml.html#project_config.reporters.toml._normalize_indentation_to_2_spaces">_normalize_indentation_to_2_spaces() (in module project_config.reporters.toml)</a>
@@ -380,13 +423,23 @@
 </li>
       <li><a href="dev/reference/project_config.project.html#project_config.project.Project._process_conditionals_for_rule">_process_conditionals_for_rule() (project_config.project.Project method)</a>
 </li>
+      <li><a href="dev/reference/project_config.serializers.editorconfig.html#project_config.serializers.editorconfig._pyobject_to_ini_str">_pyobject_to_ini_str() (in module project_config.serializers.editorconfig)</a>
+</li>
+      <li><a href="dev/reference/project_config.serializers.python.html#project_config.serializers.python._pyobject_to_string">_pyobject_to_string() (in module project_config.serializers.python)</a>
+</li>
       <li><a href="dev/reference/project_config.__main__.html#project_config.__main__.ReporterAction._raise_invalid_reporter_error">_raise_invalid_reporter_error() (project_config.__main__.ReporterAction method)</a>
 </li>
+      <li><a href="dev/reference/project_config.html#project_config.ActionsContext._replace">_replace() (project_config.ActionsContext method)</a>
+
+      <ul>
+        <li><a href="dev/reference/project_config.types.html#project_config.types.ActionsContext._replace">(project_config.types.ActionsContext method)</a>
+</li>
+      </ul></li>
       <li><a href="dev/reference/project_config.reporters.toml.html#project_config.reporters.toml._replace_nulls_by_repr_strings_in_dict">_replace_nulls_by_repr_strings_in_dict() (in module project_config.reporters.toml)</a>
 </li>
       <li><a href="dev/reference/project_config.project.html#project_config.project.Project._run_check">_run_check() (project_config.project.Project method)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath._to_items">_to_items() (in module project_config.plugins.jmespath)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath._to_items">_to_items() (in module project_config.utils.jmespath)</a>
 </li>
       <li><a href="dev/reference/project_config.reporters.yaml.html#project_config.reporters.yaml.YamlColorReporter._transform_config_data">_transform_config_data() (project_config.reporters.yaml.YamlColorReporter method)</a>
 </li>
@@ -413,11 +466,19 @@
         <li><a href="dev/plugins.html#action">built-in function</a>
 </li>
       </ul></li>
+      <li><a href="dev/reference/project_config.html#project_config.ActionsContext">ActionsContext (class in project_config)</a>
+
+      <ul>
+        <li><a href="dev/reference/project_config.types.html#project_config.types.ActionsContext">(class in project_config.types)</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="dev/reference/project_config.tests.pytest_plugin.plugin.html#project_config.tests.pytest_plugin.plugin.assert_data_report">assert_data_report() (in module project_config.tests.pytest_plugin.plugin)</a>
 </li>
       <li><a href="dev/reference/project_config.tests.pytest_plugin.plugin.html#project_config.tests.pytest_plugin.plugin.assert_errors_report">assert_errors_report() (in module project_config.tests.pytest_plugin.plugin)</a>
+</li>
+      <li><a href="dev/reference/project_config.tests.pytest_plugin.helpers.html#project_config.tests.pytest_plugin.helpers.assert_expected_files">assert_expected_files() (in module project_config.tests.pytest_plugin.helpers)</a>
 </li>
       <li><a href="dev/reference/project_config.tests.pytest_plugin.plugin.html#project_config.tests.pytest_plugin.plugin.assert_project_config_plugin_action">assert_project_config_plugin_action() (in module project_config.tests.pytest_plugin.plugin)</a>
 </li>
@@ -439,6 +500,8 @@
 </li>
       <li><a href="dev/reference/project_config.reporters.base.html#project_config.reporters.base.bold_color">bold_color() (in module project_config.reporters.base)</a>
 </li>
+      <li><a href="dev/reference/project_config.serializers.html#project_config.serializers.build_empty_file_for_serializer">build_empty_file_for_serializer() (in module project_config.serializers)</a>
+</li>
       <li><a href="dev/reference/project_config.__main__.html#project_config.__main__.build_main_parser">build_main_parser() (in module project_config.__main__)</a>
 </li>
       <li>
@@ -455,6 +518,8 @@
 </li>
         <li><a href="reference/plugins.html#count">count()</a>
 </li>
+        <li><a href="reference/plugins.html#deepmerge">deepmerge()</a>
+</li>
         <li><a href="reference/plugins.html#enumerate">enumerate()</a>
 </li>
         <li><a href="reference/plugins.html#find">find()</a>
@@ -462,6 +527,8 @@
         <li><a href="reference/plugins.html#format">format()</a>
 </li>
         <li><a href="reference/plugins.html#from_items">from_items()</a>
+</li>
+        <li><a href="reference/plugins.html#insert">insert()</a>
 </li>
         <li><a href="reference/plugins.html#isalnum">isalnum()</a>
 </li>
@@ -495,6 +562,8 @@
 </li>
         <li><a href="reference/plugins.html#op">op()</a>
 </li>
+        <li><a href="reference/plugins.html#os">os()</a>
+</li>
         <li><a href="reference/plugins.html#partition">partition()</a>
 </li>
         <li><a href="reference/plugins.html#range">range()</a>
@@ -511,6 +580,8 @@
 </li>
         <li><a href="reference/plugins.html#removesuffix">removesuffix()</a>
 </li>
+        <li><a href="reference/plugins.html#replace">replace()</a>
+</li>
         <li><a href="reference/plugins.html#rfind">rfind()</a>
 </li>
         <li><a href="reference/plugins.html#rjust">rjust()</a>
@@ -524,6 +595,8 @@
         <li><a href="reference/plugins.html#rsplit">rsplit()</a>
 </li>
         <li><a href="reference/plugins.html#rstrip">rstrip()</a>
+</li>
+        <li><a href="reference/plugins.html#set">set()</a>
 </li>
         <li><a href="reference/plugins.html#shlex_join">shlex_join()</a>
 </li>
@@ -540,6 +613,10 @@
         <li><a href="reference/plugins.html#title">title()</a>
 </li>
         <li><a href="reference/plugins.html#to_items">to_items()</a>
+</li>
+        <li><a href="reference/plugins.html#unset">unset()</a>
+</li>
+        <li><a href="reference/plugins.html#update">update()</a>
 </li>
         <li><a href="reference/plugins.html#upper">upper()</a>
 </li>
@@ -591,11 +668,19 @@
         <li><a href="dev/reference/project_config.project.html#project_config.project.Project.clean">(project_config.project.Project method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="dev/reference/project_config.project.html#project_config.project.Project.color">color (project_config.project.Project attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="dev/reference/project_config.reporters.base.html#project_config.reporters.base.colored_color_exists">colored_color_exists() (in module project_config.reporters.base)</a>
+</li>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.compile_JMESPath_expression">compile_JMESPath_expression() (in module project_config.utils.jmespath)</a>
+</li>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.compile_JMESPath_expression_or_error">compile_JMESPath_expression_or_error() (in module project_config.utils.jmespath)</a>
+</li>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.compile_JMESPath_or_expected_value_error">compile_JMESPath_or_expected_value_error() (in module project_config.utils.jmespath)</a>
+</li>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.compile_JMESPath_or_expected_value_from_other_file_error">compile_JMESPath_or_expected_value_from_other_file_error() (in module project_config.utils.jmespath)</a>
 </li>
       <li><a href="dev/reference/project_config.project.html#project_config.project.ConditionalsFalseResult">ConditionalsFalseResult</a>
 </li>
@@ -654,20 +739,47 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    deepmerge()
+
+      <ul>
+        <li><a href="reference/plugins.html#deepmerge">built-in function</a>
+</li>
+      </ul></li>
       <li><a href="dev/reference/project_config.reporters.default.html#project_config.reporters.default.DefaultColorReporter">DefaultColorReporter (class in project_config.reporters.default)</a>
 </li>
       <li><a href="dev/reference/project_config.reporters.default.html#project_config.reporters.default.DefaultReporter">DefaultReporter (class in project_config.reporters.default)</a>
 </li>
       <li><a href="dev/reference/project_config.types.html#project_config.types.ErrorDict.definition">definition (project_config.types.ErrorDict attribute)</a>
 </li>
-      <li><a href="dev/reference/project_config.serializers.yaml.html#project_config.serializers.yaml.dumps">dumps() (in module project_config.serializers.yaml)</a>
+      <li><a href="dev/reference/project_config.serializers.html#project_config.serializers.deserialize_for_url">deserialize_for_url() (in module project_config.serializers)</a>
 </li>
+      <li><a href="dev/reference/project_config.serializers.editorconfig.html#project_config.serializers.editorconfig.dumps">dumps() (in module project_config.serializers.editorconfig)</a>
+
+      <ul>
+        <li><a href="dev/reference/project_config.serializers.ini.html#project_config.serializers.ini.dumps">(in module project_config.serializers.ini)</a>
+</li>
+        <li><a href="dev/reference/project_config.serializers.json_.html#project_config.serializers.json_.dumps">(in module project_config.serializers.json_)</a>
+</li>
+        <li><a href="dev/reference/project_config.serializers.python.html#project_config.serializers.python.dumps">(in module project_config.serializers.python)</a>
+</li>
+        <li><a href="dev/reference/project_config.serializers.text.html#project_config.serializers.text.dumps">(in module project_config.serializers.text)</a>
+</li>
+        <li><a href="dev/reference/project_config.serializers.yaml.html#project_config.serializers.yaml.dumps">(in module project_config.serializers.yaml)</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
 <h2 id="E">E</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="dev/reference/project_config.html#project_config.Tree.edit_serialized_file">edit_serialized_file() (project_config.Tree method)</a>
+
+      <ul>
+        <li><a href="dev/reference/project_config.tree.html#project_config.tree.Tree.edit_serialized_file">(project_config.tree.Tree method)</a>
+</li>
+      </ul></li>
       <li>
     enumerate()
 
@@ -705,6 +817,10 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.evaluate_JMESPath">evaluate_JMESPath() (in module project_config.utils.jmespath)</a>
+</li>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.evaluate_JMESPath_or_expected_value_error">evaluate_JMESPath_or_expected_value_error() (in module project_config.utils.jmespath)</a>
+</li>
       <li><a href="dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseReporter.exception_class">exception_class (project_config.reporters.base.BaseReporter attribute)</a>
 </li>
       <li><a href="dev/reference/project_config.plugins.inclusion.html#project_config.plugins.inclusion.InclusionPlugin.excludeContent">excludeContent() (project_config.plugins.inclusion.InclusionPlugin static method)</a>
@@ -740,6 +856,10 @@
       <li><a href="dev/reference/project_config.html#project_config.Rule.files">files (project_config.Rule attribute)</a>
 
       <ul>
+        <li><a href="dev/reference/project_config.html#project_config.Tree.files">(project_config.Tree property)</a>
+</li>
+        <li><a href="dev/reference/project_config.tree.html#project_config.tree.Tree.files">(project_config.tree.Tree property)</a>
+</li>
         <li><a href="dev/reference/project_config.types.html#project_config.types.Rule.files">(project_config.types.Rule attribute)</a>
 </li>
       </ul></li>
@@ -750,6 +870,20 @@
         <li><a href="reference/plugins.html#find">built-in function</a>
 </li>
       </ul></li>
+      <li><a href="dev/reference/project_config.html#project_config.ActionsContext.fix">fix (project_config.ActionsContext attribute)</a>
+
+      <ul>
+        <li><a href="dev/reference/project_config.project.html#project_config.project.Project.fix">(project_config.project.Project attribute)</a>
+</li>
+        <li><a href="dev/reference/project_config.types.html#project_config.types.ActionsContext.fix">(project_config.types.ActionsContext attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.fix_tree_serialized_file_by_jmespath">fix_tree_serialized_file_by_jmespath() (in module project_config.utils.jmespath)</a>
+</li>
+      <li><a href="dev/reference/project_config.types.html#project_config.types.ErrorDict.fixable">fixable (project_config.types.ErrorDict attribute)</a>
+</li>
+      <li><a href="dev/reference/project_config.types.html#project_config.types.ErrorDict.fixed">fixed (project_config.types.ErrorDict attribute)</a>
+</li>
       <li>
     format()
 
@@ -773,6 +907,8 @@
         <li><a href="dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseNoopFormattedReporter.format_config_value">(project_config.reporters.base.BaseNoopFormattedReporter method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseColorReporter.format_definition">format_definition() (project_config.reporters.base.BaseColorReporter method)</a>
 
       <ul>
@@ -781,18 +917,12 @@
         <li><a href="dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseNoopFormattedReporter.format_definition">(project_config.reporters.base.BaseNoopFormattedReporter method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseColorReporter.format_error_message">format_error_message() (project_config.reporters.base.BaseColorReporter method)</a>
 
       <ul>
         <li><a href="dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseFormattedReporter.format_error_message">(project_config.reporters.base.BaseFormattedReporter method)</a>
 </li>
         <li><a href="dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseNoopFormattedReporter.format_error_message">(project_config.reporters.base.BaseNoopFormattedReporter method)</a>
-</li>
-        <li><a href="dev/reference/project_config.reporters.default.html#project_config.reporters.default.DefaultColorReporter.format_error_message">(project_config.reporters.default.DefaultColorReporter method)</a>
-</li>
-        <li><a href="dev/reference/project_config.reporters.default.html#project_config.reporters.default.DefaultReporter.format_error_message">(project_config.reporters.default.DefaultReporter method)</a>
 </li>
       </ul></li>
       <li><a href="dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseColorReporter.format_file">format_file() (project_config.reporters.base.BaseColorReporter method)</a>
@@ -801,6 +931,14 @@
         <li><a href="dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseFormattedReporter.format_file">(project_config.reporters.base.BaseFormattedReporter method)</a>
 </li>
         <li><a href="dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseNoopFormattedReporter.format_file">(project_config.reporters.base.BaseNoopFormattedReporter method)</a>
+</li>
+      </ul></li>
+      <li><a href="dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseColorReporter.format_fixed">format_fixed() (project_config.reporters.base.BaseColorReporter method)</a>
+
+      <ul>
+        <li><a href="dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseFormattedReporter.format_fixed">(project_config.reporters.base.BaseFormattedReporter method)</a>
+</li>
+        <li><a href="dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseNoopFormattedReporter.format_fixed">(project_config.reporters.base.BaseNoopFormattedReporter method)</a>
 </li>
       </ul></li>
       <li><a href="dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseColorReporter.format_hint">format_hint() (project_config.reporters.base.BaseColorReporter method)</a>
@@ -840,7 +978,7 @@
 </li>
       <li><a href="dev/reference/project_config.serializers.html#project_config.serializers.SerializerDefinitionType.function_kwargs_from_url_path">function_kwargs_from_url_path (project_config.serializers.SerializerDefinitionType attribute)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions.FUNCTION_TABLE">FUNCTION_TABLE (project_config.plugins.jmespath.JMESPathProjectConfigFunctions attribute)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions.FUNCTION_TABLE">FUNCTION_TABLE (project_config.utils.jmespath.JMESPathProjectConfigFunctions attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -942,6 +1080,13 @@
 </li>
       <li><a href="dev/reference/project_config.config.html#project_config.config.initialize_config">initialize_config() (in module project_config.config)</a>
 </li>
+      <li>
+    insert()
+
+      <ul>
+        <li><a href="reference/plugins.html#insert">built-in function</a>
+</li>
+      </ul></li>
       <li><a href="dev/reference/project_config.reporters.html#project_config.reporters.ThirdPartyReporters.instance">instance (project_config.reporters.ThirdPartyReporters attribute)</a>
 </li>
       <li><a href="dev/reference/project_config.project.html#project_config.project.InterruptCheck">InterruptCheck</a>
@@ -1048,11 +1193,11 @@
 <h2 id="J">J</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathError">JMESPathError</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathError">JMESPathError</a>
 </li>
       <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathPlugin">JMESPathPlugin (class in project_config.plugins.jmespath)</a>
 </li>
-      <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathProjectConfigFunctions">JMESPathProjectConfigFunctions (class in project_config.plugins.jmespath)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions">JMESPathProjectConfigFunctions (class in project_config.utils.jmespath)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -1087,6 +1232,8 @@
         <li><a href="dev/reference/project_config.serializers.python.html#project_config.serializers.python.loads">(in module project_config.serializers.python)</a>
 </li>
         <li><a href="dev/reference/project_config.serializers.text.html#project_config.serializers.text.loads">(in module project_config.serializers.text)</a>
+</li>
+        <li><a href="dev/reference/project_config.serializers.toml.html#project_config.serializers.toml.loads">(in module project_config.serializers.toml)</a>
 </li>
         <li><a href="dev/reference/project_config.serializers.yaml.html#project_config.serializers.yaml.loads">(in module project_config.serializers.yaml)</a>
 </li>
@@ -1142,8 +1289,6 @@
 </li>
         <li><a href="dev/reference/project_config.plugins.html#project_config.plugins.InvalidPluginFunction.message">(project_config.plugins.InvalidPluginFunction attribute)</a>
 </li>
-        <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathError.message">(project_config.plugins.jmespath.JMESPathError attribute)</a>
-</li>
         <li><a href="dev/reference/project_config.reporters.base.html#project_config.reporters.base.InvalidColors.message">(project_config.reporters.base.InvalidColors attribute)</a>
 </li>
         <li><a href="dev/reference/project_config.reporters.html#project_config.reporters.InvalidNotBasedThirdPartyReporter.message">(project_config.reporters.InvalidNotBasedThirdPartyReporter attribute)</a>
@@ -1157,6 +1302,8 @@
         <li><a href="dev/reference/project_config.utils.http.html#project_config.utils.http.ProjectConfigHTTPError.message">(project_config.utils.http.ProjectConfigHTTPError attribute)</a>
 </li>
         <li><a href="dev/reference/project_config.utils.http.html#project_config.utils.http.ProjectConfigTimeoutError.message">(project_config.utils.http.ProjectConfigTimeoutError attribute)</a>
+</li>
+        <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathError.message">(project_config.utils.jmespath.JMESPathError attribute)</a>
 </li>
       </ul></li>
       <li>
@@ -1219,9 +1366,13 @@
 </li>
         <li><a href="dev/reference/project_config.serializers.ini.html#module-project_config.serializers.ini">project_config.serializers.ini</a>
 </li>
+        <li><a href="dev/reference/project_config.serializers.json_.html#module-project_config.serializers.json_">project_config.serializers.json_</a>
+</li>
         <li><a href="dev/reference/project_config.serializers.python.html#module-project_config.serializers.python">project_config.serializers.python</a>
 </li>
         <li><a href="dev/reference/project_config.serializers.text.html#module-project_config.serializers.text">project_config.serializers.text</a>
+</li>
+        <li><a href="dev/reference/project_config.serializers.toml.html#module-project_config.serializers.toml">project_config.serializers.toml</a>
 </li>
         <li><a href="dev/reference/project_config.serializers.yaml.html#module-project_config.serializers.yaml">project_config.serializers.yaml</a>
 </li>
@@ -1240,6 +1391,8 @@
         <li><a href="dev/reference/project_config.utils.html#module-project_config.utils">project_config.utils</a>
 </li>
         <li><a href="dev/reference/project_config.utils.http.html#module-project_config.utils.http">project_config.utils.http</a>
+</li>
+        <li><a href="dev/reference/project_config.utils.jmespath.html#module-project_config.utils.jmespath">project_config.utils.jmespath</a>
 </li>
       </ul></li>
   </ul></td>
@@ -1264,11 +1417,22 @@
 <h2 id="O">O</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="dev/reference/project_config.project.html#project_config.project.Project.only_hints">only_hints (project_config.project.Project attribute)</a>
+</li>
       <li>
     op()
 
       <ul>
         <li><a href="reference/plugins.html#op">built-in function</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    os()
+
+      <ul>
+        <li><a href="reference/plugins.html#os">built-in function</a>
 </li>
       </ul></li>
   </ul></td>
@@ -1447,8 +1611,6 @@
         <li><a href="dev/reference/project_config.reporters.default.html#module-project_config.reporters.default">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     project_config.reporters.json_
 
@@ -1463,6 +1625,8 @@
         <li><a href="dev/reference/project_config.reporters.table.html#module-project_config.reporters.table">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     project_config.reporters.toml
 
@@ -1499,6 +1663,13 @@
 </li>
       </ul></li>
       <li>
+    project_config.serializers.json_
+
+      <ul>
+        <li><a href="dev/reference/project_config.serializers.json_.html#module-project_config.serializers.json_">module</a>
+</li>
+      </ul></li>
+      <li>
     project_config.serializers.python
 
       <ul>
@@ -1510,6 +1681,13 @@
 
       <ul>
         <li><a href="dev/reference/project_config.serializers.text.html#module-project_config.serializers.text">module</a>
+</li>
+      </ul></li>
+      <li>
+    project_config.serializers.toml
+
+      <ul>
+        <li><a href="dev/reference/project_config.serializers.toml.html#module-project_config.serializers.toml">module</a>
 </li>
       </ul></li>
       <li>
@@ -1573,6 +1751,13 @@
 
       <ul>
         <li><a href="dev/reference/project_config.utils.http.html#module-project_config.utils.http">module</a>
+</li>
+      </ul></li>
+      <li>
+    project_config.utils.jmespath
+
+      <ul>
+        <li><a href="dev/reference/project_config.utils.jmespath.html#module-project_config.utils.jmespath">module</a>
 </li>
       </ul></li>
       <li><a href="dev/reference/project_config.tests.pytest_plugin.html#project_config.tests.pytest_plugin.project_config_data_report_asserter">project_config_data_report_asserter() (in module project_config.tests.pytest_plugin)</a>
@@ -1676,16 +1861,23 @@
         <li><a href="reference/plugins.html#removesuffix">built-in function</a>
 </li>
       </ul></li>
+      <li>
+    replace()
+
+      <ul>
+        <li><a href="reference/plugins.html#replace">built-in function</a>
+</li>
+      </ul></li>
       <li><a href="dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseReporter.report_error">report_error() (project_config.reporters.base.BaseReporter method)</a>
 </li>
       <li><a href="dev/reference/project_config.project.html#project_config.project.Project.reporter_">reporter_ (project_config.project.Project attribute)</a>
 </li>
       <li><a href="dev/reference/project_config.__main__.html#project_config.__main__.ReporterAction">ReporterAction (class in project_config.__main__)</a>
 </li>
-      <li><a href="dev/reference/project_config.fetchers.html#project_config.fetchers.resolve_maybe_relative_url">resolve_maybe_relative_url() (in module project_config.fetchers)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="dev/reference/project_config.fetchers.html#project_config.fetchers.resolve_maybe_relative_url">resolve_maybe_relative_url() (in module project_config.fetchers)</a>
+</li>
       <li><a href="dev/reference/project_config.fetchers.html#project_config.fetchers.resolve_url">resolve_url() (in module project_config.fetchers)</a>
 
       <ul>
@@ -1781,6 +1973,13 @@
 </li>
       <li><a href="dev/reference/project_config.serializers.html#project_config.serializers.SerializerFunction">SerializerFunction (class in project_config.serializers)</a>
 </li>
+      <li>
+    set()
+
+      <ul>
+        <li><a href="reference/plugins.html#set">built-in function</a>
+</li>
+      </ul></li>
       <li><a href="dev/reference/project_config.cache.html#project_config.cache.Cache.set">set() (project_config.cache.Cache class method)</a>
 </li>
       <li><a href="dev/reference/project_config.cache.html#project_config.cache.Cache.set_expiration_time">set_expiration_time() (project_config.cache.Cache class method)</a>
@@ -1792,10 +1991,10 @@
         <li><a href="reference/plugins.html#shlex_join">built-in function</a>
 </li>
       </ul></li>
-      <li><a href="dev/reference/project_config.compat.html#project_config.compat.shlex_join">shlex_join() (in module project_config.compat)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="dev/reference/project_config.compat.html#project_config.compat.shlex_join">shlex_join() (in module project_config.compat)</a>
+</li>
       <li>
     shlex_split()
 
@@ -1804,6 +2003,8 @@
 </li>
       </ul></li>
       <li><a href="dev/reference/project_config.project.html#project_config.project.Project.show">show() (project_config.project.Project method)</a>
+</li>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.smart_fixer_by_expected_value">smart_fixer_by_expected_value() (in module project_config.utils.jmespath)</a>
 </li>
       <li>
     split()
@@ -1882,6 +2083,22 @@
 
 <h2 id="U">U</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    unset()
+
+      <ul>
+        <li><a href="reference/plugins.html#unset">built-in function</a>
+</li>
+      </ul></li>
+      <li>
+    update()
+
+      <ul>
+        <li><a href="reference/plugins.html#update">built-in function</a>
+</li>
+      </ul></li>
+  </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     upper()

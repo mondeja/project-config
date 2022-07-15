@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Rationale &mdash; project-config 0.6.0 documentation</title>
+  <title>Rationale &mdash; project-config 0.7.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -34,7 +34,7 @@
             <a href="../index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.6
+                0.7
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -49,6 +49,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../basic-usage.html">Basic usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul>
@@ -134,7 +135,7 @@ serious limitations in his design.</p>
 configuration follows the same pattern, but the plugin system and the concept
 of <a class="reference internal" href="serialization.html"><span class="doc">Objects serialization</span></a> is quite different. The main differences are:</p>
 <ul class="simple">
-<li><p><a class="reference external" href="https://nitpick.readthedocs.io/en/latest/">nitpick</a> enforces the definition configuration values as constants using TOML files, but <strong>project-config</strong> just make assertions executing certain rules. This approach allows to check more things but turns the implementation of a <code class="docutils literal notranslate"><span class="pre">fix</span></code> command more difficult, though not impossible.</p></li>
+<li><p><a class="reference external" href="https://nitpick.readthedocs.io/en/latest/">nitpick</a> enforces the definition configuration values as constants using TOML files, but <strong>project-config</strong> allows to fix them in different ways.</p></li>
 <li><p><a class="reference external" href="https://nitpick.readthedocs.io/en/latest/">nitpick</a> has a serious limitation about how to query object structures, which has given rise to the monstrosity of <a class="reference external" href="https://nitpick.readthedocs.io/en/latest/styles.html?highlight=pre-commit#special-configurations">Special configurations</a>, while <strong>project-config</strong> deals with this problem using <a class="reference external" href="https://jmespath.org/">JMESPath</a>.</p></li>
 </ul>
 </section>
