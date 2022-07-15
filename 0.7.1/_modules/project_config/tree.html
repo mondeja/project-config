@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>project_config.tree &mdash; project-config 0.7.1 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/tabs.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/bolditalic.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/override-styles.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/tabs.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> project-config
+          </a>
+              <div class="version">
+                0.7
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Quickstart</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../basic-usage.html">Basic usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/cli.html">project-config CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/config.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/styling.html">Styling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/plugins.html">Plugins</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">In depth</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../in-depth/rationale.html">Rationale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../in-depth/serialization.html">Objects serialization</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For developers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/plugins.html">Writing third party plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/reporters.html">Writing third party reporters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/reference/modules.html">Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">project-config</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      <li>project_config.tree</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for project_config.tree</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Cached files tree used by the linter when using checker commands.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">typing</span> <span class="k">as</span> <span class="nn">t</span>
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+
+<span class="kn">from</span> <span class="nn">project_config.fetchers</span> <span class="kn">import</span> <span class="n">fetch</span>
+<span class="kn">from</span> <span class="nn">project_config.serializers</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">deserialize_for_url</span><span class="p">,</span>
+    <span class="n">guess_preferred_serializer</span><span class="p">,</span>
+    <span class="n">serialize_for_url</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<span class="n">TreeDirectory</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">Iterator</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+<span class="n">TreeNode</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">TreeDirectory</span><span class="p">]</span>
+<span class="n">TreeNodeFiles</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">TreeNode</span><span class="p">]]</span>
+<span class="n">TreeNodeFilesIterator</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">Iterator</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">TreeNode</span><span class="p">]]</span>
+<span class="n">FilePathsArgument</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">Iterator</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>
+
+
+<div class="viewcode-block" id="Tree"><a class="viewcode-back" href="../../dev/reference/project_config.tree.html#project_config.Tree">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">Tree</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Files cache used by the linter in checking processes.</span>
+
+<span class="sd">    It represents the tree of files and directories starting</span>
+<span class="sd">    at the root directory of the project.</span>
+
+<span class="sd">    Instances of :py:class:`project_config.tree.Tree` can be</span>
+<span class="sd">    iterated with:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">       for fpath, fcontent in tree.files:</span>
+<span class="sd">           if fcontent is None:</span>
+<span class="sd">                # file does not exist</span>
+<span class="sd">                ...</span>
+<span class="sd">           elif not isinstance(fcontent, str):</span>
+<span class="sd">                # file is a directory</span>
+<span class="sd">                #</span>
+<span class="sd">                # so `fcontent` is another Tree instance here</span>
+<span class="sd">                for nested_fpath, nested_fcontent in fcontent.files:</span>
+<span class="sd">                    ...</span>
+
+<span class="sd">    If you want to get the serialialized version of the file you can</span>
+<span class="sd">    use the method :py:meth:`project_config.tree.Tree.serialize_file`:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">       instance = fpath, tree.serialize_file(fpath)</span>
+
+<span class="sd">    If you are not inside a context were you have the content</span>
+<span class="sd">    of the files (a common scenario for conditional actions)</span>
+<span class="sd">    you can get them calling the method</span>
+<span class="sd">    :py:meth:`project_config.tree.Tree.get_file_content`:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">       fcontent = tree.get_file_content(fpath)</span>
+
+<span class="sd">    This class caches the files contents along with their</span>
+<span class="sd">    serialized versions, so subsequent access to the same</span>
+<span class="sd">    files in the project tree are fast.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        rootdir (str): Root directory of the project.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">rootdir</span><span class="p">:</span> <span class="nb">str</span>
+
+    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># cache for all files</span>
+        <span class="c1">#</span>
+        <span class="c1"># TODO: this type becomes recursive, in the future, define it properly</span>
+        <span class="c1"># https://github.com/python/mypy/issues/731</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">files_cache</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="c1"># cache for serialized version of files</span>
+        <span class="c1">#</span>
+        <span class="c1"># JSON encodable version of files are cached here to avoid</span>
+        <span class="c1"># multiple calls to serializer for the same file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">serialized_files_cache</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="c1"># latest cached files</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_files</span><span class="p">:</span> <span class="n">TreeNodeFiles</span> <span class="o">=</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="Tree.normalize_path"><a class="viewcode-back" href="../../dev/reference/project_config.tree.html#project_config.Tree.normalize_path">[docs]</a>    <span class="k">def</span> <span class="nf">normalize_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fpath</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Normalize a path given his relative path to the root directory.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            fpath (str): Path to the file relative to the root directory.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: Normalized absolute path.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rootdir</span><span class="p">,</span> <span class="n">fpath</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Tree._cache_file"><a class="viewcode-back" href="../../dev/reference/project_config.tree.html#project_config.Tree._cache_file">[docs]</a>    <span class="k">def</span> <span class="nf">_cache_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fpath</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Cache a file normalizing its path.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            fpath (str): Relative path from root directory.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: Normalized absolute path.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">normalized_fpath</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalize_path</span><span class="p">(</span><span class="n">fpath</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">normalized_fpath</span><span class="p">):</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">normalized_fpath</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">files_cache</span><span class="p">[</span><span class="n">normalized_fpath</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+        <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">normalized_fpath</span><span class="p">):</span>
+            <span class="c1"># recursive generation</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">files_cache</span><span class="p">[</span><span class="n">normalized_fpath</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>  <span class="c1"># type: ignore</span>
+                <span class="kc">True</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_generator</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">normalize_path</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">normalized_fpath</span><span class="p">)</span>
+                <span class="p">),</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># file or directory does not exist</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">files_cache</span><span class="p">[</span><span class="n">normalized_fpath</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">normalized_fpath</span></div>
+
+<div class="viewcode-block" id="Tree._generator"><a class="viewcode-back" href="../../dev/reference/project_config.tree.html#project_config.Tree._generator">[docs]</a>    <span class="k">def</span> <span class="nf">_generator</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">fpaths</span><span class="p">:</span> <span class="n">FilePathsArgument</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Iterable</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]:</span>
+        <span class="k">for</span> <span class="n">fpath_or_glob</span> <span class="ow">in</span> <span class="n">fpaths</span><span class="p">:</span>
+            <span class="c1"># try to get all existing files from glob</span>
+            <span class="c1">#</span>
+            <span class="c1"># note that when a glob does not match any files,</span>
+            <span class="c1"># is because the file does not exist, so the generator</span>
+            <span class="c1"># will yield it as is, which would lead to a unexistent</span>
+            <span class="c1"># file error when an user specifies a glob that do not</span>
+            <span class="c1"># match any files</span>
+            <span class="n">fpaths_from_glob</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">fpath_or_glob</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">fpaths_from_glob</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">fpath</span> <span class="ow">in</span> <span class="n">fpaths_from_glob</span><span class="p">:</span>
+                    <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalize_path</span><span class="p">(</span><span class="n">fpath</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">files_cache</span><span class="p">[</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_cache_file</span><span class="p">(</span><span class="n">fpath</span><span class="p">)</span>
+                    <span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalize_path</span><span class="p">(</span><span class="n">fpath_or_glob</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">files_cache</span><span class="p">[</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_cache_file</span><span class="p">(</span><span class="n">fpath_or_glob</span><span class="p">)</span>
+                <span class="p">][</span><span class="mi">1</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Tree.get_file_content"><a class="viewcode-back" href="../../dev/reference/project_config.tree.html#project_config.Tree.get_file_content">[docs]</a>    <span class="k">def</span> <span class="nf">get_file_content</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fpath</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Returns the content of a file given his relative path.</span>
+
+<span class="sd">        This method is tipically used by ``if`` plugin action conditionals</span>
+<span class="sd">        to get the content of the files that are not defined in ``files``</span>
+<span class="sd">        subject rules fields.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            fpath (str): Path to the file relative to the root directory.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">files_cache</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_cache_file</span><span class="p">(</span><span class="n">fpath</span><span class="p">)][</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># type: ignore</span></div>
+
+<div class="viewcode-block" id="Tree.cache_files"><a class="viewcode-back" href="../../dev/reference/project_config.tree.html#project_config.Tree.cache_files">[docs]</a>    <span class="k">def</span> <span class="nf">cache_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fpaths</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Cache a set of files given their paths.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            fpaths (list): Paths to the files to store in cache.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_files</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_generator</span><span class="p">(</span><span class="n">fpaths</span><span class="p">))</span>  <span class="c1"># type: ignore</span>
+
+        <span class="k">for</span> <span class="n">fpath</span><span class="p">,</span> <span class="n">_content</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_files</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">_content</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">fpath</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">serialized_files_cache</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">serialized_files_cache</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">fpath</span><span class="p">)</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">files</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
+        <span class="sd">&quot;&quot;&quot;Returns an array of the current cached files for a rule action.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: Array of tuples with the relative path to the file</span>
+<span class="sd">                ``rootdir`` as the first item and the content of the file</span>
+<span class="sd">                as the second one.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">fpath</span><span class="p">,</span> <span class="n">_content</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_files</span><span class="p">:</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">(</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">fpath</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rootdir</span><span class="p">)</span>
+                    <span class="o">+</span> <span class="p">(</span><span class="s2">&quot;/&quot;</span> <span class="k">if</span> <span class="n">fpath</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">),</span>
+                    <span class="n">_content</span><span class="p">,</span>
+                <span class="p">),</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span>  <span class="c1"># type: ignore</span>
+
+<div class="viewcode-block" id="Tree.serialize_file"><a class="viewcode-back" href="../../dev/reference/project_config.tree.html#project_config.Tree.serialize_file">[docs]</a>    <span class="k">def</span> <span class="nf">serialize_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fpath</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Returns the object-serialized version of a file.</span>
+
+<span class="sd">        This method is a convenient cache wrapper for</span>
+<span class="sd">        :py:func:`project_config.serializers.serialize_for_url`.</span>
+<span class="sd">        Is used by plugin actions which need an object-serialized</span>
+<span class="sd">        version of files to perform operations against them, like</span>
+<span class="sd">        the :ref:`reference/plugins:jmespath` one.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            fpath (str): Path to the file to serialize.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            object: Object-serialized version of the file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">fpath</span><span class="p">,</span> <span class="n">serializer_name</span> <span class="o">=</span> <span class="n">guess_preferred_serializer</span><span class="p">(</span><span class="n">fpath</span><span class="p">)</span>
+
+        <span class="n">normalized_fpath</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalize_path</span><span class="p">(</span><span class="n">fpath</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">serialized_files_cache</span><span class="p">[</span><span class="n">normalized_fpath</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="n">fcontent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_file_content</span><span class="p">(</span><span class="n">fpath</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">fcontent</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;No such file or directory: &#39;</span><span class="si">{</span><span class="n">fpath</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">,</span>
+                <span class="p">)</span>
+
+            <span class="n">result</span> <span class="o">=</span> <span class="n">serialize_for_url</span><span class="p">(</span>
+                <span class="n">fpath</span><span class="p">,</span>
+                <span class="n">fcontent</span><span class="p">,</span>
+                <span class="n">prefer_serializer</span><span class="o">=</span><span class="n">serializer_name</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">serialized_files_cache</span><span class="p">[</span><span class="n">normalized_fpath</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span>
+        <span class="k">return</span> <span class="n">fpath</span><span class="p">,</span> <span class="n">result</span></div>
+
+<div class="viewcode-block" id="Tree.fetch_file"><a class="viewcode-back" href="../../dev/reference/project_config.tree.html#project_config.Tree.fetch_file">[docs]</a>    <span class="k">def</span> <span class="nf">fetch_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Fetch a file from online or offline sources given a url or path.</span>
+
+<span class="sd">        This method is a convenient cache wrapper for</span>
+<span class="sd">        :py:func:`project_config.fetchers.fetch`. Used by plugin actions</span>
+<span class="sd">        which need an object-serialized version of files to perform</span>
+<span class="sd">        operations against them, like the :ref:`reference/plugins:jmespath`</span>
+<span class="sd">        one.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            url (str): Url or path to the file to fetch.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            object: Object-serialized version of the file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">serialized_files_cache</span><span class="p">[</span><span class="n">url</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">fetch</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">serialized_files_cache</span><span class="p">[</span><span class="n">url</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span>
+
+        <span class="k">return</span> <span class="n">result</span></div>
+
+<div class="viewcode-block" id="Tree.edit_serialized_file"><a class="viewcode-back" href="../../dev/reference/project_config.tree.html#project_config.Tree.edit_serialized_file">[docs]</a>    <span class="k">def</span> <span class="nf">edit_serialized_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fpath</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">new_content</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Edit a file in the cache.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            fpath (str): Path to the file to edit.</span>
+<span class="sd">            new_content (object): New content for the file.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if the file content has changed, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">fpath</span><span class="p">,</span> <span class="n">serializer_name</span> <span class="o">=</span> <span class="n">guess_preferred_serializer</span><span class="p">(</span><span class="n">fpath</span><span class="p">)</span>
+
+        <span class="n">normalized_fpath</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalize_path</span><span class="p">(</span><span class="n">fpath</span><span class="p">)</span>
+        <span class="n">previous_content_string</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_file_content</span><span class="p">(</span><span class="n">fpath</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">serialized_files_cache</span><span class="p">[</span><span class="n">normalized_fpath</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_content</span>
+
+        <span class="n">new_content_string</span> <span class="o">=</span> <span class="n">deserialize_for_url</span><span class="p">(</span>
+            <span class="n">fpath</span><span class="p">,</span>
+            <span class="n">new_content</span><span class="p">,</span>
+            <span class="n">prefer_serializer</span><span class="o">=</span><span class="n">serializer_name</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">files_cache</span><span class="p">[</span><span class="n">normalized_fpath</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="n">new_content_string</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">previous_content_string</span> <span class="o">!=</span> <span class="n">new_content_string</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fpath</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">new_content_string</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Álvaro Mondéjar Rubio.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

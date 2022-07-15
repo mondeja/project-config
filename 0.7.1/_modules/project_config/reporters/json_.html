@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>project_config.reporters.json_ &mdash; project-config 0.7.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/tabs.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/bolditalic.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/override-styles.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/tabs.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> project-config
+          </a>
+              <div class="version">
+                0.7
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Quickstart</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../basic-usage.html">Basic usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/index.html">Tutorials</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference/cli.html">project-config CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference/config.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference/styling.html">Styling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference/plugins.html">Plugins</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">In depth</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../in-depth/rationale.html">Rationale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../in-depth/serialization.html">Objects serialization</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For developers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/plugins.html">Writing third party plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/reporters.html">Writing third party reporters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/reference/modules.html">Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">project-config</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+          <li><a href="../reporters.html">project_config.reporters</a> &raquo;</li>
+      <li>project_config.reporters.json_</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for project_config.reporters.json_</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;JSON reporters.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">typing</span> <span class="k">as</span> <span class="nn">t</span>
+
+<span class="kn">from</span> <span class="nn">project_config.reporters.base</span> <span class="kn">import</span> <span class="n">BaseColorReporter</span><span class="p">,</span> <span class="n">BaseReporter</span>
+
+
+<div class="viewcode-block" id="JsonReporter"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.json_.html#project_config.reporters.json_.JsonReporter">[docs]</a><span class="k">class</span> <span class="nc">JsonReporter</span><span class="p">(</span><span class="n">BaseReporter</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Black/white reporter in JSON format.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="JsonReporter.generate_errors_report"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.json_.html#project_config.reporters.json_.JsonReporter.generate_errors_report">[docs]</a>    <span class="k">def</span> <span class="nf">generate_errors_report</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Generate an errors report in black/white JSON format.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="p">,</span>
+            <span class="n">indent</span><span class="o">=</span><span class="mi">2</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">==</span> <span class="s2">&quot;pretty&quot;</span>
+            <span class="k">else</span> <span class="p">(</span><span class="mi">4</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">==</span> <span class="s2">&quot;pretty4&quot;</span> <span class="k">else</span> <span class="kc">None</span><span class="p">),</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="JsonReporter.generate_data_report"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.json_.html#project_config.reporters.json_.JsonReporter.generate_data_report">[docs]</a>    <span class="k">def</span> <span class="nf">generate_data_report</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">data_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">data</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Generate a data report in black/white JSON format.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span>
+            <span class="n">data</span><span class="p">,</span>
+            <span class="n">indent</span><span class="o">=</span><span class="mi">2</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">==</span> <span class="s2">&quot;pretty&quot;</span>
+            <span class="k">else</span> <span class="p">(</span><span class="mi">4</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">==</span> <span class="s2">&quot;pretty4&quot;</span> <span class="k">else</span> <span class="kc">None</span><span class="p">),</span>
+        <span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="JsonColorReporter"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.json_.html#project_config.reporters.json_.JsonColorReporter">[docs]</a><span class="k">class</span> <span class="nc">JsonColorReporter</span><span class="p">(</span><span class="n">BaseColorReporter</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Color reporter in JSON format.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="JsonColorReporter.generate_errors_report"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.json_.html#project_config.reporters.json_.JsonColorReporter.generate_errors_report">[docs]</a>    <span class="k">def</span> <span class="nf">generate_errors_report</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Generate an errors report in JSON format with colors.&quot;&quot;&quot;</span>
+        <span class="n">message_key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">format_key</span><span class="p">(</span><span class="s1">&#39;&quot;message&quot;&#39;</span><span class="p">)</span>
+        <span class="n">definition_key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">format_key</span><span class="p">(</span><span class="s1">&#39;&quot;definition&quot;&#39;</span><span class="p">)</span>
+        <span class="n">hint_key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">format_key</span><span class="p">(</span><span class="s1">&#39;&quot;hint&quot;&#39;</span><span class="p">)</span>
+        <span class="n">fixed_key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">format_key</span><span class="p">(</span><span class="s1">&#39;&quot;fixed&quot;&#39;</span><span class="p">)</span>
+        <span class="n">fixable_key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">format_key</span><span class="p">(</span><span class="s1">&#39;&quot;fixable&quot;&#39;</span><span class="p">)</span>
+
+        <span class="n">space</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">:</span>
+            <span class="c1"># separators for pretty formatting</span>
+            <span class="n">newline0</span> <span class="o">=</span> <span class="n">newline2</span> <span class="o">=</span> <span class="n">newline4</span> <span class="o">=</span> <span class="n">newline6</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">mul</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">==</span> <span class="s2">&quot;pretty&quot;</span> <span class="k">else</span> <span class="mi">2</span>
+            <span class="n">newline0</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">newline2</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">space</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">mul</span>
+            <span class="n">newline4</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">space</span> <span class="o">*</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">mul</span>
+            <span class="n">newline6</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">space</span> <span class="o">*</span> <span class="mi">6</span> <span class="o">*</span> <span class="n">mul</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span>
+
+        <span class="n">report</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_metachar</span><span class="p">(</span><span class="s1">&#39;{&#39;</span><span class="p">)</span><span class="si">}{</span><span class="n">newline2</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">for</span> <span class="n">f</span><span class="p">,</span> <span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">errors</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+            <span class="n">report</span> <span class="o">+=</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">format_file</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">file</span><span class="p">))</span>
+                <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">format_metachar</span><span class="p">(</span><span class="s2">&quot;: [&quot;</span><span class="p">)</span>
+                <span class="o">+</span> <span class="n">newline4</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">e</span><span class="p">,</span> <span class="n">error</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">errors</span><span class="p">):</span>
+                <span class="n">error_message</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">format_error_message</span><span class="p">(</span>
+                    <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">error</span><span class="p">[</span><span class="s2">&quot;message&quot;</span><span class="p">]),</span>
+                <span class="p">)</span>
+                <span class="n">definition</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">format_definition</span><span class="p">(</span>
+                    <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">error</span><span class="p">[</span><span class="s2">&quot;definition&quot;</span><span class="p">]),</span>
+                <span class="p">)</span>
+                <span class="n">report</span> <span class="o">+=</span> <span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_metachar</span><span class="p">(</span><span class="s1">&#39;{&#39;</span><span class="p">)</span><span class="si">}{</span><span class="n">newline6</span><span class="si">}{</span><span class="n">message_key</span><span class="si">}</span><span class="s2">:&quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="n">error_message</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_metachar</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span><span class="si">}{</span><span class="n">newline6</span> <span class="ow">or</span> <span class="n">space</span><span class="si">}</span><span class="s1">&#39;</span>
+                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">definition_key</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_metachar</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+                    <span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="n">definition</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+                <span class="k">if</span> <span class="s2">&quot;hint&quot;</span> <span class="ow">in</span> <span class="n">error</span><span class="p">:</span>
+                    <span class="n">hint</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">format_hint</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">error</span><span class="p">[</span><span class="s2">&quot;hint&quot;</span><span class="p">]))</span>
+                    <span class="n">report</span> <span class="o">+=</span> <span class="p">(</span>
+                        <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_metachar</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span><span class="si">}{</span><span class="n">newline6</span> <span class="ow">or</span> <span class="n">space</span><span class="si">}</span><span class="s1">&#39;</span>
+                        <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">hint_key</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_metachar</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+                        <span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="n">hint</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="p">)</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">error</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;fixable&quot;</span><span class="p">):</span>
+                        <span class="k">if</span> <span class="n">error</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;fixed&quot;</span><span class="p">):</span>
+                            <span class="n">report</span> <span class="o">+=</span> <span class="p">(</span>
+                                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_metachar</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+                                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">newline6</span> <span class="ow">or</span> <span class="n">space</span><span class="si">}</span><span class="s2">&quot;</span>
+                                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">fixed_key</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_metachar</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+                                <span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_fixed</span><span class="p">(</span><span class="s1">&#39;true&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+                            <span class="p">)</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">report</span> <span class="o">+=</span> <span class="p">(</span>
+                                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_metachar</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+                                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">newline6</span> <span class="ow">or</span> <span class="n">space</span><span class="si">}</span><span class="s2">&quot;</span>
+                                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">fixable_key</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_metachar</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+                                <span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_fixed</span><span class="p">(</span><span class="s1">&#39;true&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+                            <span class="p">)</span>
+                <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                <span class="n">report</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">newline4</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_metachar</span><span class="p">(</span><span class="s1">&#39;}&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="k">if</span> <span class="n">e</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">report</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_metachar</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span><span class="si">}{</span><span class="n">newline4</span> <span class="ow">or</span> <span class="n">space</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">report</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">newline2</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_metachar</span><span class="p">(</span><span class="s1">&#39;]&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="k">if</span> <span class="n">f</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">report</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_metachar</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span><span class="si">}{</span><span class="n">newline2</span> <span class="ow">or</span> <span class="n">space</span><span class="si">}</span><span class="s1">&#39;</span>
+
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">report</span><span class="si">}{</span><span class="n">newline0</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_metachar</span><span class="p">(</span><span class="s1">&#39;}&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span></div>
+
+<div class="viewcode-block" id="JsonColorReporter.generate_data_report"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.json_.html#project_config.reporters.json_.JsonColorReporter.generate_data_report">[docs]</a>    <span class="k">def</span> <span class="nf">generate_data_report</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">data_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">data</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Generate data report in JSON format with colors.&quot;&quot;&quot;</span>
+        <span class="n">space</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">:</span>
+            <span class="n">newline0</span> <span class="o">=</span> <span class="n">newline2</span> <span class="o">=</span> <span class="n">newline4</span> <span class="o">=</span> <span class="n">newline6</span> <span class="o">=</span> <span class="n">newline8</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="n">newline10</span> <span class="o">=</span> <span class="n">newline12</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">mul</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">==</span> <span class="s2">&quot;pretty&quot;</span> <span class="k">else</span> <span class="mi">2</span>
+            <span class="n">newline0</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">newline2</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">space</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">mul</span>
+            <span class="n">newline4</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">space</span> <span class="o">*</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">mul</span>
+            <span class="n">newline6</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">space</span> <span class="o">*</span> <span class="mi">6</span> <span class="o">*</span> <span class="n">mul</span>
+            <span class="n">newline8</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">space</span> <span class="o">*</span> <span class="mi">8</span> <span class="o">*</span> <span class="n">mul</span>
+            <span class="n">newline10</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">space</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">*</span> <span class="n">mul</span>
+            <span class="n">newline12</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">space</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">*</span> <span class="n">mul</span>
+
+        <span class="n">report</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_metachar</span><span class="p">(</span><span class="s1">&#39;{&#39;</span><span class="p">)</span><span class="si">}{</span><span class="n">newline2</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">if</span> <span class="n">data_key</span> <span class="o">==</span> <span class="s2">&quot;style&quot;</span><span class="p">:</span>
+            <span class="n">plugins</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;plugins&quot;</span><span class="p">,</span> <span class="p">[])</span>
+            <span class="k">if</span> <span class="n">plugins</span><span class="p">:</span>
+                <span class="n">report</span> <span class="o">+=</span> <span class="p">(</span>
+                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_config_key</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="s2">&quot;plugins&quot;</span><span class="p">))</span><span class="si">}</span><span class="s1">&#39;</span>
+                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_metachar</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">space</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_metachar</span><span class="p">(</span><span class="s2">&quot;[&quot;</span><span class="p">)</span><span class="si">}{</span><span class="n">newline4</span><span class="si">}</span><span class="s1">&#39;</span>
+                <span class="p">)</span>
+                <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">plugin</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">plugins</span><span class="p">):</span>
+                    <span class="n">report</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_config_value</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">plugin</span><span class="p">))</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="k">if</span> <span class="n">p</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">plugins</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="n">report</span> <span class="o">+=</span> <span class="p">(</span>
+                            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_metachar</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span><span class="si">}{</span><span class="n">newline4</span> <span class="ow">or</span> <span class="n">space</span><span class="si">}</span><span class="s1">&#39;</span>
+                        <span class="p">)</span>
+                <span class="n">report</span> <span class="o">+=</span> <span class="p">(</span>
+                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">newline2</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_metachar</span><span class="p">(</span><span class="s2">&quot;],&quot;</span><span class="p">)</span><span class="si">}{</span><span class="n">newline2</span> <span class="ow">or</span> <span class="n">space</span><span class="si">}</span><span class="s1">&#39;</span>
+                <span class="p">)</span>
+            <span class="n">report</span> <span class="o">+=</span> <span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_config_key</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="s2">&quot;rules&quot;</span><span class="p">))</span><span class="si">}</span><span class="s1">&#39;</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_metachar</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">space</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_metachar</span><span class="p">(</span><span class="s2">&quot;[&quot;</span><span class="p">)</span><span class="si">}{</span><span class="n">newline4</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="p">)</span>
+            <span class="n">rules</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;rules&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">r</span><span class="p">,</span> <span class="n">rule</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">rules</span><span class="p">):</span>
+                <span class="n">report</span> <span class="o">+=</span> <span class="p">(</span>
+                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_metachar</span><span class="p">(</span><span class="s2">&quot;{&quot;</span><span class="p">)</span><span class="si">}{</span><span class="n">newline6</span><span class="si">}</span><span class="s1">&#39;</span>
+                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_key</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="s2">&quot;files&quot;</span><span class="p">))</span><span class="si">}</span><span class="s1">&#39;</span>
+                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_metachar</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span><span class="si">}{</span><span class="n">space</span><span class="si">}</span><span class="s1">&#39;</span>
+                <span class="p">)</span>
+                <span class="n">files</span> <span class="o">=</span> <span class="n">rule</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;files&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="s2">&quot;not&quot;</span> <span class="ow">in</span> <span class="n">files</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">files</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">report</span> <span class="o">+=</span> <span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_metachar</span><span class="p">(</span><span class="s1">&#39;{&#39;</span><span class="p">)</span><span class="si">}{</span><span class="n">newline8</span><span class="si">}</span><span class="s2">&quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_key</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="s1">&#39;not&#39;</span><span class="p">))</span><span class="si">}</span><span class="s2">&quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_metachar</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span><span class="si">}{</span><span class="n">space</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="p">)</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">files</span><span class="p">[</span><span class="s2">&quot;not&quot;</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>
+                        <span class="c1">#  [...files...]</span>
+                        <span class="n">report</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_metachar</span><span class="p">(</span><span class="s2">&quot;[&quot;</span><span class="p">)</span><span class="si">}{</span><span class="n">newline10</span><span class="si">}</span><span class="s1">&#39;</span>
+                        <span class="k">for</span> <span class="n">f</span><span class="p">,</span> <span class="n">file</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">files</span><span class="p">[</span><span class="s2">&quot;not&quot;</span><span class="p">]):</span>
+                            <span class="n">report</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_file</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">file</span><span class="p">))</span><span class="si">}</span><span class="s2">&quot;</span>
+                            <span class="k">if</span> <span class="n">f</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">files</span><span class="p">[</span><span class="s2">&quot;not&quot;</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                                <span class="n">report</span> <span class="o">+=</span> <span class="p">(</span>
+                                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_metachar</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+                                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">newline10</span> <span class="ow">or</span> <span class="n">space</span><span class="si">}</span><span class="s2">&quot;</span>
+                                <span class="p">)</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="n">report</span> <span class="o">+=</span> <span class="p">(</span>
+                                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">newline8</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_metachar</span><span class="p">(</span><span class="s2">&quot;]&quot;</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+                                <span class="p">)</span>
+                        <span class="n">report</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">newline6</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_metachar</span><span class="p">(</span><span class="s2">&quot;}&quot;</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="c1"># {file: reason}</span>
+                        <span class="n">report</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_metachar</span><span class="p">(</span><span class="s2">&quot;{&quot;</span><span class="p">)</span><span class="si">}{</span><span class="n">newline12</span><span class="si">}</span><span class="s1">&#39;</span>
+                        <span class="k">for</span> <span class="n">f</span><span class="p">,</span> <span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">reason</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span>
+                            <span class="n">files</span><span class="p">[</span><span class="s2">&quot;not&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span>
+                        <span class="p">):</span>
+                            <span class="n">formatted_reason</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">format_config_value</span><span class="p">(</span>
+                                <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">reason</span><span class="p">),</span>
+                            <span class="p">)</span>
+                            <span class="n">report</span> <span class="o">+=</span> <span class="p">(</span>
+                                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_file</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">file</span><span class="p">))</span><span class="si">}</span><span class="s2">&quot;</span>
+                                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_metachar</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+                                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">space</span><span class="si">}{</span><span class="n">formatted_reason</span><span class="si">}</span><span class="s2">&quot;</span>
+                            <span class="p">)</span>
+                            <span class="k">if</span> <span class="n">f</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">files</span><span class="p">[</span><span class="s2">&quot;not&quot;</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                                <span class="n">report</span> <span class="o">+=</span> <span class="p">(</span>
+                                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_metachar</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+                                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">newline10</span> <span class="ow">or</span> <span class="n">space</span><span class="si">}</span><span class="s2">&quot;</span>
+                                <span class="p">)</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="n">report</span> <span class="o">+=</span> <span class="n">newline8</span>
+                        <span class="n">report</span> <span class="o">+=</span> <span class="p">(</span>
+                            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_metachar</span><span class="p">(</span><span class="s2">&quot;}&quot;</span><span class="p">)</span><span class="si">}{</span><span class="n">newline6</span><span class="si">}</span><span class="s1">&#39;</span>
+                            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_metachar</span><span class="p">(</span><span class="s2">&quot;}&quot;</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+                        <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">report</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_metachar</span><span class="p">(</span><span class="s1">&#39;[&#39;</span><span class="p">)</span><span class="si">}{</span><span class="n">newline8</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="k">for</span> <span class="n">f</span><span class="p">,</span> <span class="n">file</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">files</span><span class="p">):</span>
+                        <span class="n">report</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_file</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">file</span><span class="p">))</span><span class="si">}</span><span class="s2">&quot;</span>
+                        <span class="k">if</span> <span class="n">f</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">files</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                            <span class="n">report</span> <span class="o">+=</span> <span class="p">(</span>
+                                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_metachar</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+                                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">newline8</span> <span class="ow">or</span> <span class="n">space</span><span class="si">}</span><span class="s2">&quot;</span>
+                            <span class="p">)</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">report</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">newline6</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_metachar</span><span class="p">(</span><span class="s2">&quot;]&quot;</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+
+                <span class="k">for</span> <span class="n">action_index</span><span class="p">,</span> <span class="p">(</span><span class="n">action_name</span><span class="p">,</span> <span class="n">action_value</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span>
+                    <span class="n">rule</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span>
+                <span class="p">):</span>
+                    <span class="k">if</span> <span class="n">action_index</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">report</span> <span class="o">+=</span> <span class="p">(</span>
+                            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_metachar</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span><span class="si">}{</span><span class="n">newline6</span> <span class="ow">or</span> <span class="n">space</span><span class="si">}</span><span class="s1">&#39;</span>
+                        <span class="p">)</span>
+                    <span class="n">indented_value</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                        <span class="p">((</span><span class="n">space</span> <span class="o">*</span> <span class="mi">6</span> <span class="o">*</span> <span class="n">mul</span> <span class="o">+</span> <span class="n">line</span><span class="p">)</span> <span class="k">if</span> <span class="n">line_index</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">line</span><span class="p">)</span>
+                        <span class="k">for</span> <span class="n">line_index</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span>
+                            <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span>
+                                <span class="n">action_value</span><span class="p">,</span>
+                                <span class="n">indent</span><span class="o">=</span><span class="kc">None</span>
+                                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span>
+                                <span class="k">else</span> <span class="p">(</span><span class="mi">4</span> <span class="k">if</span> <span class="s2">&quot;4&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="k">else</span> <span class="mi">2</span><span class="p">),</span>
+                            <span class="p">)</span><span class="o">.</span><span class="n">splitlines</span><span class="p">(),</span>
+                        <span class="p">)</span>
+                    <span class="p">)</span>
+                    <span class="n">report</span> <span class="o">+=</span> <span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_key</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">action_name</span><span class="p">))</span><span class="si">}</span><span class="s2">&quot;</span>
+                        <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_metachar</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">space</span><span class="si">}</span><span class="s2">&quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_config_value</span><span class="p">(</span><span class="n">indented_value</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="p">)</span>
+                    <span class="k">if</span> <span class="n">action_index</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="n">report</span> <span class="o">+=</span> <span class="p">(</span>
+                            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_metachar</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span><span class="si">}{</span><span class="n">newline6</span> <span class="ow">or</span> <span class="n">space</span><span class="si">}</span><span class="s1">&#39;</span>
+                        <span class="p">)</span>
+
+                <span class="n">report</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">newline4</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_metachar</span><span class="p">(</span><span class="s2">&quot;}&quot;</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+                <span class="k">if</span> <span class="n">r</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">rules</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">report</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_metachar</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span><span class="si">}{</span><span class="n">newline4</span> <span class="ow">or</span> <span class="n">space</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">report</span> <span class="o">+=</span> <span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">newline2</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_metachar</span><span class="p">(</span><span class="s2">&quot;]&quot;</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">newline0</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_metachar</span><span class="p">(</span><span class="s2">&quot;}&quot;</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">d</span><span class="p">,</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+                <span class="n">report</span> <span class="o">+=</span> <span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_config_key</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">key</span><span class="p">))</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_metachar</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+                <span class="p">)</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                    <span class="n">report</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">space</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_metachar</span><span class="p">(</span><span class="s2">&quot;[&quot;</span><span class="p">)</span><span class="si">}{</span><span class="n">newline4</span><span class="si">}</span><span class="s1">&#39;</span>
+                    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">value_item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+                        <span class="n">report</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">format_config_value</span><span class="p">(</span>
+                            <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">value_item</span><span class="p">),</span>
+                        <span class="p">)</span>
+                        <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                            <span class="n">report</span> <span class="o">+=</span> <span class="p">(</span>
+                                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_metachar</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+                                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">newline4</span> <span class="ow">or</span> <span class="n">space</span><span class="si">}</span><span class="s2">&quot;</span>
+                            <span class="p">)</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">report</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">newline2</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_metachar</span><span class="p">(</span><span class="s2">&quot;]&quot;</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">report</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_config_value</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">value</span><span class="p">))</span><span class="si">}</span><span class="s2">&quot;</span>
+
+                <span class="k">if</span> <span class="n">d</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">report</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_metachar</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span><span class="si">}{</span><span class="n">newline2</span> <span class="ow">or</span> <span class="n">space</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">report</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">newline0</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_metachar</span><span class="p">(</span><span class="s2">&quot;}&quot;</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+
+        <span class="k">return</span> <span class="n">report</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Álvaro Mondéjar Rubio.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
