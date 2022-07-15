@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>project_config.reporters.base &mdash; project-config 0.7.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/tabs.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/bolditalic.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/override-styles.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/tabs.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> project-config
+          </a>
+              <div class="version">
+                0.7
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Quickstart</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../basic-usage.html">Basic usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/index.html">Tutorials</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference/cli.html">project-config CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference/config.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference/styling.html">Styling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference/plugins.html">Plugins</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">In depth</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../in-depth/rationale.html">Rationale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../in-depth/serialization.html">Objects serialization</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For developers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/plugins.html">Writing third party plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/reporters.html">Writing third party reporters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/reference/modules.html">Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">project-config</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+          <li><a href="../reporters.html">project_config.reporters</a> &raquo;</li>
+      <li>project_config.reporters.base</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for project_config.reporters.base</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Base reporters.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span> <span class="nn">abc</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">typing</span> <span class="k">as</span> <span class="nn">t</span>
+
+<span class="kn">import</span> <span class="nn">colored</span>
+
+<span class="kn">from</span> <span class="nn">project_config.compat</span> <span class="kn">import</span> <span class="n">TypeAlias</span>
+<span class="kn">from</span> <span class="nn">project_config.exceptions</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ProjectConfigCheckFailed</span><span class="p">,</span>
+    <span class="n">ProjectConfigException</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">project_config.types</span> <span class="kn">import</span> <span class="n">ErrorDict</span>
+
+
+<span class="n">FilesErrors</span><span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">ErrorDict</span><span class="p">]]</span>
+<span class="n">FormatterDefinitionType</span><span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="InvalidColors"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.base.html#project_config.reporters.base.InvalidColors">[docs]</a><span class="k">class</span> <span class="nc">InvalidColors</span><span class="p">(</span><span class="n">ProjectConfigException</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Invalid not supported colors in colored formatter.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">errors</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s2">&quot;Invalid colors or subjects in &#39;colors&#39; configuration&quot;</span>
+            <span class="s2">&quot; for reporters:</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">error</span> <span class="ow">in</span> <span class="n">errors</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;  - </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="BaseReporter"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseReporter">[docs]</a><span class="k">class</span> <span class="nc">BaseReporter</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base reporter from which all reporters inherit.&quot;&quot;&quot;</span>
+
+    <span class="n">exception_class</span> <span class="o">=</span> <span class="n">ProjectConfigCheckFailed</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">rootdir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">fmt</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">only_hints</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rootdir</span> <span class="o">=</span> <span class="n">rootdir</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="p">:</span> <span class="n">FilesErrors</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">fmt</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">only_hints</span> <span class="o">=</span> <span class="n">only_hints</span>
+
+        <span class="c1"># configuration, styles...</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+<div class="viewcode-block" id="BaseReporter.generate_errors_report"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseReporter.generate_errors_report">[docs]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">generate_errors_report</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Generate check errors report.</span>
+
+<span class="sd">        This method must be implemented by inherited reporters.</span>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+
+<div class="viewcode-block" id="BaseReporter.generate_data_report"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseReporter.generate_data_report">[docs]</a>    <span class="k">def</span> <span class="nf">generate_data_report</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">data_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">data</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Generate data report for configuration or styles.</span>
+
+<span class="sd">        This method should be implemented by inherited reporters.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data_key (str): Configuration for which the data will</span>
+<span class="sd">                be generated. Could be either ``&quot;config&quot;`` or</span>
+<span class="sd">                ``&quot;style&quot;``.</span>
+<span class="sd">            data (dict): Data to report.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>  <span class="c1"># pragma: no cover</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">success</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Return if the reporter has not reported errors.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: ``True`` if no errors reported, ``False`` otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+
+<div class="viewcode-block" id="BaseReporter.raise_errors"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseReporter.raise_errors">[docs]</a>    <span class="k">def</span> <span class="nf">raise_errors</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Raise errors failure if no success.</span>
+
+<span class="sd">        Raise the correspondent exception class for the reporter</span>
+<span class="sd">        if the reporter has reported any error.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">success</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">exception_class</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_errors_report</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="BaseReporter.report_error"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseReporter.report_error">[docs]</a>    <span class="k">def</span> <span class="nf">report_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">error</span><span class="p">:</span> <span class="n">ErrorDict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Report an error.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            error (dict): Error to report.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s2">&quot;file&quot;</span> <span class="ow">in</span> <span class="n">error</span><span class="p">:</span>
+            <span class="n">file</span> <span class="o">=</span> <span class="n">error</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;file&quot;</span><span class="p">)</span>
+            <span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rootdir</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span>
+                <span class="s2">&quot;/&quot;</span> <span class="k">if</span> <span class="n">file</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">file</span> <span class="o">=</span> <span class="s2">&quot;[CONFIGURATION]&quot;</span>  <span class="c1"># pragma: no cover</span>
+
+        <span class="k">if</span> <span class="n">file</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="p">[</span><span class="n">file</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="s2">&quot;hint&quot;</span> <span class="ow">in</span> <span class="n">error</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">only_hints</span><span class="p">:</span>
+            <span class="n">error</span><span class="p">[</span><span class="s2">&quot;message&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">error</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;hint&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="p">[</span><span class="n">file</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">error</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="BaseFormattedReporter"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseFormattedReporter">[docs]</a><span class="k">class</span> <span class="nc">BaseFormattedReporter</span><span class="p">(</span><span class="n">BaseReporter</span><span class="p">,</span> <span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Reporter that requires formatted fields.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="BaseFormattedReporter.format_fixed"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseFormattedReporter.format_fixed">[docs]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">format_fixed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+        <span class="sd">&quot;&quot;&quot;File name formatter.&quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="BaseFormattedReporter.format_file"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseFormattedReporter.format_file">[docs]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">format_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+        <span class="sd">&quot;&quot;&quot;File name formatter.&quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="BaseFormattedReporter.format_error_message"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseFormattedReporter.format_error_message">[docs]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">format_error_message</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">error_message</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+        <span class="sd">&quot;&quot;&quot;Error message formatter.&quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="BaseFormattedReporter.format_definition"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseFormattedReporter.format_definition">[docs]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">format_definition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">definition</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+        <span class="sd">&quot;&quot;&quot;Definition formatter.&quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="BaseFormattedReporter.format_hint"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseFormattedReporter.format_hint">[docs]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">format_hint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hint</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+        <span class="sd">&quot;&quot;&quot;Hint formatter.&quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="BaseFormattedReporter.format_key"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseFormattedReporter.format_key">[docs]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">format_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+        <span class="sd">&quot;&quot;&quot;Serialized key formatter.&quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="BaseFormattedReporter.format_metachar"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseFormattedReporter.format_metachar">[docs]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">format_metachar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metachar</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+        <span class="sd">&quot;&quot;&quot;Meta characters string formatter.&quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="BaseFormattedReporter.format_config_key"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseFormattedReporter.format_config_key">[docs]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">format_config_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+        <span class="sd">&quot;&quot;&quot;Configuration data key formatter, for example &#39;style&#39;.&quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="BaseFormattedReporter.format_config_value"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseFormattedReporter.format_config_value">[docs]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">format_config_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+        <span class="sd">&quot;&quot;&quot;Configuration data value formatter, for example &#39;style&#39; urls.&quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div></div>
+
+
+<span class="n">self_format_noop</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Callable</span><span class="p">[[</span><span class="nb">type</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">s</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span>
+
+
+<div class="viewcode-block" id="BaseNoopFormattedReporter"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseNoopFormattedReporter">[docs]</a><span class="k">class</span> <span class="nc">BaseNoopFormattedReporter</span><span class="p">(</span><span class="n">BaseFormattedReporter</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Reporter that requires formatted fields without format.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="BaseNoopFormattedReporter.format_fixed"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseNoopFormattedReporter.format_fixed">[docs]</a>    <span class="k">def</span> <span class="nf">format_fixed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>  <span class="c1"># noqa: D102</span>
+        <span class="k">return</span> <span class="n">output</span></div>
+
+<div class="viewcode-block" id="BaseNoopFormattedReporter.format_file"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseNoopFormattedReporter.format_file">[docs]</a>    <span class="k">def</span> <span class="nf">format_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>  <span class="c1"># noqa: D102</span>
+        <span class="k">return</span> <span class="n">fname</span></div>
+
+<div class="viewcode-block" id="BaseNoopFormattedReporter.format_error_message"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseNoopFormattedReporter.format_error_message">[docs]</a>    <span class="k">def</span> <span class="nf">format_error_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">error_message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>  <span class="c1"># noqa: D102</span>
+        <span class="k">return</span> <span class="n">error_message</span></div>
+
+<div class="viewcode-block" id="BaseNoopFormattedReporter.format_definition"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseNoopFormattedReporter.format_definition">[docs]</a>    <span class="k">def</span> <span class="nf">format_definition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">definition</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>  <span class="c1"># noqa: D102</span>
+        <span class="k">return</span> <span class="n">definition</span></div>
+
+<div class="viewcode-block" id="BaseNoopFormattedReporter.format_hint"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseNoopFormattedReporter.format_hint">[docs]</a>    <span class="k">def</span> <span class="nf">format_hint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hint</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>  <span class="c1"># noqa: D102</span>
+        <span class="k">return</span> <span class="n">hint</span></div>
+
+<div class="viewcode-block" id="BaseNoopFormattedReporter.format_key"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseNoopFormattedReporter.format_key">[docs]</a>    <span class="k">def</span> <span class="nf">format_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>  <span class="c1"># noqa: D102</span>
+        <span class="k">return</span> <span class="n">key</span></div>
+
+<div class="viewcode-block" id="BaseNoopFormattedReporter.format_metachar"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseNoopFormattedReporter.format_metachar">[docs]</a>    <span class="k">def</span> <span class="nf">format_metachar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metachar</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>  <span class="c1"># noqa: D102</span>
+        <span class="k">return</span> <span class="n">metachar</span></div>
+
+<div class="viewcode-block" id="BaseNoopFormattedReporter.format_config_key"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseNoopFormattedReporter.format_config_key">[docs]</a>    <span class="k">def</span> <span class="nf">format_config_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>  <span class="c1"># noqa: D102</span>
+        <span class="k">return</span> <span class="n">config_key</span></div>
+
+<div class="viewcode-block" id="BaseNoopFormattedReporter.format_config_value"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseNoopFormattedReporter.format_config_value">[docs]</a>    <span class="k">def</span> <span class="nf">format_config_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>  <span class="c1"># noqa: D102</span>
+        <span class="k">return</span> <span class="n">config_value</span></div></div>
+
+
+<div class="viewcode-block" id="bold_color"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.base.html#project_config.reporters.base.bold_color">[docs]</a><span class="k">def</span> <span class="nf">bold_color</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">color</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Colorize a string with bold formatting using `colored`_ library.</span>
+
+<span class="sd">    .. _colored: https://gitlab.com/dslackw/colored</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        value (str): Value to colorize.</span>
+<span class="sd">        color (str): Color to use for the formatting.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: Colorized string.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">colored</span><span class="o">.</span><span class="n">stylize</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
+        <span class="n">value</span><span class="p">,</span>
+        <span class="n">colored</span><span class="o">.</span><span class="n">fg</span><span class="p">(</span><span class="n">color</span><span class="p">)</span> <span class="o">+</span> <span class="n">colored</span><span class="o">.</span><span class="n">attr</span><span class="p">(</span><span class="s2">&quot;bold&quot;</span><span class="p">),</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="colored_color_exists"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.base.html#project_config.reporters.base.colored_color_exists">[docs]</a><span class="k">def</span> <span class="nf">colored_color_exists</span><span class="p">(</span><span class="n">color</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Check if a color exists in the `colored`_ library.</span>
+
+<span class="sd">    .. _colored: https://gitlab.com/dslackw/colored</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        color (str): Color to check.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: ``True`` if the color exists, ``False`` otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">colored</span><span class="o">.</span><span class="n">fg</span><span class="p">(</span><span class="n">color</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>  <span class="c1"># pragma: no cover (tested, but not supported on CI)</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="BaseColorReporter"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseColorReporter">[docs]</a><span class="k">class</span> <span class="nc">BaseColorReporter</span><span class="p">(</span><span class="n">BaseFormattedReporter</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base reporter with colorized output.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">,</span>
+        <span class="n">colors</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">colors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_normalize_colors</span><span class="p">(</span><span class="n">colors</span> <span class="ow">or</span> <span class="p">{})</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<div class="viewcode-block" id="BaseColorReporter._normalize_colors"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseColorReporter._normalize_colors">[docs]</a>    <span class="k">def</span> <span class="nf">_normalize_colors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">colors</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+        <span class="n">normalized_colors</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">errors</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">subject</span><span class="p">,</span> <span class="n">color</span> <span class="ow">in</span> <span class="n">colors</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">normalized_subject</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">subject</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;format_</span><span class="si">{</span><span class="n">normalized_subject</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">):</span>
+                <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Invalid subject &#39;</span><span class="si">{</span><span class="n">normalized_subject</span><span class="si">}</span><span class="s2">&#39; to colorize&quot;</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">colored_color_exists</span><span class="p">(</span><span class="n">color</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
+                <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Color &#39;</span><span class="si">{</span><span class="n">color</span><span class="si">}</span><span class="s2">&#39; not supported&quot;</span><span class="p">)</span>
+            <span class="n">normalized_colors</span><span class="p">[</span><span class="n">normalized_subject</span><span class="p">]</span> <span class="o">=</span> <span class="n">color</span>
+        <span class="k">if</span> <span class="n">errors</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">InvalidColors</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">normalized_colors</span></div>
+
+<div class="viewcode-block" id="BaseColorReporter.format_fixed"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseColorReporter.format_fixed">[docs]</a>    <span class="k">def</span> <span class="nf">format_fixed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>  <span class="c1"># noqa: D102</span>
+        <span class="k">return</span> <span class="n">bold_color</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;fixed&quot;</span><span class="p">,</span> <span class="s2">&quot;green&quot;</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="BaseColorReporter.format_file"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseColorReporter.format_file">[docs]</a>    <span class="k">def</span> <span class="nf">format_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>  <span class="c1"># noqa: D102</span>
+        <span class="k">return</span> <span class="n">bold_color</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;file&quot;</span><span class="p">,</span> <span class="s2">&quot;light_red&quot;</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="BaseColorReporter.format_error_message"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseColorReporter.format_error_message">[docs]</a>    <span class="k">def</span> <span class="nf">format_error_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">error_message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>  <span class="c1"># noqa: D102</span>
+        <span class="k">return</span> <span class="n">bold_color</span><span class="p">(</span>
+            <span class="n">error_message</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;error_message&quot;</span><span class="p">,</span> <span class="s2">&quot;yellow&quot;</span><span class="p">),</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseColorReporter.format_definition"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseColorReporter.format_definition">[docs]</a>    <span class="k">def</span> <span class="nf">format_definition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">definition</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>  <span class="c1"># noqa: D102</span>
+        <span class="k">return</span> <span class="n">bold_color</span><span class="p">(</span><span class="n">definition</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;definition&quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="BaseColorReporter.format_hint"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseColorReporter.format_hint">[docs]</a>    <span class="k">def</span> <span class="nf">format_hint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hint</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>  <span class="c1"># noqa: D102</span>
+        <span class="k">return</span> <span class="n">bold_color</span><span class="p">(</span><span class="n">hint</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;hint&quot;</span><span class="p">,</span> <span class="s2">&quot;green&quot;</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="BaseColorReporter.format_key"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseColorReporter.format_key">[docs]</a>    <span class="k">def</span> <span class="nf">format_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>  <span class="c1"># noqa: D102</span>
+        <span class="k">return</span> <span class="n">bold_color</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;key&quot;</span><span class="p">,</span> <span class="s2">&quot;cyan&quot;</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="BaseColorReporter.format_metachar"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseColorReporter.format_metachar">[docs]</a>    <span class="k">def</span> <span class="nf">format_metachar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metachar</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>  <span class="c1"># noqa: D102</span>
+        <span class="k">return</span> <span class="n">bold_color</span><span class="p">(</span><span class="n">metachar</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;metachar&quot;</span><span class="p">,</span> <span class="s2">&quot;grey_37&quot;</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="BaseColorReporter.format_config_key"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseColorReporter.format_config_key">[docs]</a>    <span class="k">def</span> <span class="nf">format_config_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>  <span class="c1"># noqa: D102</span>
+        <span class="k">return</span> <span class="n">bold_color</span><span class="p">(</span><span class="n">config_key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;config_key&quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="BaseColorReporter.format_config_value"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseColorReporter.format_config_value">[docs]</a>    <span class="k">def</span> <span class="nf">format_config_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>  <span class="c1"># noqa: D102</span>
+        <span class="k">return</span> <span class="n">bold_color</span><span class="p">(</span>
+            <span class="n">config_value</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;config_value&quot;</span><span class="p">,</span> <span class="s2">&quot;yellow&quot;</span><span class="p">),</span>
+        <span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Álvaro Mondéjar Rubio.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
