@@ -130,6 +130,7 @@ class Project:
                         "file": fpath,
                         "definition": f"rules[{rule_index}].files[{f}]",
                         "fixed": self.fix,
+                        "fixable": True,
                     },
                 )
 
@@ -169,6 +170,7 @@ class Project:
                                 f"rules[{rule_index}].files.not[{fpath}]"
                             ),
                             "fixed": self.fix,
+                            "fixable": True,
                         },
                     )
         else:
@@ -193,6 +195,7 @@ class Project:
                             "file": fpath,
                             "definition": f"rules[{rule_index}].files.not[{f}]",
                             "fixed": self.fix,
+                            "fixable": True,
                         },
                     )
 
