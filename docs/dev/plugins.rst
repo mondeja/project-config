@@ -71,7 +71,7 @@ methods. For example:
        ) -> Results:
            ...
 
-.. function:: action(value: typing.Any, tree: project_config.tree.Tree, rule: project_config.types.Rule, context: ActionsContext: project_config.types.ActionsContext) -> project_config.types.Results
+.. function:: action(value: typing.Any, tree: project_config.tree.Tree, rule: project_config.types.Rule, context: project_config.types.ActionsContext) -> project_config.types.Results
 
    Action definition.
 
