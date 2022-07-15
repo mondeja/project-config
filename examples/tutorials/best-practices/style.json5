@@ -165,7 +165,7 @@
       //
       // You can use `includeLines` to force the inclusion of a line.
       // For example, if you want to ensure that the file `.gitignore`
-      // has the line 'dist/':
+      // has the line 'dist/' (FIXABLE):
       includeLines: ["dist/"],
       //
       // TIP: Use `hint` field of rules to show a better error message
