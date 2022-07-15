@@ -1,0 +1,22 @@
+{
+  extends: ["../../project-config-styles/base/editorconfig.json5"],
+  rules: [
+    {
+      files: [".project-config.toml"],
+      JMESPathsMatch: [
+        ["type(style)", "array"],
+        [
+          "op(length(style), '>', `0`)",
+          true,
+          "set(@, 'style', ['style.json5'])",
+        ],
+        ["type(cache)", "string", "set(@, 'cache', '5 minutes')"],
+        [
+          "regex_match('(\\d+ ((seconds?)|(minutes?)|(hours?)|(days?)|(weeks?)))|(never)$', cache)",
+          true,
+          "5 minutes",
+        ],
+      ],
+    },
+  ],
+}

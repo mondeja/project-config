@@ -812,6 +812,16 @@ def smart_fixer_by_expected_value(
     if ast["type"] == "field":
         key = ast["value"]
         return f"set(@, '{key}' `{json.dumps(expected_value)}`)"
+    elif ast["type"] == "subexpression":
+        temporal_object = {}
+
+        _obj = {}
+        for i, child in enumerate(reversed(ast["children"])):
+            if i == 0:
+                _obj = {child["value"]: expected_value}
+            else:
+                _obj = {child["value"]: _obj}
+        temporal_object = _obj
     elif ast["type"] == "function_expression" and ast["value"] == "type":
         if expected_value not in REVERSE_JMESPATH_TYPE_PYOBJECT:
             return ""
