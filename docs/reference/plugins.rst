@@ -245,6 +245,21 @@ always takes the regex to apply as the first parameter following the Python's
 
    .. versionadded:: 0.7.0
 
+.. function:: getenv(envvar: str) -> str
+
+   Return the value of an environment variable.
+
+   .. versionadded:: 0.8.0
+
+.. function:: setenv(envvar: str, value: str | None) -> None
+
+   Set the value of an environment variable. If you set the value to ``null``,
+   the environment variable will be removed.
+
+   Return the updated environment object.
+
+   .. versionadded:: 0.8.0
+
 .. function:: rootdir_name() -> str
 
    Returns the name if the root directory of the project (passed in :ref:`project-config---rootdir`

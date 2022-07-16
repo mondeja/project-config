@@ -464,6 +464,22 @@ class JMESPathProjectConfigFunctions(JMESPathFunctions):
     def _func_os(self) -> str:
         return sys.platform
 
+    @jmespath_func_signature({"types": ["string"]})
+    def _func_getenv(self, envvar: str) -> t.Optional[str]:
+        return os.environ.get(envvar)
+
+    @jmespath_func_signature({"types": ["string"]}, {"types": ["string"]})
+    def _func_setenv(
+        self,
+        envvar: str,
+        value: t.Optional[str],
+    ) -> t.Dict[str, str]:
+        if value is None:
+            del os.environ[envvar]
+        else:
+            os.environ[envvar] = value
+        return dict(os.environ)
+
     # Github functions
     @jmespath_func_signature(
         {"types": ["string"]},
