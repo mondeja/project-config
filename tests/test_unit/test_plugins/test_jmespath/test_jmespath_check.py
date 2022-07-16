@@ -478,7 +478,9 @@ from project_config.plugins.jmespath import JMESPathPlugin
             {"foo.json": "{}"},
             [
                 [
-                    "op(getenv('PWD'), '==', '" + os.environ.get("PWD") + "')",
+                    "op(type(getenv('PATH')), '==', type('"
+                    + os.environ.get("PATH")
+                    + "'))",
                     True,
                 ],
             ],
