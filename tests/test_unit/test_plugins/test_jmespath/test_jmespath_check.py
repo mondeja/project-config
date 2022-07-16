@@ -1,3 +1,4 @@
+import os
 import sys
 
 import pytest
@@ -472,6 +473,39 @@ from project_config.plugins.jmespath import JMESPathPlugin
             None,
             [],
             id="os()",
+        ),
+        pytest.param(
+            {"foo.json": "{}"},
+            [
+                [
+                    "op(type(getenv('PATH')), '==', type('"
+                    + os.environ.get("PATH")
+                    + "'))",
+                    True,
+                ],
+            ],
+            None,
+            [],
+            id="getenv()",
+        ),
+        pytest.param(
+            {"foo.json": "{}"},
+            [
+                [
+                    (
+                        "setenv('_PROJECT_CONFIG_TESTS_SETENV', 'true')"
+                        "._PROJECT_CONFIG_TESTS_SETENV"
+                    ),
+                    "true",
+                ],
+                [
+                    "getenv('_PROJECT_CONFIG_TESTS_SETENV')",
+                    "true",
+                ],
+            ],
+            None,
+            [],
+            id="setenv()",
         ),
     ),
 )

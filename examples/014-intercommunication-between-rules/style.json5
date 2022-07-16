@@ -1,0 +1,44 @@
+{
+  rules: [
+    {
+      // Setting environment variables
+      //
+      // If `cache` field is of type string, set an environment
+      // variable `PREVIOUS_PROJECT_CONFIG_CACHE` with the value
+      files: [".project-config.toml"],
+      JMESPathsMatch: [
+        [
+          "op(op(type(cache), '!=', 'string'), '|', op(type(setenv('PREVIOUS_PROJECT_CONFIG_CACHE', cache)), '==', 'object'))",
+          true,
+        ],
+      ],
+    },
+    {
+      // Getting environment variables
+      //
+      // If the previous environment variable is setted, change `cache`
+      // to `never`.
+      files: [".project-config.toml"],
+      ifJMESPathsMatch: {
+        ".project-config.toml": [
+          ["type(getenv('PREVIOUS_PROJECT_CONFIG_CACHE'))", "string"],
+        ],
+      },
+      JMESPathsMatch: [["cache", "never"]],
+    },
+    {
+      // Deleting environment variables
+      //
+      // If the previous environment variable is setted, delete it.
+      files: [".project-config.toml"],
+      ifJMESPathsMatch: {
+        ".project-config.toml": [
+          ["type(getenv('PREVIOUS_PROJECT_CONFIG_CACHE'))", "string"],
+        ],
+      },
+      JMESPathsMatch: [
+        ["type(setenv('PREVIOUS_PROJECT_CONFIG_CACHE', null))", "object"],
+      ],
+    },
+  ],
+}
