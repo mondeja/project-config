@@ -12,7 +12,7 @@
 The testing and reporter APIs may change without warning before the
 first stable release (v1), but configuration, CLI and plugins are
 guaranteed to be backwards compatible, so you can safely write
-styles now! :+1:
+styles now.
 
 ## [Documentation](https://mondeja.github.io/project-config/latest/)
 
