@@ -853,6 +853,8 @@ def smart_fixer_by_expected_value(
 
         _obj = {}
         for i, child in enumerate(reversed(ast["children"])):
+            if child["type"] == "index_expression":
+                return ""
             if i == 0:
                 _obj = {child["value"]: expected_value}
             else:
