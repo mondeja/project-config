@@ -1,8 +1,8 @@
 repos:
-  # - repo: https://github.com/mondeja/project-config
-  #   rev: v0.7.1
-  #   hooks:
-  #     - id: project-config
+  - repo: https://github.com/mondeja/project-config
+    rev: fix-subexpressions-index
+    hooks:
+      - id: project-config
   - repo: meta
     hooks:
       - id: check-hooks-apply
