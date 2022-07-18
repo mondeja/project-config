@@ -18,7 +18,11 @@ styles now! :+1:
 
 Lint the data files of your projects in a flexible way using JMESPaths.
 
+### `project-config check`
+
 ![project-config check](https://raw.githubusercontent.com/mondeja/project-config/fix-bugs-3/docs/_static/img/project-config-check.png)
+
+### `project-config fix`
 
 ![project-config fix](https://raw.githubusercontent.com/mondeja/project-config/fix-bugs-3/docs/_static/img/project-config-fix.png)
 
