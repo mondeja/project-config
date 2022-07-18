@@ -20,11 +20,11 @@ Lint the data files of your projects in a flexible way using JMESPaths.
 
 ### `project-config check`
 
-![project-config check](https://raw.githubusercontent.com/mondeja/project-config/fix-bugs-3/docs/_static/img/project-config-check.png)
+![project-config check](https://raw.githubusercontent.com/mondeja/project-config/master/docs/_static/img/project-config-check.png)
 
 ### `project-config fix`
 
-![project-config fix](https://raw.githubusercontent.com/mondeja/project-config/fix-bugs-3/docs/_static/img/project-config-fix.png)
+![project-config fix](https://raw.githubusercontent.com/mondeja/project-config/master/docs/_static/img/project-config-fix.png)
 
 [pypi-link]: https://pypi.org/project/project-config
 [pypi-version-badge-link]: https://img.shields.io/pypi/v/project-config?logo=pypi&logoColor=white
