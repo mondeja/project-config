@@ -12,9 +12,19 @@
 The testing and reporter APIs may change without warning before the
 first stable release (v1), but configuration, CLI and plugins are
 guaranteed to be backwards compatible, so you can safely write
-styles now! :+1:
+styles now.
 
 ## [Documentation](https://mondeja.github.io/project-config/latest/)
+
+Lint the data files of your projects in a flexible way using JMESPaths.
+
+### `project-config check`
+
+![project-config check](https://raw.githubusercontent.com/mondeja/project-config/fix-bugs-3/docs/_static/img/project-config-check.png)
+
+### `project-config fix`
+
+![project-config fix](https://raw.githubusercontent.com/mondeja/project-config/fix-bugs-3/docs/_static/img/project-config-fix.png)
 
 [pypi-link]: https://pypi.org/project/project-config
 [pypi-version-badge-link]: https://img.shields.io/pypi/v/project-config?logo=pypi&logoColor=white

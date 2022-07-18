@@ -849,17 +849,21 @@ def smart_fixer_by_expected_value(
         key = ast["value"]
         return f"set(@, '{key}' `{json.dumps(expected_value)}`)"
     elif ast["type"] == "subexpression":
-        temporal_object = {}
+        try:
+            temporal_object = {}
 
-        _obj = {}
-        for i, child in enumerate(reversed(ast["children"])):
-            if child["type"] == "index_expression":
-                return ""
-            if i == 0:
-                _obj = {child["value"]: expected_value}
-            else:
-                _obj = {child["value"]: _obj}
-        temporal_object = _obj
+            _obj = {}
+            for i, child in enumerate(reversed(ast["children"])):
+                if child["type"] == "index_expression":
+                    return ""
+                if i == 0:
+                    _obj = {child["value"]: expected_value}
+                else:
+                    _obj = {child["value"]: _obj}
+        except KeyError:
+            return ""
+        else:
+            temporal_object = _obj
     elif ast["type"] == "function_expression" and ast["value"] == "type":
         if expected_value not in REVERSE_JMESPATH_TYPE_PYOBJECT:
             return ""
