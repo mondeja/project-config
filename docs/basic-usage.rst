@@ -58,3 +58,19 @@ when the file `.gitignore` is even unexistent.
    .gitignore
      - (FIXED) Expected existing file does not exists rules[0].files[0]
      - (FIXED) Expected line '/dist/' not found rules[0].includeLines[0]
+
+.. seealso::
+
+   Output from real examples:
+
+   .. tabs::
+
+      .. tab:: project-config check
+
+         .. image:: _static/img/project-config-check.png
+            :target: _static/img/project-config-check.png
+
+      .. tab:: project-config fix
+
+         .. image:: _static/img/project-config-fix.png
+            :target: _static/img/project-config-fix.png
