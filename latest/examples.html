@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Examples &mdash; project-config 0.7.1 documentation</title>
+  <title>Examples &mdash; project-config 0.7.2 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -63,6 +63,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#replacing-code-blocks-languages-in-rst-documents">Replacing code blocks languages in RST documents</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#autofixing-editorconfig">Autofixing .editorconfig</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#setting-hooks-in-pre-commit-config-yaml">Setting hooks in .pre-commit-config.yaml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#intercommunication-between-rules">Intercommunication between rules</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials/index.html">Tutorials</a></li>
@@ -592,6 +593,62 @@ dist/
 <span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">editorconfig-checker</span><span class="w"></span>
 <span class="w">    </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/editorconfig-checker/editorconfig-checker.python</span><span class="w"></span>
 <span class="w">    </span><span class="nt">rev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2.4.0</span><span class="w"></span>
+</pre></div>
+</div>
+</div></div>
+</section>
+<section id="intercommunication-between-rules">
+<h2>Intercommunication between rules<a class="headerlink" href="#intercommunication-between-rules" title="Permalink to this headline"></a></h2>
+<p>Using <a class="reference internal" href="reference/plugins.html#getenv" title="getenv"><code class="xref py py-func docutils literal notranslate"><span class="pre">getenv()</span></code></a> and <a class="reference internal" href="reference/plugins.html#setenv" title="setenv"><code class="xref py py-func docutils literal notranslate"><span class="pre">setenv()</span></code></a> functions to pass arbitrary data between rules.</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-13-13-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-13-13-0" name="13-0" role="tab" tabindex="0">.project-config.toml</button><button aria-controls="panel-13-13-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-13-13-1" name="13-1" role="tab" tabindex="-1">style.json5</button></div><div aria-labelledby="tab-13-13-0" class="sphinx-tabs-panel" id="panel-13-13-0" name="13-0" role="tabpanel" tabindex="0"><div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="n">style</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;style.json5&quot;</span><span class="w"></span>
+<span class="n">cache</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;never&quot;</span><span class="w"></span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-13-13-1" class="sphinx-tabs-panel" hidden="true" id="panel-13-13-1" name="13-1" role="tabpanel" tabindex="0"><div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="c1">// Setting environment variables</span><span class="w"></span>
+<span class="w">      </span><span class="c1">//</span><span class="w"></span>
+<span class="w">      </span><span class="c1">// If `cache` field is of type string, set an environment</span><span class="w"></span>
+<span class="w">      </span><span class="c1">// variable `PREVIOUS_PROJECT_CONFIG_CACHE` with the value</span><span class="w"></span>
+<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.project-config.toml&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">      </span><span class="nx">JMESPathsMatch</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">        </span><span class="p">[</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;op(op(type(cache), &#39;!=&#39;, &#39;string&#39;), &#39;|&#39;, op(type(setenv(&#39;PREVIOUS_PROJECT_CONFIG_CACHE&#39;, cache)), &#39;==&#39;, &#39;object&#39;))&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="kc">true</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="p">],</span><span class="w"></span>
+<span class="w">      </span><span class="p">],</span><span class="w"></span>
+<span class="w">    </span><span class="p">},</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="c1">// Getting environment variables</span><span class="w"></span>
+<span class="w">      </span><span class="c1">//</span><span class="w"></span>
+<span class="w">      </span><span class="c1">// If the previous environment variable is setted, change `cache`</span><span class="w"></span>
+<span class="w">      </span><span class="c1">// to `never`.</span><span class="w"></span>
+<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.project-config.toml&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">      </span><span class="nx">ifJMESPathsMatch</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="s2">&quot;.project-config.toml&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">          </span><span class="p">[</span><span class="s2">&quot;type(getenv(&#39;PREVIOUS_PROJECT_CONFIG_CACHE&#39;))&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">        </span><span class="p">],</span><span class="w"></span>
+<span class="w">      </span><span class="p">},</span><span class="w"></span>
+<span class="w">      </span><span class="nx">JMESPathsMatch</span><span class="o">:</span><span class="w"> </span><span class="p">[[</span><span class="s2">&quot;cache&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;never&quot;</span><span class="p">]],</span><span class="w"></span>
+<span class="w">    </span><span class="p">},</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="c1">// Deleting environment variables</span><span class="w"></span>
+<span class="w">      </span><span class="c1">//</span><span class="w"></span>
+<span class="w">      </span><span class="c1">// If the previous environment variable is setted, delete it.</span><span class="w"></span>
+<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.project-config.toml&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">      </span><span class="nx">ifJMESPathsMatch</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="s2">&quot;.project-config.toml&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">          </span><span class="p">[</span><span class="s2">&quot;type(getenv(&#39;PREVIOUS_PROJECT_CONFIG_CACHE&#39;))&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">        </span><span class="p">],</span><span class="w"></span>
+<span class="w">      </span><span class="p">},</span><span class="w"></span>
+<span class="w">      </span><span class="nx">JMESPathsMatch</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">        </span><span class="p">[</span><span class="s2">&quot;type(setenv(&#39;PREVIOUS_PROJECT_CONFIG_CACHE&#39;, null))&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">      </span><span class="p">],</span><span class="w"></span>
+<span class="w">    </span><span class="p">},</span><span class="w"></span>
+<span class="w">  </span><span class="p">],</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
 </div></div>
