@@ -1,0 +1,18 @@
+project\_config.plugins package
+===============================
+
+.. automodule:: project_config.plugins
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   project_config.plugins.existence
+   project_config.plugins.inclusion
+   project_config.plugins.jmespath

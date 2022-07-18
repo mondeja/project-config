@@ -1,0 +1,24 @@
+project\_config.config package
+==============================
+
+.. automodule:: project_config.config
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   project_config.config.style
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   project_config.config.exceptions

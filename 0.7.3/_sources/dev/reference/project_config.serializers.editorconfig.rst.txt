@@ -1,0 +1,8 @@
+project\_config.serializers.editorconfig module
+===============================================
+
+.. automodule:: project_config.serializers.editorconfig
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
