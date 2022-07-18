@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>project_config.config.style &mdash; project-config 0.7.2 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/tabs.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/bolditalic.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/override-styles.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/tabs.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> project-config
+          </a>
+              <div class="version">
+                0.7
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Quickstart</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../basic-usage.html">Basic usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/index.html">Tutorials</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference/cli.html">project-config CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference/config.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference/styling.html">Styling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference/plugins.html">Plugins</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">In depth</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../in-depth/rationale.html">Rationale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../in-depth/serialization.html">Objects serialization</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For developers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/plugins.html">Writing third party plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/reporters.html">Writing third party reporters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/reference/modules.html">Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">project-config</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+          <li><a href="../config.html">project_config.config</a> &raquo;</li>
+      <li>project_config.config.style</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for project_config.config.style</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Style loader, blender and checker.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">typing</span> <span class="k">as</span> <span class="nn">t</span>
+
+<span class="kn">from</span> <span class="nn">project_config.cache</span> <span class="kn">import</span> <span class="n">Cache</span>
+<span class="kn">from</span> <span class="nn">project_config.config.exceptions</span> <span class="kn">import</span> <span class="n">ProjectConfigInvalidConfigSchema</span>
+<span class="kn">from</span> <span class="nn">project_config.fetchers</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">FetchError</span><span class="p">,</span>
+    <span class="n">fetch</span><span class="p">,</span>
+    <span class="n">resolve_maybe_relative_url</span><span class="p">,</span>
+    <span class="n">resolve_url</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">project_config.plugins</span> <span class="kn">import</span> <span class="n">Plugins</span>
+<span class="kn">from</span> <span class="nn">project_config.serializers</span> <span class="kn">import</span> <span class="n">serialize_for_url</span>
+<span class="kn">from</span> <span class="nn">project_config.types</span> <span class="kn">import</span> <span class="n">Rule</span>
+
+
+<div class="viewcode-block" id="ProjectConfigInvalidStyle"><a class="viewcode-back" href="../../../dev/reference/project_config.config.style.html#project_config.config.style.ProjectConfigInvalidStyle">[docs]</a><span class="k">class</span> <span class="nc">ProjectConfigInvalidStyle</span><span class="p">(</span><span class="n">ProjectConfigInvalidConfigSchema</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Invalid style error.&quot;&quot;&quot;</span></div>
+
+
+<span class="n">PluginType</span> <span class="o">=</span> <span class="nb">type</span>
+<span class="c1"># TODO: improve style type with TypedDict?</span>
+<span class="c1"># https://docs.python.org/3/library/typing.html#typing.TypedDict</span>
+<span class="n">StyleType</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">]]</span>
+<span class="n">StyleLoaderIterator</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">Iterator</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">StyleType</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span>
+
+
+<div class="viewcode-block" id="Style"><a class="viewcode-back" href="../../../dev/reference/project_config.config.style.html#project_config.config.style.Style">[docs]</a><span class="k">class</span> <span class="nc">Style</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Wrapper for style loader, blender and checker.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        config (dict): Configuration for the project.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plugins</span> <span class="o">=</span> <span class="n">Plugins</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
+
+<div class="viewcode-block" id="Style.from_config"><a class="viewcode-back" href="../../../dev/reference/project_config.config.style.html#project_config.config.style.Style.from_config">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Style</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Loads styles to the configuration passed as argument.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;PROJECT_CONFIG_USE_CACHE&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">&quot;false&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span>  <span class="c1"># pragma: no cover</span>
+                <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;style&quot;</span><span class="p">],</span> <span class="nb">str</span><span class="p">)</span>
+                <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;style&quot;</span><span class="p">])</span>
+            <span class="p">)</span> <span class="ow">or</span> <span class="p">(</span>
+                <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;style&quot;</span><span class="p">],</span> <span class="nb">list</span><span class="p">)</span>
+                <span class="ow">and</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">([</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">url</span><span class="p">)</span> <span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;style&quot;</span><span class="p">]])</span>
+            <span class="p">):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">_prefetch_urls</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                    <span class="c1"># if a exception is raised, will be raised again</span>
+                    <span class="c1"># in the synchronous style loader</span>
+                    <span class="k">pass</span>
+
+        <span class="n">style</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+
+        <span class="n">style_gen</span> <span class="o">=</span> <span class="n">style</span><span class="o">.</span><span class="n">_load_styles_from_config</span><span class="p">()</span>
+        <span class="n">error_messages</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">style_or_error</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">style_gen</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
+                <span class="k">break</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">style_or_error</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                    <span class="c1"># final style collected</span>
+                    <span class="n">style</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;style&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">style_or_error</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">error_messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">style_or_error</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">error_messages</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ProjectConfigInvalidStyle</span><span class="p">(</span><span class="n">style</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">error_messages</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">style</span></div>
+
+<div class="viewcode-block" id="Style._load_styles_from_config"><a class="viewcode-back" href="../../../dev/reference/project_config.config.style.html#project_config.config.style.Style._load_styles_from_config">[docs]</a>    <span class="k">def</span> <span class="nf">_load_styles_from_config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">StyleLoaderIterator</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Load styles yielding error messages if found.</span>
+
+<span class="sd">        Error messages are of type string and style is of type dict.</span>
+<span class="sd">        If the first yielded value is a dict, we have a style without errors.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;_style&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;style&quot;</span><span class="p">]</span>
+        <span class="n">style_urls</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;style&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">style_urls</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">style</span> <span class="o">=</span> <span class="n">fetch</span><span class="p">(</span><span class="n">style_urls</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">FetchError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="sa">f</span><span class="s2">&quot;style -&gt; </span><span class="si">{</span><span class="n">exc</span><span class="o">.</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">_partial_style_is_valid</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">validator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validate_style_preparing_new_plugins</span><span class="p">(</span>
+                    <span class="n">style_urls</span><span class="p">,</span>
+                    <span class="n">style</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="k">yield</span> <span class="nb">next</span><span class="p">(</span><span class="n">validator</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
+                        <span class="k">break</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">_partial_style_is_valid</span> <span class="o">=</span> <span class="kc">False</span>
+
+                <span class="k">if</span> <span class="n">_partial_style_is_valid</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="s2">&quot;extends&quot;</span> <span class="ow">in</span> <span class="n">style</span><span class="p">:</span>
+                        <span class="c1"># extend the style</span>
+                        <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extend_partial_style</span><span class="p">(</span><span class="n">style_urls</span><span class="p">,</span> <span class="n">style</span><span class="p">)</span>
+                    <span class="k">yield</span> <span class="n">style</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">style_urls</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">style</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;rules&quot;</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">&quot;plugins&quot;</span><span class="p">:</span> <span class="p">[]}</span>
+            <span class="k">for</span> <span class="n">s</span><span class="p">,</span> <span class="n">partial_style_url</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">style_urls</span><span class="p">):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">partial_style</span> <span class="o">=</span> <span class="n">fetch</span><span class="p">(</span><span class="n">partial_style_url</span><span class="p">)</span>
+                <span class="k">except</span> <span class="n">FetchError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                    <span class="k">yield</span> <span class="sa">f</span><span class="s2">&quot;style[</span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">] -&gt; </span><span class="si">{</span><span class="n">exc</span><span class="o">.</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="k">continue</span>
+
+                <span class="c1"># extend style only if it is valid</span>
+                <span class="n">_partial_style_is_valid</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">validator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validate_style_preparing_new_plugins</span><span class="p">(</span>
+                    <span class="n">partial_style_url</span><span class="p">,</span>
+                    <span class="n">partial_style</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="k">yield</span> <span class="nb">next</span><span class="p">(</span><span class="n">validator</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
+                        <span class="k">break</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">_partial_style_is_valid</span> <span class="o">=</span> <span class="kc">False</span>
+
+                <span class="k">if</span> <span class="n">_partial_style_is_valid</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="s2">&quot;extends&quot;</span> <span class="ow">in</span> <span class="n">partial_style</span><span class="p">:</span>
+                        <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extend_partial_style</span><span class="p">(</span>
+                            <span class="n">partial_style_url</span><span class="p">,</span>
+                            <span class="n">partial_style</span><span class="p">,</span>
+                        <span class="p">)</span>
+
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_add_new_rules_plugins_to_style</span><span class="p">(</span>
+                        <span class="n">style</span><span class="p">,</span>
+                        <span class="n">partial_style</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;rules&quot;</span><span class="p">,</span> <span class="p">[]),</span>
+                        <span class="n">partial_style</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;plugins&quot;</span><span class="p">,</span> <span class="p">[]),</span>
+                    <span class="p">)</span>
+            <span class="k">yield</span> <span class="n">style</span></div>
+
+<div class="viewcode-block" id="Style._extend_partial_style"><a class="viewcode-back" href="../../../dev/reference/project_config.config.style.html#project_config.config.style.Style._extend_partial_style">[docs]</a>    <span class="k">def</span> <span class="nf">_extend_partial_style</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">parent_style_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">style</span><span class="p">:</span> <span class="n">StyleType</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">StyleLoaderIterator</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">s</span><span class="p">,</span> <span class="n">extend_url</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">style</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;extends&quot;</span><span class="p">)):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">partial_style</span> <span class="o">=</span> <span class="n">fetch</span><span class="p">(</span><span class="n">extend_url</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">FetchError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">parent_style_url</span><span class="si">}</span><span class="s2">: .extends[</span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">] -&gt; </span><span class="si">{</span><span class="n">exc</span><span class="o">.</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="k">continue</span>
+
+            <span class="n">_partial_style_is_valid</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">validator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validate_style_preparing_new_plugins</span><span class="p">(</span>
+                <span class="n">extend_url</span><span class="p">,</span>
+                <span class="n">partial_style</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="k">yield</span> <span class="nb">next</span><span class="p">(</span><span class="n">validator</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
+                    <span class="k">break</span>
+                <span class="k">else</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+                    <span class="c1"># NOTE: this is marked as not covered, but putting a</span>
+                    <span class="c1"># `print` statement here it can be seen that the</span>
+                    <span class="c1"># `else` branch is reached, so probably it is a bug</span>
+                    <span class="c1"># in coverage.py</span>
+                    <span class="n">_partial_style_is_valid</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="n">_partial_style_is_valid</span><span class="p">:</span>
+                <span class="k">if</span> <span class="s2">&quot;extends&quot;</span> <span class="ow">in</span> <span class="n">partial_style</span><span class="p">:</span>
+                    <span class="c1"># extend the style recursively</span>
+                    <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extend_partial_style</span><span class="p">(</span>
+                        <span class="n">extend_url</span><span class="p">,</span>
+                        <span class="n">partial_style</span><span class="p">,</span>
+                    <span class="p">)</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">_add_new_rules_plugins_to_style</span><span class="p">(</span>
+                    <span class="n">style</span><span class="p">,</span>
+                    <span class="n">partial_style</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;rules&quot;</span><span class="p">,</span> <span class="p">[]),</span>
+                    <span class="n">partial_style</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;plugins&quot;</span><span class="p">,</span> <span class="p">[]),</span>
+                    <span class="n">prepend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="p">)</span>
+
+        <span class="k">yield</span> <span class="n">style</span></div>
+
+<div class="viewcode-block" id="Style._add_new_rules_plugins_to_style"><a class="viewcode-back" href="../../../dev/reference/project_config.config.style.html#project_config.config.style.Style._add_new_rules_plugins_to_style">[docs]</a>    <span class="k">def</span> <span class="nf">_add_new_rules_plugins_to_style</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">style</span><span class="p">:</span> <span class="n">StyleType</span><span class="p">,</span>
+        <span class="n">new_rules</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Rule</span><span class="p">],</span>
+        <span class="n">new_plugins</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">PluginType</span><span class="p">],</span>
+        <span class="n">prepend</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">style</span><span class="p">[</span><span class="s2">&quot;plugins&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">style</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;plugins&quot;</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="n">style</span><span class="p">[</span><span class="s2">&quot;rules&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">style</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;rules&quot;</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="k">if</span> <span class="n">prepend</span><span class="p">:</span>
+            <span class="n">style</span><span class="p">[</span><span class="s2">&quot;rules&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_rules</span> <span class="o">+</span> <span class="n">style</span><span class="p">[</span><span class="s2">&quot;rules&quot;</span><span class="p">]</span>
+            <span class="n">style</span><span class="p">[</span><span class="s2">&quot;plugins&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">new_plugins</span> <span class="o">+</span> <span class="n">style</span><span class="p">[</span><span class="s2">&quot;plugins&quot;</span><span class="p">]))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">style</span><span class="p">[</span><span class="s2">&quot;rules&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">new_rules</span><span class="p">)</span>
+            <span class="n">style</span><span class="p">[</span><span class="s2">&quot;plugins&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">style</span><span class="p">[</span><span class="s2">&quot;plugins&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">new_plugins</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="Style._validate_style_preparing_new_plugins"><a class="viewcode-back" href="../../../dev/reference/project_config.config.style.html#project_config.config.style.Style._validate_style_preparing_new_plugins">[docs]</a>    <span class="k">def</span> <span class="nf">_validate_style_preparing_new_plugins</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">style_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">style</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Iterator</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+
+        <span class="c1"># validate extends urls</span>
+        <span class="k">if</span> <span class="s2">&quot;extends&quot;</span> <span class="ow">in</span> <span class="n">style</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">style</span><span class="p">[</span><span class="s2">&quot;extends&quot;</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">style_url</span><span class="si">}</span><span class="s2">: .extends -&gt; must be of type array&quot;</span>
+            <span class="k">elif</span> <span class="ow">not</span> <span class="n">style</span><span class="p">[</span><span class="s2">&quot;extends&quot;</span><span class="p">]:</span>
+                <span class="k">yield</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">style_url</span><span class="si">}</span><span class="s2">: .extends -&gt; must not be empty&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">url</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">style</span><span class="p">[</span><span class="s2">&quot;extends&quot;</span><span class="p">]):</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                        <span class="k">yield</span> <span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">style_url</span><span class="si">}</span><span class="s2">: .extends[</span><span class="si">{</span><span class="n">u</span><span class="si">}</span><span class="s2">] -&gt; must be of&quot;</span>
+                            <span class="s2">&quot; type string&quot;</span>
+                        <span class="p">)</span>
+                    <span class="k">elif</span> <span class="ow">not</span> <span class="n">url</span><span class="p">:</span>
+                        <span class="k">yield</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">style_url</span><span class="si">}</span><span class="s2">: .extends[</span><span class="si">{</span><span class="n">u</span><span class="si">}</span><span class="s2">] -&gt; must not be empty&quot;</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="c1"># resolve &quot;extends&quot; url given the style url</span>
+                        <span class="n">style</span><span class="p">[</span><span class="s2">&quot;extends&quot;</span><span class="p">][</span><span class="n">u</span><span class="p">]</span> <span class="o">=</span> <span class="n">resolve_maybe_relative_url</span><span class="p">(</span>
+                            <span class="n">url</span><span class="p">,</span>
+                            <span class="n">style_url</span><span class="p">,</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">rootdir</span><span class="p">,</span>
+                        <span class="p">)</span>
+
+        <span class="c1"># validate plugins data consistency</span>
+        <span class="k">if</span> <span class="s2">&quot;plugins&quot;</span> <span class="ow">in</span> <span class="n">style</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">style</span><span class="p">[</span><span class="s2">&quot;plugins&quot;</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">style_url</span><span class="si">}</span><span class="s2">: .plugins -&gt; must be of type array&quot;</span>
+            <span class="k">elif</span> <span class="ow">not</span> <span class="n">style</span><span class="p">[</span><span class="s2">&quot;plugins&quot;</span><span class="p">]:</span>
+                <span class="k">yield</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">style_url</span><span class="si">}</span><span class="s2">: .plugins -&gt; must not be empty&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">plugin_name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">style</span><span class="p">[</span><span class="s2">&quot;plugins&quot;</span><span class="p">]):</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">plugin_name</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                        <span class="k">yield</span> <span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">style_url</span><span class="si">}</span><span class="s2">: .plugins[</span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s2">]&quot;</span>
+                            <span class="s2">&quot; -&gt; must be of type string&quot;</span>
+                        <span class="p">)</span>
+                    <span class="k">elif</span> <span class="ow">not</span> <span class="n">plugin_name</span><span class="p">:</span>
+                        <span class="k">yield</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">style_url</span><span class="si">}</span><span class="s2">: .plugins[</span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s2">] -&gt; must not be empty&quot;</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="c1"># cache plugins on demand</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">plugins</span><span class="o">.</span><span class="n">prepare_3rd_party_plugin</span><span class="p">(</span><span class="n">plugin_name</span><span class="p">)</span>
+
+        <span class="c1"># validate rules</span>
+        <span class="k">if</span> <span class="s2">&quot;rules&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">style</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;extends&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">style</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">style_url</span><span class="si">}</span><span class="s2">: .rules or .extends&quot;</span>
+                    <span class="s2">&quot; -&gt; one of both is required&quot;</span>
+                <span class="p">)</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">style</span><span class="p">[</span><span class="s2">&quot;rules&quot;</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">style_url</span><span class="si">}</span><span class="s2">: .rules -&gt; must be of type array&quot;</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="n">style</span><span class="p">[</span><span class="s2">&quot;rules&quot;</span><span class="p">]:</span>
+            <span class="k">yield</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">style_url</span><span class="si">}</span><span class="s2">: .rules -&gt; at least one rule is required&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">r</span><span class="p">,</span> <span class="n">rule</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">style</span><span class="p">[</span><span class="s2">&quot;rules&quot;</span><span class="p">]):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                    <span class="k">yield</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">style_url</span><span class="si">}</span><span class="s2">: .rules[</span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s2">] -&gt; must be of type object&quot;</span>
+                    <span class="k">continue</span>
+                <span class="k">elif</span> <span class="s2">&quot;files&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">rule</span><span class="p">:</span>
+                    <span class="k">yield</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">style_url</span><span class="si">}</span><span class="s2">: .rules[</span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s2">].files -&gt; is required&quot;</span>
+                <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rule</span><span class="p">[</span><span class="s2">&quot;files&quot;</span><span class="p">],</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)):</span>
+                    <span class="k">yield</span> <span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">style_url</span><span class="si">}</span><span class="s2">: .rules[</span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s2">].files -&gt; must be&quot;</span>
+                        <span class="s2">&quot; of type array or object&quot;</span>
+                    <span class="p">)</span>
+                <span class="k">elif</span> <span class="ow">not</span> <span class="n">rule</span><span class="p">[</span><span class="s2">&quot;files&quot;</span><span class="p">]:</span>
+                    <span class="k">yield</span> <span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">style_url</span><span class="si">}</span><span class="s2">: .rules[</span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s2">].files -&gt; at least&quot;</span>
+                        <span class="s2">&quot; one file is required&quot;</span>
+                    <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rule</span><span class="p">[</span><span class="s2">&quot;files&quot;</span><span class="p">],</span> <span class="nb">dict</span><span class="p">):</span>
+                        <span class="c1"># requiring absence of files with</span>
+                        <span class="c1"># `files: {not: {&lt;file&gt;: reason}}`</span>
+                        <span class="k">if</span> <span class="p">(</span>
+                            <span class="nb">len</span><span class="p">(</span><span class="n">rule</span><span class="p">[</span><span class="s2">&quot;files&quot;</span><span class="p">])</span> <span class="o">!=</span> <span class="mi">1</span>
+                            <span class="ow">or</span> <span class="s2">&quot;not&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">rule</span><span class="p">[</span><span class="s2">&quot;files&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+                        <span class="p">):</span>
+                            <span class="k">yield</span> <span class="p">(</span>
+                                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">style_url</span><span class="si">}</span><span class="s2">: .rules[</span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s2">].files&quot;</span>
+                                <span class="s2">&quot; -&gt; when files is an object, must&quot;</span>
+                                <span class="s2">&quot; have one &#39;not&#39; key&quot;</span>
+                            <span class="p">)</span>
+                        <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rule</span><span class="p">[</span><span class="s2">&quot;files&quot;</span><span class="p">][</span><span class="s2">&quot;not&quot;</span><span class="p">],</span> <span class="p">(</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
+                            <span class="k">yield</span> <span class="p">(</span>
+                                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">style_url</span><span class="si">}</span><span class="s2">: .rules[</span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s2">].files.not&quot;</span>
+                                <span class="s2">&quot; -&gt; must be of type array or object&quot;</span>
+                            <span class="p">)</span>
+                        <span class="k">elif</span> <span class="ow">not</span> <span class="n">rule</span><span class="p">[</span><span class="s2">&quot;files&quot;</span><span class="p">][</span><span class="s2">&quot;not&quot;</span><span class="p">]:</span>
+                            <span class="k">yield</span> <span class="p">(</span>
+                                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">style_url</span><span class="si">}</span><span class="s2">: .rules[</span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s2">].files.not&quot;</span>
+                                <span class="s2">&quot; -&gt; must not be empty&quot;</span>
+                            <span class="p">)</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rule</span><span class="p">[</span><span class="s2">&quot;files&quot;</span><span class="p">][</span><span class="s2">&quot;not&quot;</span><span class="p">],</span> <span class="nb">dict</span><span class="p">):</span>
+                                <span class="c1"># when &#39;not&#39; is an object, is a mapping</span>
+                                <span class="c1"># from files to absence reasons</span>
+                                <span class="k">for</span> <span class="n">fpath</span><span class="p">,</span> <span class="n">reason</span> <span class="ow">in</span> <span class="n">rule</span><span class="p">[</span><span class="s2">&quot;files&quot;</span><span class="p">][</span>
+                                    <span class="s2">&quot;not&quot;</span>
+                                <span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                                    <span class="k">if</span> <span class="n">reason</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">reason</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                                        <span class="k">yield</span> <span class="p">(</span>
+                                            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">style_url</span><span class="si">}</span><span class="s2">: .rules[</span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s2">].files&quot;</span>
+                                            <span class="sa">f</span><span class="s2">&quot;.not.</span><span class="si">{</span><span class="n">fpath</span><span class="si">}</span><span class="s2"> -&gt; must be of type&quot;</span>
+                                            <span class="s2">&quot; string&quot;</span>
+                                        <span class="p">)</span>
+                                    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fpath</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                                        <span class="k">yield</span> <span class="p">(</span>
+                                            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">style_url</span><span class="si">}</span><span class="s2">: .rules[</span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s2">].files&quot;</span>
+                                            <span class="sa">f</span><span class="s2">&quot;.not[</span><span class="si">{</span><span class="n">fpath</span><span class="si">}</span><span class="s2">] -&gt; file path must&quot;</span>
+                                            <span class="s2">&quot; be of type string&quot;</span>
+                                        <span class="p">)</span>
+                                    <span class="k">elif</span> <span class="ow">not</span> <span class="n">fpath</span><span class="p">:</span>
+                                        <span class="k">yield</span> <span class="p">(</span>
+                                            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">style_url</span><span class="si">}</span><span class="s2">: .rules[</span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s2">].files&quot;</span>
+                                            <span class="sa">f</span><span class="s2">&quot;.not[&#39;&#39;] -&gt; file path must&quot;</span>
+                                            <span class="s2">&quot; not be empty&quot;</span>
+                                        <span class="p">)</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="k">for</span> <span class="n">f</span><span class="p">,</span> <span class="n">fpath</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">rule</span><span class="p">[</span><span class="s2">&quot;files&quot;</span><span class="p">][</span><span class="s2">&quot;not&quot;</span><span class="p">]):</span>
+                                    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fpath</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                                        <span class="k">yield</span> <span class="p">(</span>
+                                            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">style_url</span><span class="si">}</span><span class="s2">: .rules[</span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s2">].files&quot;</span>
+                                            <span class="sa">f</span><span class="s2">&quot;.not[</span><span class="si">{</span><span class="n">f</span><span class="si">}</span><span class="s2">] -&gt; must be of type&quot;</span>
+                                            <span class="s2">&quot; string&quot;</span>
+                                        <span class="p">)</span>
+                                    <span class="k">elif</span> <span class="ow">not</span> <span class="n">fpath</span><span class="p">:</span>
+                                        <span class="k">yield</span> <span class="p">(</span>
+                                            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">style_url</span><span class="si">}</span><span class="s2">: .rules[</span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s2">].files&quot;</span>
+                                            <span class="sa">f</span><span class="s2">&quot;.not[</span><span class="si">{</span><span class="n">f</span><span class="si">}</span><span class="s2">] -&gt; must not be empty&quot;</span>
+                                        <span class="p">)</span>
+
+                        <span class="c1"># when requiring absence of files,</span>
+                        <span class="c1"># no other action can be used</span>
+                        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span> <span class="ow">and</span> <span class="ow">not</span> <span class="p">(</span>
+                            <span class="nb">len</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="s2">&quot;hint&quot;</span> <span class="ow">in</span> <span class="n">rule</span>
+                        <span class="p">):</span>
+                            <span class="k">yield</span> <span class="p">(</span>
+                                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">style_url</span><span class="si">}</span><span class="s2">: .rules[</span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s2">] -&gt; when&quot;</span>
+                                <span class="s2">&quot; requiring absence of files with&quot;</span>
+                                <span class="s2">&quot; &#39;.files.not&#39;, no other actions can&quot;</span>
+                                <span class="s2">&quot; be used in the same rule&quot;</span>
+                            <span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">for</span> <span class="n">f</span><span class="p">,</span> <span class="n">file</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">rule</span><span class="p">[</span><span class="s2">&quot;files&quot;</span><span class="p">]):</span>
+                            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                                <span class="k">yield</span> <span class="p">(</span>
+                                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">style_url</span><span class="si">}</span><span class="s2">: .rules[</span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s2">].files[</span><span class="si">{</span><span class="n">f</span><span class="si">}</span><span class="s2">]&quot;</span>
+                                    <span class="s2">&quot; -&gt; must be of type string&quot;</span>
+                                <span class="p">)</span>
+                            <span class="k">elif</span> <span class="ow">not</span> <span class="n">file</span><span class="p">:</span>
+                                <span class="k">yield</span> <span class="p">(</span>
+                                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">style_url</span><span class="si">}</span><span class="s2">: .rules[</span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s2">].files[</span><span class="si">{</span><span class="n">f</span><span class="si">}</span><span class="s2">]&quot;</span>
+                                    <span class="s2">&quot; -&gt; must not be empty&quot;</span>
+                                <span class="p">)</span>
+
+                <span class="c1"># Validate rules properties consistency against plugins</span>
+                <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="n">rule</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">action</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;files&quot;</span><span class="p">,</span> <span class="s2">&quot;hint&quot;</span><span class="p">]:</span>
+                        <span class="k">continue</span>
+
+                    <span class="c1"># the action must be prepared</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">action</span><span class="p">:</span>
+                        <span class="k">yield</span> <span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">style_url</span><span class="si">}</span><span class="s2">: .rules[</span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s2">].&#39;&#39;&quot;</span>
+                            <span class="s2">&quot; -&gt; action must not be empty&quot;</span>
+                        <span class="p">)</span>
+                    <span class="k">elif</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">plugins</span><span class="o">.</span><span class="n">is_valid_action</span><span class="p">(</span><span class="n">action</span><span class="p">):</span>
+                        <span class="k">yield</span> <span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">style_url</span><span class="si">}</span><span class="s2">: .rules[</span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s2">].</span><span class="si">{</span><span class="n">action</span><span class="si">}</span><span class="s2">&quot;</span>
+                            <span class="s2">&quot; -&gt; invalid action, not found in&quot;</span>
+                            <span class="s2">&quot; defined plugins:&quot;</span>
+                            <span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plugins</span><span class="o">.</span><span class="n">plugin_names</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+                        <span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="_prefetch_urls"><a class="viewcode-back" href="../../../dev/reference/project_config.config.style.html#project_config.config.style._prefetch_urls">[docs]</a><span class="k">def</span> <span class="nf">_prefetch_urls</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Prefetch urls concurrently and store them in cache.</span>
+
+<span class="sd">    This function is used to store urls in cache before they are used,</span>
+<span class="sd">    so the network calls are speedup a lot.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        config: The config object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="kn">import</span> <span class="n">as_completed</span>
+
+    <span class="kn">from</span> <span class="nn">requests_futures.sessions</span> <span class="kn">import</span> <span class="n">FuturesSession</span>
+
+    <span class="n">session</span> <span class="o">=</span> <span class="n">FuturesSession</span><span class="p">()</span>
+
+    <span class="n">style_urls_</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;style&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">style_urls_</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">style_urls_</span> <span class="o">=</span> <span class="p">[</span><span class="n">style_urls_</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">prefetch_partial_style</span><span class="p">(</span>
+        <span class="n">parent_style_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">extend_urls</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">urls</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">extend_url</span> <span class="ow">in</span> <span class="n">extend_urls</span><span class="p">:</span>
+            <span class="n">resolved_extend_url</span> <span class="o">=</span> <span class="n">resolve_maybe_relative_url</span><span class="p">(</span>
+                <span class="n">extend_url</span><span class="p">,</span>
+                <span class="n">parent_style_url</span><span class="p">,</span>
+                <span class="n">config</span><span class="o">.</span><span class="n">rootdir</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">url</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">resolve_url</span><span class="p">(</span><span class="n">resolved_extend_url</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">Cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">urls</span><span class="p">[</span><span class="n">url</span><span class="p">]</span> <span class="o">=</span> <span class="n">resolved_extend_url</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">urls</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="n">futures</span> <span class="o">=</span> <span class="p">[</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span> <span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">urls</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">future</span> <span class="ow">in</span> <span class="n">as_completed</span><span class="p">(</span><span class="n">futures</span><span class="p">):</span>
+            <span class="n">resp</span> <span class="o">=</span> <span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+            <span class="n">Cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">url</span><span class="p">,</span> <span class="n">resp</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+            <span class="n">style_obj</span> <span class="o">=</span> <span class="n">serialize_for_url</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">url</span><span class="p">,</span> <span class="n">resp</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">style_obj</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;extends&quot;</span><span class="p">),</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="n">prefetch_partial_style</span><span class="p">(</span><span class="n">urls</span><span class="p">[</span><span class="n">resp</span><span class="o">.</span><span class="n">url</span><span class="p">],</span> <span class="n">style_obj</span><span class="p">[</span><span class="s2">&quot;extends&quot;</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">prefetch_style</span><span class="p">(</span><span class="n">style_urls</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">urls</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">style_url</span> <span class="ow">in</span> <span class="n">style_urls</span><span class="p">:</span>
+            <span class="n">url</span><span class="p">,</span> <span class="n">scheme</span> <span class="o">=</span> <span class="n">resolve_url</span><span class="p">(</span><span class="n">style_url</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">scheme</span> <span class="o">==</span> <span class="s2">&quot;file&quot;</span> <span class="ow">or</span> <span class="n">Cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">urls</span><span class="p">[</span><span class="n">url</span><span class="p">]</span> <span class="o">=</span> <span class="n">style_url</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">urls</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="n">futures</span> <span class="o">=</span> <span class="p">[</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span> <span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">urls</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">future</span> <span class="ow">in</span> <span class="n">as_completed</span><span class="p">(</span><span class="n">futures</span><span class="p">):</span>
+            <span class="n">resp</span> <span class="o">=</span> <span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+            <span class="n">Cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">url</span><span class="p">,</span> <span class="n">resp</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+            <span class="n">style_obj</span> <span class="o">=</span> <span class="n">serialize_for_url</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">url</span><span class="p">,</span> <span class="n">resp</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">style_obj</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;extends&quot;</span><span class="p">),</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="n">prefetch_partial_style</span><span class="p">(</span><span class="n">urls</span><span class="p">[</span><span class="n">resp</span><span class="o">.</span><span class="n">url</span><span class="p">],</span> <span class="n">style_obj</span><span class="p">[</span><span class="s2">&quot;extends&quot;</span><span class="p">])</span>
+
+    <span class="n">prefetch_style</span><span class="p">(</span><span class="n">style_urls_</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Álvaro Mondéjar Rubio.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

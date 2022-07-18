@@ -1,0 +1,8 @@
+project\_config.compat module
+=============================
+
+.. automodule:: project_config.compat
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:

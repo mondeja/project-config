@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Styling &mdash; project-config 0.7.2 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/tabs.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/bolditalic.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/override-styles.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/tabs.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Plugins" href="plugins.html" />
+    <link rel="prev" title="Configuration" href="config.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> project-config
+          </a>
+              <div class="version">
+                0.7
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Quickstart</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basic-usage.html">Basic usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="cli.html">project-config CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config.html">Configuration</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Styling</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#rules-object"><code class="docutils literal notranslate"><span class="pre">rules</span></code> (<cite>object[]</cite>)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#files-string-or-object-not-not"><code class="docutils literal notranslate"><span class="pre">files</span></code> (<cite>string[]</cite> or <cite>object{not{} | not[]}</cite>)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#enforce-files-absence">Enforce files absence</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#file-syntax-convention">File syntax convention</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#hint-string"><code class="docutils literal notranslate"><span class="pre">hint</span></code> (<cite>string</cite>)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#extends-string"><code class="docutils literal notranslate"><span class="pre">extends</span></code> (<cite>string[]</cite>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#plugins-string"><code class="docutils literal notranslate"><span class="pre">plugins</span></code> (<cite>string[]</cite>)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="plugins.html">Plugins</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">In depth</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../in-depth/rationale.html">Rationale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../in-depth/serialization.html">Objects serialization</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For developers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../dev/plugins.html">Writing third party plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev/reporters.html">Writing third party reporters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev/changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev/contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev/reference/modules.html">Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">project-config</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Styling</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/reference/styling.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="styling">
+<h1>Styling<a class="headerlink" href="#styling" title="Permalink to this headline"></a></h1>
+<p>Styles can be defined in any object-serializable file format (see
+<a class="reference internal" href="../in-depth/serialization.html#objects-serialization"><span class="std std-ref">Objects serialization</span></a>).</p>
+<p>We recommend to use YAML or JSON5 because are the most readable, flexible
+and allows comments, which are really useful writing styles.</p>
+<p>Each style must be an object with the following keys:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">rules</span></code> (optional if <code class="docutils literal notranslate"><span class="pre">extends</span></code> is specified)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">extends</span></code> (optional if <code class="docutils literal notranslate"><span class="pre">rules</span></code> is specified)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">plugins</span></code> (optional)</p></li>
+</ul>
+<p>At least one rule or extension is required to be a valid style. At least one
+rule must be collected after styles extensions to be a valid merged style.</p>
+<section id="rules-object">
+<h2><code class="docutils literal notranslate"><span class="pre">rules</span></code> (<cite>object[]</cite>)<a class="headerlink" href="#rules-object" title="Permalink to this headline"></a></h2>
+<p>Define the actions to execute against files. It must be an array of objects
+with at least one object.</p>
+<section id="files-string-or-object-not-not">
+<h3><code class="docutils literal notranslate"><span class="pre">files</span></code> (<cite>string[]</cite> or <cite>object{not{} | not[]}</cite>)<a class="headerlink" href="#files-string-or-object-not-not" title="Permalink to this headline"></a></h3>
+<p>Unique mandatory field for all rules. It specifies the subject of the rule,
+that is, the files for which the verbs will be applied.</p>
+<p>It must be either an array of strings or an object with an unique key <code class="docutils literal notranslate"><span class="pre">not</span></code>.</p>
+<p>Defining <code class="docutils literal notranslate"><span class="pre">files</span></code> as an array of strings enforce the existence of these files.
+If they don’t exist will raise errors, and additionally created in <code class="docutils literal notranslate"><span class="pre">fix</span></code> mode.
+The existence of these files and directories is mandatory for execute the rest
+of actions of the rule.</p>
+<p>The items of <code class="docutils literal notranslate"><span class="pre">files</span></code> can also be globs to match a set of existent files.
+Keep in mind that if the files do not exist when the rule is executed, the
+glob itself will be treated as a file name and will be checked for existence.</p>
+<p class="rubric">Examples</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">Existence of files</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">Absence of files</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w">    </span><span class="c1">// Files and directories are created in `fix` mode</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">        </span><span class="s2">&quot;src/&quot;</span><span class="p">,</span><span class="w">             </span><span class="c1">// Enforce existence of directory</span><span class="w"></span>
+<span class="w">        </span><span class="s2">&quot;pyproject.toml&quot;</span><span class="p">,</span><span class="w">   </span><span class="c1">// Enforce existence of file</span><span class="w"></span>
+<span class="w">      </span><span class="p">]</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="p">]</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">    </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="nx">not</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="s2">&quot;setup.cfg&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Migrate the configuration to pyproject.toml&quot;</span><span class="w"></span>
+<span class="w">      </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="p">],</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+</div></div>
+<section id="enforce-files-absence">
+<h4>Enforce files absence<a class="headerlink" href="#enforce-files-absence" title="Permalink to this headline"></a></h4>
+<p>Defining <code class="docutils literal notranslate"><span class="pre">files</span></code> as an object, it must be an unique key <code class="docutils literal notranslate"><span class="pre">not</span></code>. The value
+of <code class="docutils literal notranslate"><span class="pre">not</span></code> must be either:</p>
+<ul class="simple">
+<li><p>An object whose keys are the files that must not exist and a message for each value indicating a reason that explain why this file must be absent.</p></li>
+<li><p>An array of strings with the paths to the files that must not exist.</p></li>
+</ul>
+<p>When enforcing absence of files no other actions can be defined in the rule,
+as this has no sense. The attempt will raise an error validating the style.</p>
+</section>
+<section id="file-syntax-convention">
+<h4>File syntax convention<a class="headerlink" href="#file-syntax-convention" title="Permalink to this headline"></a></h4>
+<ul class="simple">
+<li><p>Files are defined relative to the root directory of the project, which will be the current working directory if no other is passed in <cite>–rootdir</cite> CLI argument.</p></li>
+<li><p>Paths terminated with <code class="docutils literal notranslate"><span class="pre">/</span></code> will be treated as directories using the Unix separator, even in Windows systems.</p></li>
+</ul>
+</section>
+</section>
+<section id="hint-string">
+<h3><code class="docutils literal notranslate"><span class="pre">hint</span></code> (<cite>string</cite>)<a class="headerlink" href="#hint-string" title="Permalink to this headline"></a></h3>
+<p>Optional field for all rules. It specifies a hint that will be displayed along
+the error message when a checking error occurred using the <code class="docutils literal notranslate"><span class="pre">check</span></code> command.
+It is specially useful for complex rules which could show abstract error messages.</p>
+<p class="rubric">Example</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.project-config.toml&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">      </span><span class="nx">hint</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;The name of the root directory must match the regex &#39;[a-z0-9-]+$&#39;&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="nx">JMESPathsMatch</span><span class="o">:</span><span class="w"> </span><span class="p">[[</span><span class="s2">&quot;regex_match(&#39;[a-z0-9-]+$&#39;, rootdir_name())&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">]],</span><span class="w"></span>
+<span class="w">    </span><span class="p">},</span><span class="w"></span>
+<span class="w">  </span><span class="p">],</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="extends-string">
+<h2><code class="docutils literal notranslate"><span class="pre">extends</span></code> (<cite>string[]</cite>)<a class="headerlink" href="#extends-string" title="Permalink to this headline"></a></h2>
+<p>Array of strings to define other styles from which the current will extend.
+Extended rules will be executed before the rules of the current style.</p>
+<p>Can be defined with the same syntax of styles in configuration, from a local
+file, a URI resource… Resources fetched can be defined with relative URIs
+to their fetchers locations. So giving a style located at
+<code class="docutils literal notranslate"><span class="pre">gh://author/project/path/to/file.json5</span></code> we can reference with
+<code class="docutils literal notranslate"><span class="pre">extends</span></code> to a resource located at <code class="docutils literal notranslate"><span class="pre">gh://author/project/path/other/file.json5</span></code>
+using <code class="docutils literal notranslate"><span class="pre">extends:</span> <span class="pre">[&quot;../other/file.json5&quot;]</span></code> inside the style
+<code class="docutils literal notranslate"><span class="pre">gh://author/project/path/to/file.json5</span></code>.</p>
+<p class="rubric">Example</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="k">extends</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;../../base/style.json5&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;gh://author/project/path/to/style.json5&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.project-config.toml&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">    </span><span class="p">},</span><span class="w"></span>
+<span class="w">  </span><span class="p">],</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+</section>
+<section id="plugins-string">
+<span id="style-plugins"></span><h2><code class="docutils literal notranslate"><span class="pre">plugins</span></code> (<cite>string[]</cite>)<a class="headerlink" href="#plugins-string" title="Permalink to this headline"></a></h2>
+<p>Additional third party plugin names on which the rules of the style depend.
+Built-in plugins don’t need to be defined here, as are loaded by default.</p>
+<p class="rubric">Example</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">plugins</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;foobar&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.project-config.toml&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">      </span><span class="nx">verbFromFooBarPlugin</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;foo&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;bar&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">    </span><span class="p">},</span><span class="w"></span>
+<span class="w">  </span><span class="p">],</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="../dev/plugins.html"><span class="doc">Writing third party plugins</span></a></p>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="config.html" class="btn btn-neutral float-left" title="Configuration" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="plugins.html" class="btn btn-neutral float-right" title="Plugins" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Álvaro Mondéjar Rubio.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
