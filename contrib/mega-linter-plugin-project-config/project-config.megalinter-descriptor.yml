@@ -32,4 +32,4 @@ linters:
     linter_repo: https://github.com/mondeja/project-config
     linter_rules_configuration_url: https://mondeja.github.io/project-config/latest/reference/styling.html
     linter_rules_url: https://mondeja.github.io/project-config/latest/reference/plugins.html
-    linter_version_cache: 0.7.1
+    linter_version_cache: 0.7.2

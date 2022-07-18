@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/mondeja/project-config
-    rev: v0.7.1
+    rev: master
     hooks:
       - id: project-config
   - repo: meta

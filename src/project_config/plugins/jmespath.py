@@ -135,7 +135,6 @@ class JMESPathPlugin:
                         "file": fpath,
                     }
                     continue
-
                 if expression_result != expected_value:
                     if not fixer_query:
                         fixer_query = smart_fixer_by_expected_value(
