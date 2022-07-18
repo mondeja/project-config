@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/mondeja/project-config
-    rev: fix-subexpressions-index
+    rev: master
     hooks:
       - id: project-config
   - repo: meta
