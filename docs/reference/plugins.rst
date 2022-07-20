@@ -267,7 +267,7 @@ always takes the regex to apply as the first parameter following the Python's
 
    .. versionadded:: 0.6.0
 
-.. function:: op(source: type, operation: str, target: type) -> bool
+.. function:: op(source: any, operation: str, target: any[, operation: str, target: any]...) -> any
 
    Applies the operator `operator` between the two values using the operators
    for two values defined in :py:mod:`op`. The next operators are available:
@@ -322,12 +322,23 @@ always takes the regex to apply as the first parameter following the Python's
    * ``-``: :py:func:`operator.sub`
    * ``^``: :py:func:`operator.xor`
 
+   You can pass multiple operators and values after the ``target`` argument
+   chaining the operation with multiple operators. For example:
+
+   .. code-block:: text
+
+      op(`5`, '+', `3`, '-', `4`)
+
    .. versionadded:: 0.1.0
 
    .. versionchanged:: 0.4.0
 
       Convert to :external:py:class:`set` before applying operators if both
       arguments are arrays.
+
+   .. versionchanged:: 0.8.0
+
+      Multiple optional operator and values can be passed as positional arguments.
 
 .. function:: shlex_split(cmd_str: str) -> list
 

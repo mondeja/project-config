@@ -203,7 +203,7 @@ flake8-docstrings = [
   "-D415"
 ]
 
-[tool.flakeheaven.exceptions."docs/**/*.rst"]
+[tool.flakeheaven.exceptions."*.rst"]
 flake8-docstrings = ["-D100", "-D101", "-D102"]
 flake8-print = ["-T201"]
 
