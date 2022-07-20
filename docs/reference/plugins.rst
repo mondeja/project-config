@@ -269,8 +269,10 @@ always takes the regex to apply as the first parameter following the Python's
 
 .. function:: op(source: any, operation: str, target: any[, operation: str, target: any]...) -> any
 
-   Applies the operator `operator` between the two values using the operators
-   for two values defined in :py:mod:`op`. The next operators are available:
+   Apply the operator ``operation`` between the two values ``source`` and ``target``
+   using the operators for two values defined in the module :py:mod:`op`.
+
+   The next operators are available:
 
    * ``<``: :py:func:`operator.lt`
    * ``<=``: :py:func:`operator.le`
