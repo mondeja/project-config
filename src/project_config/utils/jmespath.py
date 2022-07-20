@@ -253,7 +253,7 @@ class JMESPathProjectConfigFunctions(JMESPathFunctions):
                 except KeyError:
                     raise OriginalJMESPathError(
                         f"Invalid operator '{op_or_value}' passed to op()"
-                        " function, expected one of:"
+                        f" function at index {i}, expected one of:"
                         f" {', '.join(list(OPERATORS_FUNCTIONS))}",
                     )
                 else:

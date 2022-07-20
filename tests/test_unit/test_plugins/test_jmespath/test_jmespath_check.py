@@ -119,11 +119,11 @@ from project_config.plugins.jmespath import JMESPathPlugin
                             " letters than', foo)\". Expected to return"
                             " True, raised JMESPath error: Invalid operator"
                             " 'has the same letters than' passed to op()"
-                            " function, expected one of: <, <=, ==, !=, >=,"
-                            " >, is, is_not, is-not, is not, isNot, +, &,"
-                            " and, //, <<, %, *, @, |, or, **, >>, -, /, ^,"
-                            " count_of, count of, count-of, countOf, index_of,"
-                            " index of, index-of, indexOf"
+                            " function at index 0, expected one of: <, <=,"
+                            " ==, !=, >=, >, is, is_not, is-not, is not,"
+                            " isNot, +, &, and, //, <<, %, *, @, |, or, **,"
+                            " >>, -, /, ^, count_of, count of, count-of,"
+                            " countOf, index_of, index of, index-of, indexOf"
                         ),
                     },
                 ),
@@ -206,12 +206,12 @@ from project_config.plugins.jmespath import JMESPathPlugin
                         "message": (
                             "Invalid JMESPath \"op(foo, '+', bar, `5`, baz)\"."
                             " Expected to return 4, raised JMESPath error:"
-                            " Invalid operator '5' passed to op() function,"
-                            " expected one of: <, <=, ==, !=, >=, >, is,"
-                            " is_not, is-not, is not, isNot, +, &, and, //,"
-                            " <<, %, *, @, |, or, **, >>, -, /, ^, count_of,"
-                            " count of, count-of, countOf, index_of, index of,"
-                            " index-of, indexOf"
+                            " Invalid operator '5' passed to op() function at"
+                            " index 2, expected one of: <, <=, ==, !=, >=, >,"
+                            " is, is_not, is-not, is not, isNot, +, &, and,"
+                            " //, <<, %, *, @, |, or, **, >>, -, /, ^,"
+                            " count_of, count of, count-of, countOf,"
+                            " index_of, index of, index-of, indexOf"
                         ),
                     },
                 ),
