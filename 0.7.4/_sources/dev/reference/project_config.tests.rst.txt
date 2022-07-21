@@ -1,0 +1,16 @@
+project\_config.tests package
+=============================
+
+.. automodule:: project_config.tests
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   project_config.tests.pytest_plugin
