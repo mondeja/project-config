@@ -437,23 +437,6 @@ Don't allow code blocks in RST documentation files:
 
          style = "style.json5"
 
-   .. tab:: file.rst
-
-      .. code-block:: restructuredtext
-
-         .. code-block:: python
-
-            foo = "bar"
-
-         .. code-block:: js
-
-            {}
-
-         .. code-block:: sh
-
-            #!/bin/sh
-            curl -X POST http://localhost:8080/api/v1/users
-
    .. tab:: style.json5
 
       .. code-block:: js
@@ -479,6 +462,23 @@ Don't allow code blocks in RST documentation files:
              },
            ],
          }
+
+   .. tab:: file.rst
+
+      .. code-block:: restructuredtext
+
+         .. code-block:: python
+
+            foo = "bar"
+
+         .. code-block:: js
+
+            {}
+
+         .. code-block:: sh
+
+            #!/bin/sh
+            curl -X POST http://localhost:8080/api/v1/users
 
 Autofixing .editorconfig
 ========================
@@ -539,6 +539,18 @@ Set a pre-commit hook for ``editorconfig-checker`` inside `.pre-commit-config.ya
 
          style = "style.json5"
 
+   .. tab:: .pre-commit-config.yaml
+
+      .. code-block:: yaml
+
+         repos:
+           - hooks:
+               - alias: ec
+                 id: editorconfig-checker
+                 name: editorconfig-checker
+             repo: https://github.com/editorconfig-checker/editorconfig-checker.python
+             rev: 2.4.0
+
    .. tab:: style.json5
 
       .. code-block:: js
@@ -596,18 +608,6 @@ Set a pre-commit hook for ``editorconfig-checker`` inside `.pre-commit-config.ya
              },
            ],
          }
-
-   .. tab:: .pre-commit-config.yaml
-
-      .. code-block:: yaml
-
-         repos:
-           - hooks:
-               - alias: ec
-                 id: editorconfig-checker
-                 name: editorconfig-checker
-             repo: https://github.com/editorconfig-checker/editorconfig-checker.python
-             rev: 2.4.0
 
 Intercommunication between rules
 ================================

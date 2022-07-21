@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Plugins &mdash; project-config 0.7.3 documentation</title>
+  <title>Plugins &mdash; project-config 0.7.4 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -382,9 +382,10 @@ CLI option or defined in <code class="docutils literal notranslate"><span class=
 
 <dl class="py function">
 <dt class="sig sig-object py" id="op">
-<span class="sig-name descname"><span class="pre">op</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.10)"><span class="pre">type</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">operation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.10)"><span class="pre">type</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#op" title="Permalink to this definition"></a></dt>
-<dd><p>Applies the operator <cite>operator</cite> between the two values using the operators
-for two values defined in <a class="reference internal" href="#op" title="op"><code class="xref py py-mod docutils literal notranslate"><span class="pre">op</span></code></a>. The next operators are available:</p>
+<span class="sig-name descname"><span class="pre">op</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">source:</span> <span class="pre">any,</span> <span class="pre">operation:</span> <span class="pre">str,</span> <span class="pre">target:</span> <span class="pre">any[,</span> <span class="pre">operation:</span> <span class="pre">str,</span> <span class="pre">target:</span> <span class="pre">any]...</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">any</span></span></span><a class="headerlink" href="#op" title="Permalink to this definition"></a></dt>
+<dd><p>Apply the operator <code class="docutils literal notranslate"><span class="pre">operation</span></code> between the two values <code class="docutils literal notranslate"><span class="pre">source</span></code> and <code class="docutils literal notranslate"><span class="pre">target</span></code>
+using the operators for two values defined in the module <a class="reference internal" href="#op" title="op"><code class="xref py py-mod docutils literal notranslate"><span class="pre">op</span></code></a>.</p>
+<p>The next operators are available:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">&lt;</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.lt" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.lt()</span></code></a></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">&lt;=</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.le" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.le()</span></code></a></p></li>
@@ -436,12 +437,20 @@ is one of the next ones, the arrays are converted to
 <li><p><code class="docutils literal notranslate"><span class="pre">-</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.sub" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.sub()</span></code></a></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">^</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.xor" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.xor()</span></code></a></p></li>
 </ul>
+<p>You can pass multiple operators and values after the <code class="docutils literal notranslate"><span class="pre">target</span></code> argument
+chaining the operation with multiple operators. For example:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>op(`5`, &#39;+&#39;, `3`, &#39;-&#39;, `4`)
+</pre></div>
+</div>
 <div class="versionadded">
 <p><span class="versionmodified added">New in version 0.1.0.</span></p>
 </div>
 <div class="versionchanged">
 <p><span class="versionmodified changed">Changed in version 0.4.0: </span>Convert to <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">set</span></code></a> before applying operators if both
 arguments are arrays.</p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 0.7.4: </span>Multiple optional operator and values can be passed as positional arguments.</p>
 </div>
 </dd></dl>
 

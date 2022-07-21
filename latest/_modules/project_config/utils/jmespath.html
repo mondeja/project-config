@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.utils.jmespath &mdash; project-config 0.7.3 documentation</title>
+  <title>project_config.utils.jmespath &mdash; project-config 0.7.4 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
@@ -180,7 +180,7 @@
 <span class="p">}</span>
 
 <span class="n">SET_OPERATORS</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;&lt;&quot;</span><span class="p">,</span> <span class="s2">&quot;&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;=&quot;</span><span class="p">,</span> <span class="s2">&quot;&gt;=&quot;</span><span class="p">,</span> <span class="s2">&quot;and&quot;</span><span class="p">,</span> <span class="s2">&quot;&amp;&quot;</span><span class="p">,</span> <span class="s2">&quot;or&quot;</span><span class="p">,</span> <span class="s2">&quot;|&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;^&quot;</span><span class="p">}</span>
-<span class="n">SET_OPERATORS_THAT_RETURN_SET</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;and&quot;</span><span class="p">,</span> <span class="s2">&quot;&amp;&quot;</span><span class="p">,</span> <span class="s2">&quot;or&quot;</span><span class="p">,</span> <span class="s2">&quot;|&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;^&quot;</span><span class="p">}</span>
+<span class="n">OPERATORS_THAT_RETURN_SET</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;and&quot;</span><span class="p">,</span> <span class="s2">&quot;&amp;&quot;</span><span class="p">,</span> <span class="s2">&quot;or&quot;</span><span class="p">,</span> <span class="s2">&quot;|&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;^&quot;</span><span class="p">}</span>
 
 <span class="c1"># map from jmespath exceptions class names to readable error types</span>
 <span class="n">JMESPATH_READABLE_ERRORS</span> <span class="o">=</span> <span class="p">{</span>
@@ -336,27 +336,44 @@
 <div class="viewcode-block" id="JMESPathProjectConfigFunctions._func_op"><a class="viewcode-back" href="../../../dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_op">[docs]</a>    <span class="nd">@jmespath_func_signature</span><span class="p">(</span>
         <span class="p">{</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[]},</span>
         <span class="p">{</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">]},</span>
-        <span class="p">{</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[]},</span>
+        <span class="p">{</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">&quot;variadic&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
     <span class="p">)</span>
-    <span class="k">def</span> <span class="nf">_func_op</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">operator</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">:</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">func</span> <span class="o">=</span> <span class="n">OPERATORS_FUNCTIONS</span><span class="p">[</span><span class="n">operator</span><span class="p">]</span>
-        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">OriginalJMESPathError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Invalid operator &#39;</span><span class="si">{</span><span class="n">operator</span><span class="si">}</span><span class="s2">&#39; passed to op() function,&quot;</span>
-                <span class="sa">f</span><span class="s2">&quot; expected one of: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">OPERATORS_FUNCTIONS</span><span class="p">))</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-            <span class="p">)</span>
-        <span class="k">if</span> <span class="p">(</span>
-            <span class="nb">isinstance</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
-            <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
-            <span class="ow">and</span> <span class="n">operator</span> <span class="ow">in</span> <span class="n">SET_OPERATORS</span>
-        <span class="p">):</span>
-            <span class="c1"># both values are lists and the operator is only valid for sets,</span>
-            <span class="c1"># so convert both values to set applying the operator</span>
-            <span class="n">b</span><span class="p">,</span> <span class="n">a</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">b</span><span class="p">),</span> <span class="nb">set</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">operator</span> <span class="ow">in</span> <span class="n">SET_OPERATORS_THAT_RETURN_SET</span><span class="p">:</span>
-                <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">func</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span></div>
+    <span class="k">def</span> <span class="nf">_func_op</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">operator</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">:</span>
+        <span class="n">operators</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">current_op</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">op_or_value</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="n">operator</span><span class="p">,</span> <span class="n">b</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="ow">or</span> <span class="p">[])):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">func</span> <span class="o">=</span> <span class="n">OPERATORS_FUNCTIONS</span><span class="p">[</span><span class="n">op_or_value</span><span class="p">]</span>  <span class="c1"># type: ignore</span>
+                <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">OriginalJMESPathError</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Invalid operator &#39;</span><span class="si">{</span><span class="n">op_or_value</span><span class="si">}</span><span class="s2">&#39; passed to op()&quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot; function at index </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">, expected one of:&quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">OPERATORS_FUNCTIONS</span><span class="p">))</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">current_op</span> <span class="o">=</span> <span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">op_or_value</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">operators</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">current_op</span><span class="p">,</span> <span class="n">op_or_value</span><span class="p">))</span>
+
+        <span class="n">partial_result</span> <span class="o">=</span> <span class="n">a</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">operator</span><span class="p">),</span> <span class="n">b_</span> <span class="ow">in</span> <span class="n">operators</span><span class="p">:</span>  <span class="c1"># type: ignore</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="nb">isinstance</span><span class="p">(</span><span class="n">b_</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
+                <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">partial_result</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
+                <span class="ow">and</span> <span class="n">operator</span> <span class="ow">in</span> <span class="n">SET_OPERATORS</span>
+            <span class="p">):</span>
+                <span class="c1"># both values are lists and the operator is only valid for sets,</span>
+                <span class="c1"># so convert both values to set applying the operator</span>
+                <span class="k">if</span> <span class="n">operator</span> <span class="ow">in</span> <span class="n">OPERATORS_THAT_RETURN_SET</span><span class="p">:</span>
+                    <span class="n">partial_result</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">func</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">partial_result</span><span class="p">),</span> <span class="nb">set</span><span class="p">(</span><span class="n">b_</span><span class="p">)))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">partial_result</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">partial_result</span><span class="p">),</span> <span class="nb">set</span><span class="p">(</span><span class="n">b_</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">partial_result</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">partial_result</span><span class="p">,</span> <span class="n">b_</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">partial_result</span></div>
 
 <div class="viewcode-block" id="JMESPathProjectConfigFunctions._func_shlex_join"><a class="viewcode-back" href="../../../dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_shlex_join">[docs]</a>    <span class="nd">@jmespath_func_signature</span><span class="p">({</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;array-string&quot;</span><span class="p">]})</span>
     <span class="k">def</span> <span class="nf">_func_shlex_join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmd_list</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
