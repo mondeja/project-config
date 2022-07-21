@@ -338,7 +338,7 @@ always takes the regex to apply as the first parameter following the Python's
       Convert to :external:py:class:`set` before applying operators if both
       arguments are arrays.
 
-   .. versionchanged:: 0.8.0
+   .. versionchanged:: 0.7.4
 
       Multiple optional operator and values can be passed as positional arguments.
 
