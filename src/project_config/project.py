@@ -353,7 +353,7 @@ class Project:
     def show(self, args: argparse.Namespace) -> None:
         """Show configuration or fetched style for a project.
 
-        It will depend in the ``subargs.data`` property.
+        It will depend in the ``args.data`` property.
         """
         if args.data == "cache":
             from project_config.cache import Cache

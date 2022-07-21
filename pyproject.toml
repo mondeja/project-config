@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "project-config"
-version = "0.7.3"
+version = "0.7.4"
 description = "Reproducible configuration across projects."
 authors = ["Álvaro Mondéjar Rubio <mondejar1994@gmail.com>"]
 license = "BSD-3-Clause"
@@ -203,7 +203,7 @@ flake8-docstrings = [
   "-D415"
 ]
 
-[tool.flakeheaven.exceptions."docs/**/*.rst"]
+[tool.flakeheaven.exceptions."*.rst"]
 flake8-docstrings = ["-D100", "-D101", "-D102"]
 flake8-print = ["-T201"]
 

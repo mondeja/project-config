@@ -83,7 +83,7 @@ OPERATORS_FUNCTIONS = {
 }
 
 SET_OPERATORS = {"<", ">", "<=", ">=", "and", "&", "or", "|", "-", "^"}
-SET_OPERATORS_THAT_RETURN_SET = {"and", "&", "or", "|", "-", "^"}
+OPERATORS_THAT_RETURN_SET = {"and", "&", "or", "|", "-", "^"}
 
 # map from jmespath exceptions class names to readable error types
 JMESPATH_READABLE_ERRORS = {
@@ -239,27 +239,44 @@ class JMESPathProjectConfigFunctions(JMESPathFunctions):
     @jmespath_func_signature(
         {"types": []},
         {"types": ["string"]},
-        {"types": []},
+        {"types": [], "variadic": True},
     )
-    def _func_op(self, a: float, operator: str, b: float) -> t.Any:
-        try:
-            func = OPERATORS_FUNCTIONS[operator]
-        except KeyError:
-            raise OriginalJMESPathError(
-                f"Invalid operator '{operator}' passed to op() function,"
-                f" expected one of: {', '.join(list(OPERATORS_FUNCTIONS))}",
-            )
-        if (
-            isinstance(b, list)
-            and isinstance(a, list)
-            and operator in SET_OPERATORS
-        ):
-            # both values are lists and the operator is only valid for sets,
-            # so convert both values to set applying the operator
-            b, a = set(b), set(a)
-            if operator in SET_OPERATORS_THAT_RETURN_SET:
-                return list(func(a, b))
-        return func(a, b)
+    def _func_op(
+        self, a: float, operator: str, b: float, *args: t.Any
+    ) -> t.Any:
+        operators = []
+        current_op = None
+        for i, op_or_value in enumerate([operator, b] + (list(args) or [])):
+            if i % 2 == 0:
+                try:
+                    func = OPERATORS_FUNCTIONS[op_or_value]  # type: ignore
+                except KeyError:
+                    raise OriginalJMESPathError(
+                        f"Invalid operator '{op_or_value}' passed to op()"
+                        f" function at index {i}, expected one of:"
+                        f" {', '.join(list(OPERATORS_FUNCTIONS))}",
+                    )
+                else:
+                    current_op = (func, op_or_value)
+            else:
+                operators.append((current_op, op_or_value))
+
+        partial_result = a
+        for (func, operator), b_ in operators:  # type: ignore
+            if (
+                isinstance(b_, list)
+                and isinstance(partial_result, list)
+                and operator in SET_OPERATORS
+            ):
+                # both values are lists and the operator is only valid for sets,
+                # so convert both values to set applying the operator
+                if operator in OPERATORS_THAT_RETURN_SET:
+                    partial_result = list(func(set(partial_result), set(b_)))
+                else:
+                    partial_result = func(set(partial_result), set(b_))
+            else:
+                partial_result = func(partial_result, b_)
+        return partial_result
 
     @jmespath_func_signature({"types": ["array-string"]})
     def _func_shlex_join(self, cmd_list: t.List[str]) -> str:

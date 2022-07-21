@@ -119,11 +119,11 @@ from project_config.plugins.jmespath import JMESPathPlugin
                             " letters than', foo)\". Expected to return"
                             " True, raised JMESPath error: Invalid operator"
                             " 'has the same letters than' passed to op()"
-                            " function, expected one of: <, <=, ==, !=, >=,"
-                            " >, is, is_not, is-not, is not, isNot, +, &,"
-                            " and, //, <<, %, *, @, |, or, **, >>, -, /, ^,"
-                            " count_of, count of, count-of, countOf, index_of,"
-                            " index of, index-of, indexOf"
+                            " function at index 0, expected one of: <, <=,"
+                            " ==, !=, >=, >, is, is_not, is-not, is not,"
+                            " isNot, +, &, and, //, <<, %, *, @, |, or, **,"
+                            " >>, -, /, ^, count_of, count of, count-of,"
+                            " countOf, index_of, index of, index-of, indexOf"
                         ),
                     },
                 ),
@@ -152,13 +152,6 @@ from project_config.plugins.jmespath import JMESPathPlugin
             id="op as strict issubset returns true",
         ),
         pytest.param(
-            {"foo.json": '{"foo": [1, 2]}'},
-            [["op(foo, '<', `[2, 1]`)", False]],
-            None,
-            [],
-            id="op as strict issubset returns false",
-        ),
-        pytest.param(
             {"foo.json": '{"foo": [3, 1, 2]}'},
             [["op(foo, '>', `[2, 1]`)", True]],
             None,
@@ -185,6 +178,45 @@ from project_config.plugins.jmespath import JMESPathPlugin
             None,
             [],
             id="op as set intersection returns array",
+        ),
+        pytest.param(
+            {"foo.json": '{"foo": "foo", "bar": "bar", "baz": "baz"}'},
+            [["op(foo, '+', bar, '+', baz)", "foobarbaz"]],
+            None,
+            [],
+            id="op with multiple positional string arguments",
+        ),
+        pytest.param(
+            {"foo.json": '{"foo": 5, "bar": 3, "baz": 4}'},
+            [["op(foo, '+', bar, '-', baz)", 4]],
+            None,
+            [],
+            id="op with multiple positional number arguments",
+        ),
+        pytest.param(
+            {"foo.json": '{"foo": 5, "bar": 3, "baz": 4}'},
+            [["op(foo, '+', bar, `5`, baz)", 4]],
+            None,
+            [
+                (
+                    Error,
+                    {
+                        "definition": ".JMESPathsMatch[0]",
+                        "file": "foo.json",
+                        "message": (
+                            "Invalid JMESPath \"op(foo, '+', bar, `5`, baz)\"."
+                            " Expected to return 4, raised JMESPath error:"
+                            " Invalid operator '5' passed to op() function at"
+                            " index 2, expected one of: <, <=, ==, !=, >=, >,"
+                            " is, is_not, is-not, is not, isNot, +, &, and,"
+                            " //, <<, %, *, @, |, or, **, >>, -, /, ^,"
+                            " count_of, count of, count-of, countOf,"
+                            " index_of, index of, index-of, indexOf"
+                        ),
+                    },
+                ),
+            ],
+            id="op-invalid-second-operator-type",
         ),
         pytest.param(
             {"foo.json": '{"command": "echo -n \'Multiple arguments\'"}'},
