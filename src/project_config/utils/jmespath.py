@@ -272,6 +272,8 @@ class JMESPathProjectConfigFunctions(JMESPathFunctions):
                 # so convert both values to set applying the operator
                 if operator in OPERATORS_THAT_RETURN_SET:
                     partial_result = list(func(set(partial_result), set(b_)))
+                elif operator in SET_OPERATORS:
+                    partial_result = func(set(partial_result), set(b_))
                 else:
                     partial_result = func(partial_result, b_)
             else:
