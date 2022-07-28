@@ -39,3 +39,8 @@ multiple projects.
    dev/changelog
    dev/contributing
    dev/reference/modules
+
+.. tip::
+
+   You can see other versions of this documentation using URLs like
+   ``https://mondeja.github.io/project-config/<version>``.
