@@ -1,0 +1,27 @@
+{
+  "name": "python-project-config",
+  "version": "0.7.5",
+  "description": "Reproducible configuration across projects.",
+  "author": {
+    "name": "Álvaro Mondéjar Rubio",
+    "email": "mondejar1994@gmail.com"
+  },
+  "license": "BSD-3-Clause",
+  "contributors": [],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mondeja/project-config.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mondeja/project-config/issues",
+    "email": "mondejar1994@gmail.com"
+  },
+  "homepage": "https://mondeja.github.io/project-config/",
+  "scripts": {
+    "postinstall": "node postinstall.js"
+  },
+  "dependencies": {
+    "compare-versions": "^4.1.3",
+    "which": "^2.0.2"
+  }
+}
