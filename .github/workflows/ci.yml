@@ -40,6 +40,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - name: Use NodeJS v16
+        if: runner.os != 'Windows'
         uses: actions/setup-node@v3
         with:
           node-version: 16.x
