@@ -151,7 +151,6 @@ jobs:
         with:
           token: ${{ secrets.NPM_TOKEN }}
           package: contrib/npm/package.json
-          greater-version-only: true
 
   release:
     name: Release
