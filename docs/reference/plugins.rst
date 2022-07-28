@@ -234,6 +234,13 @@ always takes the regex to apply as the first parameter following the Python's
 
    .. versionadded:: 0.5.0
 
+.. function:: regex_escape(pattern: str) -> str
+
+   Escape a regular expression pattern using the Python's built-in :py:func:`re.escape`
+   function.
+
+   .. versionadded:: 0.7.5
+
 .. _regex standard library: https://docs.python.org/3/library/re.html
 
 

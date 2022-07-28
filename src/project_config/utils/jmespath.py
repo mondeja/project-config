@@ -236,6 +236,10 @@ class JMESPathProjectConfigFunctions(JMESPathFunctions):
     ) -> str:
         return re.sub(regex, repl, value, *args)
 
+    @jmespath_func_signature({"types": ["string"]})
+    def _func_regex_escape(self, regex: str) -> str:
+        return re.escape(regex)
+
     @jmespath_func_signature(
         {"types": []},
         {"types": ["string"]},
