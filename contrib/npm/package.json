@@ -1,0 +1,17 @@
+{
+  "name": "python-project-config",
+  "version": "0.7.5",
+  "description": "Reproducible configuration across projects.",
+  "author": {
+    "name": "Álvaro Mondéjar Rubio",
+    "email": "mondejar1994@gmail.com"
+  },
+  "license": "BSD-3-Clause",
+  "scripts": {
+    "postinstall": "node postinstall.js"
+  },
+  "dependencies": {
+    "compare-versions": "^4.1.3",
+    "which": "^2.0.2"
+  }
+}

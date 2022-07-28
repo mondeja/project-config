@@ -134,6 +134,24 @@ jobs:
           # repository_url: https://test.pypi.org/legacy/
           skip_existing: true
 
+  npm-upload:
+    needs: pypi-upload
+    name: Upload to NPM
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Use NodeJS v16
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+      - name: Deploy to NPM
+        uses: JS-DevTools/npm-publish@v1.4.3
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+          package: contrib/npm/package.json
+          greater-version-only: true
+
   release:
     name: Release
     needs: build-dist
