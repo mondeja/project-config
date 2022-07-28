@@ -7,6 +7,16 @@
     "email": "mondejar1994@gmail.com"
   },
   "license": "BSD-3-Clause",
+  "contributors": [],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mondeja/project-config.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mondeja/project-config/issues",
+    "email": "mondejar1994@gmail.com"
+  },
+  "homepage": "https://mondeja.github.io/project-config/",
   "scripts": {
     "postinstall": "node postinstall.js"
   },
