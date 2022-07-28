@@ -30,6 +30,7 @@ def test_npm_pack_and_install(tmp_path):
         ),
     )[0]
     tgz_path = packer_dir / tgz_filename
+    assert os.path.isfile(tgz_path)
 
     proc = subprocess.run(
         ["npm", "init", "-y"],
@@ -47,5 +48,10 @@ def test_npm_pack_and_install(tmp_path):
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
     )
+
+    package_json_file = user_dir / "package.json"
+    assert (
+        '"python-project-config": "file:../packer/python-project-config-'
+    ) in package_json_file.read_text()
 
     assert proc.returncode == 0
