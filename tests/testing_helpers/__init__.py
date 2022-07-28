@@ -22,7 +22,7 @@ mark_end2end = pytest.mark.skipif(
 )
 
 mark_unix_only = pytest.mark.skipif(
-    "sys" in sys.platform,
+    "win" in sys.platform,
     reason="Windows does not support this test",
 )
 
