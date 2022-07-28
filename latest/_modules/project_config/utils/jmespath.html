@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.utils.jmespath &mdash; project-config 0.7.4 documentation</title>
+  <title>project_config.utils.jmespath &mdash; project-config 0.7.5 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
@@ -332,6 +332,10 @@
         <span class="bp">self</span><span class="p">,</span> <span class="n">regex</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">repl</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">regex</span><span class="p">,</span> <span class="n">repl</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="JMESPathProjectConfigFunctions._func_regex_escape"><a class="viewcode-back" href="../../../dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_regex_escape">[docs]</a>    <span class="nd">@jmespath_func_signature</span><span class="p">({</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">]})</span>
+    <span class="k">def</span> <span class="nf">_func_regex_escape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">regex</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">regex</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="JMESPathProjectConfigFunctions._func_op"><a class="viewcode-back" href="../../../dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_op">[docs]</a>    <span class="nd">@jmespath_func_signature</span><span class="p">(</span>
         <span class="p">{</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[]},</span>
