@@ -14,3 +14,6 @@ docs/examples.rst
 docs/tutorials/pages/*
 !docs/tutorials/pages/.keep
 docs/_examples/
+node_modules/
+package-lock.json
+*.tgz
