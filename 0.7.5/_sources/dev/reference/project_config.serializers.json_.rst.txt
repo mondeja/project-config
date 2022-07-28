@@ -1,0 +1,8 @@
+project\_config.serializers.json\_ module
+=========================================
+
+.. automodule:: project_config.serializers.json_
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:

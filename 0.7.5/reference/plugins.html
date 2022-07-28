@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Plugins &mdash; project-config 0.7.5 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/tabs.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/bolditalic.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/override-styles.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/tabs.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Rationale" href="../in-depth/rationale.html" />
+    <link rel="prev" title="Styling" href="styling.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> project-config
+          </a>
+              <div class="version">
+                0.7
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Quickstart</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basic-usage.html">Basic usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="cli.html">project-config CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="styling.html">Styling</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Plugins</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#inclusion">inclusion</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#includelines">includeLines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ifincludelines">ifIncludeLines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#excludecontent">excludeContent</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#existence">existence</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#iffilesexist">ifFilesExist</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#jmespath">jmespath</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#jmespathsmatch">JMESPathsMatch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#crossjmespathsmatch">crossJMESPathsMatch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ifjmespathsmatch">ifJMESPathsMatch</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">In depth</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../in-depth/rationale.html">Rationale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../in-depth/serialization.html">Objects serialization</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For developers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../dev/plugins.html">Writing third party plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev/reporters.html">Writing third party reporters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev/changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev/contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev/reference/modules.html">Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">project-config</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Plugins</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/reference/plugins.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="plugins">
+<h1>Plugins<a class="headerlink" href="#plugins" title="Permalink to this headline"></a></h1>
+<p>Plugins are the basic unit for rules application. Plugins defines
+<span class="bolditalic">actions</span> which can be either <span class="bolditalic">verbs</span> or
+<span class="bolditalic">conditionals</span>.</p>
+<ul class="simple">
+<li><p><span class="bolditalic">conditionals</span> filter the execution of verbs in a rule. If all the conditionals of a rule returns <code class="docutils literal notranslate"><span class="pre">true</span></code>, the verbs are executed. Conditionals are identified because they start with the prefix <code class="docutils literal notranslate"><span class="pre">if</span></code>.</p></li>
+<li><p><span class="bolditalic">verbs</span> execute actions against the files defined in the special <code class="docutils literal notranslate"><span class="pre">files</span></code> property of each rule. They act like asserters.</p></li>
+</ul>
+<section id="inclusion">
+<h2>inclusion<a class="headerlink" href="#inclusion" title="Permalink to this headline"></a></h2>
+<p>Plain content inclusion management.</p>
+<section id="includelines">
+<h3>includeLines<a class="headerlink" href="#includelines" title="Permalink to this headline"></a></h3>
+<p>Check that the files include all lines passed as argument.</p>
+<p>If the files don’t include all lines specified as argument,
+it will raise a checking error. Newlines are ignored, so they
+should not be specified.</p>
+<p class="rubric">Examples</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">Automatic inclusion</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">Manual edition</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><p>Appends lines not already present in the file to the end.</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">    </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.gitignore&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">    </span><span class="nx">includeLines</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;venv*/&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/dist/&quot;</span><span class="p">]</span><span class="w"></span>
+<span class="w">  </span><span class="p">]</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><p>You can define manually a JMESPath fix query if the line is an array
+with the line and the fix query as items:</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.gitignore&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">      </span><span class="nx">hint</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;The line &#39;dist/&#39; must be included in .gitignore&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="nx">includeLines</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">        </span><span class="p">[</span><span class="s2">&quot;dist/&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;op([?!contains([&#39;/dist/&#39;, &#39;dist&#39;, &#39;dist/&#39;], @)], &#39;+&#39;, [&#39;dist/&#39;])&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">        </span><span class="s2">&quot;__pycache__/&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="p">]</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="p">]</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+<p>The returned value of the JMESPath fix query will be the new content
+of the file, an array with a <code class="docutils literal notranslate"><span class="pre">'\n'.join(lines)</span></code> transformation of the
+array of strings that represent the lines of the file.</p>
+</div></div>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.1.0.</span></p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 0.7.0: </span>Accept arrays of <code class="docutils literal notranslate"><span class="pre">[line,</span> <span class="pre">fixer_query]</span></code> as items of the array
+to edit manually the files using JMESPath queries.</p>
+</div>
+</section>
+<section id="ifincludelines">
+<h3>ifIncludeLines<a class="headerlink" href="#ifincludelines" title="Permalink to this headline"></a></h3>
+<p>Conditional to exclude rule only if some files include a set of lines.</p>
+<p>If one file don’t include all lines passed as parameter,
+the rule will be ignored.</p>
+<p>Accepts an object mapping files to lines that must be included in order
+to execute the rule.</p>
+<p class="rubric">Example</p>
+<p>If the license defined in the <cite>LICENSE</cite> file is BSD-3, <code class="docutils literal notranslate"><span class="pre">tool.poetry.license</span></code>
+must correspont:</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">    </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;pyproject.toml&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">    </span><span class="nx">ifIncludeLines</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="nx">LICENSE</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;BSD 3-Clause License&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">    </span><span class="p">},</span><span class="w"></span>
+<span class="w">    </span><span class="nx">JMESPathsMatch</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">      </span><span class="p">[</span><span class="s2">&quot;tool.poetry.license&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;BSD-3-License&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">    </span><span class="p">]</span><span class="w"></span>
+<span class="w">  </span><span class="p">]</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.1.0.</span></p>
+</div>
+</section>
+<section id="excludecontent">
+<h3>excludeContent<a class="headerlink" href="#excludecontent" title="Permalink to this headline"></a></h3>
+<p>Check that the files do not include certain content.</p>
+<p>The specified partial contents can match multiple lines
+and line ending characters.</p>
+<p class="rubric">Example</p>
+<p>Don’t allow code blocks in RST documentation files:</p>
+<ul class="simple">
+<li><p>Bash is not a POSIX compliant shell, use Shell lexer.</p></li>
+<li><p>Pygments’ JSON5 lexer is not implemented yet, use Javascript lexer.</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="n">rules</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="n">files</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;file.rst&quot;</span><span class="p">],</span>
+      <span class="n">excludeContent</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">[</span>
+          <span class="s2">&quot;.. code-block::  &quot;</span><span class="p">,</span>
+          <span class="s2">&quot;map(&amp;replace(@, &#39;code-block::  &#39;, &#39;code-block:: &#39;), @)&quot;</span><span class="p">,</span>
+        <span class="p">],</span>
+        <span class="p">[</span>
+          <span class="s2">&quot;.. code-block:: bash&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;map(&amp;replace(@, &#39;code-block:: bash&#39;, &#39;code-block:: sh&#39;), @)&quot;</span><span class="p">,</span>
+        <span class="p">],</span>
+        <span class="p">[</span>
+          <span class="s2">&quot;.. code-block:: json5&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;map(&amp;replace(@, &#39;code-block:: json5&#39;, &#39;code-block:: js&#39;), @)&quot;</span><span class="p">,</span>
+        <span class="p">],</span>
+      <span class="p">],</span>
+    <span class="p">},</span>
+  <span class="p">],</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.3.0.</span></p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 0.7.0: </span>Accepts an array <code class="docutils literal notranslate"><span class="pre">['content-to-exclude',</span> <span class="pre">fixer-query]</span></code> for each item
+in the array to perform editions in the file if the content is found.</p>
+</div>
+</section>
+</section>
+<section id="existence">
+<h2>existence<a class="headerlink" href="#existence" title="Permalink to this headline"></a></h2>
+<p>Check existence of files.</p>
+<section id="iffilesexist">
+<h3>ifFilesExist<a class="headerlink" href="#iffilesexist" title="Permalink to this headline"></a></h3>
+<p>Check if a set of files and/or directories exists.</p>
+<p>Accepts an array of paths. If a path ends with <code class="docutils literal notranslate"><span class="pre">/</span></code> character it is
+considered a directory.</p>
+<p class="rubric">Examples</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-1-1-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-1-1-0" name="1-0" role="tab" tabindex="0">If directory exists</button><button aria-controls="panel-1-1-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-1-1-1" name="1-1" role="tab" tabindex="-1">If file exists</button></div><div aria-labelledby="tab-1-1-0" class="sphinx-tabs-panel" id="panel-1-1-0" name="1-0" role="tabpanel" tabindex="0"><p>If the directory <cite>src/</cite> exists, a <cite>pyproject.toml</cite> file must exist also:</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">    </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;pyproject.toml&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">    </span><span class="nx">ifFilesExist</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;src/&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">  </span><span class="p">]</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-1-1-1" class="sphinx-tabs-panel" hidden="true" id="panel-1-1-1" name="1-1" role="tabpanel" tabindex="0"><p>If the file <cite>.pre-commit-hooks.yaml</cite> exists, must be declared as an array:</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">    </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.pre-commit-hooks.yaml&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">    </span><span class="nx">ifFilesExist</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.pre-commit-hooks.yaml&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">    </span><span class="nx">JMESPathsMatch</span><span class="o">:</span><span class="w"> </span><span class="p">[[</span><span class="s2">&quot;type(@)&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;array&quot;</span><span class="p">]]</span><span class="w"></span>
+<span class="w">  </span><span class="p">]</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+</div></div>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.4.0.</span></p>
+</div>
+</section>
+</section>
+<section id="jmespath">
+<h2>jmespath<a class="headerlink" href="#jmespath" title="Permalink to this headline"></a></h2>
+<p><a class="reference external" href="https://jmespath.org">JMES paths</a> manipulation against files.</p>
+<p>The actions of this plugin operates against object-serialized versions
+of files, so only files that can be serialized can be targetted (see
+<a class="reference internal" href="../in-depth/serialization.html#objects-serialization"><span class="std std-ref">Objects serialization</span></a>).</p>
+<p>You can use in expressions all <a class="reference external" href="https://jmespath.org/specification.html#built-in-functions">JMESPath builtin functions</a> plus a set of
+convenient functions defined by the plugin internally:</p>
+<p class="rubric">Regex functions</p>
+<p>All functions whose name start with <code class="docutils literal notranslate"><span class="pre">regex_</span></code> are regex functions, which
+always takes the regex to apply as the first parameter following the Python’s
+<a class="reference external" href="https://docs.python.org/3/library/re.html">regex standard library</a> syntax.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="regex_match">
+<span class="sig-name descname"><span class="pre">regex_match</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pattern:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">string:</span> <span class="pre">str</span></span></em><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">flags:</span> <span class="pre">int=0</span></span></em><span class="optional">]</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#regex_match" title="Permalink to this definition"></a></dt>
+<dd><p>Match a regular expression against a string using the Python’s built-in
+<a class="reference external" href="https://docs.python.org/3/library/re.html#re.match" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">re.match()</span></code></a> function.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.1.0.</span></p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 0.5.0: </span>Allow to pass <code class="docutils literal notranslate"><span class="pre">flags</span></code> optional argument as an integer.</p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="regex_matchall">
+<span class="sig-name descname"><span class="pre">regex_matchall</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pattern</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">strings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#regex_matchall" title="Permalink to this definition"></a></dt>
+<dd><p>Match a regular expression against a set of strings defined in an array
+using the Python’s built-in <a class="reference external" href="https://docs.python.org/3/library/re.html#re.match" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">re.match()</span></code></a> function.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.1.0.</span></p>
+</div>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version 0.4.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="regex_search">
+<span class="sig-name descname"><span class="pre">regex_search</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pattern:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">string:</span> <span class="pre">str</span></span></em><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">flags:</span> <span class="pre">int=0</span></span></em><span class="optional">]</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#regex_search" title="Permalink to this definition"></a></dt>
+<dd><p>Search using a regular expression against a string using the Python’s
+built-in <a class="reference external" href="https://docs.python.org/3/library/re.html#re.search" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">re.search()</span></code></a> function. Returns all found groups in an
+array or an array with the full match as the unique item if no groups
+are defined. If no results are found, returns an empty array.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.1.0.</span></p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 0.5.0: </span>Allow to pass <code class="docutils literal notranslate"><span class="pre">flags</span></code> optional argument as an integer.</p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="regex_sub">
+<span class="sig-name descname"><span class="pre">regex_sub</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pattern:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repl:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">string:</span> <span class="pre">str</span></span></em><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">count:</span> <span class="pre">int=0</span></span></em><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">flags:</span> <span class="pre">int=0</span></span></em><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></span><a class="headerlink" href="#regex_sub" title="Permalink to this definition"></a></dt>
+<dd><p>Replace using a regular expression against a string using the Python’s
+built-in <a class="reference external" href="https://docs.python.org/3/library/re.html#re.sub" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">re.sub()</span></code></a> function.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.5.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="regex_escape">
+<span class="sig-name descname"><span class="pre">regex_escape</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pattern</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></span><a class="headerlink" href="#regex_escape" title="Permalink to this definition"></a></dt>
+<dd><p>Escape a regular expression pattern using the Python’s built-in <a class="reference external" href="https://docs.python.org/3/library/re.html#re.escape" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">re.escape()</span></code></a>
+function.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.7.5.</span></p>
+</div>
+</dd></dl>
+
+<p class="rubric">Utility functions</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="os">
+<span class="sig-name descname"><span class="pre">os</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></span><a class="headerlink" href="#os" title="Permalink to this definition"></a></dt>
+<dd><p>Return the result of the Python’s variable <a class="reference external" href="https://docs.python.org/3/library/sys.html#sys.platform">sys.platform</a>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.7.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="getenv">
+<span class="sig-name descname"><span class="pre">getenv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">envvar</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></span><a class="headerlink" href="#getenv" title="Permalink to this definition"></a></dt>
+<dd><p>Return the value of an environment variable.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.8.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="setenv">
+<span class="sig-name descname"><span class="pre">setenv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">envvar</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><span class="pre">None</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#setenv" title="Permalink to this definition"></a></dt>
+<dd><p>Set the value of an environment variable. If you set the value to <code class="docutils literal notranslate"><span class="pre">null</span></code>,
+the environment variable will be removed.</p>
+<p>Return the updated environment object.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.8.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rootdir_name">
+<span class="sig-name descname"><span class="pre">rootdir_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></span><a class="headerlink" href="#rootdir_name" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the name if the root directory of the project (passed in <a class="reference internal" href="cli.html#project-config---rootdir"><span class="std std-ref">project-config --rootdir</span></a>
+CLI option or defined in <code class="docutils literal notranslate"><span class="pre">cli.rootdir</span></code> <a class="reference internal" href="config.html"><span class="doc">configuration option</span></a>).</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.6.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="op">
+<span class="sig-name descname"><span class="pre">op</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">source:</span> <span class="pre">any,</span> <span class="pre">operation:</span> <span class="pre">str,</span> <span class="pre">target:</span> <span class="pre">any[,</span> <span class="pre">operation:</span> <span class="pre">str,</span> <span class="pre">target:</span> <span class="pre">any]...</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">any</span></span></span><a class="headerlink" href="#op" title="Permalink to this definition"></a></dt>
+<dd><p>Apply the operator <code class="docutils literal notranslate"><span class="pre">operation</span></code> between the two values <code class="docutils literal notranslate"><span class="pre">source</span></code> and <code class="docutils literal notranslate"><span class="pre">target</span></code>
+using the operators for two values defined in the module <a class="reference internal" href="#op" title="op"><code class="xref py py-mod docutils literal notranslate"><span class="pre">op</span></code></a>.</p>
+<p>The next operators are available:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.lt" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.lt()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;=</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.le" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.le()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">==</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.eq" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.eq()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">!=</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.ne" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.ne()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&gt;=</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.ge" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.ge()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&gt;</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.gt" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.gt()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">is</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.is_" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.is_()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">is_not</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.is_not" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.is_not()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">is-not</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.is_not" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.is_not()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">is</span> <span class="pre">not</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.is_not" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.is_not()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">isNot</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.is_not" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.is_not()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">+</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.add" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.add()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&amp;</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.and_" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.and_()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">and</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.and_" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.and_()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">//</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.floordiv" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.floordiv()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;&lt;</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.lshift" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.lshift()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">%</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.mod" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.mod()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">*</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.mul" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.mul()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&#64;</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.matmul" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.matmul()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">|</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.or_" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.or_()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">or</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.or_" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.or_()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">**</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.pow" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.pow()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&gt;&gt;</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.rshift" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.rshift()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.sub" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.sub()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.truediv" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.truediv()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">^</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.xor" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.xor()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">count_of</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.countOf" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.countOf()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">count</span> <span class="pre">of</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.countOf" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.countOf()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">count-of</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.countOf" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.countOf()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">countOf</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.countOf" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.countOf()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">index_of</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.indexOf" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.indexOf()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">index</span> <span class="pre">of</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.indexOf" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.indexOf()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">index-of</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.indexOf" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.indexOf()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">indexOf</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.indexOf" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.indexOf()</span></code></a></p></li>
+</ul>
+<p>If <code class="docutils literal notranslate"><span class="pre">source</span></code> and <code class="docutils literal notranslate"><span class="pre">target</span></code> are both of type array and the operator
+is one of the next ones, the arrays are converted to
+<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">set</span></code></a> before applying the operator:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.lt" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.lt()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;=</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.le" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.le()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&gt;=</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.ge" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.ge()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&gt;</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.gt" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.gt()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&amp;</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.and_" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.and_()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">and</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.and_" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.and_()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">|</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.or_" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.or_()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">or</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.or_" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.or_()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.sub" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.sub()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">^</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.xor" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.xor()</span></code></a></p></li>
+</ul>
+<p>You can pass multiple operators and values after the <code class="docutils literal notranslate"><span class="pre">target</span></code> argument
+chaining the operation with multiple operators. For example:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>op(`5`, &#39;+&#39;, `3`, &#39;-&#39;, `4`)
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.1.0.</span></p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 0.4.0: </span>Convert to <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">set</span></code></a> before applying operators if both
+arguments are arrays.</p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 0.7.4: </span>Multiple optional operator and values can be passed as positional arguments.</p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="shlex_split">
+<span class="sig-name descname"><span class="pre">shlex_split</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmd_str</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><span class="pre">list</span></a></span></span><a class="headerlink" href="#shlex_split" title="Permalink to this definition"></a></dt>
+<dd><p>Split a string using the Python’s built-in <a class="reference external" href="https://docs.python.org/3/library/shlex.html#shlex.split" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">shlex.split()</span></code></a> function.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.4.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="shlex_join">
+<span class="sig-name descname"><span class="pre">shlex_join</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmd_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></span><a class="headerlink" href="#shlex_join" title="Permalink to this definition"></a></dt>
+<dd><p>Join a list of strings using the Python’s built-in <a class="reference external" href="https://docs.python.org/3/library/shlex.html#shlex.join" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">shlex.join()</span></code></a> function.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.4.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="round">
+<span class="sig-name descname"><span class="pre">round</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number:</span> <span class="pre">float</span></span></em><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">precision:</span> <span class="pre">int</span></span></em><span class="optional">]</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a></span></span><a class="headerlink" href="#round" title="Permalink to this definition"></a></dt>
+<dd><p>Round a number to a given precision using the function <a class="reference external" href="https://docs.python.org/3/library/functions.html#round" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">round()</span></code></a>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.5.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="range">
+<span class="sig-name descname"><span class="pre">range</span></span><span class="sig-paren">(</span><span class="optional">[</span><em class="sig-param"><span class="n"><span class="pre">start:</span> <span class="pre">float</span></span></em>, <span class="optional">]</span><em class="sig-param"><span class="n"><span class="pre">stop:</span> <span class="pre">float</span></span></em><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">step:</span> <span class="pre">float</span></span></em><span class="optional">]</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><span class="pre">list</span></a></span></span><a class="headerlink" href="#range" title="Permalink to this definition"></a></dt>
+<dd><p>Return an array of numbers from <code class="docutils literal notranslate"><span class="pre">start</span></code> to <code class="docutils literal notranslate"><span class="pre">stop</span></code> with a step of <code class="docutils literal notranslate"><span class="pre">step</span></code>
+casting the result of the constructor <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#range" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">range</span></code></a> to an array.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.5.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="count">
+<span class="sig-name descname"><span class="pre">count</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sub:</span> <span class="pre">any</span></span></em><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">start:</span> <span class="pre">int</span></span></em><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">end:</span> <span class="pre">int</span></span></em><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></span><a class="headerlink" href="#count" title="Permalink to this definition"></a></dt>
+<dd><p>Return the number of occurrences of <code class="docutils literal notranslate"><span class="pre">sub</span></code> in <code class="docutils literal notranslate"><span class="pre">value</span></code> using <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str.count" title="(in Python v3.10)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">str.count()</span></code></a>.
+If <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">end</span></code> are given, return the number of occurrences between
+<code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">end</span></code>.
+.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.5.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="find">
+<span class="sig-name descname"><span class="pre">find</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sub:</span> <span class="pre">any</span></span></em><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">start:</span> <span class="pre">int</span></span></em><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">end:</span> <span class="pre">int</span></span></em><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></span><a class="headerlink" href="#find" title="Permalink to this definition"></a></dt>
+<dd><p>Return the lowest index in <code class="docutils literal notranslate"><span class="pre">value</span></code> where subvalue <code class="docutils literal notranslate"><span class="pre">sub</span></code> is found.
+If <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">end</span></code> are given, return the number of occurrences between
+<code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">end</span></code>. If not found, <code class="docutils literal notranslate"><span class="pre">-1</span></code> is returned. If <code class="docutils literal notranslate"><span class="pre">value</span></code> is a string
+it uses internally the Python’s built-in function <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str.find" title="(in Python v3.10)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">str.find()</span></code></a>
+or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str.index" title="(in Python v3.10)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">str.index()</span></code></a> if <code class="docutils literal notranslate"><span class="pre">value</span></code> is an array.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.5.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="isalnum">
+<span class="sig-name descname"><span class="pre">isalnum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#isalnum" title="Permalink to this definition"></a></dt>
+<dd><p>Return True if all characters in <code class="docutils literal notranslate"><span class="pre">string</span></code> are alphanumeric using <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str.isalnum" title="(in Python v3.10)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">str.isalnum()</span></code></a>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.5.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="isalpha">
+<span class="sig-name descname"><span class="pre">isalpha</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#isalpha" title="Permalink to this definition"></a></dt>
+<dd><p>Return True if all characters in <code class="docutils literal notranslate"><span class="pre">string</span></code> are alphabetic using <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str.isalpha" title="(in Python v3.10)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">str.isalpha()</span></code></a>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.5.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="isascii">
+<span class="sig-name descname"><span class="pre">isascii</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#isascii" title="Permalink to this definition"></a></dt>
+<dd><p>Return True if all characters in <code class="docutils literal notranslate"><span class="pre">string</span></code> are ASCII using <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str.isascii" title="(in Python v3.10)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">str.isascii()</span></code></a>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.5.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="isdecimal">
+<span class="sig-name descname"><span class="pre">isdecimal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#isdecimal" title="Permalink to this definition"></a></dt>
+<dd><p>Return True if all characters in <code class="docutils literal notranslate"><span class="pre">string</span></code> are decimal using <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str.isdecimal" title="(in Python v3.10)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">str.isdecimal()</span></code></a>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.5.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="isdigit">
+<span class="sig-name descname"><span class="pre">isdigit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#isdigit" title="Permalink to this definition"></a></dt>
+<dd><p>Return True if all characters in <code class="docutils literal notranslate"><span class="pre">string</span></code> are digits using <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str.isdigit" title="(in Python v3.10)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">str.isdigit()</span></code></a>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.5.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="isidentifier">
+<span class="sig-name descname"><span class="pre">isidentifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#isidentifier" title="Permalink to this definition"></a></dt>
+<dd><p>Return True if all characters in <code class="docutils literal notranslate"><span class="pre">string</span></code> are identifiers if the string is a valid
+identifier according to the Python language definition using <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str.isidentifier" title="(in Python v3.10)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">str.isidentifier()</span></code></a>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.5.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="islower">
+<span class="sig-name descname"><span class="pre">islower</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#islower" title="Permalink to this definition"></a></dt>
+<dd><p>Return True if all characters in <code class="docutils literal notranslate"><span class="pre">string</span></code> are lowercase using <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str.islower" title="(in Python v3.10)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">str.islower()</span></code></a>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.5.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="isnumeric">
+<span class="sig-name descname"><span class="pre">isnumeric</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#isnumeric" title="Permalink to this definition"></a></dt>
+<dd><p>Return True if all characters in <code class="docutils literal notranslate"><span class="pre">string</span></code> are numeric using <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str.isnumeric" title="(in Python v3.10)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">str.isnumeric()</span></code></a>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.5.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="isprintable">
+<span class="sig-name descname"><span class="pre">isprintable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#isprintable" title="Permalink to this definition"></a></dt>
+<dd><p>Return True if all characters in <code class="docutils literal notranslate"><span class="pre">string</span></code> are printable using <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str.isprintable" title="(in Python v3.10)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">str.isprintable()</span></code></a>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.5.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="isspace">
+<span class="sig-name descname"><span class="pre">isspace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#isspace" title="Permalink to this definition"></a></dt>
+<dd><p>Return True if all characters in <code class="docutils literal notranslate"><span class="pre">string</span></code> are whitespace using <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str.isspace" title="(in Python v3.10)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">str.isspace()</span></code></a>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.5.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="istitle">
+<span class="sig-name descname"><span class="pre">istitle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#istitle" title="Permalink to this definition"></a></dt>
+<dd><p>Return True if all characters in <code class="docutils literal notranslate"><span class="pre">string</span></code> are titlecased using <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str.istitle" title="(in Python v3.10)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">str.istitle()</span></code></a>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.5.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="isupper">
+<span class="sig-name descname"><span class="pre">isupper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#isupper" title="Permalink to this definition"></a></dt>
+<dd><p>Return True if all characters in <code class="docutils literal notranslate"><span class="pre">string</span></code> are uppercase using <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str.isupper" title="(in Python v3.10)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">str.isupper()</span></code></a>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.5.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lower">
+<span class="sig-name descname"><span class="pre">lower</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></span><a class="headerlink" href="#lower" title="Permalink to this definition"></a></dt>
+<dd><p>Return a lowercased version of the string using <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str.lower" title="(in Python v3.10)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">str.lower()</span></code></a>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.5.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lstrip">
+<span class="sig-name descname"><span class="pre">lstrip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string:</span> <span class="pre">str</span></span></em><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">chars:</span> <span class="pre">str</span></span></em><span class="optional">]</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></span><a class="headerlink" href="#lstrip" title="Permalink to this definition"></a></dt>
+<dd><p>Return a left-stripped version of the string using <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str.lstrip" title="(in Python v3.10)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">str.lstrip()</span></code></a>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.5.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="partition">
+<span class="sig-name descname"><span class="pre">partition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#partition" title="Permalink to this definition"></a></dt>
+<dd><p>Return an array of 3 items containing the part before the separator,
+the separator itself, and the part after the separator.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.5.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rfind">
+<span class="sig-name descname"><span class="pre">rfind</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sub:</span> <span class="pre">any</span></span></em><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">start:</span> <span class="pre">int</span></span></em><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">end:</span> <span class="pre">int</span></span></em><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></span><a class="headerlink" href="#rfind" title="Permalink to this definition"></a></dt>
+<dd><p>Return the highest index in <code class="docutils literal notranslate"><span class="pre">value</span></code> where subvalue <code class="docutils literal notranslate"><span class="pre">sub</span></code> is found.
+If <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">end</span></code> are given, return the number of occurrences between
+<code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">end</span></code>. If not found, <code class="docutils literal notranslate"><span class="pre">-1</span></code> is returned. If <code class="docutils literal notranslate"><span class="pre">value</span></code> is a string
+it uses internally the Python’s built-in function <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str.find" title="(in Python v3.10)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">str.find()</span></code></a>
+or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str.index" title="(in Python v3.10)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">str.index()</span></code></a> if <code class="docutils literal notranslate"><span class="pre">value</span></code> is an array.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.5.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rpartition">
+<span class="sig-name descname"><span class="pre">rpartition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#rpartition" title="Permalink to this definition"></a></dt>
+<dd><p>Return an array of 3 items containing the part after the separator,
+the separator itself, and the part before the separator splitting the
+string at the last occurrence of <code class="docutils literal notranslate"><span class="pre">sep</span></code>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.5.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rsplit">
+<span class="sig-name descname"><span class="pre">rsplit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string:</span> <span class="pre">str</span></span></em><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">sep:</span> <span class="pre">str</span></span></em><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">maxsplit:</span> <span class="pre">int</span></span></em><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#rsplit" title="Permalink to this definition"></a></dt>
+<dd><p>Return a list of the words in the string, using <code class="docutils literal notranslate"><span class="pre">sep</span></code> as the delimiter string
+as returned from the method <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str.rsplit" title="(in Python v3.10)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">str.rsplit()</span></code></a>. Except for splitting from the
+right, <a class="reference internal" href="#rsplit" title="rsplit"><code class="xref py py-func docutils literal notranslate"><span class="pre">rsplit()</span></code></a> behaves like <a class="reference internal" href="#split" title="split"><code class="xref py py-func docutils literal notranslate"><span class="pre">split()</span></code></a>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.5.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="split">
+<span class="sig-name descname"><span class="pre">split</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string:</span> <span class="pre">str</span></span></em><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">sep:</span> <span class="pre">str</span></span></em><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">maxsplit:</span> <span class="pre">int</span></span></em><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#split" title="Permalink to this definition"></a></dt>
+<dd><p>Return a list of the words in the string, using <code class="docutils literal notranslate"><span class="pre">sep</span></code> as the delimiter string
+as returned from the method <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str.split" title="(in Python v3.10)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">str.split()</span></code></a>. If <code class="docutils literal notranslate"><span class="pre">sep</span></code> is not given,
+it defaults to <code class="docutils literal notranslate"><span class="pre">None</span></code>, meaning that any whitespace string is a separator.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.5.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="splitlines">
+<span class="sig-name descname"><span class="pre">splitlines</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string:</span> <span class="pre">str</span></span></em><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">keepends:</span> <span class="pre">bool</span></span></em><span class="optional">]</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#splitlines" title="Permalink to this definition"></a></dt>
+<dd><p>Return a list of the lines in the string, breaking at line boundaries using
+the method <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str.splitlines" title="(in Python v3.10)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">str.splitlines()</span></code></a>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.5.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="swapcase">
+<span class="sig-name descname"><span class="pre">swapcase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></span><a class="headerlink" href="#swapcase" title="Permalink to this definition"></a></dt>
+<dd><p>Return a swapped-case version of the string using <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str.swapcase" title="(in Python v3.10)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">str.swapcase()</span></code></a>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.5.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="title">
+<span class="sig-name descname"><span class="pre">title</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></span><a class="headerlink" href="#title" title="Permalink to this definition"></a></dt>
+<dd><p>Return a titlecased version of the string using <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str.title" title="(in Python v3.10)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">str.title()</span></code></a>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.5.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="upper">
+<span class="sig-name descname"><span class="pre">upper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></span><a class="headerlink" href="#upper" title="Permalink to this definition"></a></dt>
+<dd><p>Return an uppercased version of the string using <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str.upper" title="(in Python v3.10)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">str.upper()</span></code></a>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.5.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="zfill">
+<span class="sig-name descname"><span class="pre">zfill</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></span><a class="headerlink" href="#zfill" title="Permalink to this definition"></a></dt>
+<dd><p>Return a zero-padded version of the string using <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str.zfill" title="(in Python v3.10)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">str.zfill()</span></code></a>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.5.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="enumerate">
+<span class="sig-name descname"><span class="pre">enumerate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><span class="pre">list</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#enumerate" title="Permalink to this definition"></a></dt>
+<dd><p>Return an array of arrays containing the index and value of each item in the iterable.
+If the iterable is an object, the value is converted before using <a class="reference internal" href="#to_items" title="to_items"><code class="xref py py-func docutils literal notranslate"><span class="pre">to_items()</span></code></a>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.5.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="to_items">
+<span class="sig-name descname"><span class="pre">to_items</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#to_items" title="Permalink to this definition"></a></dt>
+<dd><p>Convert an object to an array of arrays containing the key and value of each item.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.5.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="from_items">
+<span class="sig-name descname"><span class="pre">from_items</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">items</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a></span></span><a class="headerlink" href="#from_items" title="Permalink to this definition"></a></dt>
+<dd><p>Convert an array of arrays containing the key and value of each item to an object.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.5.0.</span></p>
+</div>
+</dd></dl>
+
+<p class="rubric">Updater functions</p>
+<p>The next functions take an value as the first argument, make some update
+on this <code class="docutils literal notranslate"><span class="pre">base</span></code> object and return it updated. Useful for fix queries when
+you need to return fixed contents for files.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">next</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a></span></span><a class="headerlink" href="#update" title="Permalink to this definition"></a></dt>
+<dd><p>Update the <code class="docutils literal notranslate"><span class="pre">base</span></code> object with the <code class="docutils literal notranslate"><span class="pre">next</span></code> object using Python’s builtin
+<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict.update" title="(in Python v3.10)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">dict.update()</span></code></a>.</p>
+<p>Returns the updated <code class="docutils literal notranslate"><span class="pre">base</span></code> object.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.7.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="insert">
+<span class="sig-name descname"><span class="pre">insert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><span class="pre">list</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">item</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">t.Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><span class="pre">list</span></a></span></span><a class="headerlink" href="#insert" title="Permalink to this definition"></a></dt>
+<dd><p>Insert a <code class="docutils literal notranslate"><span class="pre">item</span></code> at the given <code class="docutils literal notranslate"><span class="pre">index</span></code> in the array <code class="docutils literal notranslate"><span class="pre">base</span></code>.</p>
+<p>Returns the updated <code class="docutils literal notranslate"><span class="pre">base</span></code> array.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.7.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="deepmerge">
+<span class="sig-name descname"><span class="pre">deepmerge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">next</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">strategy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><span class="pre">list</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'conservative_merger'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a></span></span><a class="headerlink" href="#deepmerge" title="Permalink to this definition"></a></dt>
+<dd><p>Merge the <code class="docutils literal notranslate"><span class="pre">base</span></code> and <code class="docutils literal notranslate"><span class="pre">next</span></code> objects using the library <a class="reference internal" href="#deepmerge" title="deepmerge"><code class="xref py py-mod docutils literal notranslate"><span class="pre">deepmerge</span></code></a>.</p>
+<p>Returns the updated <code class="docutils literal notranslate"><span class="pre">base</span></code> object.</p>
+<p>The argument of <code class="docutils literal notranslate"><span class="pre">strategy</span></code> controls how the objects are merged. It can accept
+strings with <a class="reference external" href="https://deepmerge.readthedocs.io/en/latest/strategies.html#builtin-strategies">deepmerge strategy names</a>:</p>
+<p class="rubric">Example</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>deepmerge(@, `{&quot;foo&quot;: &quot;bar&quot;}`, &#39;always_merger&#39;)
+</pre></div>
+</div>
+<p>Or an array with 3 values, the same that takes the class <a class="reference external" href="https://deepmerge.readthedocs.io/en/latest/api.html#deepmerge.merger.Merger" title="(in deepmerge v0.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">deepmerge.merger.Merger</span></code></a>
+as arguments:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">type_strategies</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fallback_strategies</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">type_conflict_strategies</span></code></p></li>
+</ul>
+<p class="rubric">Example</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>deepmerge(
+   @,
+   `{&quot;foo&quot;: [&quot;bar&quot;]}`,
+   `[[[&quot;list&quot;, &quot;append&quot;], [&quot;dict&quot;: &quot;merge&quot;]], [&quot;override&quot;], [&quot;override&quot;]]`
+)
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.7.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="set">
+<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">t.Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a></span></span><a class="headerlink" href="#set" title="Permalink to this definition"></a></dt>
+<dd><p>Set the value of the <code class="docutils literal notranslate"><span class="pre">key</span></code> in the <code class="docutils literal notranslate"><span class="pre">base</span></code> object to <code class="docutils literal notranslate"><span class="pre">value</span></code>.</p>
+<p>Returns the updated <code class="docutils literal notranslate"><span class="pre">base</span></code> object.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.7.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unset">
+<span class="sig-name descname"><span class="pre">unset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a></span></span><a class="headerlink" href="#unset" title="Permalink to this definition"></a></dt>
+<dd><p>If has it, remove the <code class="docutils literal notranslate"><span class="pre">key</span></code> from the <code class="docutils literal notranslate"><span class="pre">base</span></code> object.</p>
+<p>Returns the updated <code class="docutils literal notranslate"><span class="pre">base</span></code> object.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.7.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="replace">
+<span class="sig-name descname"><span class="pre">replace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">old:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new:</span> <span class="pre">str</span></span></em><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">count:</span> <span class="pre">int</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#replace" title="Permalink to this definition"></a></dt>
+<dd><p>Replace the <code class="docutils literal notranslate"><span class="pre">old</span></code> string with the <code class="docutils literal notranslate"><span class="pre">new</span></code> string in the <code class="docutils literal notranslate"><span class="pre">base</span></code> string
+using the Python’s built-in string method <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str.replace" title="(in Python v3.10)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">str.replace()</span></code></a>.</p>
+<p>Returns the updated <code class="docutils literal notranslate"><span class="pre">base</span></code> string.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.7.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="removeprefix">
+<span class="sig-name descname"><span class="pre">removeprefix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></span><a class="headerlink" href="#removeprefix" title="Permalink to this definition"></a></dt>
+<dd><p>Return a string with the given prefix removed using <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str.removeprefix" title="(in Python v3.10)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">str.removeprefix()</span></code></a>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.5.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="removesuffix">
+<span class="sig-name descname"><span class="pre">removesuffix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">suffix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></span><a class="headerlink" href="#removesuffix" title="Permalink to this definition"></a></dt>
+<dd><p>Return a string with the given suffix removed using <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str.removesuffix" title="(in Python v3.10)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">str.removesuffix()</span></code></a>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.5.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="format">
+<span class="sig-name descname"><span class="pre">format</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">schema</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></span><a class="headerlink" href="#format" title="Permalink to this definition"></a></dt>
+<dd><p>Return a string formatted using the Python’s built-in <a class="reference internal" href="#format" title="format"><code class="xref py py-func docutils literal notranslate"><span class="pre">format()</span></code></a> function.
+The variable <code class="docutils literal notranslate"><span class="pre">schema</span></code> only accepts numeric indexes delimited by braces <code class="docutils literal notranslate"><span class="pre">{}</span></code>
+for positional arguments in <code class="docutils literal notranslate"><span class="pre">*args</span></code>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.5.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="strip">
+<span class="sig-name descname"><span class="pre">strip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string:</span> <span class="pre">str</span></span></em><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">chars:</span> <span class="pre">str</span></span></em><span class="optional">]</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></span><a class="headerlink" href="#strip" title="Permalink to this definition"></a></dt>
+<dd><p>Return a stripped version of the string using <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str.strip" title="(in Python v3.10)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">str.strip()</span></code></a>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.5.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rstrip">
+<span class="sig-name descname"><span class="pre">rstrip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string:</span> <span class="pre">str</span></span></em><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">chars:</span> <span class="pre">str</span></span></em><span class="optional">]</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></span><a class="headerlink" href="#rstrip" title="Permalink to this definition"></a></dt>
+<dd><p>Return a right-stripped version of the string using <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str.rstrip" title="(in Python v3.10)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">str.rstrip()</span></code></a>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.5.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="capitalize">
+<span class="sig-name descname"><span class="pre">capitalize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></span><a class="headerlink" href="#capitalize" title="Permalink to this definition"></a></dt>
+<dd><p>Capitalize the first letter of a string using <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str.capitalize" title="(in Python v3.10)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">str.capitalize()</span></code></a>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.5.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="casefold">
+<span class="sig-name descname"><span class="pre">casefold</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></span><a class="headerlink" href="#casefold" title="Permalink to this definition"></a></dt>
+<dd><p>Return a casefolded copy of a string using <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str.casefold" title="(in Python v3.10)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">str.casefold()</span></code></a>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.5.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="center">
+<span class="sig-name descname"><span class="pre">center</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width:</span> <span class="pre">int</span></span></em><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">fillchar:</span> <span class="pre">str</span></span></em><span class="optional">]</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></span><a class="headerlink" href="#center" title="Permalink to this definition"></a></dt>
+<dd><p>Return centered in a string of length <code class="docutils literal notranslate"><span class="pre">width</span></code> using <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str.center" title="(in Python v3.10)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">str.center()</span></code></a>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.5.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ljust">
+<span class="sig-name descname"><span class="pre">ljust</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width:</span> <span class="pre">int</span></span></em><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">fillchar:</span> <span class="pre">str</span></span></em><span class="optional">]</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></span><a class="headerlink" href="#ljust" title="Permalink to this definition"></a></dt>
+<dd><p>Return a left-justified version of the string using <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str.ljust" title="(in Python v3.10)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">str.ljust()</span></code></a>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.5.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rjust">
+<span class="sig-name descname"><span class="pre">rjust</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width:</span> <span class="pre">int</span></span></em><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">fillchar:</span> <span class="pre">str</span></span></em><span class="optional">]</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></span><a class="headerlink" href="#rjust" title="Permalink to this definition"></a></dt>
+<dd><p>Return a right-justified version of the string using <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str.rjust" title="(in Python v3.10)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">str.rjust()</span></code></a>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.5.0.</span></p>
+</div>
+</dd></dl>
+
+<p class="rubric">Github functions</p>
+<p>The functions which name starts with <cite>gh_</cite> are functions that connect to
+only Github sources.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="gh_tags">
+<span class="sig-name descname"><span class="pre">gh_tags</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">repo_owner:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repo_name:</span> <span class="pre">str</span></span></em><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">only_semver:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False</span></span></em><span class="optional">]</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#gh_tags" title="Permalink to this definition"></a></dt>
+<dd><p>Return the list of tags of the Github repository, ordered from latest to oldest.</p>
+<p>If you pass the third parameter as a <code class="docutils literal notranslate"><span class="pre">true</span></code> value, only the tags that
+are following semantic versioning (even if they are prepended with some
+text like <code class="docutils literal notranslate"><span class="pre">v</span></code>) will be returned.</p>
+<p>This function is really useful setting the <code class="docutils literal notranslate"><span class="pre">rev</span></code> properties in
+<cite>.pre-commit-config.yaml</cite> file.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.7.1.</span></p>
+</div>
+</dd></dl>
+
+<p class="rubric">Fix queries</p>
+<p>The verbs of the jmespath plugin can fix files by applying a JMESPath
+query over the previous content of the files. The fix-queries arguments
+are always optional.</p>
+<p>If no fix-query is provided, <strong>project-config</strong> will attempt to build an expected
+node tree instance to update the content parsing the other queries arguments
+and the expected value.</p>
+<p>The query will be a syntax like (example merging objects):</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>deepmerge(@, `{ &quot;foo&quot;: &quot;bar&quot; }`)
+</pre></div>
+</div>
+<p>Where <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> is the previous content of the file.</p>
+<p>The result from this JMESPath expression will be the next content of the file.
+So these transformer functions like <a class="reference internal" href="#deepmerge" title="deepmerge"><code class="xref py py-func docutils literal notranslate"><span class="pre">deepmerge()</span></code></a>, <a class="reference internal" href="#insert" title="insert"><code class="xref py py-func docutils literal notranslate"><span class="pre">insert()</span></code></a> or
+<a class="reference internal" href="#update" title="update"><code class="xref py py-func docutils literal notranslate"><span class="pre">update()</span></code></a> allow you to edit your files with total flexibility.</p>
+<p class="rubric">Automatic fixes</p>
+<p>Queries that are simple can be automatically fixed by the plugin. For example,
+a constant query with their expected value:</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-2-2-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-2-2-0" name="2-0" role="tab" tabindex="0">package.json (before)</button><button aria-controls="panel-2-2-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-2-2-1" name="2-1" role="tab" tabindex="-1">package.json (after)</button><button aria-controls="panel-2-2-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-2-2-2" name="2-2" role="tab" tabindex="-1">style.json5 (rule)</button></div><div aria-labelledby="tab-2-2-0" class="sphinx-tabs-panel" id="panel-2-2-0" name="2-0" role="tabpanel" tabindex="0"><div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
+<span class="w">   </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my-project&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-2-2-1" class="sphinx-tabs-panel" hidden="true" id="panel-2-2-1" name="2-1" role="tabpanel" tabindex="0"><div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
+<span class="w">   </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my-project&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">   </span><span class="nt">&quot;license&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;BSD-3-Clause&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-2-2-2" class="sphinx-tabs-panel" hidden="true" id="panel-2-2-2" name="2-2" role="tabpanel" tabindex="0"><div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;package.json&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">  </span><span class="nx">JMESPathsMatch</span><span class="o">:</span><span class="w"> </span><span class="p">[[</span><span class="s2">&quot;license&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;BSD-3-Clause&quot;</span><span class="p">]]</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+</div></div>
+<p>Currently, is possible to automatically fix the following cases:</p>
+<ul class="simple">
+<li><p>Query to constant.</p></li>
+<li><p>Query to constant in nested objects.</p></li>
+<li><p>Expression using the <code class="docutils literal notranslate"><span class="pre">type</span></code> function like <code class="docutils literal notranslate"><span class="pre">type(foo.bar)</span></code> with expected value as <code class="docutils literal notranslate"><span class="pre">'array'</span></code> (creates <code class="docutils literal notranslate"><span class="pre">{foo:</span> <span class="pre">{bar:</span> <span class="pre">[]}}</span></code> nodes if doesn’t exists before).</p></li>
+<li><p>Indexed expressions with indexes like <code class="docutils literal notranslate"><span class="pre">type(foo[0].bar)</span></code> with expected value as <code class="docutils literal notranslate"><span class="pre">'object'</span></code> (prepends, <code class="docutils literal notranslate"><span class="pre">{bar:</span> <span class="pre">{}}</span></code> to the array <code class="docutils literal notranslate"><span class="pre">bar</span></code>, creating it if does not exists).</p></li>
+</ul>
+<section id="jmespathsmatch">
+<h3>JMESPathsMatch<a class="headerlink" href="#jmespathsmatch" title="Permalink to this headline"></a></h3>
+<p>Compares a set of JMESPath expressions against results.</p>
+<p>Object-serializes each file in the <code class="docutils literal notranslate"><span class="pre">files</span></code> property of the rule
+and executes each expression given in the first item of the
+tuples passed as value. If a result don’t match, report an error.</p>
+<p class="rubric">Example</p>
+<p>The <cite>.editorconfig</cite> file must have the next content:</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="na">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">true</span><span class="w"></span>
+
+<span class="k">[*]</span><span class="w"></span>
+<span class="na">end_of_line</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">lf</span><span class="w"></span>
+<span class="na">charset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">utf-8</span><span class="w"></span>
+<span class="na">indent_style</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">space</span><span class="w"></span>
+<span class="na">trim_trailing_whitespace</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">true</span><span class="w"></span>
+</pre></div>
+</div>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.editorconfig&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">      </span><span class="nx">JMESPathsMatch</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">        </span><span class="p">[</span><span class="s1">&#39;&quot;&quot;.root&#39;</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">],</span><span class="w"></span>
+<span class="w">        </span><span class="p">[</span><span class="s1">&#39;&quot;*&quot;.end_of_line&#39;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;lf&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">        </span><span class="p">[</span><span class="s1">&#39;&quot;*&quot;.indent_style&#39;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;space&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">        </span><span class="p">[</span><span class="s1">&#39;&quot;*&quot;.charset&#39;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;utf-8&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">        </span><span class="p">[</span><span class="s1">&#39;&quot;*&quot;.trim_trailing_whitespace&#39;</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">],</span><span class="w"></span>
+<span class="w">      </span><span class="p">],</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="p">]</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.1.0.</span></p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 0.7.0: </span>The verb also accepts fix queries as third item of rows.</p>
+</div>
+</section>
+<section id="crossjmespathsmatch">
+<h3>crossJMESPathsMatch<a class="headerlink" href="#crossjmespathsmatch" title="Permalink to this headline"></a></h3>
+<p>JMESPaths matching between multiple files.</p>
+<p>Accepts an array of arrays. Each one of these arrays must have the syntax:</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="w"></span>
+<span class="w">  </span><span class="s2">&quot;filesJMESPathExpression&quot;</span><span class="p">,</span><span class="w">  </span><span class="c1">// expression to query each file in `files` property of the rule</span><span class="w"></span>
+<span class="w">  </span><span class="p">[</span><span class="s2">&quot;otherFile.ext&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;JMESPathExpression&quot;</span><span class="p">]...,</span><span class="w">  </span><span class="c1">// optionally other files</span><span class="w"></span>
+<span class="w">  </span><span class="s2">&quot;finalJMESPathExpression&quot;</span><span class="p">,</span><span class="w">  </span><span class="c1">// an array with results of previous expressions as input</span><span class="w"></span>
+<span class="w">  </span><span class="nx">expectedValue</span><span class="p">,</span><span class="w">  </span><span class="c1">// value to compare with the result of final JMESPath expression</span><span class="w"></span>
+<span class="p">]</span><span class="w"></span>
+</pre></div>
+</div>
+<p>The executed steps are:</p>
+<ol class="arabic simple">
+<li><p>For each object-serialized file in <code class="docutils literal notranslate"><span class="pre">files</span></code> property of the rule.</p></li>
+<li><p>Execute <code class="docutils literal notranslate"><span class="pre">&quot;filesJMESPathExpression&quot;</span></code> and append the result to a temporal array.</p></li>
+<li><p>For each pair of <code class="docutils literal notranslate"><span class="pre">[&quot;otherFile.ext&quot;,</span> <span class="pre">&quot;JMESPathExpression&quot;]</span></code>, execute
+<code class="docutils literal notranslate"><span class="pre">&quot;JMESPathExpression&quot;</span></code> against the object-serialized version of
+<code class="docutils literal notranslate"><span class="pre">&quot;otherFile.ext&quot;</span></code> and append each result to the temporal array.</p></li>
+<li><p>Execute <code class="docutils literal notranslate"><span class="pre">&quot;finalJMESPathExpression&quot;</span></code> against the temporal array.</p></li>
+<li><p>Compare the final result with <code class="docutils literal notranslate"><span class="pre">expectedValue</span></code> and raise error if not match.</p></li>
+</ol>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Other file paths can be URLs if you want to match against online sources.</p>
+</div>
+<p class="rubric">Example</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">release</span></code> field of a Sphinx configuration defined in a file
+<cite>docs/conf.py</cite> must be the same that the version of the project metadata
+defined in th file <cite>pyproject.toml</cite>, field <code class="docutils literal notranslate"><span class="pre">tool.poetry.version</span></code>:</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;pyproject.toml&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">      </span><span class="nx">crossJMESPathsMatch</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">        </span><span class="p">[</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;tool.poetry.metadata&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="p">[</span><span class="s2">&quot;docs/conf.py&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;release&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;op([0], &#39;==&#39;, [1])&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="kc">true</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="p">],</span><span class="w"></span>
+<span class="w">      </span><span class="p">],</span><span class="w"></span>
+<span class="w">      </span><span class="nx">hint</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Versions of documentation and metadata must be the same&quot;</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="p">]</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+<p>Note that you can pass whatever number of other files, even 0 and just apply
+<code class="docutils literal notranslate"><span class="pre">files</span></code> and <code class="docutils literal notranslate"><span class="pre">final</span></code> expressions to each file in <code class="docutils literal notranslate"><span class="pre">files</span></code> property of
+the rule. For example, the next configuration would not raise errors:</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-3-3-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-3-3-0" name="3-0" role="tab" tabindex="0">style.json5</button><button aria-controls="panel-3-3-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-3-3-1" name="3-1" role="tab" tabindex="-1">foo.json</button></div><div aria-labelledby="tab-3-3-0" class="sphinx-tabs-panel" id="panel-3-3-0" name="3-0" role="tabpanel" tabindex="0"><div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;foo.json&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">      </span><span class="nx">crossJMESPathsMatch</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">        </span><span class="p">[</span><span class="s2">&quot;bar&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;[0].baz&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">7</span><span class="p">],</span><span class="w"></span>
+<span class="w">      </span><span class="p">]</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="p">]</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-3-3-1" class="sphinx-tabs-panel" hidden="true" id="panel-3-3-1" name="3-1" role="tabpanel" tabindex="0"><div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="nt">&quot;bar&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;baz&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="p">}}</span><span class="w"></span>
+</pre></div>
+</div>
+</div></div>
+<p>You can also override the <a class="reference internal" href="../in-depth/serialization.html"><span class="doc">Objects serialization</span></a> to use for opening
+other files using <code class="docutils literal notranslate"><span class="pre">file/path.ext?serializer</span></code> syntax. For example, to open a Python
+file line by line:</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-4-4-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-4-4-0" name="4-0" role="tab" tabindex="0">file.py</button><button aria-controls="panel-4-4-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-4-4-1" name="4-1" role="tab" tabindex="-1">style.json5</button></div><div aria-labelledby="tab-4-4-0" class="sphinx-tabs-panel" id="panel-4-4-0" name="4-0" role="tabpanel" tabindex="0"><div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">foo</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">bar</span> <span class="o">=</span> <span class="kc">False</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-4-4-1" class="sphinx-tabs-panel" hidden="true" id="panel-4-4-1" name="4-1" role="tabpanel" tabindex="0"><div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;file.py&quot;</span><span class="p">],</span><span class="w">  </span><span class="c1">// just asserts that the file exists</span><span class="w"></span>
+<span class="w">      </span><span class="nx">crossJMESPathsMatch</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">        </span><span class="p">[</span><span class="s2">&quot;null&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;file.py?text&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;[0]&quot;</span><span class="p">],</span><span class="w"> </span><span class="s2">&quot;[1]&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;foo = True&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">      </span><span class="p">]</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="p">]</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+</div></div>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.4.0.</span></p>
+</div>
+</section>
+<section id="ifjmespathsmatch">
+<h3>ifJMESPathsMatch<a class="headerlink" href="#ifjmespathsmatch" title="Permalink to this headline"></a></h3>
+<p>Compares a set of JMESPath expressions against results.</p>
+<p>JSON-serializes each file in the <code class="docutils literal notranslate"><span class="pre">ifJMESPathsMatch</span></code> property
+of the rule and executes each expression given in the first item of the
+tuples passed as value for each file. If a result don’t match,
+skips the rule.</p>
+<p class="rubric">Example</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">inline-quotes</span></code> config of flake8 is defined to use double quotes,
+Black must be configured as the formatting tool in <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code>:</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;pyproject.toml&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">      </span><span class="nx">ifJMESPathsMatch</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="s2">&quot;pyproject.toml&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">           </span><span class="p">[</span><span class="s2">&quot;tool.flakeheaven.inline_quotes&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;double&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">         </span><span class="p">],</span><span class="w"></span>
+<span class="w">      </span><span class="p">},</span><span class="w"></span>
+<span class="w">      </span><span class="nx">JMESPathsMatch</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">        </span><span class="p">[</span><span class="s2">&quot;contains(keys(@), &#39;tool&#39;)&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">],</span><span class="w"></span>
+<span class="w">        </span><span class="p">[</span><span class="s2">&quot;contains(keys(tool), &#39;black&#39;)&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">],</span><span class="w"></span>
+<span class="w">      </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="p">]</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.1.0.</span></p>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="styling.html" class="btn btn-neutral float-left" title="Styling" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../in-depth/rationale.html" class="btn btn-neutral float-right" title="Rationale" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Álvaro Mondéjar Rubio.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

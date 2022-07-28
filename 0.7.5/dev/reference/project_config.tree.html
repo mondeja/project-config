@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>project_config.tree module &mdash; project-config 0.7.5 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/tabs.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/bolditalic.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/override-styles.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="project_config.types module" href="project_config.types.html" />
+    <link rel="prev" title="project_config.project module" href="project_config.project.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> project-config
+          </a>
+              <div class="version">
+                0.7
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Quickstart</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../basic-usage.html">Basic usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/cli.html">project-config CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/config.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/styling.html">Styling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/plugins.html">Plugins</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">In depth</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../in-depth/rationale.html">Rationale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../in-depth/serialization.html">Objects serialization</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For developers</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../plugins.html">Writing third party plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reporters.html">Writing third party reporters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="project_config.html">project_config package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="project_config.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="project_config.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="project_config.__main__.html">project_config.__main__ module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.cache.html">project_config.cache module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.compat.html">project_config.compat module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.constants.html">project_config.constants module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.exceptions.html">project_config.exceptions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.project.html">project_config.project module</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">project_config.tree module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.types.html">project_config.types module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">project-config</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="modules.html">Reference</a> &raquo;</li>
+          <li><a href="project_config.html">project_config package</a> &raquo;</li>
+      <li>project_config.tree module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/dev/reference/project_config.tree.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-project_config.tree">
+<span id="project-config-tree-module"></span><h1>project_config.tree module<a class="headerlink" href="#module-project_config.tree" title="Permalink to this headline"></a></h1>
+<p>Cached files tree used by the linter when using checker commands.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="project_config.tree.Tree">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">project_config.tree.</span></span><span class="sig-name descname"><span class="pre">Tree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rootdir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/project_config/tree.html#Tree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.tree.Tree" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Files cache used by the linter in checking processes.</p>
+<p>It represents the tree of files and directories starting
+at the root directory of the project.</p>
+<p>Instances of <a class="reference internal" href="#project_config.tree.Tree" title="project_config.tree.Tree"><code class="xref py py-class docutils literal notranslate"><span class="pre">project_config.tree.Tree</span></code></a> can be
+iterated with:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">fpath</span><span class="p">,</span> <span class="n">fcontent</span> <span class="ow">in</span> <span class="n">tree</span><span class="o">.</span><span class="n">files</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">fcontent</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+         <span class="c1"># file does not exist</span>
+         <span class="o">...</span>
+    <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fcontent</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+         <span class="c1"># file is a directory</span>
+         <span class="c1">#</span>
+         <span class="c1"># so `fcontent` is another Tree instance here</span>
+         <span class="k">for</span> <span class="n">nested_fpath</span><span class="p">,</span> <span class="n">nested_fcontent</span> <span class="ow">in</span> <span class="n">fcontent</span><span class="o">.</span><span class="n">files</span><span class="p">:</span>
+             <span class="o">...</span>
+</pre></div>
+</div>
+<p>If you want to get the serialialized version of the file you can
+use the method <a class="reference internal" href="#project_config.tree.Tree.serialize_file" title="project_config.tree.Tree.serialize_file"><code class="xref py py-meth docutils literal notranslate"><span class="pre">project_config.tree.Tree.serialize_file()</span></code></a>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">instance</span> <span class="o">=</span> <span class="n">fpath</span><span class="p">,</span> <span class="n">tree</span><span class="o">.</span><span class="n">serialize_file</span><span class="p">(</span><span class="n">fpath</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If you are not inside a context were you have the content
+of the files (a common scenario for conditional actions)
+you can get them calling the method
+<a class="reference internal" href="#project_config.tree.Tree.get_file_content" title="project_config.tree.Tree.get_file_content"><code class="xref py py-meth docutils literal notranslate"><span class="pre">project_config.tree.Tree.get_file_content()</span></code></a>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fcontent</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">get_file_content</span><span class="p">(</span><span class="n">fpath</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This class caches the files contents along with their
+serialized versions, so subsequent access to the same
+files in the project tree are fast.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>rootdir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Root directory of the project.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="project_config.tree.Tree._cache_file">
+<span class="sig-name descname"><span class="pre">_cache_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fpath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../_modules/project_config/tree.html#Tree._cache_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.tree.Tree._cache_file" title="Permalink to this definition"></a></dt>
+<dd><p>Cache a file normalizing its path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fpath</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Relative path from root directory.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Normalized absolute path.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="project_config.tree.Tree._generator">
+<span class="sig-name descname"><span class="pre">_generator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fpaths</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterator" title="(in Python v3.10)"><span class="pre">Iterator</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.10)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.10)"><span class="pre">Iterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.10)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/project_config/tree.html#Tree._generator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.tree.Tree._generator" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="project_config.tree.Tree.cache_files">
+<span class="sig-name descname"><span class="pre">cache_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fpaths</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.10)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../_modules/project_config/tree.html#Tree.cache_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.tree.Tree.cache_files" title="Permalink to this definition"></a></dt>
+<dd><p>Cache a set of files given their paths.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fpaths</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – Paths to the files to store in cache.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="project_config.tree.Tree.edit_serialized_file">
+<span class="sig-name descname"><span class="pre">edit_serialized_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fpath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_content</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.10)"><span class="pre">Any</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="../../_modules/project_config/tree.html#Tree.edit_serialized_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.tree.Tree.edit_serialized_file" title="Permalink to this definition"></a></dt>
+<dd><p>Edit a file in the cache.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fpath</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Path to the file to edit.</p></li>
+<li><p><strong>new_content</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.10)"><em>object</em></a>) – New content for the file.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if the file content has changed, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="project_config.tree.Tree.fetch_file">
+<span class="sig-name descname"><span class="pre">fetch_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.10)"><span class="pre">Any</span></a></span></span><a class="reference internal" href="../../_modules/project_config/tree.html#Tree.fetch_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.tree.Tree.fetch_file" title="Permalink to this definition"></a></dt>
+<dd><p>Fetch a file from online or offline sources given a url or path.</p>
+<p>This method is a convenient cache wrapper for
+<a class="reference internal" href="project_config.fetchers.html#project_config.fetchers.fetch" title="project_config.fetchers.fetch"><code class="xref py py-func docutils literal notranslate"><span class="pre">project_config.fetchers.fetch()</span></code></a>. Used by plugin actions
+which need an object-serialized version of files to perform
+operations against them, like the <a class="reference internal" href="../../reference/plugins.html#jmespath"><span class="std std-ref">jmespath</span></a>
+one.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>url</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Url or path to the file to fetch.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Object-serialized version of the file.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.10)">object</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="project_config.tree.Tree.files">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">files</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#project_config.tree.Tree.files" title="Permalink to this definition"></a></dt>
+<dd><p>Returns an array of the current cached files for a rule action.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>Array of tuples with the relative path to the file</dt><dd><p><code class="docutils literal notranslate"><span class="pre">rootdir</span></code> as the first item and the content of the file
+as the second one.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)">list</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="project_config.tree.Tree.get_file_content">
+<span class="sig-name descname"><span class="pre">get_file_content</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fpath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../_modules/project_config/tree.html#Tree.get_file_content"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.tree.Tree.get_file_content" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the content of a file given his relative path.</p>
+<p>This method is tipically used by <code class="docutils literal notranslate"><span class="pre">if</span></code> plugin action conditionals
+to get the content of the files that are not defined in <code class="docutils literal notranslate"><span class="pre">files</span></code>
+subject rules fields.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fpath</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Path to the file relative to the root directory.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="project_config.tree.Tree.normalize_path">
+<span class="sig-name descname"><span class="pre">normalize_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fpath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../_modules/project_config/tree.html#Tree.normalize_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.tree.Tree.normalize_path" title="Permalink to this definition"></a></dt>
+<dd><p>Normalize a path given his relative path to the root directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fpath</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Path to the file relative to the root directory.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Normalized absolute path.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="project_config.tree.Tree.rootdir">
+<span class="sig-name descname"><span class="pre">rootdir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></em><a class="headerlink" href="#project_config.tree.Tree.rootdir" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="project_config.tree.Tree.serialize_file">
+<span class="sig-name descname"><span class="pre">serialize_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fpath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.10)"><span class="pre">Any</span></a></span></span><a class="reference internal" href="../../_modules/project_config/tree.html#Tree.serialize_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.tree.Tree.serialize_file" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the object-serialized version of a file.</p>
+<p>This method is a convenient cache wrapper for
+<a class="reference internal" href="project_config.serializers.html#project_config.serializers.serialize_for_url" title="project_config.serializers.serialize_for_url"><code class="xref py py-func docutils literal notranslate"><span class="pre">project_config.serializers.serialize_for_url()</span></code></a>.
+Is used by plugin actions which need an object-serialized
+version of files to perform operations against them, like
+the <a class="reference internal" href="../../reference/plugins.html#jmespath"><span class="std std-ref">jmespath</span></a> one.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fpath</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Path to the file to serialize.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Object-serialized version of the file.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.10)">object</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="project_config.project.html" class="btn btn-neutral float-left" title="project_config.project module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="project_config.types.html" class="btn btn-neutral float-right" title="project_config.types module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Álvaro Mondéjar Rubio.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
