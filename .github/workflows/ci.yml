@@ -107,7 +107,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Install poetry
-        run: pipx install poetry==1.2.0b1
+        run: pipx install poetry==1.2.0b3
       - uses: actions/setup-python@v3
         name: Install Python v3.x
         with:
