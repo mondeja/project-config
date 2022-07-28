@@ -26,13 +26,13 @@ Installation
 
       .. code-block:: sh
 
-         npm install -D project-config
+         npm install -D python-project-config
 
       .. rubric:: yarn
 
       .. code-block:: sh
 
-         yarn add -D project-config
+         yarn add -D python-project-config
 
    .. tab:: pre-commit
 
