@@ -1,8 +1,9 @@
 # project-config
 
 [![PyPI][pypi-version-badge-link]][pypi-link]
-[![Python versions][pypi-pyversions-badge-link]][pypi-link]
+[![NPM version][npm-version-image]][npm-link]
 [![License][license-image]][license-link]
+
 [![Tests][tests-image]][tests-link]
 [![Coverage][coverage-image]][coverage-link]
 [![Downloads][pypi-downloads-image]][pypi-downloads-link]
@@ -28,7 +29,6 @@ Lint the data files of your projects in a flexible way using JMESPaths.
 
 [pypi-link]: https://pypi.org/project/project-config
 [pypi-version-badge-link]: https://img.shields.io/pypi/v/project-config?logo=pypi&logoColor=white
-[pypi-pyversions-badge-link]: https://img.shields.io/pypi/pyversions/project-config?logo=python&logoColor=white
 [license-image]: https://img.shields.io/pypi/l/project-config?color=light-green&logo=freebsd&logoColor=white
 [license-link]: https://github.com/mondeja/project-config/blob/master/LICENSE
 [tests-image]: https://img.shields.io/github/workflow/status/mondeja/project-config/CI?logo=github&label=tests
@@ -37,3 +37,5 @@ Lint the data files of your projects in a flexible way using JMESPaths.
 [pypi-downloads-link]: https://pypistats.org/packages/project-config
 [coverage-image]: https://img.shields.io/coveralls/github/mondeja/project-config?logo=coveralls
 [coverage-link]: https://coveralls.io/github/mondeja/project-config
+[npm-link]: https://www.npmjs.com/package/python-project-config
+[npm-version-image]: https://img.shields.io/npm/v/python-project-config?logo=npm
