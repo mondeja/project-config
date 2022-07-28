@@ -105,8 +105,8 @@ from project_config.plugins.jmespath import JMESPathPlugin
             id="regex_sub(regex, repl, value, count)",
         ),
         pytest.param(
-            {"foo.json": '{"foo": "^bar"}'},
-            [["regex_match(regex_escape('^bar'), foo)", True]],
+            {"foo.json": '{"foo": "$bar"}'},
+            [["regex_match(regex_escape('$bar'), foo)", True]],
             None,
             [],
             id="regex_escape()",
