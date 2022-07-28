@@ -4,19 +4,35 @@ Installation
 
 .. tabs::
 
-   .. tab:: Standalone
+   .. tab:: Python
 
       .. rubric:: pip
 
-      .. code-block:: bash
+      .. code-block:: sh
 
          pip install project-config
 
       .. rubric:: poetry
 
-      .. code-block:: bash
+      .. code-block:: sh
 
          poetry add project-config
+
+   .. tab:: Node.js
+
+      Requires Python >= 3.7 and `pip`_ installed.
+
+      .. rubric:: npm
+
+      .. code-block:: sh
+
+         npm install -D project-config
+
+      .. rubric:: yarn
+
+      .. code-block:: sh
+
+         yarn add -D project-config
 
    .. tab:: pre-commit
 
@@ -38,6 +54,12 @@ Installation
            hooks:
              - id: project-config-fix
 
+      .. seealso::
+
+         `pre-commit.com`_
+
+         .. _pre-commit.com: https://pre-commit.com
+
    .. tab:: MegaLinter plugin
 
       .. code-block:: yaml
@@ -46,3 +68,11 @@ Installation
            - https://raw.githubusercontent.com/mondeja/project-config/v0.7.5/contrib/mega-linter-plugin-project-config/project-config.megalinter-descriptor.yml
          ENABLE_LINTERS:
            - PROJECT_CONFIG
+
+      .. seealso::
+
+         `MegaLinter`_
+
+         .. _MegaLinter: https://megalinter.github.io
+
+.. _pip: https://pypi.org/project/pip/
