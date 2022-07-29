@@ -797,6 +797,7 @@ Currently, is possible to automatically fix the following cases:
 * Query to constant in nested objects.
 * Expression using the ``type`` function like ``type(foo.bar)`` with expected value as ``'array'`` (creates ``{foo: {bar: []}}`` nodes if doesn't exists before).
 * Indexed expressions with indexes like ``type(foo[0].bar)`` with expected value as ``'object'`` (prepends, ``{bar: {}}`` to the array ``bar``, creating it if does not exists).
+* Forbidden key in root object like ``contains(keys(@), 'foo')`` with expected value as ``false`` (removes the key ``foo`` from the root object).
 
 JMESPathsMatch
 ==============
