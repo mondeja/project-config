@@ -741,7 +741,7 @@ def test_JMESPath_custom_functions(
                         ),
                         "file": "foo.json",
                         "fixed": False,
-                        "fixable": False,
+                        "fixable": True,
                     },
                 ),
             ],

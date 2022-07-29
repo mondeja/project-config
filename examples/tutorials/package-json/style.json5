@@ -89,22 +89,10 @@
         // Remove invalid fields
         // ---------------------
         //   - engineStrict, engine-strict (removed in NPM v3)
-        [
-          "contains(keys(@), 'engineStrict')",
-          false,
-          "unset(@, 'engineStrict')",
-        ],
-        [
-          "contains(keys(@), 'engine-strict')",
-          false,
-          "unset(@, 'engine-strict')",
-        ],
+        ["contains(keys(@), 'engineStrict')", false],
+        ["contains(keys(@), 'engine-strict')", false],
         //   - preferGlobal
-        [
-          "contains(keys(@), 'preferGlobal')",
-          false,
-          "unset(@, 'preferGlobal')",
-        ],
+        ["contains(keys(@), 'preferGlobal')", false],
 
         // private
         // -------

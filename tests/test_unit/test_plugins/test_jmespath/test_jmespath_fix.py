@@ -471,6 +471,30 @@ JSON_2_INDENTED = lambda string: (  # noqa: E731
             },
             id="fixer-query-subexpression-smart",
         ),
+        pytest.param(
+            {"foo.json": '{"foo": 1, "bar": 2}'},
+            [["contains(keys(@), 'foo')", False]],
+            None,
+            [
+                (
+                    Error,
+                    {
+                        "definition": ".JMESPathsMatch[0]",
+                        "file": "foo.json",
+                        "fixable": True,
+                        "fixed": True,
+                        "message": (
+                            "JMESPath 'contains(keys(@), 'foo')' does"
+                            " not match. Expected False, returned True"
+                        ),
+                    },
+                ),
+            ],
+            {
+                "foo.json": JSON_2_INDENTED('{"bar": 2}'),
+            },
+            id="@-forbidden-key-smart",
+        ),
     ),
 )
 def test_JMESPathsMatch_fix(

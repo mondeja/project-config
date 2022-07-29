@@ -978,7 +978,21 @@ def smart_fixer_by_expected_value(
                         merge_strategy,
                         deep,
                     )
-
+    elif (
+        ast["type"] == "function_expression"
+        and ast["value"] == "contains"
+        and len(ast.get("children", [])) == 2
+        and ast["children"][0]["type"] == "function_expression"
+        and ast["children"][0]["value"] == "keys"
+        and ast["children"][0].get("children")
+        and ast["children"][0]["children"][0]["type"] == "current"
+        and ast["children"][1]["type"] == "literal"
+    ):
+        if expected_value is False:
+            # contains(keys(@), 'key') -> false
+            key = ast["children"][1]["value"]
+            fixer_expression = f"unset(@, '{key}')"
+        return fixer_expression
     else:  # pragma: no cover
         return fixer_expression
 
