@@ -1,5 +1,5 @@
 ..
-   Name: Compare values between serializable files
+   Name: Compare values between files
    Exitcode: 0
 
 The version defined in ``__version__`` inside a Python script must match

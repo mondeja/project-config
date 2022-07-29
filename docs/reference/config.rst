@@ -62,8 +62,8 @@ It can be a string or an array of strings, always pointing existent resources.
 Valid resource types are:
 
 * Local files with relative paths like `foo.json5` or `./bar.yaml`.
-* Github schema URIs in the form `gh://<user>/<project>(@tag)?/<path/to/file.ext>`
-  like `gh://mondeja/project-config-styles/python/version/min-37.json5`. The
+* Github schema URIs in the form ``gh://<user>/<project>(@tag)?/<path/to/file.ext>``
+  like ``gh://mondeja/project-config-styles/python/version/min-37.json5``. The
   ``@`` syntax is used to pin a GIT reference (commit, tag, branch) and is optional,
   if is not specified the main branch of the repository will be used.
 * Raw URLs like
