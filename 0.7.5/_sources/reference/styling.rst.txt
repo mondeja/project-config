@@ -80,7 +80,8 @@ Enforce files absence
 Defining ``files`` as an object, it must be an unique key ``not``. The value
 of ``not`` must be either:
 
-* An object whose keys are the files that must not exist and a message for each value indicating a reason that explain why this file must be absent.
+* An object whose keys are the files that must not exist and a message for each
+  value indicating a reason that explain why this file must be absent.
 * An array of strings with the paths to the files that must not exist.
 
 When enforcing absence of files no other actions can be defined in the rule,
@@ -89,15 +90,18 @@ as this has no sense. The attempt will raise an error validating the style.
 File syntax convention
 ----------------------
 
-* Files are defined relative to the root directory of the project, which will be the current working directory if no other is passed in `--rootdir` CLI argument.
-* Paths terminated with ``/`` will be treated as directories using the Unix separator, even in Windows systems.
+* Files are defined relative to the root directory of the project, which will be the
+  current working directory if no other is passed in :ref:`--rootdir<project-config---rootdir>`
+  CLI argument.
+* Paths terminated with ``/`` will be treated as directories using the Unix separator,
+  so you must always use ``/`` as file path separators even on Windows systems.
 
 ``hint`` (`string`)
 ===================
 
 Optional field for all rules. It specifies a hint that will be displayed along
 the error message when a checking error occurred using the ``check`` command.
-It is specially useful for complex rules which could show abstract error messages.
+It is specially useful for complex rules which show abstract error messages.
 
 .. rubric:: Example
 
@@ -108,9 +112,9 @@ It is specially useful for complex rules which could show abstract error message
        {
          files: [".project-config.toml"],
          hint: "The name of the root directory must match the regex '[a-z0-9-]+$'",
-         JMESPathsMatch: [["regex_match('[a-z0-9-]+$', rootdir_name())", true]],
-       },
-     ],
+         JMESPathsMatch: [["regex_match('[a-z0-9-]+$', rootdir_name())", true]]
+       }
+     ]
    }
 
 ************************
@@ -134,11 +138,7 @@ using ``extends: ["../other/file.json5"]`` inside the style
 
    {
      extends: ["../../base/style.json5", "gh://author/project/path/to/style.json5"],
-     rules: [
-       {
-         files: [".project-config.toml"],
-       },
-     ],
+     rules: [{files: [".project-config.toml"]}]
    }
 
 .. _style-plugins:

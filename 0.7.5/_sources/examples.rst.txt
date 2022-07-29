@@ -9,12 +9,6 @@ The file `.gitignore` must have a line with the content ``/dist/``.
 
 .. tabs::
 
-   .. tab:: .project-config.toml
-
-      .. code-block:: toml
-
-         style = "style.json"
-
    .. tab:: style.json
 
       .. code-block:: json
@@ -34,19 +28,18 @@ The file `.gitignore` must have a line with the content ``/dist/``.
 
          /dist/
 
+   .. tab:: .project-config.toml
+
+      .. code-block:: toml
+
+         style = "style.json"
+
 project-config self configuration
 =================================
 
 project-config is defining a valid configuration, forcing the definition of ``styles`` as an array for styles and a valid ``cache`` value.
 
 .. tabs::
-
-   .. tab:: .project-config.toml
-
-      .. code-block:: toml
-
-         style = ["style.json5"]
-         cache = "5 minutes"
 
    .. tab:: style.json5
 
@@ -77,18 +70,19 @@ project-config is defining a valid configuration, forcing the definition of ``st
            ],
          }
 
+   .. tab:: .project-config.toml
+
+      .. code-block:: toml
+
+         style = ["style.json5"]
+         cache = "5 minutes"
+
 Files absence
 =============
 
 The files `readme.md` and `index.md` must not exist.
 
 .. tabs::
-
-   .. tab:: .project-config.toml
-
-      .. code-block:: toml
-
-         style = "style.yaml"
 
    .. tab:: style.yaml
 
@@ -103,18 +97,18 @@ The files `readme.md` and `index.md` must not exist.
                not:
                  - index.md
 
+   .. tab:: .project-config.toml
+
+      .. code-block:: toml
+
+         style = "style.yaml"
+
 Conditionals
 ============
 
 If `.gitignore` includes the line ``__pycache__/`` a `pyproject.toml` file must be present.
 
 .. tabs::
-
-   .. tab:: .project-config.toml
-
-      .. code-block:: toml
-
-         style = "style.json"
 
    .. tab:: style.json
 
@@ -137,6 +131,12 @@ If `.gitignore` includes the line ``__pycache__/`` a `pyproject.toml` file must 
 
          __pycache__/
 
+   .. tab:: .project-config.toml
+
+      .. code-block:: toml
+
+         style = "style.json"
+
    .. tab:: pyproject.toml
 
       .. code-block:: toml
@@ -151,12 +151,6 @@ Follows the next rules:
    * If the file `pyproject.toml` exists, a Python file must be present in the root directory.
 
 .. tabs::
-
-   .. tab:: .project-config.toml
-
-      .. code-block:: toml
-
-         style = "style.json5"
 
    .. tab:: style.json5
 
@@ -174,6 +168,12 @@ Follows the next rules:
              },
            ],
          }
+
+   .. tab:: .project-config.toml
+
+      .. code-block:: toml
+
+         style = "style.json5"
 
    .. tab:: pyproject.toml
 
@@ -193,25 +193,12 @@ Follows the next rules:
 
 
 
-Compare values between serializable files
-=========================================
+Compare values between files
+============================
 
 The version defined in ``__version__`` inside a Python script must match the metadata defined in `pyproject.toml` file.
 
 .. tabs::
-
-   .. tab:: .project-config.toml
-
-      .. code-block:: toml
-
-         style = "style.toml"
-
-   .. tab:: pyproject.toml
-
-      .. code-block:: toml
-
-         [tool.poetry]
-         version = "1.0.0"
 
    .. tab:: style.toml
 
@@ -228,6 +215,19 @@ The version defined in ``__version__`` inside a Python script must match the met
            ],
          ]
 
+   .. tab:: pyproject.toml
+
+      .. code-block:: toml
+
+         [tool.poetry]
+         version = "1.0.0"
+
+   .. tab:: .project-config.toml
+
+      .. code-block:: toml
+
+         style = "style.toml"
+
    .. tab:: script.py
 
       .. code-block:: python
@@ -242,12 +242,6 @@ JMESPath against online sources
 Check that the ``license`` field of *package.json* file is defined with a valid OSI approved SPDX license identifier.
 
 .. tabs::
-
-   .. tab:: .project-config.toml
-
-      .. code-block:: toml
-
-         style = "style.json5"
 
    .. tab:: style.json5
 
@@ -272,6 +266,12 @@ Check that the ``license`` field of *package.json* file is defined with a valid 
            ],
          }
 
+   .. tab:: .project-config.toml
+
+      .. code-block:: toml
+
+         style = "style.json5"
+
    .. tab:: package.json
 
       .. code-block:: json
@@ -287,12 +287,6 @@ Check that the name of the directory that is the root of the project matches aga
 
 .. tabs::
 
-   .. tab:: .project-config.toml
-
-      .. code-block:: toml
-
-         style = "style.json5"
-
    .. tab:: style.json5
 
       .. code-block:: js
@@ -307,28 +301,18 @@ Check that the name of the directory that is the root of the project matches aga
            ],
          }
 
-TOML sections order
-===================
-
-Check that the section ``[foo]`` of a TOML file is placed before the section ``[bar]``.
-
-.. tabs::
-
    .. tab:: .project-config.toml
 
       .. code-block:: toml
 
          style = "style.json5"
 
-   .. tab:: pyproject.toml
+TOML sections order
+===================
 
-      .. code-block:: toml
+Check that the section ``[foo]`` of a TOML file is placed before the section ``[bar]``.
 
-         [foo]
-         name = "foo"
-
-         [bar]
-         name = "bar"
+.. tabs::
 
    .. tab:: style.json5
 
@@ -351,18 +335,28 @@ Check that the section ``[foo]`` of a TOML file is placed before the section ``[
            ],
          }
 
-Editing a .gitignore file
-=========================
+   .. tab:: pyproject.toml
 
-Enforce the existence of certain lines in a `.gitignore` file.
+      .. code-block:: toml
 
-.. tabs::
+         [foo]
+         name = "foo"
+
+         [bar]
+         name = "bar"
 
    .. tab:: .project-config.toml
 
       .. code-block:: toml
 
          style = "style.json5"
+
+Editing a .gitignore file
+=========================
+
+Enforce the existence of certain lines in a `.gitignore` file.
+
+.. tabs::
 
    .. tab:: style.json5
 
@@ -422,6 +416,12 @@ Enforce the existence of certain lines in a `.gitignore` file.
          /dist/
          dist/
 
+   .. tab:: .project-config.toml
+
+      .. code-block:: toml
+
+         style = "style.json5"
+
 Replacing code blocks languages in RST documents
 ================================================
 
@@ -430,12 +430,6 @@ Don't allow code blocks in RST documentation files:
  * Pygments' JSON5 lexer is not implemented yet, use Javascript lexer.
 
 .. tabs::
-
-   .. tab:: .project-config.toml
-
-      .. code-block:: toml
-
-         style = "style.json5"
 
    .. tab:: style.json5
 
@@ -463,6 +457,12 @@ Don't allow code blocks in RST documentation files:
            ],
          }
 
+   .. tab:: .project-config.toml
+
+      .. code-block:: toml
+
+         style = "style.json5"
+
    .. tab:: file.rst
 
       .. code-block:: restructuredtext
@@ -486,12 +486,6 @@ Autofixing .editorconfig
 If you run the next example using ``project-config fix`` subcommand without creating an `.editorconfig` file it will be created and populated with the sections defined in the rule.
 
 .. tabs::
-
-   .. tab:: .project-config.toml
-
-      .. code-block:: toml
-
-         style = "style.json5"
 
    .. tab:: style.json5
 
@@ -526,30 +520,18 @@ If you run the next example using ``project-config fix`` subcommand without crea
          charset = utf-8
          trim_trailing_whitespace = true
 
-Setting hooks in .pre-commit-config.yaml
-========================================
-
-Set a pre-commit hook for ``editorconfig-checker`` inside `.pre-commit-config.yaml` with manual fixes.
-
-.. tabs::
-
    .. tab:: .project-config.toml
 
       .. code-block:: toml
 
          style = "style.json5"
 
-   .. tab:: .pre-commit-config.yaml
+Setting hooks in .pre-commit-config.yaml
+========================================
 
-      .. code-block:: yaml
+Set a pre-commit hook for ``editorconfig-checker`` inside `.pre-commit-config.yaml` with manual fixes.
 
-         repos:
-           - hooks:
-               - alias: ec
-                 id: editorconfig-checker
-                 name: editorconfig-checker
-             repo: https://github.com/editorconfig-checker/editorconfig-checker.python
-             rev: 2.4.0
+.. tabs::
 
    .. tab:: style.json5
 
@@ -609,19 +591,30 @@ Set a pre-commit hook for ``editorconfig-checker`` inside `.pre-commit-config.ya
            ],
          }
 
-Intercommunication between rules
-================================
+   .. tab:: .pre-commit-config.yaml
 
-Using :py:func:`getenv` and :py:func:`setenv` functions to pass arbitrary data between rules.
+      .. code-block:: yaml
 
-.. tabs::
+         repos:
+           - hooks:
+               - alias: ec
+                 id: editorconfig-checker
+                 name: editorconfig-checker
+             repo: https://github.com/editorconfig-checker/editorconfig-checker.python
+             rev: 2.4.0
 
    .. tab:: .project-config.toml
 
       .. code-block:: toml
 
          style = "style.json5"
-         cache = "never"
+
+Intercommunication between rules
+================================
+
+Using :py:func:`getenv` and :py:func:`setenv` functions to pass arbitrary data between rules.
+
+.. tabs::
 
    .. tab:: style.json5
 
@@ -671,6 +664,13 @@ Using :py:func:`getenv` and :py:func:`setenv` functions to pass arbitrary data b
              },
            ],
          }
+
+   .. tab:: .project-config.toml
+
+      .. code-block:: toml
+
+         style = "style.json5"
+         cache = "never"
 
 .. raw:: html
 
