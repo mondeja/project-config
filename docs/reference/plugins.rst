@@ -268,10 +268,10 @@ always takes the regex to apply as the first parameter following the Python's
 
    .. versionadded:: 0.8.0
 
-.. function:: setenv(envvar: str, value: str | None) -> None
+.. function:: setenv(envvar: str, value: str | None) -> dict
 
-   Set the value of an environment variable. If you set the value to ``null``,
-   the environment variable will be removed.
+   Set the value of an environment variable. If you set the value
+   to ``null``, the environment variable will be removed.
 
    Return the updated environment object.
 
@@ -279,8 +279,10 @@ always takes the regex to apply as the first parameter following the Python's
 
 .. function:: rootdir_name() -> str
 
-   Returns the name if the root directory of the project (passed in :ref:`project-config---rootdir`
-   CLI option or defined in ``cli.rootdir`` :doc:`configuration option <./config>`).
+   Returns the name if the root directory of the project, that will be the
+   current working directory or other that could be either passed in
+   :ref:`project-config---rootdir` CLI option or defined in ``cli.rootdir``
+   :doc:`configuration option <./config>`.
 
    .. versionadded:: 0.6.0
 
@@ -343,12 +345,13 @@ always takes the regex to apply as the first parameter following the Python's
 
    .. rubric:: Example
 
-   In the next example we are checking that the configuration field ``tool.isort.sections``
-   is a superset or equal to the array ``['STDLIB', 'THIRDPARTY', 'FIRSTPARTY', 'LOCALFOLDER']``
-   appyling the operator ``<=``.
+   The next example checks that the configuration field ``tool.isort.sections``
+   is a superset or equal to the array of strings
+   ``['STDLIB', 'THIRDPARTY', 'FIRSTPARTY', 'LOCALFOLDER']`` appyling
+   the operator ``<=``.
 
    These comparations are easier to do than checking every item in the array
-   with the buil-in JMESPath function ``contains()``.
+   with the built-in JMESPath function ``contains()``.
 
    .. code-block:: js
 
@@ -388,19 +391,20 @@ always takes the regex to apply as the first parameter following the Python's
 
 .. function:: shlex_split(cmd_str: str) -> list
 
-   Split a string using the Python's built-in :py:func:`shlex.split` function.
+   Split a string using the Python's built-in function :py:func:`shlex.split`.
 
    .. versionadded:: 0.4.0
 
 .. function:: shlex_join(cmd_list: list[str]) -> str
 
-   Join a list of strings using the Python's built-in :py:func:`shlex.join` function.
+   Join a list of strings using the Python's built-in function :py:func:`shlex.join`.
 
    .. versionadded:: 0.4.0
 
 .. function:: round(number: float[, precision: int]) -> float
 
-   Round a number to a given precision using the function :external:py:func:`round`.
+   Round a number to a given precision using the Python's built-in function
+   :external:py:func:`round`.
 
    .. versionadded:: 0.5.0
 
@@ -423,9 +427,10 @@ always takes the regex to apply as the first parameter following the Python's
 
    Return the lowest index in ``value`` where subvalue ``sub`` is found.
    If ``start`` and ``end`` are given, return the number of occurrences between
-   ``start`` and ``end``. If not found, ``-1`` is returned. If ``value`` is a string
-   it uses internally the Python's built-in function :py:meth:`str.find`
-   or :py:meth:`str.index` if ``value`` is an array.
+   ``start`` and ``end``. If not found, ``-1`` is returned.
+
+   If ``value`` is a string it uses internally the Python's built-in function
+   :py:meth:`str.find`. If ``value`` is an array, uses the method :py:meth:`str.index`.
 
    .. versionadded:: 0.5.0
 
