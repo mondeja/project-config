@@ -995,7 +995,7 @@ Python file line by line:
    * :doc:`../in-depth/serialization`
    * :ref:`Example of crossJMESPath against online source<examples:JMESPath against online sources>`
    * :ref:`Example comparing values between files<examples:Compare values between files>`
-   * :ref:`Example checking lines sorting<examples/TOML sections order>`
+   * :ref:`Example checking lines sorting<examples:TOML sections order>`
 
 .. versionadded:: 0.4.0
 
