@@ -165,7 +165,7 @@ using <a class="reference external" href="https://github.com/pre-commit/identify
 <li><p>Loader: <a class="reference internal" href="../dev/reference/project_config.serializers.editorconfig.html#project_config.serializers.editorconfig.loads" title="project_config.serializers.editorconfig.loads"><code class="xref py py-func docutils literal notranslate"><span class="pre">project_config.serializers.editorconfig.loads()</span></code></a>.</p></li>
 <li><p>Dumper: <a class="reference internal" href="../dev/reference/project_config.serializers.editorconfig.html#project_config.serializers.editorconfig.dumps" title="project_config.serializers.editorconfig.dumps"><code class="xref py py-func docutils literal notranslate"><span class="pre">project_config.serializers.editorconfig.dumps()</span></code></a>.</p></li>
 </ul>
-<p>The <cite>root</cite> directive, if exists, will be added in a <code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code> object:</p>
+<p>The <cite>root</cite> directive, if exists, will be added in an empty string key <code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code> object:</p>
 <div class="sphinx-tabs docutils container">
 <div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">.editorconfig</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">object</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="na">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">true</span><span class="w"></span>
 
@@ -193,8 +193,8 @@ using <a class="reference external" href="https://github.com/pre-commit/identify
 </section>
 <section id="python">
 <h2>Python<a class="headerlink" href="#python" title="Permalink to this headline"></a></h2>
-<p>For Python files, the global namespace exposed is serialized after
-executing them.</p>
+<p>For Python files, the global namespace is exposed after executing the file in
+a Python dictionary, including the key <code class="docutils literal notranslate"><span class="pre">__file__</span></code> with the script file path.</p>
 <ul class="simple">
 <li><p>Loader: <a class="reference internal" href="../dev/reference/project_config.serializers.python.html#project_config.serializers.python.loads" title="project_config.serializers.python.loads"><code class="xref py py-func docutils literal notranslate"><span class="pre">project_config.serializers.python.loads()</span></code></a></p></li>
 <li><p>Dumper: <a class="reference internal" href="../dev/reference/project_config.serializers.python.html#project_config.serializers.python.dumps" title="project_config.serializers.python.dumps"><code class="xref py py-func docutils literal notranslate"><span class="pre">project_config.serializers.python.dumps()</span></code></a></p></li>

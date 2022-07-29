@@ -171,7 +171,8 @@ glob itself will be treated as a file name and will be checked for existence.</p
 <p>Defining <code class="docutils literal notranslate"><span class="pre">files</span></code> as an object, it must be an unique key <code class="docutils literal notranslate"><span class="pre">not</span></code>. The value
 of <code class="docutils literal notranslate"><span class="pre">not</span></code> must be either:</p>
 <ul class="simple">
-<li><p>An object whose keys are the files that must not exist and a message for each value indicating a reason that explain why this file must be absent.</p></li>
+<li><p>An object whose keys are the files that must not exist and a message for each
+value indicating a reason that explain why this file must be absent.</p></li>
 <li><p>An array of strings with the paths to the files that must not exist.</p></li>
 </ul>
 <p>When enforcing absence of files no other actions can be defined in the rule,
@@ -180,8 +181,11 @@ as this has no sense. The attempt will raise an error validating the style.</p>
 <section id="file-syntax-convention">
 <h4>File syntax convention<a class="headerlink" href="#file-syntax-convention" title="Permalink to this headline"></a></h4>
 <ul class="simple">
-<li><p>Files are defined relative to the root directory of the project, which will be the current working directory if no other is passed in <cite>–rootdir</cite> CLI argument.</p></li>
-<li><p>Paths terminated with <code class="docutils literal notranslate"><span class="pre">/</span></code> will be treated as directories using the Unix separator, even in Windows systems.</p></li>
+<li><p>Files are defined relative to the root directory of the project, which will be the
+current working directory if no other is passed in <a class="reference internal" href="cli.html#project-config---rootdir"><span class="std std-ref">–rootdir</span></a>
+CLI argument.</p></li>
+<li><p>Paths terminated with <code class="docutils literal notranslate"><span class="pre">/</span></code> will be treated as directories using the Unix separator,
+so you must always use <code class="docutils literal notranslate"><span class="pre">/</span></code> as file path separators even on Windows systems.</p></li>
 </ul>
 </section>
 </section>
@@ -189,16 +193,16 @@ as this has no sense. The attempt will raise an error validating the style.</p>
 <h3><code class="docutils literal notranslate"><span class="pre">hint</span></code> (<cite>string</cite>)<a class="headerlink" href="#hint-string" title="Permalink to this headline"></a></h3>
 <p>Optional field for all rules. It specifies a hint that will be displayed along
 the error message when a checking error occurred using the <code class="docutils literal notranslate"><span class="pre">check</span></code> command.
-It is specially useful for complex rules which could show abstract error messages.</p>
+It is specially useful for complex rules which show abstract error messages.</p>
 <p class="rubric">Example</p>
 <div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
 <span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
 <span class="w">    </span><span class="p">{</span><span class="w"></span>
 <span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.project-config.toml&quot;</span><span class="p">],</span><span class="w"></span>
 <span class="w">      </span><span class="nx">hint</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;The name of the root directory must match the regex &#39;[a-z0-9-]+$&#39;&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">      </span><span class="nx">JMESPathsMatch</span><span class="o">:</span><span class="w"> </span><span class="p">[[</span><span class="s2">&quot;regex_match(&#39;[a-z0-9-]+$&#39;, rootdir_name())&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">]],</span><span class="w"></span>
-<span class="w">    </span><span class="p">},</span><span class="w"></span>
-<span class="w">  </span><span class="p">],</span><span class="w"></span>
+<span class="w">      </span><span class="nx">JMESPathsMatch</span><span class="o">:</span><span class="w"> </span><span class="p">[[</span><span class="s2">&quot;regex_match(&#39;[a-z0-9-]+$&#39;, rootdir_name())&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">]]</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="p">]</span><span class="w"></span>
 <span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
@@ -218,11 +222,7 @@ using <code class="docutils literal notranslate"><span class="pre">extends:</spa
 <p class="rubric">Example</p>
 <div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
 <span class="w">  </span><span class="k">extends</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;../../base/style.json5&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;gh://author/project/path/to/style.json5&quot;</span><span class="p">],</span><span class="w"></span>
-<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
-<span class="w">    </span><span class="p">{</span><span class="w"></span>
-<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.project-config.toml&quot;</span><span class="p">],</span><span class="w"></span>
-<span class="w">    </span><span class="p">},</span><span class="w"></span>
-<span class="w">  </span><span class="p">],</span><span class="w"></span>
+<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[{</span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.project-config.toml&quot;</span><span class="p">]}]</span><span class="w"></span>
 <span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>

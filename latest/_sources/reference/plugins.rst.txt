@@ -2,18 +2,21 @@
 Plugins
 #######
 
-Plugins are the basic unit for rules application. Plugins defines
-:bolditalic:`actions` which can be either :bolditalic:`verbs` or
+Plugins are the providers of the basic units for the application of rules,
+defining :bolditalic:`actions` which can be either :bolditalic:`verbs` or
 :bolditalic:`conditionals`.
 
-* :bolditalic:`conditionals` filter the execution of verbs in a rule. If all the conditionals of a rule returns ``true``, the verbs are executed. Conditionals are identified because they start with the prefix ``if``.
-* :bolditalic:`verbs` execute actions against the files defined in the special ``files`` property of each rule. They act like asserters.
+* :bolditalic:`conditionals` filter the execution of verbs in a rule. If all
+  the conditionals of a rule returns ``true``, the verbs are executed.
+  Conditionals are identified because they start with the prefix ``if``.
+* :bolditalic:`verbs` execute actions against the files defined in the
+  special ``files`` property of each rule. They act like asserters.
 
 *********
 inclusion
 *********
 
-Plain content inclusion management.
+Files content inclusion management.
 
 includeLines
 ============
@@ -54,6 +57,8 @@ should not be specified.
                files: [".gitignore"],
                hint: "The line 'dist/' must be included in .gitignore",
                includeLines: [
+                 // Include all the lines which value is not a set of variants of `dist/`
+                 // and append the line `dist/` to the end of the file
                  ["dist/", "op([?!contains(['/dist/', 'dist', 'dist/'], @)], '+', ['dist/'])"],
                  "__pycache__/",
                ]
@@ -110,7 +115,8 @@ excludeContent
 Check that the files do not include certain content.
 
 The specified partial contents can match multiple lines
-and line ending characters.
+and line ending characters. It just raises errors if the passed
+contents are substrings of each file content.
 
 .. rubric:: Example
 
@@ -241,6 +247,10 @@ always takes the regex to apply as the first parameter following the Python's
 
    .. versionadded:: 0.7.5
 
+.. seealso::
+
+   :ref:`Example of regex_match() and rootdir_name()<examples:Assert root directory name>`.
+
 .. _regex standard library: https://docs.python.org/3/library/re.html
 
 
@@ -258,10 +268,10 @@ always takes the regex to apply as the first parameter following the Python's
 
    .. versionadded:: 0.8.0
 
-.. function:: setenv(envvar: str, value: str | None) -> None
+.. function:: setenv(envvar: str, value: str | None) -> dict
 
-   Set the value of an environment variable. If you set the value to ``null``,
-   the environment variable will be removed.
+   Set the value of an environment variable. If you set the value
+   to ``null``, the environment variable will be removed.
 
    Return the updated environment object.
 
@@ -269,8 +279,10 @@ always takes the regex to apply as the first parameter following the Python's
 
 .. function:: rootdir_name() -> str
 
-   Returns the name if the root directory of the project (passed in :ref:`project-config---rootdir`
-   CLI option or defined in ``cli.rootdir`` :doc:`configuration option <./config>`).
+   Returns the name if the root directory of the project, that will be the
+   current working directory or other that could be either passed in
+   :ref:`project-config---rootdir` CLI option or defined in ``cli.rootdir``
+   :doc:`configuration option <./config>`.
 
    .. versionadded:: 0.6.0
 
@@ -331,6 +343,34 @@ always takes the regex to apply as the first parameter following the Python's
    * ``-``: :py:func:`operator.sub`
    * ``^``: :py:func:`operator.xor`
 
+   .. rubric:: Example
+
+   The next example checks that the configuration field ``tool.isort.sections``
+   is a superset or equal to the array of strings
+   ``['STDLIB', 'THIRDPARTY', 'FIRSTPARTY', 'LOCALFOLDER']`` appyling
+   the operator ``<=``.
+
+   These comparations are easier to do than checking every item in the array
+   with the built-in JMESPath function ``contains()``.
+
+   .. code-block:: js
+
+      {
+        rules: [
+          {
+            files: ["pyproject.toml"],
+            JMESPathsMatch: [
+              ["type(tool.isort)", "object"],
+              ["type(tool.isort.sections)", "array"],
+              [
+                "op(['STDLIB', 'THIRDPARTY', 'FIRSTPARTY', 'LOCALFOLDER'], '<=', tool.isort.sections)",
+                true,
+              ],
+            ],
+          },
+        ],
+      }
+
    You can pass multiple operators and values after the ``target`` argument
    chaining the operation with multiple operators. For example:
 
@@ -351,19 +391,20 @@ always takes the regex to apply as the first parameter following the Python's
 
 .. function:: shlex_split(cmd_str: str) -> list
 
-   Split a string using the Python's built-in :py:func:`shlex.split` function.
+   Split a string using the Python's built-in function :py:func:`shlex.split`.
 
    .. versionadded:: 0.4.0
 
 .. function:: shlex_join(cmd_list: list[str]) -> str
 
-   Join a list of strings using the Python's built-in :py:func:`shlex.join` function.
+   Join a list of strings using the Python's built-in function :py:func:`shlex.join`.
 
    .. versionadded:: 0.4.0
 
 .. function:: round(number: float[, precision: int]) -> float
 
-   Round a number to a given precision using the function :external:py:func:`round`.
+   Round a number to a given precision using the Python's built-in function
+   :external:py:func:`round`.
 
    .. versionadded:: 0.5.0
 
@@ -379,7 +420,6 @@ always takes the regex to apply as the first parameter following the Python's
    Return the number of occurrences of ``sub`` in ``value`` using :py:meth:`str.count`.
    If ``start`` and ``end`` are given, return the number of occurrences between
    ``start`` and ``end``.
-   .
 
    .. versionadded:: 0.5.0
 
@@ -387,9 +427,10 @@ always takes the regex to apply as the first parameter following the Python's
 
    Return the lowest index in ``value`` where subvalue ``sub`` is found.
    If ``start`` and ``end`` are given, return the number of occurrences between
-   ``start`` and ``end``. If not found, ``-1`` is returned. If ``value`` is a string
-   it uses internally the Python's built-in function :py:meth:`str.find`
-   or :py:meth:`str.index` if ``value`` is an array.
+   ``start`` and ``end``. If not found, ``-1`` is returned.
+
+   If ``value`` is a string it uses internally the Python's built-in function
+   :py:meth:`str.find`. If ``value`` is an array, uses the method :py:meth:`str.index`.
 
    .. versionadded:: 0.5.0
 
@@ -927,8 +968,8 @@ the rule. For example, the next configuration would not raise errors:
          {"bar": {"baz": 7}}
 
 You can also override the :doc:`../in-depth/serialization` to use for opening
-other files using ``file/path.ext?serializer`` syntax. For example, to open a Python
-file line by line:
+other files using ``file/path.ext?serializer`` syntax. For example, to open a
+Python file line by line:
 
 .. tabs::
 
@@ -954,6 +995,13 @@ file line by line:
            ]
          }
 
+.. seealso::
+
+   * :doc:`../in-depth/serialization`
+   * :ref:`Example of crossJMESPath against online source<examples:JMESPath against online sources>`
+   * :ref:`Example comparing values between files<examples:Compare values between files>`
+   * :ref:`Example checking lines sorting<examples:TOML sections order>`
+
 .. versionadded:: 0.4.0
 
 ifJMESPathsMatch
@@ -968,8 +1016,8 @@ skips the rule.
 
 .. rubric:: Example
 
-If ``inline-quotes`` config of flake8 is defined to use double quotes,
-Black must be configured as the formatting tool in ``pyproject.toml``:
+If ``inline-quotes`` config of `flake8`_ is defined to use double quotes,
+`black`_ must be configured as the formatting tool in ``pyproject.toml``:
 
 .. code-block:: js
 
@@ -991,3 +1039,6 @@ Black must be configured as the formatting tool in ``pyproject.toml``:
    }
 
 .. versionadded:: 0.1.0
+
+.. _flake8: https://flake8.pycqa.org
+.. _black: https://black.readthedocs.io
