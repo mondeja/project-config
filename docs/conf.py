@@ -178,11 +178,8 @@ if SPHINX_IS_RUNNING:
                 else:
                     with open(filepath, encoding="utf-8") as f:
                         content = f.read()
-                # put configuration files first
-                if content and filename in (
-                    ".project-config.toml",
-                    "pyproject.toml",
-                ):
+                # put styles files first
+                if content and "style" in filename:
                     example_data["files"].insert(0, (filename, content))
                 else:
                     example_data["files"].append((filename, content))
