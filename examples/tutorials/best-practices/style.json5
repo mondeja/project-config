@@ -70,11 +70,16 @@
           // error and fixed because the previous is setting
           // `conditional_constant` to `enabled`:
         ],
+
         [
           "contains(keys(@), 'conditional_constant')",
           true,
           "set(@, 'conditional_constant', 'enabled')",
         ],
+
+        // But the previous `unset()` expression is autofixable, so is
+        // not needed using `contains(keys(@), '<key>') -> false` (FIXABLE):
+        ["contains(keys(@), 'conditional_constant')", false],
 
         // If you need to update the current object you can use `update()`:
         //                                                    (MANUAL FIX)
