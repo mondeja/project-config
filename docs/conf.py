@@ -178,7 +178,7 @@ if SPHINX_IS_RUNNING:
                 else:
                     with open(filepath, encoding="utf-8") as f:
                         content = f.read()
-                # put styles files first
+                # put style files first
                 if content and "style" in filename:
                     example_data["files"].insert(0, (filename, content))
                 else:
