@@ -49,7 +49,7 @@ If you include the line, it will not warn exiting with 0 code.
 
 .. rubric:: Autofixing
 
-This example is automatically fixable executing `project-config fix`
+This example is automatically fixable executing ``project-config fix``
 when the file `.gitignore` is even unexistent.
 
 .. code-block:: sh

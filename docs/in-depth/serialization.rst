@@ -77,7 +77,7 @@ Editorconfig
 * Loader: :py:func:`project_config.serializers.editorconfig.loads`.
 * Dumper: :py:func:`project_config.serializers.editorconfig.dumps`.
 
-The `root` directive, if exists, will be added in a ``""`` object:
+The `root` directive, if exists, will be added in an empty string key ``""`` object:
 
 .. tabs::
 
@@ -113,8 +113,8 @@ The `root` directive, if exists, will be added in a ``""`` object:
 Python
 ******
 
-For Python files, the global namespace exposed is serialized after
-executing them.
+For Python files, the global namespace is exposed after executing the file in
+a Python dictionary, including the key ``__file__`` with the script file path.
 
 * Loader: :py:func:`project_config.serializers.python.loads`
 * Dumper: :py:func:`project_config.serializers.python.dumps`
