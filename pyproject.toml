@@ -102,8 +102,9 @@ regex = "(\"version\": \")(\\d+\\.\\d+\\.\\d+)(\")"
 file = "contrib/mega-linter-plugin-project-config/project-config.megalinter-descriptor.yml"
 
 [tool.project-config]
+cache = "2 days"
 style = [
-  # Basic Python styles: use poetry
+  # Basic Python style: use poetry, pre-commit, Github workflows...
   "gh://mondeja/project-config-styles/python/base.json5",
   # Minimum Python version
   "gh://mondeja/project-config-styles/python/version/min-37.json5",
@@ -118,10 +119,8 @@ style = [
   "gh://mondeja/project-config-styles/python/google-docstrings.json5",
   "gh://mondeja/project-config-styles/python/readthedocs.json5",
   # Type checking with mypy
-  "gh://mondeja/project-config-styles/python/mypy.json5",
   "gh://mondeja/project-config-styles/python/mypy.json5"
 ]
-cache = "2 days"
 
 [tool.poetry-exec-plugin.commands]
 t = "coverage run -m pytest"

@@ -142,7 +142,7 @@ def build_main_parser() -> argparse.ArgumentParser:  # noqa: D103
             " id with the syntax '<OPTION>=<JSON VALUE>'. Console reporters can"
             " take an argument 'color' which accepts a JSON object to customize"
             " the colors for parts of the report like files, for example:"
-            " table:simple;color={%s}." % example
+            " table:simple;colors={%s}." % example
         ),
     )
     parser.add_argument(
