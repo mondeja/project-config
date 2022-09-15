@@ -24,9 +24,11 @@ def loads(string: str, namespace: Namespace = {}) -> Namespace:
     Returns:
         dict: Global namespace of the Python script as an object.
     """
-    code = compile(string, "utf-8", "exec")
-    exec(code, namespace)
-    del namespace["__builtins__"]  # we don't care about builtins
+    exec(compile(string, "utf-8", "exec"), namespace)  # noqa: DUO105,DUO110
+    try:
+        del namespace["__builtins__"]  # we don't care about builtins
+    except KeyError:
+        pass
     return namespace
 
 
