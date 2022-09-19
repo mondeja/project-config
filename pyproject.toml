@@ -142,6 +142,7 @@ exclude_lines = [
   "def __repr__\\(",
   "raise NotImplementedError",
   "@(abc\\.)?abstractmethod",
+  "class .*\\bProtocol\\):",
   "if __name__ == [\"']__main__[\"']:"
 ]
 omit = ["src/project_config/tests/*"]
