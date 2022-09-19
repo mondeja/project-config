@@ -137,7 +137,13 @@ self = "project-config"
 addopts = "-s"
 
 [tool.coverage.report]
-exclude_lines = ["pragma: no cover", "if __name__ == [\"']__main__[\"']:"]
+exclude_lines = [
+  "pragma: no cover",
+  "def __repr__\\(",
+  "raise NotImplementedError",
+  "@(abc\\.)?abstractmethod",
+  "if __name__ == [\"']__main__[\"']:"
+]
 omit = ["src/project_config/tests/*"]
 
 [tool.coverage.run]
