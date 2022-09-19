@@ -25,7 +25,7 @@ class SerializerFunction(Protocol):
         self,
         value: t.Any,
         **kwargs: t.Any,
-    ) -> SerializerResult:  # pragma: no cover
+    ) -> SerializerResult:
         ...
 
 
