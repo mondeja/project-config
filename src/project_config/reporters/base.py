@@ -74,7 +74,7 @@ class BaseReporter(abc.ABC):
                 ``"style"``.
             data (dict): Data to report.
         """
-        raise NotImplementedError  # pragma: no cover
+        raise NotImplementedError
 
     @property
     def success(self) -> bool:
@@ -121,12 +121,12 @@ class BaseFormattedReporter(BaseReporter, abc.ABC):
     """Reporter that requires formatted fields."""
 
     @abc.abstractmethod
-    def format_fixed(self, output: str) -> str:  # pragma: no cover
+    def format_fixed(self, output: str) -> str:
         """File name formatter."""
         raise NotImplementedError
 
     @abc.abstractmethod
-    def format_file(self, fname: str) -> str:  # pragma: no cover
+    def format_file(self, fname: str) -> str:
         """File name formatter."""
         raise NotImplementedError
 
@@ -134,37 +134,37 @@ class BaseFormattedReporter(BaseReporter, abc.ABC):
     def format_error_message(
         self,
         error_message: str,
-    ) -> str:  # pragma: no cover
+    ) -> str:
         """Error message formatter."""
         raise NotImplementedError
 
     @abc.abstractmethod
-    def format_definition(self, definition: str) -> str:  # pragma: no cover
+    def format_definition(self, definition: str) -> str:
         """Definition formatter."""
         raise NotImplementedError
 
     @abc.abstractmethod
-    def format_hint(self, hint: str) -> str:  # pragma: no cover
+    def format_hint(self, hint: str) -> str:
         """Hint formatter."""
         raise NotImplementedError
 
     @abc.abstractmethod
-    def format_key(self, key: str) -> str:  # pragma: no cover
+    def format_key(self, key: str) -> str:
         """Serialized key formatter."""
         raise NotImplementedError
 
     @abc.abstractmethod
-    def format_metachar(self, metachar: str) -> str:  # pragma: no cover
+    def format_metachar(self, metachar: str) -> str:
         """Meta characters string formatter."""
         raise NotImplementedError
 
     @abc.abstractmethod
-    def format_config_key(self, config_key: str) -> str:  # pragma: no cover
+    def format_config_key(self, config_key: str) -> str:
         """Configuration data key formatter, for example 'style'."""
         raise NotImplementedError
 
     @abc.abstractmethod
-    def format_config_value(self, config_value: str) -> str:  # pragma: no cover
+    def format_config_value(self, config_value: str) -> str:
         """Configuration data value formatter, for example 'style' urls."""
         raise NotImplementedError
 
