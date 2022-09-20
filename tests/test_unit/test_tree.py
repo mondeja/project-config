@@ -83,14 +83,14 @@ def test_Tree_directory(tmp_path):
     assert tree.files_cache.setitem_calls == 1
 
     # files from directory
-    baz_fpath, baz_fcontent = next(foo_fcontent)
-    assert baz_fpath == str(baz_path)
-    assert baz_fcontent == "baz"
+    fpath, fcontent = next(foo_fcontent)
+    assert fpath in (str(baz_path), str(bar_path))
+    assert fcontent in ("baz", "bar")
     assert tree.files_cache.setitem_calls == 2
 
-    bar_fpath, bar_fcontent = next(foo_fcontent)
-    assert bar_fpath == str(bar_path)
-    assert bar_fcontent == "bar"
+    fpath, fcontent = next(foo_fcontent)
+    assert fpath in (str(baz_path), str(bar_path))
+    assert fcontent in ("baz", "bar")
     assert tree.files_cache.setitem_calls == 3
 
     with pytest.raises(StopIteration):
