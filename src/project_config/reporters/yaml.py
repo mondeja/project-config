@@ -20,7 +20,7 @@ class YamlReporter(BaseReporter):
 
     def generate_data_report(
         self,
-        data_key: str,
+        data_key: str,  # noqa: U100
         data: t.Dict[str, t.Any],
     ) -> str:
         """Generate a data report in black/white JSON format."""

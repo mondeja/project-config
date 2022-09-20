@@ -37,10 +37,10 @@ class ReporterAction(argparse.Action):
 
     def __call__(  # type: ignore  # noqa: D102
         self,
-        parser: argparse.ArgumentParser,
+        parser: argparse.ArgumentParser,  # noqa: U100
         namespace: argparse.Namespace,
         value: str,
-        option_string: str,
+        option_string: str,  # noqa: U100
     ) -> None:
         reporter: t.Dict[str, t.Any] = {}
         if value:
