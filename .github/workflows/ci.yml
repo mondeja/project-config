@@ -102,18 +102,18 @@ jobs:
     needs:
       - test
       - test-docs
-    name: Build source distribution
+    name: Build package
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Install poetry
-        run: pipx install poetry==1.2.0b3
       - uses: actions/setup-python@v3
         name: Install Python v3.x
         with:
           python-version: 3.x
+      - name: Install build dependencies
+        run: pip install build
       - name: Build package
-        run: poetry build
+        run: python -m build
       - uses: actions/upload-artifact@v3
         with:
           path: dist/*
@@ -128,7 +128,7 @@ jobs:
         with:
           name: distribution
           path: dist
-      - uses: pypa/gh-action-pypi-publish@v1.5.1
+      - uses: pypa/gh-action-pypi-publish@release/v1
         with:
           user: __token__
           password: ${{ secrets.PYPI_TOKEN }}
@@ -172,16 +172,14 @@ jobs:
           TAG_BODY="${TAG_BODY//$'\r'/'%0D'}"
           echo ::set-output name=body::$TAG_BODY
       - name: Create Release
-        uses: actions/create-release@v1.1.4
+        uses: softprops/action-gh-release@v1
         id: create-release
         with:
+          name: ${{ steps.tag.outputs.title }}
           tag_name: ${{ steps.tag.outputs.title }}
-          release_name: ${{ steps.tag.outputs.title }}
           body: ${{ steps.tag.outputs.body }}
           draft: false
           prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.CREATE_RELEASE_TOKEN }}
       - uses: actions/download-artifact@v3
         name: Download builds
         with:
