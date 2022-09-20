@@ -337,7 +337,7 @@ class Project:
                             " implemented for verbal checking",
                         )
 
-    def check(self, args: argparse.Namespace) -> None:
+    def check(self, args: argparse.Namespace) -> None:  # noqa: U100
         """Checks that the styles configured for a project match.
 
         Raises an error if report errors.
@@ -378,7 +378,7 @@ class Project:
 
         sys.stdout.write(f"{report}\n")
 
-    def clean(self, args: argparse.Namespace) -> None:
+    def clean(self, args: argparse.Namespace) -> None:  # noqa: U100
         """Cleaning command."""
         from project_config.cache import Cache
 

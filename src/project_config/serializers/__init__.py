@@ -23,8 +23,8 @@ class SerializerFunction(Protocol):
 
     def __call__(  # noqa: D102
         self,
-        value: t.Any,
-        **kwargs: t.Any,
+        value: t.Any,  # noqa: U100
+        **kwargs: t.Any,  # noqa: U100
     ) -> SerializerResult:
         ...
 

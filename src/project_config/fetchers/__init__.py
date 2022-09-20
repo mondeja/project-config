@@ -108,7 +108,11 @@ def resolve_url(url: str) -> t.Tuple[str, str]:
     except ImportError:  # pragma: no cover
         raise SchemeProtocolNotImplementedError(scheme, action="Resolving")
     return (
-        getattr(module, "resolve_url", lambda url_parts_: url)(url_parts),
+        getattr(
+            module,
+            "resolve_url",
+            lambda url_parts_: url,  # noqa: U100
+        )(url_parts),
         scheme,
     )
 

@@ -62,7 +62,7 @@ def minimal_valid_config():
     return min_valid_config
 
 
-def _assert_minimal_valid_style(value):
+def _assert_minimal_valid_style(value):  # noqa: U100
     pass
 
 

@@ -34,7 +34,7 @@ class JMESPathPlugin:
     def JMESPathsMatch(
         value: t.List[t.List[t.Any]],
         tree: Tree,
-        rule: Rule,
+        rule: Rule,  # noqa: U100
         context: ActionsContext,
     ) -> Results:
         if not isinstance(value, list):
@@ -194,8 +194,8 @@ class JMESPathPlugin:
     def ifJMESPathsMatch(
         value: t.Dict[str, t.List[t.List[str]]],
         tree: Tree,
-        rule: Rule,
-        context: ActionsContext,
+        rule: Rule,  # noqa: U100
+        context: ActionsContext,  # noqa: U100
     ) -> Results:
         if not isinstance(value, dict):
             yield InterruptingError, {
@@ -327,8 +327,8 @@ class JMESPathPlugin:
     def crossJMESPathsMatch(
         value: t.List[t.List[t.Any]],
         tree: Tree,
-        rule: Rule,
-        context: ActionsContext,
+        rule: Rule,  # noqa: U100
+        context: ActionsContext,  # noqa: U100
     ) -> Results:
         if not isinstance(value, list):
             yield InterruptingError, {

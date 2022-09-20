@@ -5,7 +5,7 @@ class _ValidBaseReporter(BaseReporter):
     def generate_errors_report(self):
         pass
 
-    def generate_data_report(self, data_key, data):
+    def generate_data_report(self, data_key, data):  # noqa: U100
         pass
 
 

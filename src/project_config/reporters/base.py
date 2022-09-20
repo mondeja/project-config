@@ -61,8 +61,8 @@ class BaseReporter(abc.ABC):
 
     def generate_data_report(
         self,
-        data_key: str,
-        data: t.Dict[str, t.Any],
+        data_key: str,  # noqa: U100
+        data: t.Dict[str, t.Any],  # noqa: U100
     ) -> str:
         """Generate data report for configuration or styles.
 
@@ -169,7 +169,7 @@ class BaseFormattedReporter(BaseReporter, abc.ABC):
         raise NotImplementedError
 
 
-self_format_noop: t.Callable[[type, str], str] = lambda s, v: v
+self_format_noop: t.Callable[[type, str], str] = lambda self, v: v
 
 
 class BaseNoopFormattedReporter(BaseFormattedReporter):
