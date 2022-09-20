@@ -346,7 +346,7 @@ def initialize_config(config_filepath: str) -> str:
     os.makedirs(config_dirpath, exist_ok=True)
 
     if not os.path.isfile(config_filepath):
-        with open(config_filepath, "w") as f:
+        with open(config_filepath, "w", encoding="ascii") as f:
             f.write("")
 
     style_filepath = os.path.join(config_dirpath, "style.json5")
@@ -381,7 +381,7 @@ def initialize_config(config_filepath: str) -> str:
                 " 'cache', '5 minutes')))"
             )
 
-        with open(style_filepath, "w") as f:
+        with open(style_filepath, "w", encoding="ascii") as f:
             f.write(
                 '''{
   rules: [
@@ -429,14 +429,14 @@ def initialize_config(config_filepath: str) -> str:
         return f'{result}style = ["style.json5"]\ncache = "5 minutes"\n'
 
     def add_config_string_to_file(string: str) -> None:
-        with open(config_filepath, encoding="utf-8") as f:
+        with open(config_filepath, encoding="ascii") as f:
             config_lines = f.read().splitlines()
         if config_lines:
             add_separator = config_lines[-1] != ""
         else:
             add_separator = False
 
-        with open(config_filepath, "a") as f:
+        with open(config_filepath, "a", encoding="ascii") as f:
             if add_separator:
                 f.write("\n")
             f.write(string)
@@ -461,7 +461,7 @@ def initialize_config(config_filepath: str) -> str:
         return f"{config_filepath}[tool.project-config]"
 
     if os.path.isfile(config_filepath):
-        with open(config_filepath, encoding="utf-8") as f:
+        with open(config_filepath, encoding="ascii") as f:
             if f.read():
                 raise ProjectConfigAlreadyInitialized(config_filepath)
 

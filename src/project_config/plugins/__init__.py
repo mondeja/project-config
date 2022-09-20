@@ -190,7 +190,7 @@ class Plugins:
         if module_spec is not None:
             module_path = module_spec.origin
             if module_path is not None:
-                with open(module_path) as f:
+                with open(module_path, encoding="utf-8") as f:
                     for match in re.finditer(r"def ([^_]\w+)\(", f.read()):
                         yield match.group(1)
             # else:  # TODO: this could even happen? raise error
