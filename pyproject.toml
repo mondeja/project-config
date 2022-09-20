@@ -142,6 +142,7 @@ exclude_lines = [
   "def __repr__\\(",
   "raise NotImplementedError",
   "@(abc\\.)?abstractmethod",
+  "class .*\\bProtocol\\):",
   "if __name__ == [\"']__main__[\"']:"
 ]
 omit = ["src/project_config/tests/*"]
@@ -160,6 +161,7 @@ line_length = 79
 use_parentheses = true
 combine_as_imports = true
 include_trailing_comma = true
+py_version = 37
 known_tests = "tests"
 sections = [
   "FUTURE",
@@ -169,7 +171,6 @@ sections = [
   "TESTS",
   "LOCALFOLDER"
 ]
-py_version = 37
 remove_redundant_aliases = true
 extra_standard_library = [
   "contextvars",
@@ -205,6 +206,7 @@ flake8-implicit-str-concat = ["+*"]
 flake8-print = ["+*"]
 flake8-printf-formatting = ["+*"]
 flake8-pytest-style = ["+*"]
+flake8-bugbear = ["+*"]
 dlint = ["+*"]
 
 [tool.flakeheaven.exceptions."tests/**"]

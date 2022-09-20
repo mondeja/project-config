@@ -117,7 +117,7 @@ class Tree:
             self.files_cache[normalized_fpath] = (  # type: ignore
                 True,
                 self._generator(
-                    self.normalize_path(fname)
+                    os.path.join(normalized_fpath, fname)
                     for fname in os.listdir(normalized_fpath)
                 ),
             )

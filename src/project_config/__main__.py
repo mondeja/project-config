@@ -235,7 +235,7 @@ def parse_args(argv: t.List[str]) -> argparse.Namespace:  # noqa: D103
     return argparse.Namespace(**vars(args), **vars(subargs))
 
 
-def run(argv: t.List[str] = []) -> int:  # noqa: D103
+def run(argv: t.List[str]) -> int:  # noqa: D103
     os.environ["PROJECT_CONFIG"] = "true"
     args = parse_args(argv)
 

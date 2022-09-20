@@ -10,8 +10,13 @@ from project_config.compat import TypeAlias
 
 Namespace: TypeAlias = t.Dict[str, t.Any]
 
+DEFAULT_NAMESPACE: Namespace = {}
 
-def loads(string: str, namespace: Namespace = {}) -> Namespace:
+
+def loads(
+    string: str,
+    namespace: Namespace = DEFAULT_NAMESPACE,
+) -> Namespace:
     """Execute a Python file and exposes their namespace as a dictionary.
 
     The logic is based in Sphinx's configuration file loader:

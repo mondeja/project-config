@@ -259,7 +259,7 @@ class TomlColorReporter(BaseColorReporter):
                 )
                 if isinstance(value, list):
                     report += f' {self.format_metachar("[")}\n'
-                    for i, item in enumerate(value):
+                    for item in value:
                         report += (
                             f"  {self.format_config_value(json.dumps(item))}"
                             f'{self.format_metachar(",")}\n'
