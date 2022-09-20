@@ -60,7 +60,7 @@ def loads(string: str) -> EditorConfigConfigType:
     # Strip UTF-8 BOM if present and convert to lines
     string_lines = string.lstrip("\ufeff").splitlines()
 
-    for i, line in enumerate(string_lines):
+    for line in string_lines:
         # comment or blank line?
         if line.strip() == "" or line[0] in "#;":
             continue

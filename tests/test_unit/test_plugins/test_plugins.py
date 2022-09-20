@@ -162,24 +162,24 @@ def test_get_function_for_action():
             name="inclusion",
         ),
     )[0].load()
-    includeLines_function = getattr(InclusionPlugin, "includeLines")
-    ifIncludeLines_function = getattr(InclusionPlugin, "ifIncludeLines")
 
     # first time is not cached
     assert (
-        plugins.get_function_for_action("includeLines") == includeLines_function
+        plugins.get_function_for_action("includeLines")
+        == InclusionPlugin.includeLines
     )
 
     # second time, the method is cached, is returned inmediatly
     assert (
-        plugins.get_function_for_action("includeLines") == includeLines_function
+        plugins.get_function_for_action("includeLines")
+        == InclusionPlugin.includeLines
     )
 
     # call another action of the plugin, the class is cached but
     # not the method
     assert (
         plugins.get_function_for_action("ifIncludeLines")
-        == ifIncludeLines_function
+        == InclusionPlugin.ifIncludeLines
     )
 
 

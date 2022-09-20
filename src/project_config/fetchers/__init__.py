@@ -79,9 +79,8 @@ def fetch(url: str, **kwargs: t.Any) -> FetchResult:
     except ImportError:
         raise SchemeProtocolNotImplementedError(scheme)
 
-    fetch_func = getattr(module, "fetch")
     try:
-        string = fetch_func(url_parts, **kwargs)
+        string = module.fetch(url_parts, **kwargs)
     except FileNotFoundError:
         raise FetchError(f"'{url}' file not found")
     except ProjectConfigTimeoutError as exc:

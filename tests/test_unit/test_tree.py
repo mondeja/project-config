@@ -1,6 +1,5 @@
 """Tests for on-demand files/directories tree iterator."""
 
-import collections.abc
 import types
 
 import pytest
@@ -63,40 +62,39 @@ def test_Tree_file_caching(tmp_path):
 
 
 def test_Tree_directory(tmp_path):
-    dir_path = tmp_path / "foo"
-    dir_path.mkdir()
+    foo_path = tmp_path / "foo"
+    foo_path.mkdir()
 
-    bar_path = dir_path / "bar"
+    bar_path = foo_path / "bar.txt"
     bar_path.write_text("bar")
 
-    baz_path = dir_path / "baz"
+    baz_path = foo_path / "baz.txt"
     baz_path.write_text("baz")
 
     tree = Tree(tmp_path)
     tree.files_cache = TreeFilesCacheListenerMock()
 
-    # directory generator
-    directory_generator = tree._generator([dir_path.name])
+    directory_generator = tree._generator([foo_path.name])
     assert isinstance(directory_generator, types.GeneratorType)
 
-    fpath, fcontent = next(directory_generator)
-    assert fpath == str(dir_path)
-    assert isinstance(fcontent, collections.abc.Iterable)
+    foo_fpath, foo_fcontent = next(directory_generator)
+    assert foo_fpath == str(foo_path)
+    assert isinstance(foo_fcontent, types.GeneratorType)
     assert tree.files_cache.setitem_calls == 1
 
     # files from directory
-    bar_fpath, bar_fcontent = next(fcontent)
-    bar_fpath == bar_path.name
-    bar_fcontent == "bar"
+    fpath, fcontent = next(foo_fcontent)
+    assert fpath in (str(baz_path), str(bar_path))
+    assert fcontent in ("baz", "bar")
     assert tree.files_cache.setitem_calls == 2
 
-    baz_fpath, baz_fcontent = next(fcontent)
-    baz_fpath == baz_path.name
-    baz_fcontent == "baz"
+    fpath, fcontent = next(foo_fcontent)
+    assert fpath in (str(baz_path), str(bar_path))
+    assert fcontent in ("baz", "bar")
     assert tree.files_cache.setitem_calls == 3
 
     with pytest.raises(StopIteration):
-        next(fcontent)
+        next(foo_fcontent)
 
 
 def test_file_symlink(tmp_path):
