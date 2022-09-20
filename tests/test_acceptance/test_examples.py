@@ -12,7 +12,7 @@ from project_config.project import Project
 
 def _parse_example_metadata(example_dir):
     readme_rst_filepath = os.path.join(example_dir, "README.rst")
-    with open(readme_rst_filepath) as f:
+    with open(readme_rst_filepath, encoding="utf-8") as f:
         readme_lines = f.read().splitlines()
 
     metadata = {}

@@ -265,7 +265,7 @@ Examples
 """  # noqa: E501
 
         examples_page_path = os.path.join(rootdir, "docs", "examples.rst")
-        with open(examples_page_path, "w") as f:
+        with open(examples_page_path, "w", encoding="utf-8") as f:
             f.write(examples_page_content)
 
     def _create_tutorials_pages():
@@ -311,7 +311,7 @@ Examples
                 "pages",
                 f"{tutorial_dirname}.rst",
             )
-            with open(tutorial_page_path, "w") as f:
+            with open(tutorial_page_path, "w", encoding="utf-8") as f:
                 f.write(tutorial_page_content)
 
     _create_examples_page()
