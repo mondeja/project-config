@@ -194,6 +194,31 @@ of files, so only files that can be serialized can be targetted (see
 You can use in expressions all `JMESPath builtin functions`_ plus a set of
 convenient functions defined by the plugin internally:
 
+.. rubric:: Standard JMESPath functions
+
+The next functions extends those functions that the official JMESPath library
+has accepted and are compatible, but they offer some extra features:
+
+.. function:: starts_with(search: str, prefix: str[, start: int=0[, end: int=-1]]) -> bool
+
+   Return ``true`` if string starts with the prefix, otherwise return ``false``.
+   The argument ``prefix`` can also be an array of prefixes to look for.
+   With optional ``start``, test string beginning at that position.
+   With optional ``end``, stop comparing string at that position.
+
+   In the official implementation of JMESPath, the ``start`` and ``end``
+   parameters are not included and ``prefix`` can only be a string.
+
+.. function:: ends_with(search: str, suffix: str[, start: int=0[, end: int=-1]]) -> bool
+
+   Return ``true`` if the string ends with the specified suffix, otherwise
+   return ``false``. The argument ``suffix`` can also be a tuple of suffixes
+   to look for. With optional ``start``, test beginning at that position.
+   With optional ``end``, stop comparing at that position.
+
+   In the official implementation of JMESPath, the ``start`` and ``end``
+   parameters are not included and ``suffix`` can only be a string.
+
 .. rubric:: Regex functions
 
 All functions whose name start with ``regex_`` are regex functions, which
