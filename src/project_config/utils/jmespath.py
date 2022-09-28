@@ -191,6 +191,33 @@ def _to_items(value: t.Any) -> t.List[t.Any]:
 class JMESPathProjectConfigFunctions(JMESPathFunctions):
     """JMESPath class to include custom functions."""
 
+    # Functions that expands the functionality of the standard JMESPath
+    # functions:
+
+    @jmespath_func_signature(
+        {"types": ["string"]},
+        {"types": ["string", "array-string"], "variadic": True},
+    )
+    def _func_starts_with(
+        self, search: str, suffix: t.Union[str, t.List[str]], *args: t.Any
+    ) -> bool:
+        if isinstance(suffix, list):
+            suffix = tuple(suffix)
+        return search.startswith(suffix, *args)
+
+    @jmespath_func_signature(
+        {"types": ["string"]},
+        {"types": ["string", "array-string"], "variadic": True},
+    )
+    def _func_ends_with(
+        self, search: str, suffix: t.Union[str, t.List[str]], *args: t.Any
+    ) -> bool:
+        if isinstance(suffix, list):
+            suffix = tuple(suffix)
+        return search.endswith(suffix, *args)
+
+    # Functions that expands the standard JMESPath functions:
+
     @jmespath_func_signature(
         {"types": ["string"]},
         {"types": ["string"], "variadic": True},
