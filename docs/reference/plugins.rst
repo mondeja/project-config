@@ -773,7 +773,7 @@ only Github sources.
    text like ``v``) will be returned.
 
    This function is really useful setting the ``rev`` properties in
-   `.pre-commit-config.yaml` file.
+   `.pre-commit-config.yaml` files.
 
    .. versionadded:: 0.7.1
 

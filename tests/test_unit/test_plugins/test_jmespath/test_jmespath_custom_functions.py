@@ -577,7 +577,7 @@ def test_JMESPath_custom_functions(
                         " starts_with(foo, ['abc', '234'])]"
                     ),
                     [True, False],
-                ]
+                ],
             ],
             None,
             [],
@@ -592,7 +592,7 @@ def test_JMESPath_custom_functions(
                         " ends_with(foo, ['bar', 'qux'])]"
                     ),
                     [True, False],
-                ]
+                ],
             ],
             None,
             [],

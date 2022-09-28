@@ -199,7 +199,7 @@ class JMESPathProjectConfigFunctions(JMESPathFunctions):
         {"types": ["string", "array-string"], "variadic": True},
     )
     def _func_starts_with(
-        self, search: str, suffix: t.Union[str, t.List[str]], *args: t.Any
+        self, search: str, suffix: t.Union[str, t.Tuple[str]], *args: t.Any
     ) -> bool:
         if isinstance(suffix, list):
             suffix = tuple(suffix)
@@ -210,7 +210,7 @@ class JMESPathProjectConfigFunctions(JMESPathFunctions):
         {"types": ["string", "array-string"], "variadic": True},
     )
     def _func_ends_with(
-        self, search: str, suffix: t.Union[str, t.List[str]], *args: t.Any
+        self, search: str, suffix: t.Union[str, t.Tuple[str]], *args: t.Any
     ) -> bool:
         if isinstance(suffix, list):
             suffix = tuple(suffix)
