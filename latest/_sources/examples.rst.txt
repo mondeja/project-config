@@ -255,7 +255,7 @@ Check that the ``license`` field of *package.json* file is defined with a valid 
                  [
                    "license",
                    [
-                     "gh://spdx/license-list-data@v3.17/json/licenses.json",
+                     "gh://spdx/license-list-data@v3.18/json/licenses.json",
                      "licenses[?isOsiApproved] | [?!isDeprecatedLicenseId].licenseId",
                    ],
                    "contains([1], [0])",
