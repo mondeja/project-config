@@ -50,7 +50,7 @@
         // You can make your own editions manually by specifying a fix query.
         //
         // For example, here if `boolean_constant` is `true`, the value
-        // of `conditional_contant` will be setted as 'enabled' (MANUAL FIX):
+        // of `conditional_constant` will be setted as 'enabled' (MANUAL FIX):
         [
           "boolean_constant",
           false,

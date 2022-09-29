@@ -62,7 +62,6 @@ jobs:
         env:
           PROJECT_CONFIG_TESTS_E2E: true
       - name: Coveralls
-        # Coveralls is in maintainance mode
         run: |
           pip install coveralls coverage[toml]
           coveralls
