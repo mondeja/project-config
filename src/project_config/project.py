@@ -362,8 +362,8 @@ class Project:
             indent = (
                 None if "pretty" not in fmt else (2 if fmt == "pretty" else 4)
             )
-            data_object = fetch(args.file)
-            report = json.dumps(data_object, indent=indent)
+            data = fetch(args.file)
+            report = json.dumps(data, indent=indent)
         elif args.data == "cache":
             from project_config.cache import Cache
 
@@ -376,12 +376,10 @@ class Project:
                 data["cache"] = data.pop("_cache")
             elif args.data == "plugins":
                 self._load(fetch_styles=False, init_tree=False)
-                data = Plugins(  # type: ignore
-                    prepare_all=True,
-                ).plugin_action_names
+                data = Plugins(prepare_all=True).plugin_action_names
             else:  # style
                 self._load(init_tree=False)
-                data = self.config.dict_.pop("style")  # type: ignore
+                data = self.config.dict_.pop("style")
 
             report = self.reporter.generate_data_report(args.data, data)
 

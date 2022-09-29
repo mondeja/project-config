@@ -65,4 +65,4 @@ def GET(url: str, use_cache: bool = True, **kwargs: t.Any) -> str:
             Cache.set(url, result)
     else:
         result = _GET(url, **kwargs)
-    return result  # type: ignore
+    return result

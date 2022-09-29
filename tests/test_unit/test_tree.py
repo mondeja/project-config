@@ -28,11 +28,11 @@ def test_Tree_generator(tmp_path):
     assert tree.rootdir == tmp_path
 
     files = tree._generator([path.name])  # paths relative to rootdir
-    assert tree.files_cache == {}  # files are cached when used
+    assert tree._files_cache == {}  # files are cached when used
     assert isinstance(files, types.GeneratorType)
 
     assert next(files) == (str(path), expected_content)
-    assert tree.files_cache == {str(path): (False, expected_content)}
+    assert tree._files_cache == {str(path): (False, expected_content)}
 
     with pytest.raises(StopIteration):
         next(files)
@@ -45,20 +45,20 @@ def test_Tree_file_caching(tmp_path):
     path.write_text(expected_content)
 
     tree = Tree(tmp_path)
-    tree.files_cache = TreeFilesCacheListenerMock()
+    tree._files_cache = TreeFilesCacheListenerMock()
 
     expected_files = {str(path): (False, expected_content)}
     files1 = tree._generator([path.name])
-    assert tree.files_cache == {}
-    assert tree.files_cache.setitem_calls == 0
+    assert tree._files_cache == {}
+    assert tree._files_cache.setitem_calls == 0
     next(files1)
-    assert tree.files_cache.setitem_calls == 1
-    assert tree.files_cache == expected_files
+    assert tree._files_cache.setitem_calls == 1
+    assert tree._files_cache == expected_files
 
     files2 = tree._generator([path.name])
     next(files2)
-    assert tree.files_cache.setitem_calls == 2  # no more __setitem__
-    assert tree.files_cache == expected_files
+    assert tree._files_cache.setitem_calls == 2  # no more __setitem__
+    assert tree._files_cache == expected_files
 
 
 def test_Tree_directory(tmp_path):
@@ -72,7 +72,7 @@ def test_Tree_directory(tmp_path):
     baz_path.write_text("baz")
 
     tree = Tree(tmp_path)
-    tree.files_cache = TreeFilesCacheListenerMock()
+    tree._files_cache = TreeFilesCacheListenerMock()
 
     directory_generator = tree._generator([foo_path.name])
     assert isinstance(directory_generator, types.GeneratorType)
@@ -80,18 +80,18 @@ def test_Tree_directory(tmp_path):
     foo_fpath, foo_fcontent = next(directory_generator)
     assert foo_fpath == str(foo_path)
     assert isinstance(foo_fcontent, types.GeneratorType)
-    assert tree.files_cache.setitem_calls == 1
+    assert tree._files_cache.setitem_calls == 1
 
     # files from directory
     fpath, fcontent = next(foo_fcontent)
     assert fpath in (str(baz_path), str(bar_path))
     assert fcontent in ("baz", "bar")
-    assert tree.files_cache.setitem_calls == 2
+    assert tree._files_cache.setitem_calls == 2
 
     fpath, fcontent = next(foo_fcontent)
     assert fpath in (str(baz_path), str(bar_path))
     assert fcontent in ("baz", "bar")
-    assert tree.files_cache.setitem_calls == 3
+    assert tree._files_cache.setitem_calls == 3
 
     with pytest.raises(StopIteration):
         next(foo_fcontent)
@@ -108,7 +108,7 @@ def test_file_symlink(tmp_path):
     assert source_link_path.read_text() == "target"
 
     tree = Tree(tmp_path)
-    tree.files_cache = TreeFilesCacheListenerMock()
+    tree._files_cache = TreeFilesCacheListenerMock()
 
     generator = tree._generator([str(target_link_path), str(source_link_path)])
 
@@ -136,7 +136,7 @@ def test_glob(tmp_path, chdir):
         baz_path.write_text("baz")
 
         tree = Tree(tmp_path)
-        tree.files_cache = TreeFilesCacheListenerMock()
+        tree._files_cache = TreeFilesCacheListenerMock()
 
         generator = tree._generator(["**/*"])
         assert isinstance(generator, types.GeneratorType)
@@ -151,11 +151,11 @@ def test_glob(tmp_path, chdir):
 
         fpath, fcontent = next(generator)
         assert_file(fpath, fcontent)
-        assert tree.files_cache.setitem_calls == 1
+        assert tree._files_cache.setitem_calls == 1
 
         fpath, fcontent = next(generator)
         assert_file(fpath, fcontent)
-        assert tree.files_cache.setitem_calls == 2
+        assert tree._files_cache.setitem_calls == 2
 
         with pytest.raises(StopIteration):
             next(generator)
@@ -173,7 +173,7 @@ def test_glob_with_symlink(tmp_path, chdir):
         assert source_link_path.read_text() == "target"
 
         tree = Tree(tmp_path)
-        tree.files_cache = TreeFilesCacheListenerMock()
+        tree._files_cache = TreeFilesCacheListenerMock()
 
         generator = tree._generator(["*"])
         assert isinstance(generator, types.GeneratorType)
@@ -185,7 +185,7 @@ def test_glob_with_symlink(tmp_path, chdir):
         else:
             assert str(fpath1) == str(target_link_path)
         assert fcontent == "target"
-        assert tree.files_cache.setitem_calls == 1
+        assert tree._files_cache.setitem_calls == 1
 
         fpath2, fcontent = next(generator)
         if "source" in str(fpath2):
@@ -193,7 +193,7 @@ def test_glob_with_symlink(tmp_path, chdir):
         else:
             assert str(fpath2) == str(target_link_path)
         assert fcontent == "target"
-        assert tree.files_cache.setitem_calls == 2
+        assert tree._files_cache.setitem_calls == 2
 
         assert fpath1 != fpath2  # globbing does not resolve symlink paths
 
