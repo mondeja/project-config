@@ -116,7 +116,7 @@
           //   must be a valid SPDX OSI approved license identifier
           "license",
           [
-            "gh://spdx/license-list-data@v3.17/json/licenses.json",
+            "gh://spdx/license-list-data@v3.18/json/licenses.json",
             "licenses[?isOsiApproved] | [?!isDeprecatedLicenseId].licenseId",
           ],
           "contains([1], [0])",
