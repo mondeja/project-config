@@ -231,7 +231,7 @@ has accepted and are compatible, but they offer some extra features:
    .. versionchanged:: 0.7.6
 
       * Added ``start`` and ``end`` parameters.
-      * Added support for ``prefix`` to be an array of prefixes.
+      * Added support for ``suffix`` to be an array of suffixes.
 
 .. rubric:: Regex functions
 
