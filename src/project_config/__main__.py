@@ -196,7 +196,7 @@ def _parse_command_args(
                     " configuration (config), extended style (style),"
                     " cache directory location (cache), plugins with"
                     " their actions (plugins) or a file as a"
-                    " serialized object."
+                    " serialized object (file <path>)."
                 ),
             )
             args, remaining = parser.parse_known_args(subcommand_args)
