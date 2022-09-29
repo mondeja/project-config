@@ -17,7 +17,7 @@ def test_show_file(capsys, tmp_path, chdir):
 @pytest.mark.parametrize(
     "fmt",
     ("pretty", "pretty4"),
-    ids=("fmt=pretty", "fmt=pretty4"),
+    ids=("fmt=json:pretty", "fmt=json:pretty4"),
 )
 def test_show_file_pretty_output(fmt, capsys, tmp_path, chdir):
     project_config_file = tmp_path / ".project-config.toml"
