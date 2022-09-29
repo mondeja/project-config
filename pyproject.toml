@@ -105,21 +105,21 @@ file = "contrib/mega-linter-plugin-project-config/project-config.megalinter-desc
 cache = "2 days"
 style = [
   # Basic Python style: use poetry, pre-commit, Github workflows, etc
-  "gh://mondeja/project-config-styles/python/base.json5",
+  "gh://mondeja/project-config-styles@v1/python/base.json5",
   # Minimum Python version
-  "gh://mondeja/project-config-styles/python/version/min-37.json5",
+  "gh://mondeja/project-config-styles@v1/python/version/min-37.json5",
   # Double quotes: formatting with Black
-  "gh://mondeja/project-config-styles/python/double-quotes.json5",
+  "gh://mondeja/project-config-styles@v1/python/double-quotes.json5",
   # Maximum line length
-  "gh://mondeja/project-config-styles/python/line-length-80.json5",
+  "gh://mondeja/project-config-styles@v1/python/line-length-80.json5",
   # Testing styles: use pytest
-  "gh://mondeja/project-config-styles/python/tests.json5",
+  "gh://mondeja/project-config-styles@v1/python/tests.json5",
   # Documentation styles: use Sphinx with Readthedocs theme
-  "gh://mondeja/project-config-styles/python/sphinx.json5",
-  "gh://mondeja/project-config-styles/python/google-docstrings.json5",
-  "gh://mondeja/project-config-styles/python/readthedocs.json5",
+  "gh://mondeja/project-config-styles@v1/python/sphinx.json5",
+  "gh://mondeja/project-config-styles@v1/python/google-docstrings.json5",
+  "gh://mondeja/project-config-styles@v1/python/readthedocs.json5",
   # Type checking with mypy
-  "gh://mondeja/project-config-styles/python/mypy.json5"
+  "gh://mondeja/project-config-styles@v1/python/mypy.json5"
 ]
 
 [tool.poetry-exec-plugin.commands]
