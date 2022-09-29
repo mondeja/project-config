@@ -358,9 +358,12 @@ class Project:
         It will depend in the ``args.data`` property.
         """
         if args.data == "file":
-            pretty = args.reporter.get("kwargs", {}).get("fmt", {}) == "pretty"
+            fmt = args.reporter.get("kwargs", {}).get("fmt", {})
+            indent = (
+                None if "pretty" not in fmt else (2 if fmt == "pretty" else 4)
+            )
             data_object = fetch(args.file)
-            report = json.dumps(data_object, indent=2 if pretty else None)
+            report = json.dumps(data_object, indent=indent)
         elif args.data == "cache":
             from project_config.cache import Cache
 
