@@ -209,6 +209,13 @@ has accepted and are compatible, but they offer some extra features:
    In the official implementation of JMESPath, the ``start`` and ``end``
    parameters are not included and ``prefix`` can only be a string.
 
+   .. versionadded:: 0.1.0
+
+   .. versionchanged:: 0.7.6
+
+      * Added ``start`` and ``end`` parameters.
+      * Added support for ``prefix`` to be an array of prefixes.
+
 .. function:: ends_with(search: str, suffix: str[, start: int=0[, end: int=-1]]) -> bool
 
    Return ``true`` if the string ends with the specified suffix, otherwise
@@ -218,6 +225,13 @@ has accepted and are compatible, but they offer some extra features:
 
    In the official implementation of JMESPath, the ``start`` and ``end``
    parameters are not included and ``suffix`` can only be a string.
+
+   .. versionadded:: 0.1.0
+
+   .. versionchanged:: 0.7.6
+
+      * Added ``start`` and ``end`` parameters.
+      * Added support for ``prefix`` to be an array of prefixes.
 
 .. rubric:: Regex functions
 
