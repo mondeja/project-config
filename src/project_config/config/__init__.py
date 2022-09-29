@@ -301,9 +301,9 @@ class Config:
             reporter["kwargs"] = reporter_kwargs
 
         if not rootdir:
-            rootdir = self.cli.get("rootdir")  # type: ignore
-            if rootdir:
-                self.rootdir = os.path.expanduser(rootdir)
+            _rootdir = self.cli.get("rootdir")
+            if isinstance(_rootdir, str):
+                self.rootdir = os.path.expanduser(_rootdir)
             else:
                 self.rootdir = os.getcwd()
         else:
