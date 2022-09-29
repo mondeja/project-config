@@ -36,6 +36,14 @@ class InvalidColors(ProjectConfigException):
 class BaseReporter(abc.ABC):
     """Base reporter from which all reporters inherit."""
 
+    __slots__ = {
+        "rootdir",
+        "errors",
+        "format",
+        "only_hints",
+        "data",
+    }
+
     exception_class = ProjectConfigCheckFailed
 
     def __init__(

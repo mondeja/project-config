@@ -16,7 +16,7 @@ from project_config.compat import cached_function, importlib_metadata
 @cached_function
 def _directory() -> str:
     project_config_metadata = importlib_metadata.metadata("project_config")
-    return appdirs.user_data_dir(  # type: ignore
+    return appdirs.user_data_dir(
         appname=project_config_metadata["name"],
         appauthor=project_config_metadata["author"],
     )
@@ -42,10 +42,14 @@ class Cache:
         )
 
     @classmethod
-    def get(cls, *args: t.Any, **kwargs: t.Any) -> t.Any:  # noqa: D102
+    def get(  # noqa: D102
+        cls, *args: t.Any, **kwargs: t.Any
+    ) -> t.Optional[str]:
         if os.environ.get("PROJECT_CONFIG_USE_CACHE") == "false":
             return None
-        return cls._cache.get(*args, **kwargs)  # pragma: no cover
+        return cls._cache.get(  # type: ignore  # pragma: no cover
+            *args, **kwargs
+        )
 
     @staticmethod
     def clean() -> bool:

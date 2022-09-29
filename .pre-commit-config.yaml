@@ -101,6 +101,7 @@ repos:
           - types-PyYAML
           - types-tabulate
           - types-jmespath
+          - types-appdirs
   - repo: https://github.com/Lucas-C/pre-commit-hooks
     rev: v1.3.1
     hooks:
