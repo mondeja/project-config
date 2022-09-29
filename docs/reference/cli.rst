@@ -133,6 +133,12 @@ Fix the styles for the current project:
 
    project-config fix
 
+Print the content of a file converted to JSON:
+
+.. code-block:: sh
+
+   project-config -r json:pretty show file .project-config.yml
+
 Print the result of a JMESPath query works against a file (accepts paths or URLs):
 
 .. code-block:: sh
