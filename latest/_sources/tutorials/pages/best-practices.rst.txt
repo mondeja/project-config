@@ -58,7 +58,7 @@ Is important to write your rules in a way that can be automatically fixable by *
            // You can make your own editions manually by specifying a fix query.
            //
            // For example, here if `boolean_constant` is `true`, the value
-           // of `conditional_contant` will be setted as 'enabled' (MANUAL FIX):
+           // of `conditional_constant` will be setted as 'enabled' (MANUAL FIX):
            [
              "boolean_constant",
              false,
@@ -78,11 +78,16 @@ Is important to write your rules in a way that can be automatically fixable by *
              // error and fixed because the previous is setting
              // `conditional_constant` to `enabled`:
            ],
+
            [
              "contains(keys(@), 'conditional_constant')",
              true,
              "set(@, 'conditional_constant', 'enabled')",
            ],
+
+           // But the previous `unset()` expression is autofixable, so is
+           // not needed using `contains(keys(@), '<key>') -> false` (FIXABLE):
+           ["contains(keys(@), 'conditional_constant')", false],
 
            // If you need to update the current object you can use `update()`:
            //                                                    (MANUAL FIX)

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.tree &mdash; project-config 0.7.5 documentation</title>
+  <title>project_config.tree &mdash; project-config 0.7.6 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -214,7 +214,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">files_cache</span><span class="p">[</span><span class="n">normalized_fpath</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>  <span class="c1"># type: ignore</span>
                 <span class="kc">True</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_generator</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">normalize_path</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">normalized_fpath</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
                     <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">normalized_fpath</span><span class="p">)</span>
                 <span class="p">),</span>
             <span class="p">)</span>

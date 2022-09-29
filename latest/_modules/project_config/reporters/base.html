@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.reporters.base &mdash; project-config 0.7.5 documentation</title>
+  <title>project_config.reporters.base &mdash; project-config 0.7.6 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
@@ -159,8 +159,8 @@
 
 <div class="viewcode-block" id="BaseReporter.generate_data_report"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseReporter.generate_data_report">[docs]</a>    <span class="k">def</span> <span class="nf">generate_data_report</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">data_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">data</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">],</span>
+        <span class="n">data_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>  <span class="c1"># noqa: U100</span>
+        <span class="n">data</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">],</span>  <span class="c1"># noqa: U100</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Generate data report for configuration or styles.</span>
 
@@ -172,7 +172,7 @@
 <span class="sd">                ``&quot;style&quot;``.</span>
 <span class="sd">            data (dict): Data to report.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span>  <span class="c1"># pragma: no cover</span></div>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">success</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
@@ -219,12 +219,12 @@
     <span class="sd">&quot;&quot;&quot;Reporter that requires formatted fields.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="BaseFormattedReporter.format_fixed"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseFormattedReporter.format_fixed">[docs]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
-    <span class="k">def</span> <span class="nf">format_fixed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+    <span class="k">def</span> <span class="nf">format_fixed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;File name formatter.&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 <div class="viewcode-block" id="BaseFormattedReporter.format_file"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseFormattedReporter.format_file">[docs]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
-    <span class="k">def</span> <span class="nf">format_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+    <span class="k">def</span> <span class="nf">format_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;File name formatter.&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
@@ -232,42 +232,42 @@
     <span class="k">def</span> <span class="nf">format_error_message</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">error_message</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Error message formatter.&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 <div class="viewcode-block" id="BaseFormattedReporter.format_definition"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseFormattedReporter.format_definition">[docs]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
-    <span class="k">def</span> <span class="nf">format_definition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">definition</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+    <span class="k">def</span> <span class="nf">format_definition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">definition</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Definition formatter.&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 <div class="viewcode-block" id="BaseFormattedReporter.format_hint"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseFormattedReporter.format_hint">[docs]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
-    <span class="k">def</span> <span class="nf">format_hint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hint</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+    <span class="k">def</span> <span class="nf">format_hint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hint</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Hint formatter.&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 <div class="viewcode-block" id="BaseFormattedReporter.format_key"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseFormattedReporter.format_key">[docs]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
-    <span class="k">def</span> <span class="nf">format_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+    <span class="k">def</span> <span class="nf">format_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Serialized key formatter.&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 <div class="viewcode-block" id="BaseFormattedReporter.format_metachar"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseFormattedReporter.format_metachar">[docs]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
-    <span class="k">def</span> <span class="nf">format_metachar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metachar</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+    <span class="k">def</span> <span class="nf">format_metachar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metachar</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Meta characters string formatter.&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 <div class="viewcode-block" id="BaseFormattedReporter.format_config_key"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseFormattedReporter.format_config_key">[docs]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
-    <span class="k">def</span> <span class="nf">format_config_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+    <span class="k">def</span> <span class="nf">format_config_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Configuration data key formatter, for example &#39;style&#39;.&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 <div class="viewcode-block" id="BaseFormattedReporter.format_config_value"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseFormattedReporter.format_config_value">[docs]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
-    <span class="k">def</span> <span class="nf">format_config_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+    <span class="k">def</span> <span class="nf">format_config_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Configuration data value formatter, for example &#39;style&#39; urls.&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div></div>
 
 
-<span class="n">self_format_noop</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Callable</span><span class="p">[[</span><span class="nb">type</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">s</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span>
+<span class="n">self_format_noop</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Callable</span><span class="p">[[</span><span class="nb">type</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span>
 
 
 <div class="viewcode-block" id="BaseNoopFormattedReporter"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseNoopFormattedReporter">[docs]</a><span class="k">class</span> <span class="nc">BaseNoopFormattedReporter</span><span class="p">(</span><span class="n">BaseFormattedReporter</span><span class="p">):</span>

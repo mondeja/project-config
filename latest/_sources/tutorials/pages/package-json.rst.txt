@@ -96,22 +96,10 @@ The next style file fixes a ``package.json`` file using **project-config**:
            // Remove invalid fields
            // ---------------------
            //   - engineStrict, engine-strict (removed in NPM v3)
-           [
-             "contains(keys(@), 'engineStrict')",
-             false,
-             "unset(@, 'engineStrict')",
-           ],
-           [
-             "contains(keys(@), 'engine-strict')",
-             false,
-             "unset(@, 'engine-strict')",
-           ],
+           ["contains(keys(@), 'engineStrict')", false],
+           ["contains(keys(@), 'engine-strict')", false],
            //   - preferGlobal
-           [
-             "contains(keys(@), 'preferGlobal')",
-             false,
-             "unset(@, 'preferGlobal')",
-           ],
+           ["contains(keys(@), 'preferGlobal')", false],
 
            // private
            // -------

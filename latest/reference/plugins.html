@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Plugins &mdash; project-config 0.7.5 documentation</title>
+  <title>Plugins &mdash; project-config 0.7.6 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -291,6 +291,51 @@ of files, so only files that can be serialized can be targetted (see
 <a class="reference internal" href="../in-depth/serialization.html#objects-serialization"><span class="std std-ref">Objects serialization</span></a>).</p>
 <p>You can use in expressions all <a class="reference external" href="https://jmespath.org/specification.html#built-in-functions">JMESPath builtin functions</a> plus a set of
 convenient functions defined by the plugin internally:</p>
+<p class="rubric">Standard JMESPath functions</p>
+<p>The next functions extends those functions that the official JMESPath library
+has accepted and are compatible, but they offer some extra features:</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="starts_with">
+<span class="sig-name descname"><span class="pre">starts_with</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">search:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix:</span> <span class="pre">str</span></span></em><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">start:</span> <span class="pre">int=0</span></span></em><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">end:</span> <span class="pre">int=-1</span></span></em><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#starts_with" title="Permalink to this definition"></a></dt>
+<dd><p>Return <code class="docutils literal notranslate"><span class="pre">true</span></code> if string starts with the prefix, otherwise return <code class="docutils literal notranslate"><span class="pre">false</span></code>.
+The argument <code class="docutils literal notranslate"><span class="pre">prefix</span></code> can also be an array of prefixes to look for.
+With optional <code class="docutils literal notranslate"><span class="pre">start</span></code>, test string beginning at that position.
+With optional <code class="docutils literal notranslate"><span class="pre">end</span></code>, stop comparing string at that position.</p>
+<p>In the official implementation of JMESPath, the <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">end</span></code>
+parameters are not included and <code class="docutils literal notranslate"><span class="pre">prefix</span></code> can only be a string.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.1.0.</span></p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 0.7.6: </span></p>
+<ul class="simple">
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">end</span></code> parameters.</p></li>
+<li><p>Added support for <code class="docutils literal notranslate"><span class="pre">prefix</span></code> to be an array of prefixes.</p></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ends_with">
+<span class="sig-name descname"><span class="pre">ends_with</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">search:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suffix:</span> <span class="pre">str</span></span></em><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">start:</span> <span class="pre">int=0</span></span></em><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">end:</span> <span class="pre">int=-1</span></span></em><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#ends_with" title="Permalink to this definition"></a></dt>
+<dd><p>Return <code class="docutils literal notranslate"><span class="pre">true</span></code> if the string ends with the specified suffix, otherwise
+return <code class="docutils literal notranslate"><span class="pre">false</span></code>. The argument <code class="docutils literal notranslate"><span class="pre">suffix</span></code> can also be a tuple of suffixes
+to look for. With optional <code class="docutils literal notranslate"><span class="pre">start</span></code>, test beginning at that position.
+With optional <code class="docutils literal notranslate"><span class="pre">end</span></code>, stop comparing at that position.</p>
+<p>In the official implementation of JMESPath, the <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">end</span></code>
+parameters are not included and <code class="docutils literal notranslate"><span class="pre">suffix</span></code> can only be a string.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.1.0.</span></p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 0.7.6: </span></p>
+<ul class="simple">
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">end</span></code> parameters.</p></li>
+<li><p>Added support for <code class="docutils literal notranslate"><span class="pre">prefix</span></code> to be an array of prefixes.</p></li>
+</ul>
+</div>
+</dd></dl>
+
 <p class="rubric">Regex functions</p>
 <p>All functions whose name start with <code class="docutils literal notranslate"><span class="pre">regex_</span></code> are regex functions, which
 always takes the regex to apply as the first parameter following the Python’s
@@ -1009,7 +1054,7 @@ only Github sources.</p>
 are following semantic versioning (even if they are prepended with some
 text like <code class="docutils literal notranslate"><span class="pre">v</span></code>) will be returned.</p>
 <p>This function is really useful setting the <code class="docutils literal notranslate"><span class="pre">rev</span></code> properties in
-<cite>.pre-commit-config.yaml</cite> file.</p>
+<cite>.pre-commit-config.yaml</cite> files.</p>
 <div class="versionadded">
 <p><span class="versionmodified added">New in version 0.7.1.</span></p>
 </div>
@@ -1058,6 +1103,7 @@ a constant query with their expected value:</p>
 <li><p>Query to constant in nested objects.</p></li>
 <li><p>Expression using the <code class="docutils literal notranslate"><span class="pre">type</span></code> function like <code class="docutils literal notranslate"><span class="pre">type(foo.bar)</span></code> with expected value as <code class="docutils literal notranslate"><span class="pre">'array'</span></code> (creates <code class="docutils literal notranslate"><span class="pre">{foo:</span> <span class="pre">{bar:</span> <span class="pre">[]}}</span></code> nodes if doesn’t exists before).</p></li>
 <li><p>Indexed expressions with indexes like <code class="docutils literal notranslate"><span class="pre">type(foo[0].bar)</span></code> with expected value as <code class="docutils literal notranslate"><span class="pre">'object'</span></code> (prepends, <code class="docutils literal notranslate"><span class="pre">{bar:</span> <span class="pre">{}}</span></code> to the array <code class="docutils literal notranslate"><span class="pre">bar</span></code>, creating it if does not exists).</p></li>
+<li><p>Forbidden key in root object like <code class="docutils literal notranslate"><span class="pre">contains(keys(&#64;),</span> <span class="pre">'foo')</span></code> with expected value as <code class="docutils literal notranslate"><span class="pre">false</span></code> (removes the key <code class="docutils literal notranslate"><span class="pre">foo</span></code> from the root object).</p></li>
 </ul>
 <section id="jmespathsmatch">
 <h3>JMESPathsMatch<a class="headerlink" href="#jmespathsmatch" title="Permalink to this headline"></a></h3>

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Best practices &mdash; project-config 0.7.5 documentation</title>
+  <title>Best practices &mdash; project-config 0.7.6 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -159,7 +159,7 @@
 <span class="w">        </span><span class="c1">// You can make your own editions manually by specifying a fix query.</span><span class="w"></span>
 <span class="w">        </span><span class="c1">//</span><span class="w"></span>
 <span class="w">        </span><span class="c1">// For example, here if `boolean_constant` is `true`, the value</span><span class="w"></span>
-<span class="w">        </span><span class="c1">// of `conditional_contant` will be setted as &#39;enabled&#39; (MANUAL FIX):</span><span class="w"></span>
+<span class="w">        </span><span class="c1">// of `conditional_constant` will be setted as &#39;enabled&#39; (MANUAL FIX):</span><span class="w"></span>
 <span class="w">        </span><span class="p">[</span><span class="w"></span>
 <span class="w">          </span><span class="s2">&quot;boolean_constant&quot;</span><span class="p">,</span><span class="w"></span>
 <span class="w">          </span><span class="kc">false</span><span class="p">,</span><span class="w"></span>
@@ -179,11 +179,16 @@
 <span class="w">          </span><span class="c1">// error and fixed because the previous is setting</span><span class="w"></span>
 <span class="w">          </span><span class="c1">// `conditional_constant` to `enabled`:</span><span class="w"></span>
 <span class="w">        </span><span class="p">],</span><span class="w"></span>
+
 <span class="w">        </span><span class="p">[</span><span class="w"></span>
 <span class="w">          </span><span class="s2">&quot;contains(keys(@), &#39;conditional_constant&#39;)&quot;</span><span class="p">,</span><span class="w"></span>
 <span class="w">          </span><span class="kc">true</span><span class="p">,</span><span class="w"></span>
 <span class="w">          </span><span class="s2">&quot;set(@, &#39;conditional_constant&#39;, &#39;enabled&#39;)&quot;</span><span class="p">,</span><span class="w"></span>
 <span class="w">        </span><span class="p">],</span><span class="w"></span>
+
+<span class="w">        </span><span class="c1">// But the previous `unset()` expression is autofixable, so is</span><span class="w"></span>
+<span class="w">        </span><span class="c1">// not needed using `contains(keys(@), &#39;&lt;key&gt;&#39;) -&gt; false` (FIXABLE):</span><span class="w"></span>
+<span class="w">        </span><span class="p">[</span><span class="s2">&quot;contains(keys(@), &#39;conditional_constant&#39;)&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">],</span><span class="w"></span>
 
 <span class="w">        </span><span class="c1">// If you need to update the current object you can use `update()`:</span><span class="w"></span>
 <span class="w">        </span><span class="c1">//                                                    (MANUAL FIX)</span><span class="w"></span>

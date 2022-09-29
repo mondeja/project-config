@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.fetchers &mdash; project-config 0.7.5 documentation</title>
+  <title>project_config.fetchers &mdash; project-config 0.7.6 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -176,9 +176,8 @@
     <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">SchemeProtocolNotImplementedError</span><span class="p">(</span><span class="n">scheme</span><span class="p">)</span>
 
-    <span class="n">fetch_func</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s2">&quot;fetch&quot;</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">string</span> <span class="o">=</span> <span class="n">fetch_func</span><span class="p">(</span><span class="n">url_parts</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">string</span> <span class="o">=</span> <span class="n">module</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">url_parts</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">FetchError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">&#39; file not found&quot;</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">ProjectConfigTimeoutError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
@@ -206,7 +205,11 @@
     <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
         <span class="k">raise</span> <span class="n">SchemeProtocolNotImplementedError</span><span class="p">(</span><span class="n">scheme</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;Resolving&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">(</span>
-        <span class="nb">getattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s2">&quot;resolve_url&quot;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">url_parts_</span><span class="p">:</span> <span class="n">url</span><span class="p">)(</span><span class="n">url_parts</span><span class="p">),</span>
+        <span class="nb">getattr</span><span class="p">(</span>
+            <span class="n">module</span><span class="p">,</span>
+            <span class="s2">&quot;resolve_url&quot;</span><span class="p">,</span>
+            <span class="k">lambda</span> <span class="n">url_parts_</span><span class="p">:</span> <span class="n">url</span><span class="p">,</span>  <span class="c1"># noqa: U100</span>
+        <span class="p">)(</span><span class="n">url_parts</span><span class="p">),</span>
         <span class="n">scheme</span><span class="p">,</span>
     <span class="p">)</span></div>
 

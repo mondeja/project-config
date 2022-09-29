@@ -181,15 +181,15 @@ Follows the next rules:
 
 
 
-   .. tab:: src/
-
-      .. code-block:: text
-
-
-
    .. tab:: file.py
 
       .. code-block:: python
+
+
+
+   .. tab:: src/
+
+      .. code-block:: text
 
 
 
@@ -266,12 +266,6 @@ Check that the ``license`` field of *package.json* file is defined with a valid 
            ],
          }
 
-   .. tab:: .project-config.toml
-
-      .. code-block:: toml
-
-         style = "style.json5"
-
    .. tab:: package.json
 
       .. code-block:: json
@@ -279,6 +273,12 @@ Check that the ``license`` field of *package.json* file is defined with a valid 
          {
            "license": "BSD-3-Clause"
          }
+
+   .. tab:: .project-config.toml
+
+      .. code-block:: toml
+
+         style = "style.json5"
 
 Assert root directory name
 ==========================
@@ -457,12 +457,6 @@ Don't allow code blocks in RST documentation files:
            ],
          }
 
-   .. tab:: .project-config.toml
-
-      .. code-block:: toml
-
-         style = "style.json5"
-
    .. tab:: file.rst
 
       .. code-block:: restructuredtext
@@ -479,6 +473,12 @@ Don't allow code blocks in RST documentation files:
 
             #!/bin/sh
             curl -X POST http://localhost:8080/api/v1/users
+
+   .. tab:: .project-config.toml
+
+      .. code-block:: toml
+
+         style = "style.json5"
 
 Autofixing .editorconfig
 ========================

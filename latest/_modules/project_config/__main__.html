@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.__main__ &mdash; project-config 0.7.5 documentation</title>
+  <title>project_config.__main__ &mdash; project-config 0.7.6 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -134,10 +134,10 @@
 
     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span>  <span class="c1"># type: ignore  # noqa: D102</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">,</span>
+        <span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">,</span>  <span class="c1"># noqa: U100</span>
         <span class="n">namespace</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span><span class="p">,</span>
         <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">option_string</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">option_string</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>  <span class="c1"># noqa: U100</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">reporter</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">if</span> <span class="n">value</span><span class="p">:</span>
@@ -239,7 +239,7 @@
             <span class="s2">&quot; id with the syntax &#39;&lt;OPTION&gt;=&lt;JSON VALUE&gt;&#39;. Console reporters can&quot;</span>
             <span class="s2">&quot; take an argument &#39;color&#39; which accepts a JSON object to customize&quot;</span>
             <span class="s2">&quot; the colors for parts of the report like files, for example:&quot;</span>
-            <span class="s2">&quot; table:simple;color={</span><span class="si">%s</span><span class="s2">}.&quot;</span> <span class="o">%</span> <span class="n">example</span>
+            <span class="s2">&quot; table:simple;colors={</span><span class="si">%s</span><span class="s2">}.&quot;</span> <span class="o">%</span> <span class="n">example</span>
         <span class="p">),</span>
     <span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
@@ -332,7 +332,7 @@
     <span class="k">return</span> <span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span><span class="p">(</span><span class="o">**</span><span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">),</span> <span class="o">**</span><span class="nb">vars</span><span class="p">(</span><span class="n">subargs</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="run"><a class="viewcode-back" href="../../dev/reference/project_config.__main__.html#project_config.__main__.run">[docs]</a><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">argv</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>  <span class="c1"># noqa: D103</span>
+<div class="viewcode-block" id="run"><a class="viewcode-back" href="../../dev/reference/project_config.__main__.html#project_config.__main__.run">[docs]</a><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">argv</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>  <span class="c1"># noqa: D103</span>
     <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;PROJECT_CONFIG&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;true&quot;</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">(</span><span class="n">argv</span><span class="p">)</span>
 
