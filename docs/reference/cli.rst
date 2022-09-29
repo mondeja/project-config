@@ -80,12 +80,13 @@ The reporter output affects the output of the next commands:
 
 .. note::
 
-   Keep in mind that errors shown by ``check`` and ``fix`` commands are redirected
-   to STDERR.
+   Keep in mind that errors shown by ``check`` and ``fix`` commands are
+   redirected to STDERR.
 
-   Colorized output can't be serialized, so if you want to postprocess the report
-   in the command line use always the :ref:`project-config---no-color` flag or set
-   the environment variable ``NO_COLOR``.
+   Colorized output can't be serialized, so if you want to postprocess
+   the report in the command line use always the
+   :ref:`project-config---no-color` flag or set the environment variable
+   ``NO_COLOR``.
 
 Examples of usage
 =================
@@ -139,7 +140,16 @@ Print the content of a file converted to JSON:
 
    project-config -r json:pretty show file .project-config.yml
 
-Print the result of a JMESPath query works against a file (accepts paths or URLs):
+You can also pass a URL to the ``show file`` command and indent the
+JSON with 4 spaces using the ``json:pretty4`` reporter:
+
+.. code-block:: sh
+
+   src/project_config/__main__.py -r json:pretty4 \
+     show file gh://mondeja/project-config/pyproject.toml
+
+Print the result of a JMESPath query works against a file
+(accepts paths or URLs):
 
 .. code-block:: sh
 
@@ -152,14 +162,15 @@ Initialize a minimal configuration:
 
    project-config init
 
-Initialize a minimal configuration storing the configuration inside a `pyproject.toml` file:
+Initialize a minimal configuration storing the configuration inside a
+`pyproject.toml` file:
 
 .. code-block:: sh
 
    project-config init --config pyproject.toml
 
-Initialize a minimal configuration storing the configuration in a custom file located
-in a relative project root directory:
+Initialize a minimal configuration storing the configuration in
+a custom file located in a relative project root directory:
 
 .. code-block:: sh
 
