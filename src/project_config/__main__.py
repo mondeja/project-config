@@ -190,13 +190,30 @@ def _parse_command_args(
             parser = argparse.ArgumentParser(prog="project-config show")
             parser.add_argument(
                 "data",
-                choices=["config", "style", "cache", "plugins"],
+                choices=["config", "style", "cache", "plugins", "file"],
                 help=(
                     "Indicate which data must be shown, discovered"
-                    " configuration, extended style or cache directory"
-                    " location."
+                    " configuration (config), extended style (style),"
+                    " cache directory location (cache), plugins with"
+                    " their actions (plugins) or a file as a"
+                    " serialized object (file <path>)."
                 ),
             )
+            args, remaining = parser.parse_known_args(subcommand_args)
+            if args.data == "file":
+                parser = argparse.ArgumentParser(
+                    prog="project-config show file",
+                )
+                parser.add_argument(
+                    "file",
+                    type=str,
+                    help=(
+                        "File to deserialize and show. This is useful for"
+                        " debugging purposes."
+                    ),
+                )
+                subargs, remaining = parser.parse_known_args(remaining)
+                args.__dict__.update(subargs.__dict__)
         else:  # command == "clean"
             parser = argparse.ArgumentParser(prog="project-config clean")
             parser.add_argument(
@@ -207,7 +224,8 @@ def _parse_command_args(
                     " 'cache' is the possible data to clean."
                 ),
             )
-        args, remaining = parser.parse_known_args(subcommand_args)
+            args, remaining = parser.parse_known_args(subcommand_args)
+
     else:
         args = argparse.Namespace()
         remaining = subcommand_args
