@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import shutil
 import sys
@@ -11,6 +12,7 @@ from dataclasses import dataclass
 
 from project_config.config import Config
 from project_config.constants import Error, InterruptingError, ResultValue
+from project_config.fetchers import fetch
 from project_config.plugins import InvalidPluginFunction, Plugins
 from project_config.reporters import get_reporter
 from project_config.serializers import (
@@ -355,7 +357,9 @@ class Project:
 
         It will depend in the ``args.data`` property.
         """
-        if args.data == "cache":
+        if args.data == "file":
+            report = json.dumps(fetch(args.file))
+        elif args.data == "cache":
             from project_config.cache import Cache
 
             report = Cache.get_directory()
