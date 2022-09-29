@@ -21,7 +21,6 @@ from jmespath.functions import (
     signature as jmespath_func_signature,
 )
 from jmespath.parser import ParsedResult as JMESPathParsedResult, Parser
-import project_config
 
 from project_config.compat import removeprefix, removesuffix, shlex_join
 from project_config.exceptions import ProjectConfigException
@@ -623,6 +622,7 @@ class JMESPathProjectConfigFunctions(JMESPathFunctions):
             },
         ),
     )
+
 
 project_config_options = JMESPathProjectConfigFunctions()
 

@@ -15,7 +15,7 @@ PLUGINS_REFERENCE_FILEPATH = os.path.join(
 )
 JMESPATH_UTILS_MODULE_PATH = os.path.join(
     rootdir,
-    'src',
+    "src",
     "project_config",
     "utils",
     "jmespath.py",
@@ -25,6 +25,7 @@ JMESPATH_UTILS_MODULE_PATH = os.path.join(
 def get_file_lines(filepath):
     with open(filepath, encoding="utf-8") as f:
         return f.read().splitlines()
+
 
 def get_project_config_jmespath_functions_from_impl():
     original_jmespath_functions = dir(project_config_functions)
