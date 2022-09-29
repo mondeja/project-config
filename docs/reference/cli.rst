@@ -22,6 +22,7 @@ project-config CLI
 * ``project-config show style`` - Show the collected styles merged into the final one.
 * ``project-config show plugins`` - Show all available plugins with their actions.
 * ``project-config show cache`` - Show cache directory location.
+* ``project-config show file <resource>`` - Print JSON-serialized version of the file or URL passed as argument.
 * ``project-config clean cache`` - Clean the persistent cache of remote collected sources.
 
 .. tip::
@@ -131,6 +132,13 @@ Fix the styles for the current project:
 .. code-block:: sh
 
    project-config fix
+
+Print the result of a JMESPath query works against a file (accepts paths or URLs):
+
+.. code-block:: sh
+
+   project-config show file .pre-commit-config.yaml \
+     | jp.py "repos[?repo=='https://github.com/mondeja/project-config']"
 
 Initialize a minimal configuration:
 
