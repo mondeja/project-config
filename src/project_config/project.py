@@ -206,27 +206,13 @@ class Project:
 
     def _process_conditionals_for_rule(
         self,
-        conditionals: t.List[str],
+        conditionals: t.List[t.Tuple[str, t.Any]],
         tree: Tree,
         rule: Rule,
         rule_index: int,
     ) -> None:
         conditional_failed = False
-        for conditional in conditionals:
-            try:
-                action_function = (
-                    self.config.style.plugins.get_function_for_action(
-                        conditional,
-                    )
-                )
-            except InvalidPluginFunction as exc:
-                self.reporter.report_error(
-                    {
-                        "message": exc.message,
-                        "definition": f"rules[{rule_index}].{conditional}",
-                    },
-                )
-                raise InterruptCheck()
+        for conditional, action_function in conditionals:
             for breakage_type, breakage_value in action_function(
                 # typed dict with dinamic key, this type must be ignored
                 # until some literal quirk comes, see:
@@ -257,7 +243,41 @@ class Project:
 
     def _run_check(self) -> None:
         for r, rule in enumerate(self.config["style"]["rules"]):
+            hint = rule.pop("hint", None)
             files = rule.pop("files")
+
+            verbs, conditionals_functions = [], []
+            for action in rule:
+                if action.startswith("if"):
+                    try:
+                        action_function = (
+                            self.config.style.plugins.get_function_for_action(
+                                action,
+                            )
+                        )
+                    except InvalidPluginFunction as exc:
+                        self.reporter.report_error(
+                            {
+                                "message": exc.message,
+                                "definition": f"rules[{r}].{action}",
+                            },
+                        )
+                        raise InterruptCheck()
+                    conditionals_functions.append((action, action_function))
+                else:
+                    verbs.append(action)
+
+            try:
+                self._process_conditionals_for_rule(
+                    conditionals_functions,
+                    self.tree,
+                    rule,
+                    r,
+                )
+            except ConditionalsFalseResult:
+                # conditionals skipping the rule, next...
+                continue
+
             if isinstance(files, list):
                 self.tree.cache_files(files)
                 # check if files exists
@@ -266,27 +286,6 @@ class Project:
                 # requiring absent of files
                 self._check_files_absence(files["not"], r)
                 continue  # any other verb can be used in the rule
-
-            hint = rule.pop("hint", None)
-
-            verbs, conditionals = ([], [])
-            for action in rule:
-                if action.startswith("if"):
-                    conditionals.append(action)
-                else:
-                    verbs.append(action)
-
-            # handle conditionals
-            try:
-                self._process_conditionals_for_rule(
-                    conditionals,
-                    self.tree,
-                    rule,
-                    r,
-                )
-            except ConditionalsFalseResult:
-                # conditionals skipping the rule, next...
-                continue
 
             # handle verbs
             for verb in verbs:
