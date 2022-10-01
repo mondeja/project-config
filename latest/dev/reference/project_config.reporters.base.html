@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.reporters.base module &mdash; project-config 0.7.6 documentation</title>
+  <title>project_config.reporters.base module &mdash; project-config 0.7.7 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -265,16 +265,6 @@
 <span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#project_config.reporters.base.BaseNoopFormattedReporter._abc_impl" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py" id="project_config.reporters.base.BaseNoopFormattedReporter.data">
-<span class="sig-name descname"><span class="pre">data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#project_config.reporters.base.BaseNoopFormattedReporter.data" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="project_config.reporters.base.BaseNoopFormattedReporter.errors">
-<span class="sig-name descname"><span class="pre">errors</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="project_config.types.html#project_config.types.ErrorDict" title="project_config.types.ErrorDict"><span class="pre">project_config.types.ErrorDict</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#project_config.reporters.base.BaseNoopFormattedReporter.errors" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="project_config.reporters.base.BaseNoopFormattedReporter.format_config_key">
 <span class="sig-name descname"><span class="pre">format_config_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../_modules/project_config/reporters/base.html#BaseNoopFormattedReporter.format_config_key"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.reporters.base.BaseNoopFormattedReporter.format_config_key" title="Permalink to this definition"></a></dt>
@@ -342,10 +332,25 @@
 <dd></dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="project_config.reporters.base.BaseReporter.data">
+<span class="sig-name descname"><span class="pre">data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#project_config.reporters.base.BaseReporter.data" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="project_config.reporters.base.BaseReporter.errors">
+<span class="sig-name descname"><span class="pre">errors</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="project_config.types.html#project_config.types.ErrorDict" title="project_config.types.ErrorDict"><span class="pre">project_config.types.ErrorDict</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#project_config.reporters.base.BaseReporter.errors" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="project_config.reporters.base.BaseReporter.exception_class">
 <span class="sig-name descname"><span class="pre">exception_class</span></span><a class="headerlink" href="#project_config.reporters.base.BaseReporter.exception_class" title="Permalink to this definition"></a></dt>
 <dd><p>alias of <a class="reference internal" href="project_config.exceptions.html#project_config.exceptions.ProjectConfigCheckFailed" title="project_config.exceptions.ProjectConfigCheckFailed"><code class="xref py py-class docutils literal notranslate"><span class="pre">project_config.exceptions.ProjectConfigCheckFailed</span></code></a></p>
 </dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="project_config.reporters.base.BaseReporter.format">
+<span class="sig-name descname"><span class="pre">format</span></span><a class="headerlink" href="#project_config.reporters.base.BaseReporter.format" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="project_config.reporters.base.BaseReporter.generate_data_report">
@@ -371,6 +376,11 @@ be generated. Could be either <code class="docutils literal notranslate"><span c
 <p>This method must be implemented by inherited reporters.</p>
 </dd></dl>
 
+<dl class="py attribute">
+<dt class="sig sig-object py" id="project_config.reporters.base.BaseReporter.only_hints">
+<span class="sig-name descname"><span class="pre">only_hints</span></span><a class="headerlink" href="#project_config.reporters.base.BaseReporter.only_hints" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="project_config.reporters.base.BaseReporter.raise_errors">
 <span class="sig-name descname"><span class="pre">raise_errors</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../_modules/project_config/reporters/base.html#BaseReporter.raise_errors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.reporters.base.BaseReporter.raise_errors" title="Permalink to this definition"></a></dt>
@@ -389,6 +399,11 @@ if the reporter has reported any error.</p>
 </dd>
 </dl>
 </dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="project_config.reporters.base.BaseReporter.rootdir">
+<span class="sig-name descname"><span class="pre">rootdir</span></span><a class="headerlink" href="#project_config.reporters.base.BaseReporter.rootdir" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="project_config.reporters.base.BaseReporter.success">

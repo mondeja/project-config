@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.tree &mdash; project-config 0.7.6 documentation</title>
+  <title>project_config.tree &mdash; project-config 0.7.7 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -102,7 +102,6 @@
 <span class="kn">import</span> <span class="nn">glob</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">typing</span> <span class="k">as</span> <span class="nn">t</span>
-<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 
 <span class="kn">from</span> <span class="nn">project_config.fetchers</span> <span class="kn">import</span> <span class="n">fetch</span>
 <span class="kn">from</span> <span class="nn">project_config.serializers</span> <span class="kn">import</span> <span class="p">(</span>
@@ -119,8 +118,7 @@
 <span class="n">FilePathsArgument</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">Iterator</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>
 
 
-<div class="viewcode-block" id="Tree"><a class="viewcode-back" href="../../dev/reference/project_config.tree.html#project_config.Tree">[docs]</a><span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">Tree</span><span class="p">:</span>
+<div class="viewcode-block" id="Tree"><a class="viewcode-back" href="../../dev/reference/project_config.tree.html#project_config.Tree">[docs]</a><span class="k">class</span> <span class="nc">Tree</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Files cache used by the linter in checking processes.</span>
 
 <span class="sd">    It represents the tree of files and directories starting</span>
@@ -166,23 +164,50 @@
 <span class="sd">        rootdir (str): Root directory of the project.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">rootdir</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;rootdir&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;_serialized_files_cache&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;_files_cache&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;_files&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
 
-    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rootdir</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rootdir</span> <span class="o">=</span> <span class="n">rootdir</span>
+
+        <span class="c1"># latest cached files</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_files</span><span class="p">:</span> <span class="n">TreeNodeFiles</span> <span class="o">=</span> <span class="p">[]</span>
+
         <span class="c1"># cache for all files</span>
         <span class="c1">#</span>
         <span class="c1"># TODO: this type becomes recursive, in the future, define it properly</span>
         <span class="c1"># https://github.com/python/mypy/issues/731</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">files_cache</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_files_cache</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="c1"># cache for serialized version of files</span>
         <span class="c1">#</span>
         <span class="c1"># JSON encodable version of files are cached here to avoid</span>
         <span class="c1"># multiple calls to serializer for the same file</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">serialized_files_cache</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_serialized_files_cache</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
 
-        <span class="c1"># latest cached files</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_files</span><span class="p">:</span> <span class="n">TreeNodeFiles</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">files</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
+        <span class="sd">&quot;&quot;&quot;Returns an array of the current cached files for a rule action.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: Array of tuples with the relative path to the file</span>
+<span class="sd">                ``rootdir`` as the first item and the content of the file</span>
+<span class="sd">                as the second one.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">fpath</span><span class="p">,</span> <span class="n">_content</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_files</span><span class="p">:</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">(</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">fpath</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rootdir</span><span class="p">)</span>
+                    <span class="o">+</span> <span class="p">(</span><span class="s2">&quot;/&quot;</span> <span class="k">if</span> <span class="n">fpath</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">),</span>
+                    <span class="n">_content</span><span class="p">,</span>
+                <span class="p">),</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span>  <span class="c1"># type: ignore</span>
 
 <div class="viewcode-block" id="Tree.normalize_path"><a class="viewcode-back" href="../../dev/reference/project_config.tree.html#project_config.Tree.normalize_path">[docs]</a>    <span class="k">def</span> <span class="nf">normalize_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fpath</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Normalize a path given his relative path to the root directory.</span>
@@ -208,10 +233,10 @@
 
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">normalized_fpath</span><span class="p">):</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">normalized_fpath</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">files_cache</span><span class="p">[</span><span class="n">normalized_fpath</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_files_cache</span><span class="p">[</span><span class="n">normalized_fpath</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
         <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">normalized_fpath</span><span class="p">):</span>
             <span class="c1"># recursive generation</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">files_cache</span><span class="p">[</span><span class="n">normalized_fpath</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>  <span class="c1"># type: ignore</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_files_cache</span><span class="p">[</span><span class="n">normalized_fpath</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>  <span class="c1"># type: ignore</span>
                 <span class="kc">True</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_generator</span><span class="p">(</span>
                     <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">normalized_fpath</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
@@ -220,7 +245,7 @@
             <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># file or directory does not exist</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">files_cache</span><span class="p">[</span><span class="n">normalized_fpath</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_files_cache</span><span class="p">[</span><span class="n">normalized_fpath</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">normalized_fpath</span></div>
 
@@ -239,11 +264,11 @@
             <span class="n">fpaths_from_glob</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">fpath_or_glob</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">fpaths_from_glob</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">fpath</span> <span class="ow">in</span> <span class="n">fpaths_from_glob</span><span class="p">:</span>
-                    <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalize_path</span><span class="p">(</span><span class="n">fpath</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">files_cache</span><span class="p">[</span>
+                    <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalize_path</span><span class="p">(</span><span class="n">fpath</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_files_cache</span><span class="p">[</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">_cache_file</span><span class="p">(</span><span class="n">fpath</span><span class="p">)</span>
                     <span class="p">][</span><span class="mi">1</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalize_path</span><span class="p">(</span><span class="n">fpath_or_glob</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">files_cache</span><span class="p">[</span>
+                <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalize_path</span><span class="p">(</span><span class="n">fpath_or_glob</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_files_cache</span><span class="p">[</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_cache_file</span><span class="p">(</span><span class="n">fpath_or_glob</span><span class="p">)</span>
                 <span class="p">][</span><span class="mi">1</span><span class="p">]</span></div>
 
@@ -257,7 +282,7 @@
 <span class="sd">        Args:</span>
 <span class="sd">            fpath (str): Path to the file relative to the root directory.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">files_cache</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_cache_file</span><span class="p">(</span><span class="n">fpath</span><span class="p">)][</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># type: ignore</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_files_cache</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_cache_file</span><span class="p">(</span><span class="n">fpath</span><span class="p">)][</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># type: ignore</span></div>
 
 <div class="viewcode-block" id="Tree.cache_files"><a class="viewcode-back" href="../../dev/reference/project_config.tree.html#project_config.Tree.cache_files">[docs]</a>    <span class="k">def</span> <span class="nf">cache_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fpaths</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Cache a set of files given their paths.</span>
@@ -269,28 +294,8 @@
 
         <span class="k">for</span> <span class="n">fpath</span><span class="p">,</span> <span class="n">_content</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_files</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">_content</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">fpath</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">serialized_files_cache</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">serialized_files_cache</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">fpath</span><span class="p">)</span></div>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">files</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
-        <span class="sd">&quot;&quot;&quot;Returns an array of the current cached files for a rule action.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            list: Array of tuples with the relative path to the file</span>
-<span class="sd">                ``rootdir`` as the first item and the content of the file</span>
-<span class="sd">                as the second one.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">fpath</span><span class="p">,</span> <span class="n">_content</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_files</span><span class="p">:</span>
-            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                <span class="p">(</span>
-                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">fpath</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rootdir</span><span class="p">)</span>
-                    <span class="o">+</span> <span class="p">(</span><span class="s2">&quot;/&quot;</span> <span class="k">if</span> <span class="n">fpath</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">),</span>
-                    <span class="n">_content</span><span class="p">,</span>
-                <span class="p">),</span>
-            <span class="p">)</span>
-        <span class="k">return</span> <span class="n">result</span>  <span class="c1"># type: ignore</span>
+                <span class="k">if</span> <span class="n">fpath</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_serialized_files_cache</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_serialized_files_cache</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">fpath</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Tree.serialize_file"><a class="viewcode-back" href="../../dev/reference/project_config.tree.html#project_config.Tree.serialize_file">[docs]</a>    <span class="k">def</span> <span class="nf">serialize_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fpath</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Returns the object-serialized version of a file.</span>
@@ -311,7 +316,7 @@
 
         <span class="n">normalized_fpath</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalize_path</span><span class="p">(</span><span class="n">fpath</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">serialized_files_cache</span><span class="p">[</span><span class="n">normalized_fpath</span><span class="p">]</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_serialized_files_cache</span><span class="p">[</span><span class="n">normalized_fpath</span><span class="p">]</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
             <span class="n">fcontent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_file_content</span><span class="p">(</span><span class="n">fpath</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">fcontent</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -324,7 +329,7 @@
                 <span class="n">fcontent</span><span class="p">,</span>
                 <span class="n">prefer_serializer</span><span class="o">=</span><span class="n">serializer_name</span><span class="p">,</span>
             <span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">serialized_files_cache</span><span class="p">[</span><span class="n">normalized_fpath</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_serialized_files_cache</span><span class="p">[</span><span class="n">normalized_fpath</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span>
         <span class="k">return</span> <span class="n">fpath</span><span class="p">,</span> <span class="n">result</span></div>
 
 <div class="viewcode-block" id="Tree.fetch_file"><a class="viewcode-back" href="../../dev/reference/project_config.tree.html#project_config.Tree.fetch_file">[docs]</a>    <span class="k">def</span> <span class="nf">fetch_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">:</span>
@@ -343,10 +348,10 @@
 <span class="sd">            object: Object-serialized version of the file.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">serialized_files_cache</span><span class="p">[</span><span class="n">url</span><span class="p">]</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_serialized_files_cache</span><span class="p">[</span><span class="n">url</span><span class="p">]</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
             <span class="n">result</span> <span class="o">=</span> <span class="n">fetch</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">serialized_files_cache</span><span class="p">[</span><span class="n">url</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_serialized_files_cache</span><span class="p">[</span><span class="n">url</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span>
 
         <span class="k">return</span> <span class="n">result</span></div>
 
@@ -364,14 +369,14 @@
 
         <span class="n">normalized_fpath</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalize_path</span><span class="p">(</span><span class="n">fpath</span><span class="p">)</span>
         <span class="n">previous_content_string</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_file_content</span><span class="p">(</span><span class="n">fpath</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">serialized_files_cache</span><span class="p">[</span><span class="n">normalized_fpath</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_content</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_serialized_files_cache</span><span class="p">[</span><span class="n">normalized_fpath</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_content</span>
 
         <span class="n">new_content_string</span> <span class="o">=</span> <span class="n">deserialize_for_url</span><span class="p">(</span>
             <span class="n">fpath</span><span class="p">,</span>
             <span class="n">new_content</span><span class="p">,</span>
             <span class="n">prefer_serializer</span><span class="o">=</span><span class="n">serializer_name</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">files_cache</span><span class="p">[</span><span class="n">normalized_fpath</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="n">new_content_string</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_files_cache</span><span class="p">[</span><span class="n">normalized_fpath</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="n">new_content_string</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">previous_content_string</span> <span class="o">!=</span> <span class="n">new_content_string</span><span class="p">:</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fpath</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>

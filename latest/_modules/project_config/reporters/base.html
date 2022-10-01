@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.reporters.base &mdash; project-config 0.7.6 documentation</title>
+  <title>project_config.reporters.base &mdash; project-config 0.7.7 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
@@ -133,6 +133,14 @@
 
 <div class="viewcode-block" id="BaseReporter"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseReporter">[docs]</a><span class="k">class</span> <span class="nc">BaseReporter</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Base reporter from which all reporters inherit.&quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;rootdir&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;errors&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;format&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;only_hints&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;data&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
 
     <span class="n">exception_class</span> <span class="o">=</span> <span class="n">ProjectConfigCheckFailed</span>
 

@@ -22,6 +22,7 @@ project-config CLI
 * ``project-config show style`` - Show the collected styles merged into the final one.
 * ``project-config show plugins`` - Show all available plugins with their actions.
 * ``project-config show cache`` - Show cache directory location.
+* ``project-config show file <resource>`` - Print JSON-serialized version of the file or URL passed as argument.
 * ``project-config clean cache`` - Clean the persistent cache of remote collected sources.
 
 .. tip::
@@ -79,12 +80,13 @@ The reporter output affects the output of the next commands:
 
 .. note::
 
-   Keep in mind that errors shown by ``check`` and ``fix`` commands are redirected
-   to STDERR.
+   Keep in mind that errors shown by ``check`` and ``fix`` commands are
+   redirected to STDERR.
 
-   Colorized output can't be serialized, so if you want to postprocess the report
-   in the command line use always the :ref:`project-config---no-color` flag or set
-   the environment variable ``NO_COLOR``.
+   Colorized output can't be serialized, so if you want to postprocess
+   the report in the command line use always the
+   :ref:`project-config---no-color` flag or set the environment variable
+   ``NO_COLOR``.
 
 Examples of usage
 =================
@@ -132,20 +134,43 @@ Fix the styles for the current project:
 
    project-config fix
 
+Print the content of a file converted to JSON:
+
+.. code-block:: sh
+
+   project-config -r json:pretty show file .project-config.yml
+
+You can also pass a URL to the ``show file`` command and indent the
+JSON with 4 spaces using the ``json:pretty4`` reporter:
+
+.. code-block:: sh
+
+   src/project_config/__main__.py -r json:pretty4 \
+     show file gh://mondeja/project-config/pyproject.toml
+
+Print the result of a JMESPath query works against a file
+(accepts paths or URLs):
+
+.. code-block:: sh
+
+   project-config show file .pre-commit-config.yaml \
+     | jp.py "repos[?repo=='https://github.com/mondeja/project-config']"
+
 Initialize a minimal configuration:
 
 .. code-block:: sh
 
    project-config init
 
-Initialize a minimal configuration storing the configuration inside a `pyproject.toml` file:
+Initialize a minimal configuration storing the configuration inside a
+`pyproject.toml` file:
 
 .. code-block:: sh
 
    project-config init --config pyproject.toml
 
-Initialize a minimal configuration storing the configuration in a custom file located
-in a relative project root directory:
+Initialize a minimal configuration storing the configuration in
+a custom file located in a relative project root directory:
 
 .. code-block:: sh
 

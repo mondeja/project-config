@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project-config CLI &mdash; project-config 0.7.6 documentation</title>
+  <title>project-config CLI &mdash; project-config 0.7.7 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -138,6 +138,7 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">project-config</span> <span class="pre">show</span> <span class="pre">style</span></code> - Show the collected styles merged into the final one.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">project-config</span> <span class="pre">show</span> <span class="pre">plugins</span></code> - Show all available plugins with their actions.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">project-config</span> <span class="pre">show</span> <span class="pre">cache</span></code> - Show cache directory location.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">project-config</span> <span class="pre">show</span> <span class="pre">file</span> <span class="pre">&lt;resource&gt;</span></code> - Print JSON-serialized version of the file or URL passed as argument.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">project-config</span> <span class="pre">clean</span> <span class="pre">cache</span></code> - Clean the persistent cache of remote collected sources.</p></li>
 </ul>
 <div class="admonition tip">
@@ -171,11 +172,12 @@ see <a class="reference internal" href="../dev/reporters.html#writing-third-part
 </ul>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Keep in mind that errors shown by <code class="docutils literal notranslate"><span class="pre">check</span></code> and <code class="docutils literal notranslate"><span class="pre">fix</span></code> commands are redirected
-to STDERR.</p>
-<p>Colorized output can’t be serialized, so if you want to postprocess the report
-in the command line use always the <a class="reference internal" href="#project-config---no-color"><span class="std std-ref">project-config --no-color</span></a> flag or set
-the environment variable <code class="docutils literal notranslate"><span class="pre">NO_COLOR</span></code>.</p>
+<p>Keep in mind that errors shown by <code class="docutils literal notranslate"><span class="pre">check</span></code> and <code class="docutils literal notranslate"><span class="pre">fix</span></code> commands are
+redirected to STDERR.</p>
+<p>Colorized output can’t be serialized, so if you want to postprocess
+the report in the command line use always the
+<a class="reference internal" href="#project-config---no-color"><span class="std std-ref">project-config --no-color</span></a> flag or set the environment variable
+<code class="docutils literal notranslate"><span class="pre">NO_COLOR</span></code>.</p>
 </div>
 </section>
 <section id="examples-of-usage">
@@ -210,16 +212,33 @@ that can be used to apply JMESPath queries to JSON reports produced by
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>project-config fix
 </pre></div>
 </div>
+<p>Print the content of a file converted to JSON:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>project-config -r json:pretty show file .project-config.yml
+</pre></div>
+</div>
+<p>You can also pass a URL to the <code class="docutils literal notranslate"><span class="pre">show</span> <span class="pre">file</span></code> command and indent the
+JSON with 4 spaces using the <code class="docutils literal notranslate"><span class="pre">json:pretty4</span></code> reporter:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>src/project_config/__main__.py -r json:pretty4 <span class="se">\</span>
+  show file gh://mondeja/project-config/pyproject.toml
+</pre></div>
+</div>
+<p>Print the result of a JMESPath query works against a file
+(accepts paths or URLs):</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>project-config show file .pre-commit-config.yaml <span class="se">\</span>
+  <span class="p">|</span> jp.py <span class="s2">&quot;repos[?repo==&#39;https://github.com/mondeja/project-config&#39;]&quot;</span>
+</pre></div>
+</div>
 <p>Initialize a minimal configuration:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>project-config init
 </pre></div>
 </div>
-<p>Initialize a minimal configuration storing the configuration inside a <cite>pyproject.toml</cite> file:</p>
+<p>Initialize a minimal configuration storing the configuration inside a
+<cite>pyproject.toml</cite> file:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>project-config init --config pyproject.toml
 </pre></div>
 </div>
-<p>Initialize a minimal configuration storing the configuration in a custom file located
-in a relative project root directory:</p>
+<p>Initialize a minimal configuration storing the configuration in
+a custom file located in a relative project root directory:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>project-config init --config styles-configuration.toml --rootdir my/subdir
 </pre></div>
 </div>
