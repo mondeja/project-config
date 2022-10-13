@@ -5,6 +5,7 @@ description = "Reproducible configuration across projects."
 authors = [{ name = "Álvaro Mondéjar Rubio", email = "mondejar1994@gmail.com" }]
 license = "BSD-3-Clause"
 readme = "README.md"
+requires-python = ">=3.7,<3.12"
 classifiers = [
   "Development Status :: 4 - Beta",
   "Operating System :: OS Independent",
@@ -17,6 +18,7 @@ classifiers = [
   "Programming Language :: Python :: 3.8",
   "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
 ]
 keywords = [
   "reproducible",
@@ -26,11 +28,10 @@ keywords = [
   "linter",
   "meta-linter"
 ]
-requires-python = ">=3.7,<3.11"
 dependencies = [
   "importlib-metadata-argparse-version",
   "tomli-w~=1.0",
-  "pyjson5",
+  'pyjson5; python_version < "3.11"',
   "colored",
   "tabulate~=0.8",
   "jmespath~=1.0",
@@ -104,7 +105,7 @@ python -m http.server 8088 -b localhost -d htmlcov
 """
 
 [[tool.hatch.envs.tests.matrix]]
-python = ["py37", "py38", "py39", "py310"]
+python = ["py37", "py38", "py39", "py310", "py311"]
 
 [tool.hatch.envs.docs]
 python = "3.10"
