@@ -1,137 +1,146 @@
-[tool.poetry]
+[project]
 name = "project-config"
 version = "0.7.7"
 description = "Reproducible configuration across projects."
-authors = ["Álvaro Mondéjar Rubio <mondejar1994@gmail.com>"]
+authors = [{ name = "Álvaro Mondéjar Rubio", email = "mondejar1994@gmail.com" }]
 license = "BSD-3-Clause"
 readme = "README.md"
-repository = "https://github.com/mondeja/project-config"
-documentation = "https://mondeja.github.io/project-config"
 classifiers = [
   "Development Status :: 4 - Beta",
   "Operating System :: OS Independent",
+  "License :: OSI Approved :: BSD License",
   "Intended Audience :: Developers",
   "Topic :: Software Development :: Libraries :: Python Modules",
   "Topic :: Software Development :: Quality Assurance",
-  "Environment :: Console"
+  "Environment :: Console",
+  "Programming Language :: Python :: 3.7",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+]
+keywords = [
+  "reproducible",
+  "project",
+  "configuration",
+  "config",
+  "linter",
+  "meta-linter"
+]
+requires-python = ">=3.7,<=3.10"
+dependencies = [
+  "importlib-metadata-argparse-version",
+  "tomli-w~=1.0",
+  "pyjson5",
+  "colored",
+  "tabulate~=0.8",
+  "jmespath~=1.0",
+  "identify~=2.0",
+  "ruamel.yaml~=0.17",
+  "appdirs~=1.0",
+  "diskcache~=5.0.3",
+  "typing-extensions~=4.3",
+  "requests",
+  "requests-futures~=1.0",
+  "deepmerge>=1.0.1",
+  "tomlkit~=0.11.1",
+  'importlib-metadata; python_version < "3.10"',
+  'tomli~=2.0; python_version < "3.11"',
 ]
 
-[[tool.poetry.packages]]
-include = "project_config"
-from = "src"
-
-[tool.poetry.urls]
+[project.urls]
+Source = "https://github.com/mondeja/project-config"
+Documentation = "https://mondeja.github.io/project-config"
 "Bug tracker" = "https://github.com/mondeja/project-config/issues"
 Changelog = "https://github.com/mondeja/project-config/releases"
 
-[tool.poetry.dependencies]
-python = "^3.7"
-importlib-metadata-argparse-version = "*"
-tomli-w = "^1"
-pyjson5 = "*"
-colored = "*"
-tabulate = "^0.8"
-jmespath = "^1"
-identify = "^2"
-"ruamel.yaml" = "~0.17"
-appdirs = "^1"
-diskcache = "^5"
-typing-extensions = "^4.3.0"
-requests = "^2.28.1"
-requests-futures = "^1.0.0"
-deepmerge = "^1.0.1"
-tomlkit = "^0.11.1"
+[tool.hatch.build]
+include = ["/src"]
 
-[tool.poetry.dependencies.importlib-metadata]
-version = "*"
-python = "<3.10"
+[tool.hatch.build.targets.wheel]
+packages = ["src/project_config"]
 
-[tool.poetry.dependencies.tomli]
-version = "^2"
-python = "<3.11"
-
-[tool.poetry.group.dev.dependencies]
-mondeja-bump = "*"
-
-[tool.poetry.group.test.dependencies]
-pytest = "^7"
-coverage = "^6.4"
-pre-commit = "^2.9"
-contextlib-chdir = "^1"
-pytest-maybe-raises = "^0.1.1"
-pytest-mock = "^3"
-flask = "^2"
-pysetenv = "^1"
-
-[tool.poetry.group.doc.dependencies]
-Sphinx = "^4"
-sphinx-rtd-theme = "^1"
-sphinx-tabs = "~3.3"
-chios = "^1"
-sphinx-argparse-cli = "^1.8.3"
-sphinx-github-changelog = "^1.2.0"
-
-[tool.poetry.group.doc.dependencies.importlib-metadata]
-version = "*"
-python = "<3.10"
-
-[tool.poetry.scripts]
+[project.scripts]
 project-config = "project_config.__main__:main"
 
-[tool.poetry.plugins."project_config.plugins"]
+[project."entry-points"."project_config.plugins"]
 inclusion = "project_config.plugins.inclusion:InclusionPlugin"
 jmespath = "project_config.plugins.jmespath:JMESPathPlugin"
 existence = "project_config.plugins.existence:ExistencePlugin"
 
-[tool.poetry.plugins.pytest11]
+[project."entry-points".pytest11]
 project-config-tester = "project_config.tests.pytest_plugin.plugin"
 
-[[tool.bump.targets]]
-file = "pyproject.toml"
-regex = "(version = [\"'])(\\d+\\.\\d+\\.\\d+)([\"'])"
+[tool.hatch.envs.default]
+python = "3.10"
 
-[[tool.bump.targets]]
-file = "docs/install.rst"
-regex = "(v)(\\d+\\.\\d+\\.\\d+)"
+[tool.hatch.envs.style]
+python = "3.10"
+detached = true
+dependencies = ["pre-commit"]
 
-[[tool.bump.targets]]
-file = "contrib/npm/package.json"
-regex = "(\"version\": \")(\\d+\\.\\d+\\.\\d+)(\")"
+[tool.hatch.envs.style.scripts]
+lint = "pre-commit run -a"
 
-[[tool.bump.targets]]
-file = "contrib/mega-linter-plugin-project-config/project-config.megalinter-descriptor.yml"
-
-[tool.project-config]
-cache = "2 days"
-style = [
-  # Basic Python style: use poetry, pre-commit, Github workflows, etc
-  "gh://mondeja/project-config-styles@v1/python/base.json5",
-  # Minimum Python version
-  "gh://mondeja/project-config-styles@v1/python/version/min-37.json5",
-  # Double quotes: formatting with Black
-  "gh://mondeja/project-config-styles@v1/python/double-quotes.json5",
-  # Maximum line length
-  "gh://mondeja/project-config-styles@v1/python/line-length-80.json5",
-  # Testing styles: use pytest
-  "gh://mondeja/project-config-styles@v1/python/tests.json5",
-  # Documentation styles: use Sphinx with Readthedocs theme
-  "gh://mondeja/project-config-styles@v1/python/sphinx.json5",
-  "gh://mondeja/project-config-styles@v1/python/google-docstrings.json5",
-  "gh://mondeja/project-config-styles@v1/python/readthedocs.json5",
-  # Type checking with mypy
-  "gh://mondeja/project-config-styles@v1/python/mypy.json5"
+[tool.hatch.envs.tests]
+dependencies = [
+  "pytest~=7.0",
+  "coverage~=6.4",
+  "contextlib-chdir",
+  "pytest-maybe-raises~=0.1.1",
+  "pytest-mock~=3.0",
+  "flask~=2.0",
+  "pysetenv~=1.0",
+  "pre-commit",
 ]
 
-[tool.poetry-exec-plugin.commands]
-t = "coverage run -m pytest"
-test = "coverage run -m pytest"
-"test:show" = "pysetenv PROJECT_CONFIG_TESTS_E2E=true coverage run -m pytest &&\ncoverage html &&\npython -c 'import webbrowser as w;w.open(\"http://127.0.0.1:8088\")' &&\npython -m http.server 8088 -b localhost -d htmlcov\n"
-"test:e2e" = "pysetenv PROJECT_CONFIG_TESTS_E2E=true coverage run -m pytest"
-doc = "python -m sphinx -n -T -E -W docs docs/_build/html"
-"doc:show" = "python -m sphinx -n -T -E -W docs docs/_build/html &&\npython -c 'import webbrowser as w;w.open(\"http://127.0.0.1:8089\")' &&\npython -m http.server 8089 -b localhost -d docs/_build/html"
-lint = "pre-commit run -a"
-self = "project-config"
-"clean:cache" = "project-config clean cache"
+[tool.hatch.envs.tests.scripts]
+unit = "coverage run -m pytest"
+e2e = "pysetenv PROJECT_CONFIG_TESTS_E2E=true coverage run -m pytest"
+cov = """hatch run +py=py310 tests:e2e &&
+coverage html &&
+python -c 'import webbrowser as w;w.open("http://127.0.0.1:8088")' &&
+python -m http.server 8088 -b localhost -d htmlcov
+"""
+
+[[tool.hatch.envs.tests.matrix]]
+python = ["py37", "py38", "py39", "py310"]
+
+[tool.hatch.envs.docs]
+python = "3.10"
+dependencies = [
+  "Sphinx~=4.0",
+  "sphinx-rtd-theme~=1.0",
+  "sphinx-tabs~=3.3",
+  "chios~=1.0",
+  "sphinx-argparse-cli~=1.8",
+  "sphinx-github-changelog~=1.2",
+  "pytest~=7.0",
+]
+
+[tool.hatch.envs.docs.scripts]
+build = "python -m sphinx -n -T -E -W docs docs/_build/html"
+serve = """python -m sphinx -n -T -E -W docs docs/_build/html &&
+python -c 'import webbrowser as w;w.open("http://127.0.0.1:8089")' &&
+python -m http.server 8089 -b localhost -d docs/_build/html"""
+
+[tool.project-config]
+cache = "never"
+style = [
+  # Basic Python style: use Hatch, pre-commit, Github workflows, etc
+  "gh://mondeja/project-config-styles@v2/python/base.json5",
+  # Double quotes: formatting with Black
+  "gh://mondeja/project-config-styles@v2/python/double-quotes.json5",
+  # Maximum line length
+  "gh://mondeja/project-config-styles@v2/python/line-length-80.json5",
+  # Testing styles: use pytest
+  "gh://mondeja/project-config-styles@v2/python/tests.json5",
+  # Documentation styles: use Sphinx with Readthedocs theme
+  "gh://mondeja/project-config-styles@v2/python/sphinx.json5",
+  "gh://mondeja/project-config-styles@v2/python/google-docstrings.json5",
+  "gh://mondeja/project-config-styles@v2/python/readthedocs.json5",
+  # Type checking with mypy
+  "gh://mondeja/project-config-styles@v2/python/mypy.json5"
+]
 
 [tool.pytest.ini_options]
 addopts = "-s"
@@ -228,6 +237,10 @@ flake8-docstrings = [
 ]
 flake8-no-pep420 = ["-INP001"]
 
+[tool.flakeheaven.exceptions."setup.py"]
+flake8-docstrings = ["-D205"]
+flake8-no-pep420 = ["-INP001"]
+
 [tool.flakeheaven.exceptions."docs/**"]
 flake8-docstrings = ["-D100", "-D101", "-D102"]
 flake8-print = ["-T201"]
@@ -245,5 +258,5 @@ flake8-docstrings = ["-D100"]
 flake8-no-pep420 = ["-INP001"]
 
 [build-system]
-requires = ["poetry-core>=1.1.0b2"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"

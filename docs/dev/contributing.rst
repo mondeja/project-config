@@ -12,38 +12,36 @@ You need to install the latest version of `poetry`_ >= 1.2.0 and
 
    git clone https://github.com/mondeja/project-config
    cd project-config
-   poetry install
-   pre-commit install
-   poetry self add poetry-exec-plugin
+   pip install hatch
 
-Test
-====
+Testing
+=======
 
 .. code-block:: sh
 
-   poetry exec test
-   # or `poetry exec t`
+   hatch run tests:unit
+   # or `has run tests:e2e`
 
 Show coverage report
 --------------------
 
 .. code-block:: sh
 
-   poetry exec test:show
+   hatch run tests:cov
 
 End to end tests
 ----------------
 
 .. code-block:: sh
 
-   poetry exec test:e2e
+   hatch run tests:e2e
 
 Lint
 ====
 
 .. code-block:: sh
 
-   poetry exec lint
+   hatch run style:lint
 
 
 Build documentation
@@ -51,8 +49,8 @@ Build documentation
 
 .. code-block:: sh
 
-   poetry exec doc
-   # or `poetry exec doc:show`
+   hatch run docs:build
+   # or `hatch run docs:serve`
 
 Release
 =======
