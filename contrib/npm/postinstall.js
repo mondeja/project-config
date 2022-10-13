@@ -1,6 +1,6 @@
 const cp = require("child_process");
 
-const compareVersions = require("compare-versions");
+const { compareVersions } = require("compare-versions");
 const which = require("which");
 
 const EXEC_OPTIONS = { encoding: "utf8", stdio: [0, null, null] };

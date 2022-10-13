@@ -1,6 +1,6 @@
 [project]
 name = "project-config"
-version = "0.7.7"
+version = "0.7.8"
 description = "Reproducible configuration across projects."
 authors = [{ name = "Álvaro Mondéjar Rubio", email = "mondejar1994@gmail.com" }]
 license = "BSD-3-Clause"
@@ -38,12 +38,12 @@ dependencies = [
   "identify~=2.0",
   "ruamel.yaml~=0.17",
   "appdirs~=1.0",
-  "diskcache~=5.0.3",
+  "diskcache~=5.0",
   "typing-extensions~=4.3",
   "requests",
   "requests-futures~=1.0",
-  "deepmerge>=1.0.1",
-  "tomlkit~=0.11.1",
+  "deepmerge~=1.0",
+  "tomlkit~=0.11",
   'importlib-metadata; python_version < "3.10"',
   'tomli~=2.0; python_version < "3.11"',
 ]
@@ -88,7 +88,7 @@ dependencies = [
   "pytest~=7.0",
   "coverage~=6.4",
   "contextlib-chdir",
-  "pytest-maybe-raises~=0.1.1",
+  "pytest-maybe-raises~=0.1",
   "pytest-mock~=3.0",
   "flask~=2.0",
   "pysetenv~=1.0",
@@ -149,7 +149,7 @@ targets = [
   { file = "pyproject.toml", regex = "(version = [\"'])(\\d+\\.\\d+\\.\\d+)([\"'])" },
   { file = "docs/install.rst", regex = "(v)(\\d+\\.\\d+\\.\\d+)" },
   { file = "contrib/mega-linter-plugin-project-config/project-config.megalinter-descriptor.yml" },
-  { file = "contrib/npm/package.json" },
+  { file = "contrib/npm/package.json", regex = '(version": ")(\\d+\\.\\d+\\.\\d+)' },
 ]
 
 [tool.pytest.ini_options]
