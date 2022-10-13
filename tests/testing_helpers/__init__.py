@@ -26,6 +26,11 @@ mark_unix_only = pytest.mark.skipif(
     reason="Windows does not support this test",
 )
 
+mark_unix_only = pytest.mark.skipif(
+    "win" not in sys.platform,
+    reason="This test is only supported on Linux",
+)
+
 
 def build_testing_server():
     # do not show Flask server banner

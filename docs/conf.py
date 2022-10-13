@@ -11,7 +11,7 @@ import sys
 try:
     import importlib.metadata as importlib_metadata
 except ImportError:
-    # Python < 3.8 with `pip install imporpoetry exec doctlib_metadata`
+    # Python < 3.8 with `pip install importlib_metadata`
     import importlib_metadata
 
 

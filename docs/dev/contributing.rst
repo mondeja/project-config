@@ -5,9 +5,6 @@ Contributing
 Development install
 ===================
 
-You need to install the latest version of `poetry`_ >= 1.2.0 and
-`pre-commit`_ before.
-
 .. code-block:: sh
 
    git clone https://github.com/mondeja/project-config
@@ -20,7 +17,7 @@ Testing
 .. code-block:: sh
 
    hatch run tests:unit
-   # or `has run tests:e2e`
+   # or `hatch run tests:e2e`
 
 Show coverage report
 --------------------
@@ -36,8 +33,8 @@ End to end tests
 
    hatch run tests:e2e
 
-Lint
-====
+Linting
+=======
 
 .. code-block:: sh
 
@@ -59,12 +56,9 @@ You must have administrator permissions on the repository.
 
 .. code-block:: sh
 
-   version="$(poetry run bump <major/minor/patch>)"
+   version="$(hatch run bump <major/minor/patch>)"
    git add .
    git commit -m "Bump version"
    git push origin master
    git tag -a "v$version"
    git push origin "v$version"
-
-.. _poetry: https://python-poetry.org/
-.. _pre-commit: https://pre-commit.com/

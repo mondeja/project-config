@@ -26,7 +26,7 @@ keywords = [
   "linter",
   "meta-linter"
 ]
-requires-python = ">=3.7,<=3.10"
+requires-python = ">=3.7,<3.11"
 dependencies = [
   "importlib-metadata-argparse-version",
   "tomli-w~=1.0",
@@ -72,6 +72,7 @@ project-config-tester = "project_config.tests.pytest_plugin.plugin"
 
 [tool.hatch.envs.default]
 python = "3.10"
+dependencies = ["mondeja-bump"]
 
 [tool.hatch.envs.style]
 python = "3.10"
@@ -124,22 +125,30 @@ python -c 'import webbrowser as w;w.open("http://127.0.0.1:8089")' &&
 python -m http.server 8089 -b localhost -d docs/_build/html"""
 
 [tool.project-config]
-cache = "never"
+cache = "2 days"
 style = [
   # Basic Python style: use Hatch, pre-commit, Github workflows, etc
-  "gh://mondeja/project-config-styles@v2/python/base.json5",
+  "gh://mondeja/project-config-styles@v2-fix/python/base.json5",
   # Double quotes: formatting with Black
-  "gh://mondeja/project-config-styles@v2/python/double-quotes.json5",
+  "gh://mondeja/project-config-styles@v2-fix/python/double-quotes.json5",
   # Maximum line length
-  "gh://mondeja/project-config-styles@v2/python/line-length-80.json5",
+  "gh://mondeja/project-config-styles@v2-fix/python/line-length-80.json5",
   # Testing styles: use pytest
-  "gh://mondeja/project-config-styles@v2/python/tests.json5",
+  "gh://mondeja/project-config-styles@v2-fix/python/tests.json5",
   # Documentation styles: use Sphinx with Readthedocs theme
-  "gh://mondeja/project-config-styles@v2/python/sphinx.json5",
-  "gh://mondeja/project-config-styles@v2/python/google-docstrings.json5",
-  "gh://mondeja/project-config-styles@v2/python/readthedocs.json5",
+  "gh://mondeja/project-config-styles@v2-fix/python/sphinx.json5",
+  "gh://mondeja/project-config-styles@v2-fix/python/google-docstrings.json5",
+  "gh://mondeja/project-config-styles@v2-fix/python/readthedocs.json5",
   # Type checking with mypy
-  "gh://mondeja/project-config-styles@v2/python/mypy.json5"
+  "gh://mondeja/project-config-styles@v2-fix/python/mypy.json5"
+]
+
+[tool.bump]
+targets = [
+  { file = "pyproject.toml", regex = "(version = [\"'])(\\d+\\.\\d+\\.\\d+)([\"'])" },
+  { file = "docs/install.rst", regex = "(v)(\\d+\\.\\d+\\.\\d+)" },
+  { file = "contrib/mega-linter-plugin-project-config/project-config.megalinter-descriptor.yml" },
+  { file = "contrib/npm/package.json" },
 ]
 
 [tool.pytest.ini_options]
