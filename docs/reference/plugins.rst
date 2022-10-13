@@ -969,7 +969,7 @@ defined in th file `pyproject.toml`, field ``tool.poetry.version``:
          files: ["pyproject.toml"],
          crossJMESPathsMatch: [
            [
-             "tool.poetry.metadata",
+             "tool.poetry.version",
              ["docs/conf.py", "release"],
              "op([0], '==', [1])",
              true,
