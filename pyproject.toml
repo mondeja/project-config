@@ -128,19 +128,19 @@ python -m http.server 8089 -b localhost -d docs/_build/html"""
 cache = "2 days"
 style = [
   # Basic Python style: use Hatch, pre-commit, Github workflows, etc
-  "gh://mondeja/project-config-styles@v2-fix/python/base.json5",
+  "gh://mondeja/project-config-styles@v2/python/base.json5",
   # Double quotes: formatting with Black
-  "gh://mondeja/project-config-styles@v2-fix/python/double-quotes.json5",
+  "gh://mondeja/project-config-styles@v2/python/double-quotes.json5",
   # Maximum line length
-  "gh://mondeja/project-config-styles@v2-fix/python/line-length-80.json5",
+  "gh://mondeja/project-config-styles@v2/python/line-length-80.json5",
   # Testing styles: use pytest
-  "gh://mondeja/project-config-styles@v2-fix/python/tests.json5",
+  "gh://mondeja/project-config-styles@v2/python/tests.json5",
   # Documentation styles: use Sphinx with Readthedocs theme
-  "gh://mondeja/project-config-styles@v2-fix/python/sphinx.json5",
-  "gh://mondeja/project-config-styles@v2-fix/python/google-docstrings.json5",
-  "gh://mondeja/project-config-styles@v2-fix/python/readthedocs.json5",
+  "gh://mondeja/project-config-styles@v2/python/sphinx.json5",
+  "gh://mondeja/project-config-styles@v2/python/google-docstrings.json5",
+  "gh://mondeja/project-config-styles@v2/python/readthedocs.json5",
   # Type checking with mypy
-  "gh://mondeja/project-config-styles@v2-fix/python/mypy.json5"
+  "gh://mondeja/project-config-styles@v2/python/mypy.json5"
 ]
 
 [tool.bump]
