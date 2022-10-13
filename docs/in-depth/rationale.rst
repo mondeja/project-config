@@ -4,7 +4,7 @@ Rationale
 
 This project has been created to help me to made a transition from
 setuptools/pip based Python development workflow to a more modern
-Poetry based one. I wanted to be able to parse conveniently all
+based one like `Hatch`_. I wanted to be able to parse conveniently all
 configuration files to check certain common patterns or the migration
 would be impossible.
 
@@ -46,5 +46,6 @@ of :doc:`./serialization` is quite different. The main differences are:
 * `nitpick`_ enforces the definition configuration values as constants using TOML files, but **project-config** allows to fix them in different ways.
 * `nitpick`_ has a serious limitation about how to query object structures, which has given rise to the monstrosity of `Special configurations <https://nitpick.readthedocs.io/en/latest/styles.html?highlight=pre-commit#special-configurations>`_, while **project-config** deals with this problem using `JMESPath`_.
 
-.. _nitpick: https://nitpick.readthedocs.io/en/latest/
+.. _nitpick: https://nitpick.readthedocs.io/
+.. _Hatch: https://hatch.pypa.io/
 .. _JMESPath: https://jmespath.org/

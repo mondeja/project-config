@@ -11,7 +11,7 @@ import sys
 try:
     import importlib.metadata as importlib_metadata
 except ImportError:
-    # Python < 3.8 with `pip install imporpoetry exec doctlib_metadata`
+    # Python < 3.8 with `pip install importlib_metadata`
     import importlib_metadata
 
 
@@ -30,7 +30,7 @@ with open(os.path.join(rootdir, "LICENSE"), encoding="utf-8") as f:
         f.read(),
     ).group(1)
 project = metadata["name"]
-author = metadata["author"]
+author = metadata["author-email"]
 project_copyright = f"{license_years_range}, {author}"
 release = metadata["version"]
 version = ".".join(release.split(".")[:2])
@@ -66,6 +66,7 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 nitpick_ignore = [
     ("py:class", "argparse._SubParsersAction"),
     ("py:class", "importlib_metadata.EntryPoint"),  # Python <= 3.9
+    ("py:class", "importlib.metadata.EntryPoint"),
     ("py:class", "jmespath.exceptions.JMESPathError"),
     ("py:class", "jmespath.functions.Functions"),
     ("py:class", "jmespath.parser.ParsedResult"),

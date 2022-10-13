@@ -2,11 +2,11 @@ import os
 import shutil
 import subprocess
 
-from testing_helpers import mark_end2end, mark_unix_only, rootdir
+from testing_helpers import mark_end2end, mark_linux_only, rootdir
 
 
 @mark_end2end
-@mark_unix_only
+@mark_linux_only
 def test_npm_pack_and_install(tmp_path):
     packer_dir = tmp_path / "packer"
     user_dir = tmp_path / "user"

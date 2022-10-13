@@ -198,6 +198,17 @@ def _get_serializer(
         else:
             serializer_definition = serializer_def
             break
+    if serializer_definition is None:
+        raise SerializerError(
+            _file_can_not_be_serialized_as_object_error(
+                url,
+                (
+                    f"\nSerializer for url '{url}' can't be located,"
+                    " surely because the library to handle it is"
+                    " not installed."
+                ),
+            ),
+        )
 
     loader_function: SerializerFunction = getattr(
         module,
