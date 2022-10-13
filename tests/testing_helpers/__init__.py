@@ -27,7 +27,7 @@ mark_unix_only = pytest.mark.skipif(
 )
 
 mark_linux_only = pytest.mark.skipif(
-    "win" not in sys.platform,
+    "win" in sys.platform,
     reason="This test is only supported on Linux",
 )
 
