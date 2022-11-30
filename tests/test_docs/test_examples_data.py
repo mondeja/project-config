@@ -25,6 +25,7 @@ def test_spdx_license_list_data_version_updated():
             match = re.search(license_list_data_regex, file_content)
             if match:
                 version = match.group(1)
+                file_path = os.path.relpath(file_path, rootdir)
                 assert version == latest_spdx_license_version, (
                     f"File {file_path} contains an outdated SPDX"
                     f" license list data version: {version}. "
