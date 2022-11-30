@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import copy
+import json
 import pprint
 import typing as t
 
@@ -25,6 +26,7 @@ from project_config.utils.jmespath import (
     evaluate_JMESPath,
     evaluate_JMESPath_or_expected_value_error,
     fix_tree_serialized_file_by_jmespath,
+    is_literal_jmespath_expression,
     smart_fixer_by_expected_value,
 )
 
@@ -39,7 +41,7 @@ class JMESPathPlugin:
     ) -> Results:
         if not isinstance(value, list):
             yield InterruptingError, {
-                "message": ("The JMES path match tuples must be of type array"),
+                "message": "The JMES path match tuples must be of type array",
                 "definition": ".JMESPathsMatch",
             }
             return
@@ -386,6 +388,8 @@ class JMESPathPlugin:
                         "definition": f".crossJMESPathsMatch[{i}][0]",
                     }
                     return
+                else:
+                    files_expression = files_expression.strip()
 
                 final_expression = pipe[-2]
                 if not isinstance(final_expression, str):
@@ -426,33 +430,40 @@ class JMESPathPlugin:
                     }
                     continue
 
-                _, files_instance = tree.serialize_file(fpath)
+                if (
+                    files_expression.startswith("`")
+                    and files_expression.endswith("`")
+                    and is_literal_jmespath_expression(files_expression)
+                ):
+                    files_result = json.loads(files_expression[1:-1])
+                else:
+                    _, files_instance = tree.serialize_file(fpath)
 
-                try:
-                    files_compiled_expression = (
-                        compile_JMESPath_expression_or_error(  # noqa: E501
-                            files_expression,
+                    try:
+                        files_compiled_expression = (
+                            compile_JMESPath_expression_or_error(  # noqa: E501
+                                files_expression,
+                            )
                         )
-                    )
-                except JMESPathError as exc:
-                    yield InterruptingError, {
-                        "message": exc.message,
-                        "definition": f".crossJMESPathsMatch[{i}][0]",
-                    }
-                    continue
+                    except JMESPathError as exc:
+                        yield InterruptingError, {
+                            "message": exc.message,
+                            "definition": f".crossJMESPathsMatch[{i}][0]",
+                        }
+                        continue
 
-                try:
-                    files_result = evaluate_JMESPath(
-                        files_compiled_expression,
-                        files_instance,
-                    )
-                except JMESPathError as exc:
-                    yield InterruptingError, {
-                        "message": exc.message,
-                        "definition": f".crossJMESPathsMatch[{i}][0]",
-                        "file": fpath,
-                    }
-                    continue
+                    try:
+                        files_result = evaluate_JMESPath(
+                            files_compiled_expression,
+                            files_instance,
+                        )
+                    except JMESPathError as exc:
+                        yield InterruptingError, {
+                            "message": exc.message,
+                            "definition": f".crossJMESPathsMatch[{i}][0]",
+                            "file": fpath,
+                        }
+                        continue
 
                 other_results = []
 

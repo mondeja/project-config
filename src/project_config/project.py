@@ -285,7 +285,7 @@ class Project:
             else:
                 # requiring absent of files
                 self._check_files_absence(files["not"], r)
-                continue  # any other verb can be used in the rule
+                continue  # no other verb can be used in the rule
 
             # handle verbs
             for verb in verbs:

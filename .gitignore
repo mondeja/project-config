@@ -17,3 +17,4 @@ docs/_examples/
 node_modules/
 package-lock.json
 *.tgz
+.hatch/

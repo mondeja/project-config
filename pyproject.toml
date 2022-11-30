@@ -1,6 +1,6 @@
 [project]
 name = "project-config"
-version = "0.7.8"
+version = "0.7.9"
 description = "Reproducible configuration across projects."
 authors = [{ name = "Álvaro Mondéjar Rubio", email = "mondejar1994@gmail.com" }]
 license = "BSD-3-Clause"
@@ -105,7 +105,7 @@ python -m http.server 8088 -b localhost -d htmlcov
 """
 
 [[tool.hatch.envs.tests.matrix]]
-python = ["py37", "py38", "py39", "py310", "py311"]
+python = ["py37", "py38", "py39", "py310"]
 
 [tool.hatch.envs.docs]
 python = "3.10"
@@ -149,7 +149,7 @@ targets = [
   { file = "pyproject.toml", regex = "(version = [\"'])(\\d+\\.\\d+\\.\\d+)([\"'])" },
   { file = "docs/install.rst", regex = "(v)(\\d+\\.\\d+\\.\\d+)" },
   { file = "contrib/mega-linter-plugin-project-config/project-config.megalinter-descriptor.yml" },
-  { file = "contrib/npm/package.json", regex = '(version": ")(\\d+\\.\\d+\\.\\d+)' },
+  { file = "contrib/npm/package.json", regex = '(version": ")(\d+\.\d+\.\d+)' },
 ]
 
 [tool.pytest.ini_options]

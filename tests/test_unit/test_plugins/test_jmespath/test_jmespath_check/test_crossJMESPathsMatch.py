@@ -564,6 +564,25 @@ from project_config.plugins.jmespath import JMESPathPlugin
             {"qux.json": "{"},
             id="unserializable-other-file-raises-error",
         ),
+        pytest.param(
+            # When a file query is a JMESPath literal, the file is
+            # not serialized.
+            #
+            # Serialization of Python files require their execution
+            {"foo.py": 'raise Exception("The file has been executed!")'},
+            [
+                [
+                    "`null`",  # literal as JMESPath expression
+                    ["foo.py?text", "[0]"],
+                    "[1]",
+                    'raise Exception("The file has been executed!")',
+                ],
+            ],
+            None,
+            [],
+            {},
+            id="skip-files-serialization-when-files-query-is-jp-literal",
+        ),
     ),
 )
 def test_crossJMESPathsMatch(

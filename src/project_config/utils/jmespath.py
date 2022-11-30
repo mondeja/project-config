@@ -1039,3 +1039,10 @@ def smart_fixer_by_expected_value(
     )
 
     return fixer_expression
+
+
+def is_literal_jmespath_expression(expression: str) -> bool:
+    """Check if a JMESPath expression is a literal expression."""
+    parser = Parser()
+    ast = parser.parse(expression).parsed  # type: ignore
+    return ast.get("type") == "literal"  # type: ignore
