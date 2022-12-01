@@ -96,16 +96,17 @@ dependencies = [
 ]
 
 [tool.hatch.envs.tests.scripts]
-unit = "coverage run -m pytest"
-e2e = "pysetenv PROJECT_CONFIG_TESTS_E2E=true coverage run -m pytest"
-cov = """hatch run +py=py310 tests:e2e &&
-coverage html &&
-python -c 'import webbrowser as w;w.open("http://127.0.0.1:8088")' &&
-python -m http.server 8088 -b localhost -d htmlcov
-"""
+all = "pysetenv PROJECT_CONFIG_TESTS_E2E=true coverage run -m pytest"
+unit = "coverage run -m pytest tests/test_unit"
+cov = [
+  "hatch run +py=py310 tests:all",
+  "coverage html",
+  "python -c 'import webbrowser as w;w.open(\"http://127.0.0.1:8088\")'",
+  "python -m http.server 8088 -b localhost -d htmlcov",
+]
 
 [[tool.hatch.envs.tests.matrix]]
-python = ["py37", "py38", "py39", "py310"]
+python = ["py37", "py38", "py39", "py310", "py311"]
 
 [tool.hatch.envs.docs]
 python = "3.10"
@@ -129,19 +130,19 @@ python -m http.server 8089 -b localhost -d docs/_build/html"""
 cache = "2 days"
 style = [
   # Basic Python style: use Hatch, pre-commit, Github workflows, etc
-  "gh://mondeja/project-config-styles@v2/python/base.json5",
+  "gh://mondeja/project-config-styles@v3/python/base.json5",
   # Double quotes: formatting with Black
-  "gh://mondeja/project-config-styles@v2/python/double-quotes.json5",
+  "gh://mondeja/project-config-styles@v3/python/double-quotes.json5",
   # Maximum line length
-  "gh://mondeja/project-config-styles@v2/python/line-length-80.json5",
+  "gh://mondeja/project-config-styles@v3/python/line-length-80.json5",
   # Testing styles: use pytest
-  "gh://mondeja/project-config-styles@v2/python/tests.json5",
+  "gh://mondeja/project-config-styles@v3/python/tests.json5",
   # Documentation styles: use Sphinx with Readthedocs theme
-  "gh://mondeja/project-config-styles@v2/python/sphinx.json5",
-  "gh://mondeja/project-config-styles@v2/python/google-docstrings.json5",
-  "gh://mondeja/project-config-styles@v2/python/readthedocs.json5",
+  "gh://mondeja/project-config-styles@v3/python/sphinx.json5",
+  "gh://mondeja/project-config-styles@v3/python/google-docstrings.json5",
+  "gh://mondeja/project-config-styles@v3/python/readthedocs.json5",
   # Type checking with mypy
-  "gh://mondeja/project-config-styles@v2/python/mypy.json5"
+  "gh://mondeja/project-config-styles@v3/python/mypy.json5"
 ]
 
 [tool.bump]

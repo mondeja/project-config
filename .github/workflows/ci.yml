@@ -68,7 +68,7 @@ jobs:
       - name: Install dependencies
         run: pip install -U hatch
       - name: Run tests
-        run: hatch run +py=${{ matrix.py }} tests:e2e
+        run: hatch run +py=${{ matrix.py }} tests:all
       - name: Coveralls
         run: |
           pip install coveralls coverage[toml]

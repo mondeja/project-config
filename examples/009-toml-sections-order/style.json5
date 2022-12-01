@@ -5,7 +5,7 @@
       hint: "The section '[foo]' must be defined before the section '[bar]'",
       crossJMESPathsMatch: [
         [
-          "null",
+          "`null`",
           ["pyproject.toml?text", "@"],
           "op(op([1], 'indexOf', '[foo]'), '<', op([1], 'indexOf', '[bar]'))",
           true,

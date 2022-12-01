@@ -1029,7 +1029,7 @@ Python file line by line:
              {
                files: ["file.py"],  // just asserts that the file exists
                crossJMESPathsMatch: [
-                 ["null", ["file.py?text", "[0]"], "[1]", "foo = True"],
+                 ["`null`", ["file.py?text", "[0]"], "[1]", "foo = True"],
                ]
              }
            ]
