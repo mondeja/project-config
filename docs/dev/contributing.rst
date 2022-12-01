@@ -17,7 +17,7 @@ Testing
 .. code-block:: sh
 
    hatch run tests:unit
-   # or `hatch run tests:e2e`
+   # or `hatch run tests:all`
 
 Show coverage report
 --------------------
@@ -31,7 +31,7 @@ End to end tests
 
 .. code-block:: sh
 
-   hatch run tests:e2e
+   hatch run tests:all
 
 Linting
 =======
