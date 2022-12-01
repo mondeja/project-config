@@ -5,7 +5,7 @@ description = "Reproducible configuration across projects."
 authors = [{ name = "Álvaro Mondéjar Rubio", email = "mondejar1994@gmail.com" }]
 license = "BSD-3-Clause"
 readme = "README.md"
-requires-python = ">=3.7,<=3.11"
+requires-python = ">=3.7,<3.12"
 classifiers = [
   "Development Status :: 4 - Beta",
   "Operating System :: OS Independent",
