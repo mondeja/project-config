@@ -1,0 +1,678 @@
+********
+Examples
+********
+
+Basic usage
+===========
+
+The file `.gitignore` must have a line with the content ``/dist/``.
+
+.. tabs::
+
+   .. tab:: style.json
+
+      .. code-block:: json
+
+         {
+           "rules": [
+             {
+               "files": [".gitignore"],
+               "includeLines": ["/dist/"]
+             }
+           ]
+         }
+
+   .. tab:: .gitignore
+
+      .. code-block:: text
+
+         /dist/
+
+   .. tab:: .project-config.toml
+
+      .. code-block:: toml
+
+         style = "style.json"
+
+project-config self configuration
+=================================
+
+project-config is defining a valid configuration, forcing the definition of ``styles`` as an array for styles and a valid ``cache`` value.
+
+.. tabs::
+
+   .. tab:: style.json5
+
+      .. code-block:: js
+
+         {
+           rules: [
+             {
+               files: [".project-config.toml"],
+               JMESPathsMatch: [
+                 // `style` must be defined in the file
+                 ["contains(keys(@), 'style')", true],
+                 // `style` must be an array
+                 ["type(style)", "array"],
+                 // at least one style configured
+                 ["op(length(style), '>', `0`)", true],
+
+                 // configure cache explicitly
+                 ["contains(keys(@), 'cache')", true],
+                 // cache must have a valid value
+                 [
+                   "regex_match('^(\\d+ ((seconds?)|(minutes?)|(hours?)|(days?)|(weeks?)))|(never)$', cache)",
+                   true,
+                   "set(@, 'cache', '5 minutes')",
+                 ],
+               ],
+             },
+           ],
+         }
+
+   .. tab:: .project-config.toml
+
+      .. code-block:: toml
+
+         style = ["style.json5"]
+         cache = "5 minutes"
+
+Files absence
+=============
+
+The files `readme.md` and `index.md` must not exist.
+
+.. tabs::
+
+   .. tab:: style.yaml
+
+      .. code-block:: yaml
+
+         rules:
+           - files:
+               not:
+                 readme.md: Users are more used to seeing README.md file name in uppercase
+             hint: Rename 'readme.md' to 'README.md'
+           - files:
+               not:
+                 - index.md
+
+   .. tab:: .project-config.toml
+
+      .. code-block:: toml
+
+         style = "style.yaml"
+
+Conditionals
+============
+
+If `.gitignore` includes the line ``__pycache__/`` a `pyproject.toml` file must be present.
+
+.. tabs::
+
+   .. tab:: style.json
+
+      .. code-block:: json
+
+         {
+           "rules": [
+             {
+               "ifIncludeLines": {
+                 ".gitignore": ["__pycache__/"]
+               },
+               "files": ["pyproject.toml"]
+             }
+           ]
+         }
+
+   .. tab:: .gitignore
+
+      .. code-block:: text
+
+         __pycache__/
+
+   .. tab:: .project-config.toml
+
+      .. code-block:: toml
+
+         style = "style.json"
+
+   .. tab:: pyproject.toml
+
+      .. code-block:: toml
+
+
+
+Conditionals files existence
+============================
+
+Follows the next rules: 
+   * If the directory `src/` exists, the file `pyproject.toml` must exists too.
+   * If the file `pyproject.toml` exists, a Python file must be present in the root directory.
+
+.. tabs::
+
+   .. tab:: style.json5
+
+      .. code-block:: js
+
+         {
+           rules: [
+             {
+               files: ["pyproject.toml"],
+               ifFilesExist: ["src/"],
+             },
+             {
+               files: ["*.py"],
+               ifFilesExist: ["pyproject.toml"],
+             },
+           ],
+         }
+
+   .. tab:: .project-config.toml
+
+      .. code-block:: toml
+
+         style = "style.json5"
+
+   .. tab:: pyproject.toml
+
+      .. code-block:: toml
+
+
+
+   .. tab:: file.py
+
+      .. code-block:: python
+
+
+
+   .. tab:: src/
+
+      .. code-block:: text
+
+
+
+Compare values between files
+============================
+
+The version defined in ``__version__`` inside a Python script must match the metadata defined in `pyproject.toml` file.
+
+.. tabs::
+
+   .. tab:: style.toml
+
+      .. code-block:: toml
+
+         [[rules]]
+         files = ["pyproject.toml"]
+         crossJMESPathsMatch = [
+           ["project.version", ["script.py", "__version__"], "op([0], '==', [1])", true],
+         ]
+
+   .. tab:: script.py
+
+      .. code-block:: python
+
+         """Simple script."""
+
+         __version__ = "1.0.0"
+
+   .. tab:: pyproject.toml
+
+      .. code-block:: toml
+
+         [project]
+         version = "1.0.0"
+
+   .. tab:: .project-config.toml
+
+      .. code-block:: toml
+
+         style = "style.toml"
+
+JMESPath against online sources
+===============================
+
+Check that the ``license`` field of *package.json* file is defined with a valid OSI approved SPDX license identifier.
+
+.. tabs::
+
+   .. tab:: style.json5
+
+      .. code-block:: js
+
+         {
+           rules: [
+             {
+               files: ["package.json"],
+               crossJMESPathsMatch: [
+                 [
+                   "license",
+                   [
+                     "gh://spdx/license-list-data@v3.19/json/licenses.json",
+                     "licenses[?isOsiApproved] | [?!isDeprecatedLicenseId].licenseId",
+                   ],
+                   "contains([1], [0])",
+                   true,
+                 ],
+               ],
+             },
+           ],
+         }
+
+   .. tab:: package.json
+
+      .. code-block:: json
+
+         {
+           "license": "BSD-3-Clause"
+         }
+
+   .. tab:: .project-config.toml
+
+      .. code-block:: toml
+
+         style = "style.json5"
+
+Assert root directory name
+==========================
+
+Check that the name of the directory that is the root of the project matches against certain regular expression.
+
+.. tabs::
+
+   .. tab:: style.json5
+
+      .. code-block:: js
+
+         {
+           rules: [
+             {
+               files: [".project-config.toml"],
+               hint: "The name of the root directory must match the regex '[a-z0-9-]+$'",
+               JMESPathsMatch: [["regex_match('[a-z0-9-]+$', rootdir_name())", true]],
+             },
+           ],
+         }
+
+   .. tab:: .project-config.toml
+
+      .. code-block:: toml
+
+         style = "style.json5"
+
+TOML sections order
+===================
+
+Check that the section ``[foo]`` of a TOML file is placed before the section ``[bar]``.
+
+.. tabs::
+
+   .. tab:: style.json5
+
+      .. code-block:: js
+
+         {
+           rules: [
+             {
+               files: ["pyproject.toml"],
+               hint: "The section '[foo]' must be defined before the section '[bar]'",
+               crossJMESPathsMatch: [
+                 [
+                   "`null`",
+                   ["pyproject.toml?text", "@"],
+                   "op(op([1], 'indexOf', '[foo]'), '<', op([1], 'indexOf', '[bar]'))",
+                   true,
+                 ],
+               ],
+             },
+           ],
+         }
+
+   .. tab:: pyproject.toml
+
+      .. code-block:: toml
+
+         [foo]
+         name = "foo"
+
+         [bar]
+         name = "bar"
+
+   .. tab:: .project-config.toml
+
+      .. code-block:: toml
+
+         style = "style.json5"
+
+Editing a .gitignore file
+=========================
+
+Enforce the existence of certain lines in a `.gitignore` file.
+
+.. tabs::
+
+   .. tab:: style.json5
+
+      .. code-block:: js
+
+         {
+           rules: [
+             {
+               files: [".gitignore"], // Enforce the existence of a '.gitignore' file
+               hint: "Enforced the line '__pycache__/' to be present in .gitignore file",
+               includeLines: ["__pycache__/"],
+             },
+             {
+               files: [".gitignore"],
+               hint: "As a directory 'tests/' has been found, enforced the line '.pytest_cache/' to be present in the '.gitignore' file",
+               ifFilesExist: ["tests/"],
+               includeLines: [".pytest_cache/"],
+             },
+             {
+               files: [".gitignore"],
+               hint: "Removed the line '.pytest_cache' from the '.gitignore' file as it is implicitly naming a directory",
+               JMESPathsMatch: [
+                 ["contains(@, '.pytest_cache')", false, "[?@ != '.pytest_cache']"],
+               ],
+             },
+             {
+               files: [".gitignore"],
+               hint: "Enforce '*.egg-info/' at the end of the .gitignore if is not already present",
+               includeLines: [
+                 [
+                   "*.egg-info/",
+                   "op([?!starts_with(@, '*.egg-info')], `+`, ['*.egg-info/'])",
+                 ],
+               ],
+             },
+             {
+               files: [".gitignore"],
+               hint: "The line 'dist/' must be included in .gitignore",
+               includeLines: [
+                 [
+                   "dist/",
+                   "op([?!contains(['/dist/', 'dist', 'dist/'], @)], '+', ['dist/'])",
+                 ],
+                 "__pycache__/",
+               ],
+             },
+           ],
+         }
+
+   .. tab:: .gitignore
+
+      .. code-block:: text
+
+         .pytest_cache/
+         __pycache__/
+         *.egg-info/
+         /dist/
+         dist/
+
+   .. tab:: .project-config.toml
+
+      .. code-block:: toml
+
+         style = "style.json5"
+
+Replacing code blocks languages in RST documents
+================================================
+
+Don't allow code blocks in RST documentation files: 
+ * Bash is not a POSIX compliant shell, use Shell lexer.
+ * Pygments' JSON5 lexer is not implemented yet, use Javascript lexer.
+
+.. tabs::
+
+   .. tab:: style.json5
+
+      .. code-block:: js
+
+         {
+           rules: [
+             {
+               files: ["file.rst"],
+               excludeContent: [
+                 [
+                   ".. code-block::  ",
+                   "map(&replace(@, 'code-block::  ', 'code-block:: '), @)",
+                 ],
+                 [
+                   ".. code-block:: bash",
+                   "map(&replace(@, 'code-block:: bash', 'code-block:: sh'), @)",
+                 ],
+                 [
+                   ".. code-block:: json5",
+                   "map(&replace(@, 'code-block:: json5', 'code-block:: js'), @)",
+                 ],
+               ],
+             },
+           ],
+         }
+
+   .. tab:: file.rst
+
+      .. code-block:: restructuredtext
+
+         .. code-block:: python
+
+            foo = "bar"
+
+         .. code-block:: js
+
+            {}
+
+         .. code-block:: sh
+
+            #!/bin/sh
+            curl -X POST http://localhost:8080/api/v1/users
+
+   .. tab:: .project-config.toml
+
+      .. code-block:: toml
+
+         style = "style.json5"
+
+Autofixing .editorconfig
+========================
+
+If you run the next example using ``project-config fix`` subcommand without creating an `.editorconfig` file it will be created and populated with the sections defined in the rule.
+
+.. tabs::
+
+   .. tab:: style.json5
+
+      .. code-block:: js
+
+         {
+           rules: [
+             {
+               files: [".editorconfig"],
+               JMESPathsMatch: [
+                 ["type(@)", "object"],
+                 ['type("")', "object"],
+                 ['"".root', true],
+                 ['"*".end_of_line', "lf"],
+                 ['"*".indent_style', "space"],
+                 ['"*".charset', "utf-8"],
+                 ['"*".trim_trailing_whitespace', true],
+               ],
+             },
+           ],
+         }
+
+   .. tab:: .editorconfig
+
+      .. code-block:: ini
+
+         root = true
+
+         [*]
+         end_of_line = lf
+         indent_style = space
+         charset = utf-8
+         trim_trailing_whitespace = true
+
+   .. tab:: .project-config.toml
+
+      .. code-block:: toml
+
+         style = "style.json5"
+
+Setting hooks in .pre-commit-config.yaml
+========================================
+
+Set a pre-commit hook for ``editorconfig-checker`` inside `.pre-commit-config.yaml` with manual fixes.
+
+.. tabs::
+
+   .. tab:: style.json5
+
+      .. code-block:: js
+
+         {
+           rules: [
+             {
+               files: [".pre-commit-config.yaml"],
+               ifJMESPathsMatch: {
+                 ".pre-commit-config.yaml": [
+                   ["type(@)", "object"],
+                   ["type(repos)", "array"],
+                 ],
+               },
+               JMESPathsMatch: [
+                 // Projects must use editorconfig checker pre-commit hook
+                 // to follow editorconfig rules. If the repo is not found in the list
+                 // of repos at this point, it will be added:
+                 [
+                   "length(repos[?repo=='https://github.com/editorconfig-checker/editorconfig-checker.python'])",
+                   1,
+                   "set(@, 'repos', insert(repos, `-1`, {rev: gh_tags('editorconfig-checker', 'editorconfig-checker.python', True)[0], repo: 'https://github.com/editorconfig-checker/editorconfig-checker.python', hooks: [{id: 'editorconfig-checker', name: 'editorconfig-checker', alias: 'ec'}]}))",
+                 ],
+
+                 //
+                 // After it we can check that the fields have been successfully added:
+                 //
+                 [
+                   // the 'rev' key must match the X.Y.Z regex pattern
+                   "regex_match('^\\d+\\.\\d+\\.\\d+$', repos[?repo=='https://github.com/editorconfig-checker/editorconfig-checker.python'] | [0].rev)",
+                   true,
+                 ],
+                 [
+                   // must contain hooks
+                   "type(repos[?repo=='https://github.com/editorconfig-checker/editorconfig-checker.python'] | [0].hooks)",
+                   "array",
+                 ],
+
+                 [
+                   // the hook has an `id` field with 'editorconfig-checker' value
+                   "contains(repos[?repo=='https://github.com/editorconfig-checker/editorconfig-checker.python'] | [0].hooks[*].id, 'editorconfig-checker')",
+                   true,
+                 ],
+                 [
+                   // the hook has a `name` field with 'editorconfig-checker' value
+                   "repos[?repo=='https://github.com/editorconfig-checker/editorconfig-checker.python'] | [0].hooks[?id=='editorconfig-checker'] | [0].name",
+                   "editorconfig-checker",
+                 ],
+                 [
+                   // the hook has an `alias` field with 'c' value
+                   "repos[?repo=='https://github.com/editorconfig-checker/editorconfig-checker.python'] | [0].hooks[?id=='editorconfig-checker'] | [0].alias",
+                   "ec",
+                 ],
+               ],
+             },
+           ],
+         }
+
+   .. tab:: .pre-commit-config.yaml
+
+      .. code-block:: yaml
+
+         repos:
+           - hooks:
+               - alias: ec
+                 id: editorconfig-checker
+                 name: editorconfig-checker
+             repo: https://github.com/editorconfig-checker/editorconfig-checker.python
+             rev: 2.4.0
+
+   .. tab:: .project-config.toml
+
+      .. code-block:: toml
+
+         style = "style.json5"
+
+Intercommunication between rules
+================================
+
+Using :py:func:`getenv` and :py:func:`setenv` functions to pass arbitrary data between rules.
+
+.. tabs::
+
+   .. tab:: style.json5
+
+      .. code-block:: js
+
+         {
+           rules: [
+             {
+               // Setting environment variables
+               //
+               // If `cache` field is of type string, set an environment
+               // variable `PREVIOUS_PROJECT_CONFIG_CACHE` with the value
+               files: [".project-config.toml"],
+               JMESPathsMatch: [
+                 [
+                   "op(op(type(cache), '!=', 'string'), '|', op(type(setenv('PREVIOUS_PROJECT_CONFIG_CACHE', cache)), '==', 'object'))",
+                   true,
+                 ],
+               ],
+             },
+             {
+               // Getting environment variables
+               //
+               // If the previous environment variable is setted, change `cache`
+               // to `never`.
+               files: [".project-config.toml"],
+               ifJMESPathsMatch: {
+                 ".project-config.toml": [
+                   ["type(getenv('PREVIOUS_PROJECT_CONFIG_CACHE'))", "string"],
+                 ],
+               },
+               JMESPathsMatch: [["cache", "never"]],
+             },
+             {
+               // Deleting environment variables
+               //
+               // If the previous environment variable is setted, delete it.
+               files: [".project-config.toml"],
+               ifJMESPathsMatch: {
+                 ".project-config.toml": [
+                   ["type(getenv('PREVIOUS_PROJECT_CONFIG_CACHE'))", "string"],
+                 ],
+               },
+               JMESPathsMatch: [
+                 ["type(setenv('PREVIOUS_PROJECT_CONFIG_CACHE', null))", "object"],
+               ],
+             },
+           ],
+         }
+
+   .. tab:: .project-config.toml
+
+      .. code-block:: toml
+
+         style = "style.json5"
+         cache = "never"
+
+.. raw:: html
+
+   <hr>
+
+.. tip::
+
+   For more complex examples check my own styles at `mondeja/project-config-styles`_.
+
+   .. _mondeja/project-config-styles: https://github.com/mondeja/project-config-styles
