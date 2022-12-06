@@ -12,6 +12,13 @@ so the first thing is to add the entrypoint to the group:
 
 .. tabs::
 
+   .. tab:: hatch
+
+      .. code-block:: toml
+
+         [project."entry-points"."project_config.plugins"]
+         my_plugin = "package.subpackage.my_plugin_module:PluginClass"
+
    .. tab:: poetry
 
       .. code-block:: toml

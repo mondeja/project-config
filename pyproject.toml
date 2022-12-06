@@ -31,7 +31,7 @@ keywords = [
 dependencies = [
   "importlib-metadata-argparse-version",
   "tomli-w~=1.0",
-  'pyjson5; python_version < "3.11"',
+  'pyjson5',
   "colored",
   "tabulate~=0.8",
   "jmespath~=1.0",

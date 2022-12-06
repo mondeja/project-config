@@ -132,7 +132,7 @@ JSON_2_INDENTED = lambda string: (  # noqa: E731
         ),
         pytest.param(
             {
-                "pyproject.toml": '[tool.poetry]\nname = "foo"\n',
+                "pyproject.toml": '[project]\nname = "foo"\n',
             },
             [
                 [
@@ -160,8 +160,7 @@ JSON_2_INDENTED = lambda string: (  # noqa: E731
             ],
             {
                 "pyproject.toml": (
-                    '[tool]\n[tool.poetry]\nname = "foo"\n\n'
-                    "[tool.project-config]\n"
+                    '[project]\nname = "foo"\n\n[tool.project-config]\n'
                 ),
             },
             id="typeof-deepmerge-subexpressions-default",
