@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.compat module &mdash; project-config 0.7.7 documentation</title>
+  <title>project_config.compat module &mdash; project-config 0.7.9 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -102,10 +102,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="modules.html">Reference</a> &raquo;</li>
-          <li><a href="project_config.html">project_config package</a> &raquo;</li>
-      <li>project_config.compat module</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">Reference</a></li>
+          <li class="breadcrumb-item"><a href="project_config.html">project_config package</a></li>
+      <li class="breadcrumb-item active">project_config.compat module</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/dev/reference/project_config.compat.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -120,8 +120,8 @@
 <p>Compatibility between Python versions.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="project_config.compat.Protocol">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">project_config.compat.</span></span><span class="sig-name descname"><span class="pre">Protocol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/typing.html#Protocol"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.compat.Protocol" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Generic" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Generic</span></code></a></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">project_config.compat.</span></span><span class="sig-name descname"><span class="pre">Protocol</span></span><a class="reference internal" href="../../_modules/typing.html#Protocol"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.compat.Protocol" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Generic" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Generic</span></code></a></p>
 <p>Base class for protocol classes.</p>
 <p>Protocol classes are defined as:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Proto</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
@@ -152,7 +152,7 @@ Protocol classes can be generic, they are defined as:</p>
 </div>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="project_config.compat.Protocol._abc_impl">
-<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#project_config.compat.Protocol._abc_impl" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#project_config.compat.Protocol._abc_impl" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -167,11 +167,10 @@ Protocol classes can be generic, they are defined as:</p>
 
 </dd></dl>
 
-<dl class="py class">
+<dl class="py function">
 <dt class="sig sig-object py" id="project_config.compat.TypedDict">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">project_config.compat.</span></span><span class="sig-name descname"><span class="pre">TypedDict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">typename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fields</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/typing.html#TypedDict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.compat.TypedDict" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></p>
-<p>A simple typed namespace. At runtime it is equivalent to a plain dict.</p>
+<span class="sig-prename descclassname"><span class="pre">project_config.compat.</span></span><span class="sig-name descname"><span class="pre">TypedDict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">typename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fields</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/typing.html#TypedDict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.compat.TypedDict" title="Permalink to this definition"></a></dt>
+<dd><p>A simple typed namespace. At runtime it is equivalent to a plain dict.</p>
 <p>TypedDict creates a dictionary type that expects all of its
 instances to have a certain set of keys, where each key is
 associated with a value of a consistent type. This expectation
@@ -188,8 +187,9 @@ Usage:</p>
 <span class="k">assert</span> <span class="n">Point2D</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;first&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="nb">dict</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;first&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The type info can be accessed via Point2D.__annotations__. TypedDict
-supports two additional equivalent forms:</p>
+<p>The type info can be accessed via the Point2D.__annotations__ dict, and
+the Point2D.__required_keys__ and Point2D.__optional_keys__ frozensets.
+TypedDict supports two additional equivalent forms:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Point2D</span> <span class="o">=</span> <span class="n">TypedDict</span><span class="p">(</span><span class="s1">&#39;Point2D&#39;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
 <span class="n">Point2D</span> <span class="o">=</span> <span class="n">TypedDict</span><span class="p">(</span><span class="s1">&#39;Point2D&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">})</span>
 </pre></div>
@@ -212,8 +212,9 @@ syntax forms work for Python 2.7 and 3.2+</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="project_config.compat.cached_function">
-<span class="sig-prename descclassname"><span class="pre">project_config.compat.</span></span><span class="sig-name descname"><span class="pre">cached_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_function</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#project_config.compat.cached_function" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">project_config.compat.</span></span><span class="sig-name descname"><span class="pre">cached_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_function</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#project_config.compat.cached_function" title="Permalink to this definition"></a></dt>
+<dd><p>Simple lightweight unbounded cache.  Sometimes called “memoize”.</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="project_config.compat.shlex_join">
@@ -234,7 +235,7 @@ syntax forms work for Python 2.7 and 3.2+</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2022, Álvaro Mondéjar Rubio.</p>
+    <p>&#169; Copyright 2022, Álvaro Mondéjar Rubio &lt;mondejar1994@gmail.com&gt;.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

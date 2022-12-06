@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Contributing &mdash; project-config 0.7.7 documentation</title>
+  <title>Contributing &mdash; project-config 0.7.9 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -70,12 +70,12 @@
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Contributing</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#development-install">Development install</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#test">Test</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#testing">Testing</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#show-coverage-report">Show coverage report</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#end-to-end-tests">End to end tests</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#lint">Lint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#linting">Linting</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#build-documentation">Build documentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#release">Release</a></li>
 </ul>
@@ -96,8 +96,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Contributing</li>
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Contributing</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/dev/contributing.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -111,52 +111,48 @@
 <h1>Contributing<a class="headerlink" href="#contributing" title="Permalink to this headline"></a></h1>
 <section id="development-install">
 <h2>Development install<a class="headerlink" href="#development-install" title="Permalink to this headline"></a></h2>
-<p>You need to install the latest version of <a class="reference external" href="https://python-poetry.org/">poetry</a> &gt;= 1.2.0 and
-<a class="reference external" href="https://pre-commit.com/">pre-commit</a> before.</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/mondeja/project-config
 <span class="nb">cd</span> project-config
-poetry install
-pre-commit install
-poetry self add poetry-exec-plugin
+pip install hatch
 </pre></div>
 </div>
 </section>
-<section id="test">
-<h2>Test<a class="headerlink" href="#test" title="Permalink to this headline"></a></h2>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>poetry <span class="nb">exec</span> <span class="nb">test</span>
-<span class="c1"># or `poetry exec t`</span>
+<section id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this headline"></a></h2>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>hatch run tests:unit
+<span class="c1"># or `hatch run tests:all`</span>
 </pre></div>
 </div>
 <section id="show-coverage-report">
 <h3>Show coverage report<a class="headerlink" href="#show-coverage-report" title="Permalink to this headline"></a></h3>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>poetry <span class="nb">exec</span> test:show
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>hatch run tests:cov
 </pre></div>
 </div>
 </section>
 <section id="end-to-end-tests">
 <h3>End to end tests<a class="headerlink" href="#end-to-end-tests" title="Permalink to this headline"></a></h3>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>poetry <span class="nb">exec</span> test:e2e
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>hatch run tests:all
 </pre></div>
 </div>
 </section>
 </section>
-<section id="lint">
-<h2>Lint<a class="headerlink" href="#lint" title="Permalink to this headline"></a></h2>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>poetry <span class="nb">exec</span> lint
+<section id="linting">
+<h2>Linting<a class="headerlink" href="#linting" title="Permalink to this headline"></a></h2>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>hatch run style:lint
 </pre></div>
 </div>
 </section>
 <section id="build-documentation">
 <h2>Build documentation<a class="headerlink" href="#build-documentation" title="Permalink to this headline"></a></h2>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>poetry <span class="nb">exec</span> doc
-<span class="c1"># or `poetry exec doc:show`</span>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>hatch run docs:build
+<span class="c1"># or `hatch run docs:serve`</span>
 </pre></div>
 </div>
 </section>
 <section id="release">
 <h2>Release<a class="headerlink" href="#release" title="Permalink to this headline"></a></h2>
 <p>You must have administrator permissions on the repository.</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nv">version</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>poetry run bump &lt;major/minor/patch&gt;<span class="k">)</span><span class="s2">&quot;</span>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nv">version</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>hatch run bump &lt;major/minor/patch&gt;<span class="k">)</span><span class="s2">&quot;</span>
 git add .
 git commit -m <span class="s2">&quot;Bump version&quot;</span>
 git push origin master
@@ -178,7 +174,7 @@ git push origin <span class="s2">&quot;v</span><span class="nv">$version</span><
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2022, Álvaro Mondéjar Rubio.</p>
+    <p>&#169; Copyright 2022, Álvaro Mondéjar Rubio &lt;mondejar1994@gmail.com&gt;.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

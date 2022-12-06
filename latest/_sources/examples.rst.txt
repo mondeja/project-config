@@ -207,26 +207,8 @@ The version defined in ``__version__`` inside a Python script must match the met
          [[rules]]
          files = ["pyproject.toml"]
          crossJMESPathsMatch = [
-           [
-             "tool.poetry.version",
-             ["script.py", "__version__"],
-             "op([0], '==', [1])",
-             true,
-           ],
+           ["project.version", ["script.py", "__version__"], "op([0], '==', [1])", true],
          ]
-
-   .. tab:: pyproject.toml
-
-      .. code-block:: toml
-
-         [tool.poetry]
-         version = "1.0.0"
-
-   .. tab:: .project-config.toml
-
-      .. code-block:: toml
-
-         style = "style.toml"
 
    .. tab:: script.py
 
@@ -235,6 +217,19 @@ The version defined in ``__version__`` inside a Python script must match the met
          """Simple script."""
 
          __version__ = "1.0.0"
+
+   .. tab:: pyproject.toml
+
+      .. code-block:: toml
+
+         [project]
+         version = "1.0.0"
+
+   .. tab:: .project-config.toml
+
+      .. code-block:: toml
+
+         style = "style.toml"
 
 JMESPath against online sources
 ===============================
@@ -255,7 +250,7 @@ Check that the ``license`` field of *package.json* file is defined with a valid 
                  [
                    "license",
                    [
-                     "gh://spdx/license-list-data@v3.18/json/licenses.json",
+                     "gh://spdx/license-list-data@v3.19/json/licenses.json",
                      "licenses[?isOsiApproved] | [?!isDeprecatedLicenseId].licenseId",
                    ],
                    "contains([1], [0])",
@@ -325,7 +320,7 @@ Check that the section ``[foo]`` of a TOML file is placed before the section ``[
                hint: "The section '[foo]' must be defined before the section '[bar]'",
                crossJMESPathsMatch: [
                  [
-                   "null",
+                   "`null`",
                    ["pyproject.toml?text", "@"],
                    "op(op([1], 'indexOf', '[foo]'), '<', op([1], 'indexOf', '[bar]'))",
                    true,

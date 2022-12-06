@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Rationale &mdash; project-config 0.7.7 documentation</title>
+  <title>Rationale &mdash; project-config 0.7.9 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -88,8 +88,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Rationale</li>
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Rationale</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/in-depth/rationale.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -103,7 +103,7 @@
 <h1>Rationale<a class="headerlink" href="#rationale" title="Permalink to this headline"></a></h1>
 <p>This project has been created to help me to made a transition from
 setuptools/pip based Python development workflow to a more modern
-Poetry based one. I wanted to be able to parse conveniently all
+based one like <a class="reference external" href="https://hatch.pypa.io/">Hatch</a>. I wanted to be able to parse conveniently all
 configuration files to check certain common patterns or the migration
 would be impossible.</p>
 <p>Nowadays, configuring properly a project in any almost language with
@@ -125,18 +125,18 @@ values in all files, so after updating the style file I run <code class="docutil
 <strong>project-config</strong> shows me all the changes needed.</p>
 <section id="alternatives">
 <h2>Alternatives<a class="headerlink" href="#alternatives" title="Permalink to this headline"></a></h2>
-<p>Looking for a tool to solve this problem I found <a class="reference external" href="https://nitpick.readthedocs.io/en/latest/">nitpick</a>, which is
+<p>Looking for a tool to solve this problem I found <a class="reference external" href="https://nitpick.readthedocs.io/">nitpick</a>, which is
 essentially designed with the same goals than <strong>project-config</strong>
 in mind but different approach, which I don’t really like. Don’t blame me,
 <a class="reference external" href="https://github.com/mondeja/nitpick-styles">I’ve created the styles previously</a>
-with <a class="reference external" href="https://nitpick.readthedocs.io/en/latest/">nitpick</a>, but I couldn’t create some assertions because of the
+with <a class="reference external" href="https://nitpick.readthedocs.io/">nitpick</a>, but I couldn’t create some assertions because of the
 serious limitations in his design.</p>
-<p>So I’ve created <strong>project-config</strong> inspired by <a class="reference external" href="https://nitpick.readthedocs.io/en/latest/">nitpick</a>. In fact, the
+<p>So I’ve created <strong>project-config</strong> inspired by <a class="reference external" href="https://nitpick.readthedocs.io/">nitpick</a>. In fact, the
 configuration follows the same pattern, but the plugin system and the concept
 of <a class="reference internal" href="serialization.html"><span class="doc">Objects serialization</span></a> is quite different. The main differences are:</p>
 <ul class="simple">
-<li><p><a class="reference external" href="https://nitpick.readthedocs.io/en/latest/">nitpick</a> enforces the definition configuration values as constants using TOML files, but <strong>project-config</strong> allows to fix them in different ways.</p></li>
-<li><p><a class="reference external" href="https://nitpick.readthedocs.io/en/latest/">nitpick</a> has a serious limitation about how to query object structures, which has given rise to the monstrosity of <a class="reference external" href="https://nitpick.readthedocs.io/en/latest/styles.html?highlight=pre-commit#special-configurations">Special configurations</a>, while <strong>project-config</strong> deals with this problem using <a class="reference external" href="https://jmespath.org/">JMESPath</a>.</p></li>
+<li><p><a class="reference external" href="https://nitpick.readthedocs.io/">nitpick</a> enforces the definition configuration values as constants using TOML files, but <strong>project-config</strong> allows to fix them in different ways.</p></li>
+<li><p><a class="reference external" href="https://nitpick.readthedocs.io/">nitpick</a> has a serious limitation about how to query object structures, which has given rise to the monstrosity of <a class="reference external" href="https://nitpick.readthedocs.io/en/latest/styles.html?highlight=pre-commit#special-configurations">Special configurations</a>, while <strong>project-config</strong> deals with this problem using <a class="reference external" href="https://jmespath.org/">JMESPath</a>.</p></li>
 </ul>
 </section>
 </section>
@@ -152,7 +152,7 @@ of <a class="reference internal" href="serialization.html"><span class="doc">Obj
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2022, Álvaro Mondéjar Rubio.</p>
+    <p>&#169; Copyright 2022, Álvaro Mondéjar Rubio &lt;mondejar1994@gmail.com&gt;.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Examples &mdash; project-config 0.7.7 documentation</title>
+  <title>Examples &mdash; project-config 0.7.9 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -102,8 +102,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Examples</li>
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Examples</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/examples.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -261,28 +261,23 @@
 <h2>Compare values between files<a class="headerlink" href="#compare-values-between-files" title="Permalink to this headline"></a></h2>
 <p>The version defined in <code class="docutils literal notranslate"><span class="pre">__version__</span></code> inside a Python script must match the metadata defined in <cite>pyproject.toml</cite> file.</p>
 <div class="sphinx-tabs docutils container">
-<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-5-5-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-5-5-0" name="5-0" role="tab" tabindex="0">style.toml</button><button aria-controls="panel-5-5-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-5-5-1" name="5-1" role="tab" tabindex="-1">pyproject.toml</button><button aria-controls="panel-5-5-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-5-5-2" name="5-2" role="tab" tabindex="-1">.project-config.toml</button><button aria-controls="panel-5-5-3" aria-selected="false" class="sphinx-tabs-tab" id="tab-5-5-3" name="5-3" role="tab" tabindex="-1">script.py</button></div><div aria-labelledby="tab-5-5-0" class="sphinx-tabs-panel" id="panel-5-5-0" name="5-0" role="tabpanel" tabindex="0"><div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[[rules]]</span><span class="w"></span>
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-5-5-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-5-5-0" name="5-0" role="tab" tabindex="0">style.toml</button><button aria-controls="panel-5-5-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-5-5-1" name="5-1" role="tab" tabindex="-1">script.py</button><button aria-controls="panel-5-5-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-5-5-2" name="5-2" role="tab" tabindex="-1">pyproject.toml</button><button aria-controls="panel-5-5-3" aria-selected="false" class="sphinx-tabs-tab" id="tab-5-5-3" name="5-3" role="tab" tabindex="-1">.project-config.toml</button></div><div aria-labelledby="tab-5-5-0" class="sphinx-tabs-panel" id="panel-5-5-0" name="5-0" role="tabpanel" tabindex="0"><div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[[rules]]</span><span class="w"></span>
 <span class="n">files</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s">&quot;pyproject.toml&quot;</span><span class="p">]</span><span class="w"></span>
 <span class="n">crossJMESPathsMatch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
-<span class="w">  </span><span class="p">[</span><span class="w"></span>
-<span class="w">    </span><span class="s">&quot;tool.poetry.version&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="p">[</span><span class="s">&quot;script.py&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;__version__&quot;</span><span class="p">],</span><span class="w"></span>
-<span class="w">    </span><span class="s">&quot;op([0], &#39;==&#39;, [1])&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="n">true</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="p">],</span><span class="w"></span>
+<span class="w">  </span><span class="p">[</span><span class="s">&quot;project.version&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="s">&quot;script.py&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;__version__&quot;</span><span class="p">],</span><span class="w"> </span><span class="s">&quot;op([0], &#39;==&#39;, [1])&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">true</span><span class="p">],</span><span class="w"></span>
 <span class="p">]</span><span class="w"></span>
 </pre></div>
 </div>
-</div><div aria-labelledby="tab-5-5-1" class="sphinx-tabs-panel" hidden="true" id="panel-5-5-1" name="5-1" role="tabpanel" tabindex="0"><div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[tool.poetry]</span><span class="w"></span>
+</div><div aria-labelledby="tab-5-5-1" class="sphinx-tabs-panel" hidden="true" id="panel-5-5-1" name="5-1" role="tabpanel" tabindex="0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;Simple script.&quot;&quot;&quot;</span>
+
+<span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;1.0.0&quot;</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-5-5-2" class="sphinx-tabs-panel" hidden="true" id="panel-5-5-2" name="5-2" role="tabpanel" tabindex="0"><div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[project]</span><span class="w"></span>
 <span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;1.0.0&quot;</span><span class="w"></span>
 </pre></div>
 </div>
-</div><div aria-labelledby="tab-5-5-2" class="sphinx-tabs-panel" hidden="true" id="panel-5-5-2" name="5-2" role="tabpanel" tabindex="0"><div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="n">style</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;style.toml&quot;</span><span class="w"></span>
-</pre></div>
-</div>
-</div><div aria-labelledby="tab-5-5-3" class="sphinx-tabs-panel" hidden="true" id="panel-5-5-3" name="5-3" role="tabpanel" tabindex="0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;Simple script.&quot;&quot;&quot;</span>
-
-<span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;1.0.0&quot;</span>
+</div><div aria-labelledby="tab-5-5-3" class="sphinx-tabs-panel" hidden="true" id="panel-5-5-3" name="5-3" role="tabpanel" tabindex="0"><div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="n">style</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;style.toml&quot;</span><span class="w"></span>
 </pre></div>
 </div>
 </div></div>
@@ -299,7 +294,7 @@
 <span class="w">        </span><span class="p">[</span><span class="w"></span>
 <span class="w">          </span><span class="s2">&quot;license&quot;</span><span class="p">,</span><span class="w"></span>
 <span class="w">          </span><span class="p">[</span><span class="w"></span>
-<span class="w">            </span><span class="s2">&quot;gh://spdx/license-list-data@v3.18/json/licenses.json&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="s2">&quot;gh://spdx/license-list-data@v3.19/json/licenses.json&quot;</span><span class="p">,</span><span class="w"></span>
 <span class="w">            </span><span class="s2">&quot;licenses[?isOsiApproved] | [?!isDeprecatedLicenseId].licenseId&quot;</span><span class="p">,</span><span class="w"></span>
 <span class="w">          </span><span class="p">],</span><span class="w"></span>
 <span class="w">          </span><span class="s2">&quot;contains([1], [0])&quot;</span><span class="p">,</span><span class="w"></span>
@@ -352,7 +347,7 @@
 <span class="w">      </span><span class="nx">hint</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;The section &#39;[foo]&#39; must be defined before the section &#39;[bar]&#39;&quot;</span><span class="p">,</span><span class="w"></span>
 <span class="w">      </span><span class="nx">crossJMESPathsMatch</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
 <span class="w">        </span><span class="p">[</span><span class="w"></span>
-<span class="w">          </span><span class="s2">&quot;null&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;`null`&quot;</span><span class="p">,</span><span class="w"></span>
 <span class="w">          </span><span class="p">[</span><span class="s2">&quot;pyproject.toml?text&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;@&quot;</span><span class="p">],</span><span class="w"></span>
 <span class="w">          </span><span class="s2">&quot;op(op([1], &#39;indexOf&#39;, &#39;[foo]&#39;), &#39;&lt;&#39;, op([1], &#39;indexOf&#39;, &#39;[bar]&#39;))&quot;</span><span class="p">,</span><span class="w"></span>
 <span class="w">          </span><span class="kc">true</span><span class="p">,</span><span class="w"></span>
@@ -670,7 +665,7 @@ dist/
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2022, Álvaro Mondéjar Rubio.</p>
+    <p>&#169; Copyright 2022, Álvaro Mondéjar Rubio &lt;mondejar1994@gmail.com&gt;.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

@@ -158,7 +158,7 @@ Is important to write your rules in a way that can be automatically fixable by *
            [
              "license",
              [
-               "gh://spdx/license-list-data@v3.18/json/licenses.json",
+               "gh://spdx/license-list-data@v3.19/json/licenses.json",
                "licenses[?isOsiApproved] | [?!isDeprecatedLicenseId].licenseId",
              ],
              "contains([1], [0])",
