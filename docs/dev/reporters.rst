@@ -12,6 +12,13 @@ so the first thing is to add the entrypoint to the group:
 
 .. tabs::
 
+   .. tab:: hatch
+
+      .. code-block:: toml
+
+         [tool.poetry."entry-points"."project_config.reporters"]
+         my_reporter = "package.subpackage.my_reporter_module"
+
    .. tab:: poetry
 
       .. code-block:: toml

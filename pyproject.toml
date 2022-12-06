@@ -1,6 +1,6 @@
 [project]
 name = "project-config"
-version = "0.7.8"
+version = "0.7.9"
 description = "Reproducible configuration across projects."
 authors = [{ name = "Álvaro Mondéjar Rubio", email = "mondejar1994@gmail.com" }]
 license = "BSD-3-Clause"
@@ -31,7 +31,7 @@ keywords = [
 dependencies = [
   "importlib-metadata-argparse-version",
   "tomli-w~=1.0",
-  'pyjson5; python_version < "3.11"',
+  'pyjson5',
   "colored",
   "tabulate~=0.8",
   "jmespath~=1.0",
@@ -130,19 +130,19 @@ python -m http.server 8089 -b localhost -d docs/_build/html"""
 cache = "2 days"
 style = [
   # Basic Python style: use Hatch, pre-commit, Github workflows, etc
-  "gh://mondeja/project-config-styles@v3/python/base.json5",
+  "gh://mondeja/project-config-styles@v3.1/python/base.json5",
   # Double quotes: formatting with Black
-  "gh://mondeja/project-config-styles@v3/python/double-quotes.json5",
+  "gh://mondeja/project-config-styles@v3.1/python/double-quotes.json5",
   # Maximum line length
-  "gh://mondeja/project-config-styles@v3/python/line-length-80.json5",
+  "gh://mondeja/project-config-styles@v3.1/python/line-length-80.json5",
   # Testing styles: use pytest
-  "gh://mondeja/project-config-styles@v3/python/tests.json5",
+  "gh://mondeja/project-config-styles@v3.1/python/tests.json5",
   # Documentation styles: use Sphinx with Readthedocs theme
-  "gh://mondeja/project-config-styles@v3/python/sphinx.json5",
-  "gh://mondeja/project-config-styles@v3/python/google-docstrings.json5",
-  "gh://mondeja/project-config-styles@v3/python/readthedocs.json5",
+  "gh://mondeja/project-config-styles@v3.1/python/sphinx.json5",
+  "gh://mondeja/project-config-styles@v3.1/python/google-docstrings.json5",
+  "gh://mondeja/project-config-styles@v3.1/python/readthedocs.json5",
   # Type checking with mypy
-  "gh://mondeja/project-config-styles@v3/python/mypy.json5"
+  "gh://mondeja/project-config-styles@v3.1/python/mypy.json5"
 ]
 
 [tool.bump]

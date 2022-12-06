@@ -106,7 +106,7 @@ def test_toml_file_already_exists_but_section_not_found(
 ):
     with chdir(tmp_path):
         file = tmp_path / "pyproject.toml"
-        file.write_text('[tool.poetry]\nname = "foo"\n')
+        file.write_text('[project]\nname = "foo"\n')
         assert run(["init", "-c", "pyproject.toml"]) == 0
 
         out, err = capsys.readouterr()
@@ -118,7 +118,7 @@ def test_toml_file_already_exists_but_section_not_found(
 
         assert (
             file.read_text()
-            == """[tool.poetry]
+            == """[project]
 name = "foo"
 
 [tool.project-config]

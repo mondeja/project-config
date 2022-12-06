@@ -90,7 +90,7 @@ to execute the rule.
 
 .. rubric:: Example
 
-If the license defined in the `LICENSE` file is BSD-3, ``tool.poetry.license``
+If the license defined in the `LICENSE` file is BSD-3, ``project.license``
 must correspont:
 
 .. code-block:: js
@@ -102,7 +102,7 @@ must correspont:
          LICENSE: ["BSD 3-Clause License"],
        },
        JMESPathsMatch: [
-         ["tool.poetry.license", "BSD-3-License"],
+         ["project.license", "BSD-3-License"],
        ]
      ]
    }
@@ -305,7 +305,7 @@ always takes the regex to apply as the first parameter following the Python's
 
    Return the value of an environment variable.
 
-   .. versionadded:: 0.8.0
+   .. versionadded:: 0.7.2
 
 .. function:: setenv(envvar: str, value: str | None) -> dict
 
@@ -314,7 +314,7 @@ always takes the regex to apply as the first parameter following the Python's
 
    Return the updated environment object.
 
-   .. versionadded:: 0.8.0
+   .. versionadded:: 0.7.2
 
 .. function:: rootdir_name() -> str
 
@@ -959,7 +959,7 @@ The executed steps are:
 
 The ``release`` field of a Sphinx configuration defined in a file
 `docs/conf.py` must be the same that the version of the project metadata
-defined in th file `pyproject.toml`, field ``tool.poetry.version``:
+defined in th file `pyproject.toml`, field ``project.version``:
 
 .. code-block:: js
 
@@ -969,7 +969,7 @@ defined in th file `pyproject.toml`, field ``tool.poetry.version``:
          files: ["pyproject.toml"],
          crossJMESPathsMatch: [
            [
-             "tool.poetry.version",
+             "project.version",
              ["docs/conf.py", "release"],
              "op([0], '==', [1])",
              true,
