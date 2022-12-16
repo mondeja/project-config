@@ -5,7 +5,7 @@ from __future__ import annotations
 import glob
 import os
 from collections.abc import Iterable, Iterator
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from project_config.compat import TypeAlias
 from project_config.fetchers import fetch
@@ -16,11 +16,12 @@ from project_config.serializers import (
 )
 
 
-TreeDirectory: TypeAlias = Iterator[str]
-TreeNode: TypeAlias = str | TreeDirectory
-TreeNodeFiles: TypeAlias = list[tuple[str, TreeNode]]
-TreeNodeFilesIterator: TypeAlias = Iterator[tuple[str, TreeNode]]
-FilePathsArgument: TypeAlias = Iterator[str] | list[str]
+if TYPE_CHECKING:
+    TreeDirectory: TypeAlias = Iterator[str]
+    TreeNode: TypeAlias = str | TreeDirectory
+    TreeNodeFiles: TypeAlias = list[tuple[str, TreeNode]]
+    TreeNodeFilesIterator: TypeAlias = Iterator[tuple[str, TreeNode]]
+    FilePathsArgument: TypeAlias = Iterator[str] | list[str]
 
 
 class Tree:

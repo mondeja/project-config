@@ -5,7 +5,7 @@ from __future__ import annotations
 import os
 import pathlib
 import types
-from typing import cast
+from typing import TYPE_CHECKING, cast
 
 import pytest
 
@@ -13,9 +13,10 @@ from project_config.compat import TypeAlias
 from project_config.tree import Tree
 
 
-FileType: TypeAlias = str | bool | None
-FilesType: TypeAlias = list[tuple[str, FileType]] | dict[str, FileType]
-RootdirType: TypeAlias = str | pathlib.Path
+if TYPE_CHECKING:
+    FileType: TypeAlias = str | bool | None
+    FilesType: TypeAlias = list[tuple[str, FileType]] | dict[str, FileType]
+    RootdirType: TypeAlias = str | pathlib.Path
 
 
 def create_files(  # noqa: D103

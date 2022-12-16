@@ -3,12 +3,13 @@
 from __future__ import annotations
 
 import re
-from typing import Any, cast
+from typing import TYPE_CHECKING, Any, cast
 
 from project_config.compat import TypeAlias
 
 
-Namespace: TypeAlias = dict[str, Any]
+if TYPE_CHECKING:
+    Namespace: TypeAlias = dict[str, Any]
 
 DEFAULT_NAMESPACE: Namespace = {}
 

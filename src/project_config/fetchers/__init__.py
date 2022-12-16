@@ -7,21 +7,16 @@ import os
 import urllib.parse
 from typing import Any
 
-from project_config.compat import TypeAlias
 from project_config.exceptions import (
     ProjectConfigException,
     ProjectConfigNotImplementedError,
 )
 from project_config.serializers import (
     SerializerError,
-    SerializerResult,
     guess_preferred_serializer,
     serialize_for_url,
 )
 from project_config.utils.http import ProjectConfigTimeoutError
-
-
-FetchResult: TypeAlias = SerializerResult
 
 
 class FetchError(ProjectConfigException):
@@ -64,7 +59,7 @@ def _get_scheme_from_urlparts(url_parts: urllib.parse.SplitResult) -> str:
     )
 
 
-def fetch(url: str, **kwargs: Any) -> FetchResult:
+def fetch(url: str, **kwargs: Any) -> Any:
     """Fetch a result given an URI.
 
     Args:

@@ -130,19 +130,19 @@ python -m http.server 8089 -b localhost -d docs/_build/html"""
 cache = "2 days"
 style = [
   # Basic Python style: use Hatch, pre-commit, Github workflows, etc
-  "../project-config-styles/python/base.json5",
+  "gh://mondeja/project-config-styles@v4/python/base.json5",
   # Double quotes: formatting with Black
-  "../project-config-styles/python/double-quotes.json5",
+  "gh://mondeja/project-config-styles@v4/python/double-quotes.json5",
   # Maximum line length
-  "../project-config-styles/python/line-length-80.json5",
+  "gh://mondeja/project-config-styles@v4/python/line-length-80.json5",
   # Testing styles: use pytest
-  "../project-config-styles/python/tests.json5",
+  "gh://mondeja/project-config-styles@v4/python/tests.json5",
   # Documentation styles: use Sphinx with Readthedocs theme
-  "../project-config-styles/python/sphinx.json5",
-  "../project-config-styles/python/google-docstrings.json5",
-  "../project-config-styles/python/readthedocs.json5",
+  "gh://mondeja/project-config-styles@v4/python/sphinx.json5",
+  "gh://mondeja/project-config-styles@v4/python/google-docstrings.json5",
+  "gh://mondeja/project-config-styles@v4/python/readthedocs.json5",
   # Type checking with mypy
-  "../project-config-styles/python/mypy.json5"
+  "gh://mondeja/project-config-styles@v4/python/mypy.json5"
 ]
 
 [tool.bump]
@@ -163,7 +163,8 @@ exclude_lines = [
   "raise NotImplementedError",
   "@(abc\\.)?abstractmethod",
   "class .*\\bProtocol\\):",
-  "if __name__ == [\"']__main__[\"']:"
+  "if __name__ == [\"']__main__[\"']:",
+  "if TYPE_CHECKING:",
 ]
 omit = ["src/project_config/tests/*"]
 

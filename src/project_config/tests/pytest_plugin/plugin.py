@@ -10,24 +10,25 @@ import os
 import pathlib
 import re
 import types
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import pytest
 
 from project_config.tests.pytest_plugin.helpers import (
-    FilesType,
-    RootdirType,
     assert_expected_files,
     create_files,
     create_tree,
     get_reporter_class_from_module,
 )
-from project_config.types import (
-    ActionsContext,
-    ErrorDict,
-    Rule,
-    StrictResultType,
-)
+from project_config.types import ActionsContext, ErrorDict, Rule
+
+
+if TYPE_CHECKING:
+    from project_config.tests.pytest_plugin.helpers import (
+        FilesType,
+        RootdirType,
+    )
+    from project_config.types import StrictResultType
 
 
 def project_config_plugin_action_asserter(
@@ -57,7 +58,7 @@ def project_config_plugin_action_asserter(
             If the value is ``False``, the file will not be created.
             If the value is ``None``, the file will be created as a directory.
         value (typing.Any): Value passed to the action.
-        expected_results (list): List of expected results.
+        expected_results (list): Expected results.
         additional_files (dict): Dictionary of additional files to create.
             These will not be defined inside the ``files`` property of the rule.
             Follows the same format as ``files``.
@@ -212,7 +213,7 @@ def project_config_errors_report_asserter(
         rootdir (Path): Path to root directory. This is not needed to define
             in the fixture as is inserted before the execution.
         reporters_module (types.ModuleType): Module containing the reporters.
-        errors (list): List of errors.
+        errors (list): Errors.
         expected_result (str): Expected reported result.
 
     .. rubric:: Example

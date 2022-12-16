@@ -8,15 +8,12 @@ import os
 import sys
 import urllib.parse
 from collections.abc import Callable
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from identify import identify
 
 from project_config.compat import NotRequired, Protocol, TypeAlias, TypedDict
 from project_config.exceptions import ProjectConfigException
-
-
-SerializerResult = Any
 
 
 class SerializerFunction(Protocol):
@@ -26,7 +23,7 @@ class SerializerFunction(Protocol):
         self,
         value: Any,  # noqa: U100
         **kwargs: Any,  # noqa: U100
-    ) -> SerializerResult:
+    ) -> Any:
         ...
 
 
@@ -34,21 +31,20 @@ class SerializerError(ProjectConfigException):
     """Error happened serializing content as JSON."""
 
 
-SerializerFunctionKwargs: TypeAlias = dict[str, Any]
+if TYPE_CHECKING:
+    SerializerFunctionKwargs: TypeAlias = dict[str, Any]
 
+    class SerializerDefinitionType(TypedDict):
+        """Serializer definition type."""
 
-class SerializerDefinitionType(TypedDict):
-    """Serializer definition type."""
+        module: str
 
-    module: str
+        function: NotRequired[str]
+        function_kwargs_from_url_path: NotRequired[
+            Callable[[str], SerializerFunctionKwargs]
+        ]
 
-    function: NotRequired[str]
-    function_kwargs_from_url_path: NotRequired[
-        Callable[[str], SerializerFunctionKwargs]
-    ]
-
-
-SerializerDefinitionsType: TypeAlias = list[SerializerDefinitionType]
+    SerializerDefinitionsType: TypeAlias = list[SerializerDefinitionType]
 
 serializers: dict[
     str,
@@ -307,7 +303,7 @@ def serialize_for_url(
     url: str,
     string: str,
     prefer_serializer: str | None = None,
-) -> SerializerResult:
+) -> Any:
     """Serializes to JSON a string according to the given URI.
 
     Args:

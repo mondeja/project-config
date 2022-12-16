@@ -5,7 +5,7 @@ from __future__ import annotations
 import abc
 import os
 from collections.abc import Callable
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import colored
 
@@ -17,8 +17,9 @@ from project_config.exceptions import (
 from project_config.types import ErrorDict
 
 
-FilesErrors: TypeAlias = dict[str, list[ErrorDict]]
-FormatterDefinitionType: TypeAlias = Callable[[str], str]
+if TYPE_CHECKING:
+    FilesErrors: TypeAlias = dict[str, list[ErrorDict]]
+    FormatterDefinitionType: TypeAlias = Callable[[str], str]
 
 
 class InvalidColors(ProjectConfigException):

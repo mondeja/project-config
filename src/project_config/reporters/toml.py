@@ -3,16 +3,21 @@
 from __future__ import annotations
 
 import json
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import tomli_w
 
 from project_config.reporters.base import (
     BaseColorReporter,
     BaseNoopFormattedReporter,
-    FilesErrors,
-    FormatterDefinitionType,
 )
+
+
+if TYPE_CHECKING:
+    from project_config.reporters.base import (
+        FilesErrors,
+        FormatterDefinitionType,
+    )
 
 
 def _replace_nulls_by_repr_strings_in_dict(

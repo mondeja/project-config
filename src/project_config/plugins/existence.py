@@ -3,15 +3,19 @@
 from __future__ import annotations
 
 import os
+from typing import TYPE_CHECKING
 
 from project_config import (
     ActionsContext,
     InterruptingError,
-    Results,
     ResultValue,
     Rule,
     Tree,
 )
+
+
+if TYPE_CHECKING:
+    from project_config import Results
 
 
 class ExistencePlugin:

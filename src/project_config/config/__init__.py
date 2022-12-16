@@ -5,7 +5,7 @@ from __future__ import annotations
 import importlib
 import os
 import re
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from project_config.cache import Cache
 from project_config.compat import TypeAlias, tomllib_package_name
@@ -26,7 +26,8 @@ CONFIG_CACHE_REGEX = (
     r"^(\d+ ((seconds?)|(minutes?)|(hours?)|(days?)|(weeks?)))|(never)$"
 )
 
-ConfigType: TypeAlias = dict[str, str | list[str]]
+if TYPE_CHECKING:
+    ConfigType: TypeAlias = dict[str, str | list[str]]
 
 
 def read_config_from_pyproject_toml(

@@ -10,20 +10,23 @@ import importlib.util
 import inspect
 import re
 from collections.abc import Callable, Iterator
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from project_config.compat import TypeAlias, importlib_metadata
 from project_config.exceptions import ProjectConfigException
 from project_config.tree import Tree
-from project_config.types import ActionsContext, Results, Rule
+from project_config.types import ActionsContext, Rule
 
 
 PROJECT_CONFIG_PLUGINS_ENTRYPOINTS_GROUP = "project_config.plugins"
 
-PluginMethod: TypeAlias = Callable[
-    [Any, Tree, Rule, ActionsContext | None],
-    Results,
-]
+if TYPE_CHECKING:
+    from project_config.types import Results
+
+    PluginMethod: TypeAlias = Callable[
+        [Any, Tree, Rule, ActionsContext | None],
+        Results,
+    ]
 
 
 class InvalidPluginFunction(ProjectConfigException):
@@ -64,7 +67,7 @@ class Plugins:
 
     @property
     def plugin_names(self) -> list[str]:
-        """List of available plugin names."""
+        """Available plugin names."""
         return list(self.plugin_names_loaders)
 
     @property

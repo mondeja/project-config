@@ -6,12 +6,13 @@ Based on https://github.com/editorconfig/editorconfig-core-py/blob/master/editor
 from __future__ import annotations
 
 import re
-from typing import Any
-
-from project_config.compat import TypeAlias
+from typing import TYPE_CHECKING, Any
 
 
-EditorConfigConfigType: TypeAlias = dict[str, dict[str, str | int]]
+if TYPE_CHECKING:
+    from project_config.compat import TypeAlias
+
+    EditorConfigConfigType: TypeAlias = dict[str, dict[str, str | int]]
 
 
 SECTCRE = re.compile(

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Iterator
-from typing import NamedTuple
+from typing import TYPE_CHECKING, NamedTuple
 
 from project_config.compat import NotRequired, TypeAlias, TypedDict
 
@@ -25,9 +25,10 @@ class Rule(TypedDict, total=False):
     files: list[str]
 
 
-StrictResultType: TypeAlias = tuple[str, bool | ErrorDict]
-LazyGenericResultType: TypeAlias = tuple[str, bool | ErrorDict]
-Results: TypeAlias = Iterator[LazyGenericResultType]
+if TYPE_CHECKING:
+    StrictResultType: TypeAlias = tuple[str, bool | ErrorDict]
+    LazyGenericResultType: TypeAlias = tuple[str, bool | ErrorDict]
+    Results: TypeAlias = Iterator[LazyGenericResultType]
 
 
 class ActionsContext(NamedTuple):

@@ -4,12 +4,12 @@ from __future__ import annotations
 
 import os
 import pprint
+from typing import TYPE_CHECKING
 
 from project_config import (
     ActionsContext,
     Error,
     InterruptingError,
-    Results,
     ResultValue,
     Rule,
     Tree,
@@ -20,6 +20,10 @@ from project_config.utils.jmespath import (
     compile_JMESPath_expression_or_error,
     fix_tree_serialized_file_by_jmespath,
 )
+
+
+if TYPE_CHECKING:
+    from project_config import Results
 
 
 def _directories_not_accepted_as_inputs_error(

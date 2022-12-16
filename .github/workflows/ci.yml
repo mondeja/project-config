@@ -18,7 +18,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
+          python-version: "3.10"
       - name: Install dependencies
         run: pip install -U hatch
       - name: Lint
@@ -40,22 +40,22 @@ jobs:
             python-version: 3.9
             py: py39
           - platform: ubuntu-latest
-            python-version: '3.10'
+            python-version: "3.10"
             py: py310
           - platform: ubuntu-latest
-            python-version: '3.11'
+            python-version: "3.11"
             py: py311
           - platform: macos-latest
             python-version: 3.7
             py: py37
           - platform: macos-latest
-            python-version: '3.11'
+            python-version: "3.11"
             py: py311
           - platform: windows-latest
             python-version: 3.7
             py: py37
           - platform: windows-latest
-            python-version: '3.11'
+            python-version: "3.11"
             py: py311
     steps:
       - uses: actions/checkout@v3
@@ -88,7 +88,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
+          python-version: "3.10"
       - name: Install dependencies
         run: pip install -U hatch
       - name: Build documentation
@@ -112,7 +112,7 @@ jobs:
       - uses: actions/setup-python@v4
         name: Install Python
         with:
-          python-version: '3.10'
+          python-version: "3.10"
       - name: Install build dependencies
         run: pip install -U hatch
       - name: Build package

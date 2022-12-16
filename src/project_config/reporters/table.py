@@ -2,16 +2,21 @@
 
 from __future__ import annotations
 
-from typing import cast
+from typing import TYPE_CHECKING, cast
 
 from tabulate import tabulate
 
 from project_config.reporters.base import (
     BaseColorReporter,
     BaseNoopFormattedReporter,
-    FilesErrors,
-    FormatterDefinitionType,
 )
+
+
+if TYPE_CHECKING:
+    from project_config.reporters.base import (
+        FilesErrors,
+        FormatterDefinitionType,
+    )
 
 
 def _common_generate_rows(

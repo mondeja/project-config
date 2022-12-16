@@ -4,10 +4,10 @@ from __future__ import annotations
 
 import os
 from collections.abc import Iterator
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from project_config.cache import Cache
-from project_config.compat import NotRequired, TypedDict
+from project_config.compat import NotRequired, TypeAlias, TypedDict
 from project_config.config.exceptions import ProjectConfigInvalidConfigSchema
 from project_config.fetchers import (
     FetchError,
@@ -32,8 +32,9 @@ class StyleType(TypedDict):
     extends: NotRequired[list[str]]
 
 
-PluginType = type
-StyleLoaderIterator = Iterator[StyleType | str]
+if TYPE_CHECKING:
+    PluginType: TypeAlias = type
+    StyleLoaderIterator: TypeAlias = Iterator[StyleType | str]
 
 
 class Style:

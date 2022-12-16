@@ -5,17 +5,21 @@ from __future__ import annotations
 import copy
 import json
 import pprint
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from project_config import (
     ActionsContext,
     Error,
     InterruptingError,
-    Results,
     ResultValue,
     Rule,
     Tree,
 )
+
+
+if TYPE_CHECKING:
+    from project_config import Results
+
 from project_config.fetchers import FetchError
 from project_config.serializers import SerializerError
 from project_config.utils.jmespath import (
