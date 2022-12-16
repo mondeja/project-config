@@ -60,19 +60,6 @@ include = ["/src"]
 [tool.hatch.build.targets.wheel]
 packages = ["src/project_config"]
 
-[tool.hatch.build.targets.wheel.hooks.mypyc]
-dependencies = [
-  "hatch-mypyc",
-  "types-jmespath",
-  "types-pyyaml",
-  "types-appdirs",
-  "types-tabulate",
-  "pytest",
-  "colored",
-  "tomli-w~=1.0",
-  "ruamel.yaml",
-]
-
 [project.scripts]
 project-config = "project_config.__main__:main"
 
