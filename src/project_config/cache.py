@@ -5,7 +5,7 @@ from __future__ import annotations
 import contextlib
 import os
 import shutil
-import typing as t
+from typing import Any
 
 import appdirs
 import diskcache
@@ -26,13 +26,13 @@ class Cache:
     """Wrapper for a unique :py:class:`diskcache.Cache` instance."""
 
     _cache = diskcache.Cache(_directory())
-    _expiration_time = 30
+    _expiration_time: float | int | None = 30
 
     def __init__(self) -> None:  # pragma: no cover
         raise NotImplementedError("Cache is a not instanceable interface.")
 
     @classmethod
-    def set(cls, *args: t.Any, **kwargs: t.Any) -> t.Any:  # noqa: A003, D102
+    def set(cls, *args: Any, **kwargs: Any) -> Any:  # noqa: A003, D102
         return cls._cache.set(
             *args,
             **dict(
@@ -42,9 +42,7 @@ class Cache:
         )
 
     @classmethod
-    def get(  # noqa: D102
-        cls, *args: t.Any, **kwargs: t.Any
-    ) -> t.Optional[str]:
+    def get(cls, *args: Any, **kwargs: Any) -> str | None:  # noqa: D102
         if os.environ.get("PROJECT_CONFIG_USE_CACHE") == "false":
             return None
         return cls._cache.get(  # type: ignore  # pragma: no cover
@@ -66,11 +64,11 @@ class Cache:
     @classmethod
     def set_expiration_time(
         cls,
-        expiration_time: t.Optional[float] = None,
+        expiration_time: float | int | None = None,
     ) -> None:
         """Set the expiration time for the cache.
 
         Args:
             expiration_time (float): Time in seconds.
         """
-        cls._expiration_time = expiration_time  # type: ignore
+        cls._expiration_time = expiration_time

@@ -5,7 +5,7 @@ from __future__ import annotations
 import importlib
 import os
 import re
-import typing as t
+from typing import Any
 
 from project_config.cache import Cache
 from project_config.compat import TypeAlias, tomllib_package_name
@@ -26,12 +26,12 @@ CONFIG_CACHE_REGEX = (
     r"^(\d+ ((seconds?)|(minutes?)|(hours?)|(days?)|(weeks?)))|(never)$"
 )
 
-ConfigType: TypeAlias = t.Dict[str, t.Union[str, t.List[str]]]
+ConfigType: TypeAlias = dict[str, str | list[str]]
 
 
 def read_config_from_pyproject_toml(
     filepath: str = "pyproject.toml",
-) -> t.Optional[t.Any]:
+) -> Any:
     """Read the configuration from the `pyproject.toml` file.
 
     Returns:
@@ -46,8 +46,8 @@ def read_config_from_pyproject_toml(
 
 
 def read_config(
-    custom_file_path: t.Optional[str] = None,
-) -> t.Tuple[str, t.Any]:
+    custom_file_path: str | None = None,
+) -> tuple[str, Any]:
     """Read the configuration from a file.
 
     Args:
@@ -82,7 +82,7 @@ def read_config(
     raise ConfigurationFilesNotFound()
 
 
-def validate_config_style(config: t.Any) -> t.List[str]:
+def validate_config_style(config: Any) -> list[str]:
     """Validate the ``style`` field of a configuration object.
 
     Args:
@@ -130,7 +130,7 @@ def _cache_string_to_seconds(cache_string: str) -> int:
     raise ValueError(cache_string)
 
 
-def validate_config_cache(config: t.Any) -> t.List[str]:
+def validate_config_cache(config: Any) -> list[str]:
     """Validate the ``cache`` field of a configuration object.
 
     Args:
@@ -155,7 +155,7 @@ def validate_config_cache(config: t.Any) -> t.List[str]:
     return error_messages
 
 
-def validate_config(config_path: str, config: t.Any) -> None:
+def validate_config(config_path: str, config: Any) -> None:
     """Validate a configuration.
 
     Args:
@@ -174,8 +174,8 @@ def validate_config(config_path: str, config: t.Any) -> None:
         )
 
 
-def _validate_cli_config(config: t.Dict[str, t.Any]) -> t.List[str]:
-    errors: t.List[str] = []
+def _validate_cli_config(config: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
     if "reporter" in config:
         if not isinstance(config["reporter"], str):
             errors.append("cli.reporter -> must be of type string")
@@ -213,8 +213,8 @@ def _validate_cli_config(config: t.Dict[str, t.Any]) -> t.List[str]:
 
 def validate_cli_config(
     config_path: str,
-    config: t.Dict[str, t.Any],
-) -> t.Dict[str, t.Any]:
+    config: dict[str, Any],
+) -> dict[str, Any]:
     """Validates the CLI configuration.
 
     Args:
@@ -245,7 +245,7 @@ class Config:
     def __init__(
         self,
         rootdir: str,
-        path: t.Optional[str],
+        path: str | None,
     ) -> None:
         self.rootdir = rootdir
         self.path, config = read_config(path)
@@ -268,10 +268,10 @@ class Config:
 
     def guess_from_cli_arguments(
         self,
-        color: t.Optional[bool],
-        reporter: t.Dict[str, t.Any],
+        color: bool | None,
+        reporter: dict[str, Any],
         rootdir: str,
-    ) -> t.Tuple[t.Any, t.Dict[str, t.Any], t.Any, bool]:
+    ) -> tuple[Any, dict[str, Any], Any, bool]:
         """Guess the final configuration merging file with CLI arguments."""
         # colorize output?
         color = self.cli.get("color") if color is True else color
@@ -323,10 +323,10 @@ class Config:
             only_hints,
         )
 
-    def __getitem__(self, key: str) -> t.Any:
+    def __getitem__(self, key: str) -> Any:
         return self.dict_.__getitem__(key)
 
-    def __setitem__(self, key: str, value: t.Any) -> None:
+    def __setitem__(self, key: str, value: Any) -> None:
         self.dict_.__setitem__(key, value)
 
 

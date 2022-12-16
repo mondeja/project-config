@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-import typing as t
+from typing import Any
 
 from project_config.reporters.base import BaseColorReporter, BaseReporter
 from project_config.serializers import yaml
@@ -21,7 +21,7 @@ class YamlReporter(BaseReporter):
     def generate_data_report(
         self,
         data_key: str,  # noqa: U100
-        data: t.Dict[str, t.Any],
+        data: dict[str, Any],
     ) -> str:
         """Generate a data report in black/white JSON format."""
         report = yaml.dumps(data)
@@ -78,7 +78,7 @@ class YamlColorReporter(BaseColorReporter):
                 )
         return report.rstrip("\n")
 
-    def generate_errors_report(self) -> t.Any:
+    def generate_errors_report(self) -> Any:
         """Generate an errors report in YAML format with colors."""
         if not self.errors:
             return ""
@@ -176,7 +176,7 @@ class YamlColorReporter(BaseColorReporter):
     def generate_data_report(
         self,
         data_key: str,
-        data: t.Dict[str, t.Any],
+        data: dict[str, Any],
     ) -> str:
         """Generate a data report in color YAML format."""
         return yaml.dumps(

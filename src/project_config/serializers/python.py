@@ -3,12 +3,12 @@
 from __future__ import annotations
 
 import re
-import typing as t
+from typing import Any, cast
 
 from project_config.compat import TypeAlias
 
 
-Namespace: TypeAlias = t.Dict[str, t.Any]
+Namespace: TypeAlias = dict[str, Any]
 
 DEFAULT_NAMESPACE: Namespace = {}
 
@@ -37,7 +37,7 @@ def loads(
     return namespace
 
 
-def _pyobject_to_string(value: t.Any) -> str:
+def _pyobject_to_string(value: Any) -> str:
     if isinstance(value, str):
         escaped_value = re.sub(r"([\"])", r"\\\1", value)
         return f'"{escaped_value}"'
@@ -84,10 +84,10 @@ def _pyobject_to_string(value: t.Any) -> str:
 
         result += delimiter + "]"
         return result
-    return t.cast(str, value)
+    return cast(str, value)
 
 
-def dumps(obj: t.Any) -> str:
+def dumps(obj: Any) -> str:
     """Converts a namespace to a Python script.
 
     Args:

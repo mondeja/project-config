@@ -9,7 +9,8 @@ from __future__ import annotations
 import importlib.util
 import inspect
 import re
-import typing as t
+from collections.abc import Callable, Iterator
+from typing import Any
 
 from project_config.compat import TypeAlias, importlib_metadata
 from project_config.exceptions import ProjectConfigException
@@ -19,8 +20,8 @@ from project_config.types import ActionsContext, Results, Rule
 
 PROJECT_CONFIG_PLUGINS_ENTRYPOINTS_GROUP = "project_config.plugins"
 
-PluginMethod: TypeAlias = t.Callable[
-    [t.Any, Tree, Rule, t.Optional[ActionsContext]],
+PluginMethod: TypeAlias = Callable[
+    [Any, Tree, Rule, ActionsContext | None],
     Results,
 ]
 
@@ -41,16 +42,16 @@ class Plugins:
 
     def __init__(self, prepare_all: bool = False) -> None:
         # map from plugin names to loaded classes
-        self.loaded_plugins: t.Dict[str, type] = {}
+        self.loaded_plugins: dict[str, type] = {}
 
         # map from plugin names to plugin class loaders functions
-        self.plugin_names_loaders: t.Dict[str, t.Callable[[], type]] = {}
+        self.plugin_names_loaders: dict[str, Callable[[], type]] = {}
 
         # map from actions to plugins names
-        self.actions_plugin_names: t.Dict[str, str] = {}
+        self.actions_plugin_names: dict[str, str] = {}
 
         # map from actions to static methods
-        self.actions_static_methods: t.Dict[str, PluginMethod] = {}
+        self.actions_static_methods: dict[str, PluginMethod] = {}
 
         if prepare_all:
             # prepare all plugins cache, default and third party,
@@ -62,14 +63,14 @@ class Plugins:
             self._prepare_default_plugins_cache()
 
     @property
-    def plugin_names(self) -> t.List[str]:
+    def plugin_names(self) -> list[str]:
         """List of available plugin names."""
         return list(self.plugin_names_loaders)
 
     @property
-    def plugin_action_names(self) -> t.Dict[str, t.List[str]]:
+    def plugin_action_names(self) -> dict[str, list[str]]:
         """Mapping of plugin names to their actions."""
-        plugins_actions: t.Dict[str, t.List[str]] = {}
+        plugins_actions: dict[str, list[str]] = {}
         for action_name, plugin_name in self.actions_plugin_names.items():
             if plugin_name not in plugins_actions:
                 plugins_actions[plugin_name] = []
@@ -100,6 +101,7 @@ class Plugins:
             else:
                 plugin_class = self.loaded_plugins[plugin_name]
             method = getattr(plugin_class, action)
+
             # the actions in plugins must be defined as static methods
             # to not compromise performance
             #
@@ -117,6 +119,7 @@ class Plugins:
             self.actions_static_methods[action] = method
         else:
             method = self.actions_static_methods[action]
+
         return method  # type: ignore
 
     def is_valid_action(self, action: str) -> bool:
@@ -182,7 +185,7 @@ class Plugins:
     def _extract_actions_from_plugin_module(
         self,
         module_dotpath: str,
-    ) -> t.Iterator[str]:
+    ) -> Iterator[str]:
         # TODO: raise error is the specification is not found
         #   this could happen if an user as defined an entrypoint
         #   pointing to a non existent module

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import json
-import typing as t
+from typing import Any
 
 from project_config.reporters.base import BaseColorReporter, BaseReporter
 
@@ -23,7 +23,7 @@ class JsonReporter(BaseReporter):
     def generate_data_report(
         self,
         data_key: str,  # noqa: U100
-        data: t.Dict[str, t.Any],
+        data: dict[str, Any],
     ) -> str:
         """Generate a data report in black/white JSON format."""
         return json.dumps(
@@ -117,7 +117,7 @@ class JsonColorReporter(BaseColorReporter):
     def generate_data_report(
         self,
         data_key: str,
-        data: t.Dict[str, t.Any],
+        data: dict[str, Any],
     ) -> str:
         """Generate data report in JSON format with colors."""
         space = " "

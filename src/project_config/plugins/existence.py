@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import os
-import typing as t
 
 from project_config import (
     ActionsContext,
@@ -18,7 +17,7 @@ from project_config import (
 class ExistencePlugin:
     @staticmethod
     def ifFilesExist(
-        value: t.List[str],
+        value: list[str],
         tree: Tree,
         rule: Rule,  # noqa: U100
         context: ActionsContext,  # noqa: U100

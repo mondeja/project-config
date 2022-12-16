@@ -6,12 +6,12 @@ Based on https://github.com/editorconfig/editorconfig-core-py/blob/master/editor
 from __future__ import annotations
 
 import re
-import typing as t
+from typing import Any
 
 from project_config.compat import TypeAlias
 
 
-EditorConfigConfigType: TypeAlias = t.Dict[str, t.Dict[str, t.Union[str, int]]]
+EditorConfigConfigType: TypeAlias = dict[str, dict[str, str | int]]
 
 
 SECTCRE = re.compile(
@@ -106,7 +106,7 @@ def loads(string: str) -> EditorConfigConfigType:
     return result
 
 
-def _pyobject_to_ini_str(obj: t.Any) -> str:
+def _pyobject_to_ini_str(obj: Any) -> str:
     """Converts a Python object to a string.
 
     Args:
@@ -123,7 +123,7 @@ def _pyobject_to_ini_str(obj: t.Any) -> str:
     return str(obj)
 
 
-def dumps(obj: t.Any) -> str:
+def dumps(obj: Any) -> str:
     """Converts a JSON object to a .editorconfig configuration file string.
 
     Args:

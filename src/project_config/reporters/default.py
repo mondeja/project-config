@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import json
-import typing as t
+from typing import Any
 
 from project_config.reporters.base import (
     BaseColorReporter,
@@ -43,7 +43,7 @@ class BaseDefaultReporter(BaseFormattedReporter):
     def generate_data_report(
         self,
         data_key: str,
-        data: t.Dict[str, t.Any],
+        data: dict[str, Any],
     ) -> str:
         """Generate data report in custom project-config format."""
         report = ""

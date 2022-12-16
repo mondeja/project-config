@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import os
 import pprint
-import typing as t
 
 from project_config import (
     ActionsContext,
@@ -15,6 +14,7 @@ from project_config import (
     Rule,
     Tree,
 )
+from project_config.types import ErrorDict
 from project_config.utils.jmespath import (
     JMESPathError,
     compile_JMESPath_expression_or_error,
@@ -27,7 +27,7 @@ def _directories_not_accepted_as_inputs_error(
     action_name: str,
     dir_path: str,
     definition: str,
-) -> t.Dict[str, str]:
+) -> ErrorDict:
     return {
         "message": (
             f"Directory found but the {action_type} '{action_name}' does not"
@@ -41,7 +41,7 @@ def _directories_not_accepted_as_inputs_error(
 class InclusionPlugin:
     @staticmethod
     def includeLines(
-        value: t.List[str],
+        value: list[str],
         tree: Tree,
         rule: Rule,  # noqa: U100
         context: ActionsContext,
@@ -183,7 +183,7 @@ class InclusionPlugin:
 
     @staticmethod
     def ifIncludeLines(
-        value: t.Dict[str, t.List[str]],
+        value: dict[str, list[str]],
         tree: Tree,
         rule: Rule,  # noqa: U100
         context: ActionsContext,  # noqa: U100
@@ -286,7 +286,7 @@ class InclusionPlugin:
 
     @staticmethod
     def excludeContent(
-        value: t.List[str],
+        value: list[str],
         tree: Tree,
         rule: Rule,  # noqa: U100
         context: ActionsContext,

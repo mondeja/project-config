@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import json
 import re
-import typing as t
 import urllib.parse
+from typing import Any
 
 from project_config.utils.http import GET
 
@@ -16,7 +16,7 @@ SEMVER_REGEX = r"\d+\.\d+\.\d+"
 def _get_default_branch_from_repo_branches_html(
     repo_owner: str,
     repo_name: str,
-) -> t.Optional[str]:
+) -> str | None:
     # try from repository HTML
     result = GET(f"https://github.com/{repo_owner}/{repo_name}/branches")
     match = re.search(r'branch=["|\'](\w+)["|\']', result)
@@ -96,7 +96,7 @@ def resolve_url(url_parts: urllib.parse.SplitResult) -> str:
     )
 
 
-def fetch(url_parts: urllib.parse.SplitResult, **kwargs: t.Any) -> str:
+def fetch(url_parts: urllib.parse.SplitResult, **kwargs: Any) -> str:
     """Fetch a resource through HTTPs protocol for a Github URI.
 
     Args:
@@ -112,7 +112,7 @@ def get_latest_release_tags(
     repo_owner: str,
     repo_name: str,
     only_semver: bool = False,
-) -> t.List[str]:
+) -> list[str]:
     """Get the latest release tag of a Github repository.
 
     Args:

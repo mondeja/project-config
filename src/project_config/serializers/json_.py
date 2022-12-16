@@ -3,10 +3,10 @@
 from __future__ import annotations
 
 import json
-import typing as t
+from typing import Any
 
 
-def dumps(obj: t.Any, **kwargs: t.Any) -> str:  # noqa: D103
+def dumps(obj: Any, **kwargs: Any) -> str:  # noqa: D103
     return f"{json.dumps(obj, indent=2, **kwargs)}\n"
 
 

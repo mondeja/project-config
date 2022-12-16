@@ -3,15 +3,15 @@
 from __future__ import annotations
 
 import io
-import typing as t
+from typing import Any
 
 import ruamel.yaml
 
 
 def dumps(
-    obj: t.Dict[str, t.Any],
-    *args: t.Tuple[t.Any],
-    **kwargs: t.Any,
+    obj: dict[str, Any],
+    *args: tuple[Any],
+    **kwargs: Any,
 ) -> str:
     """Deserializes an object converting it to string in YAML format."""
     f = io.StringIO()
@@ -23,7 +23,7 @@ def dumps(
     return f.getvalue()
 
 
-def loads(string: str, *args: t.Any, **kwargs: t.Any) -> t.Any:
+def loads(string: str, *args: Any, **kwargs: Any) -> Any:
     """Deserializes a YAML string to a dictionary."""
     yaml = ruamel.yaml.YAML(typ="safe", pure=True)
     return yaml.load(string, *args, **kwargs)

@@ -5,13 +5,12 @@ from __future__ import annotations
 import functools
 import shlex
 import sys
-import typing as t
 
 
 if sys.version_info < (3, 8):
     from typing_extensions import Protocol, TypedDict
 
-    def shlex_join(cmd_list: t.List[str]) -> str:  # noqa: D103
+    def shlex_join(cmd_list: list[str]) -> str:  # noqa: D103
         return " ".join(shlex.quote(x) for x in cmd_list)
 
 else:
@@ -44,11 +43,13 @@ else:
     from typing import TypeAlias
 
 if sys.version_info < (3, 11):
+    from typing_extensions import NotRequired
+
     tomllib_package_name = "tomli"
 else:
-    tomllib_package_name = "tomllib"
+    from typing import NotRequired
 
-from typing_extensions import NotRequired
+    tomllib_package_name = "tomllib"
 
 
 __all__ = (

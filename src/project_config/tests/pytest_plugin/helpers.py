@@ -5,7 +5,7 @@ from __future__ import annotations
 import os
 import pathlib
 import types
-import typing as t
+from typing import cast
 
 import pytest
 
@@ -13,12 +13,9 @@ from project_config.compat import TypeAlias
 from project_config.tree import Tree
 
 
-FileType: TypeAlias = t.Optional[t.Union[str, bool]]
-FilesType: TypeAlias = t.Union[
-    t.List[t.Tuple[str, FileType]],
-    t.Dict[str, FileType],
-]
-RootdirType: TypeAlias = t.Union[str, pathlib.Path]
+FileType: TypeAlias = str | bool | None
+FilesType: TypeAlias = list[tuple[str, FileType]] | dict[str, FileType]
+RootdirType: TypeAlias = str | pathlib.Path
 
 
 def create_files(  # noqa: D103
@@ -38,7 +35,7 @@ def create_files(  # noqa: D103
         else:
             # same name as an existent directory, means that `files` has been
             # passed as a list of tuples
-            content = t.cast(str, content)
+            content = cast(str, content)
             # ensure parent path directory exists
             parent_fpath, ext = os.path.splitext(full_path)
             if not ext:

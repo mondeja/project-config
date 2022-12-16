@@ -6,8 +6,9 @@ import functools
 import importlib
 import os
 import sys
-import typing as t
 import urllib.parse
+from collections.abc import Callable
+from typing import Any
 
 from identify import identify
 
@@ -15,7 +16,7 @@ from project_config.compat import NotRequired, Protocol, TypeAlias, TypedDict
 from project_config.exceptions import ProjectConfigException
 
 
-SerializerResult = t.Any
+SerializerResult = Any
 
 
 class SerializerFunction(Protocol):
@@ -23,8 +24,8 @@ class SerializerFunction(Protocol):
 
     def __call__(  # noqa: D102
         self,
-        value: t.Any,  # noqa: U100
-        **kwargs: t.Any,  # noqa: U100
+        value: Any,  # noqa: U100
+        **kwargs: Any,  # noqa: U100
     ) -> SerializerResult:
         ...
 
@@ -33,7 +34,7 @@ class SerializerError(ProjectConfigException):
     """Error happened serializing content as JSON."""
 
 
-SerializerFunctionKwargs: TypeAlias = t.Dict[str, t.Any]
+SerializerFunctionKwargs: TypeAlias = dict[str, Any]
 
 
 class SerializerDefinitionType(TypedDict):
@@ -43,15 +44,15 @@ class SerializerDefinitionType(TypedDict):
 
     function: NotRequired[str]
     function_kwargs_from_url_path: NotRequired[
-        t.Callable[[str], SerializerFunctionKwargs]
+        Callable[[str], SerializerFunctionKwargs]
     ]
 
 
-SerializerDefinitionsType: TypeAlias = t.List[SerializerDefinitionType]
+SerializerDefinitionsType: TypeAlias = list[SerializerDefinitionType]
 
-serializers: t.Dict[
+serializers: dict[
     str,
-    t.Tuple[SerializerDefinitionsType, SerializerDefinitionsType],
+    tuple[SerializerDefinitionsType, SerializerDefinitionsType],
 ] = {
     ".json": (
         [{"module": "project_config.serializers.json_"}],  # loads
@@ -118,7 +119,7 @@ serializers: t.Dict[
     ),
 }
 
-serializers_fallback: t.Tuple[
+serializers_fallback: tuple[
     SerializerDefinitionsType,
     SerializerDefinitionsType,
 ] = (
@@ -128,7 +129,7 @@ serializers_fallback: t.Tuple[
 
 
 def _identify_serializer(filename: str) -> str:
-    tag: t.Optional[str] = None
+    tag: str | None = None
     for tag_ in identify.tags_from_filename(filename):
         if f".{tag_}" in serializers:
             tag = tag_
@@ -138,7 +139,7 @@ def _identify_serializer(filename: str) -> str:
 
 def _get_serializer(
     url: str,
-    prefer_serializer: t.Optional[str] = None,
+    prefer_serializer: str | None = None,
     loader_function_name: str = "loads",
 ) -> SerializerFunction:
     url_parts = urllib.parse.urlsplit(url)
@@ -251,7 +252,7 @@ def _get_serializer(
     return functools.partial(loader_function, **function_kwargs)
 
 
-def guess_preferred_serializer(url: str) -> t.Tuple[str, t.Optional[str]]:
+def guess_preferred_serializer(url: str) -> tuple[str, str | None]:
     """Guess preferred serializer for URL.
 
     Args:
@@ -282,9 +283,9 @@ def _file_can_not_be_serialized_as_object_error(
 
 def deserialize_for_url(
     url: str,
-    content: t.Any,
-    prefer_serializer: t.Optional[str] = None,
-) -> t.Any:
+    content: Any,
+    prefer_serializer: str | None = None,
+) -> Any:
     """Deserialize content for URL.
 
     Args:
@@ -305,7 +306,7 @@ def deserialize_for_url(
 def serialize_for_url(
     url: str,
     string: str,
-    prefer_serializer: t.Optional[str] = None,
+    prefer_serializer: str | None = None,
 ) -> SerializerResult:
     """Serializes to JSON a string according to the given URI.
 

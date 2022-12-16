@@ -7,8 +7,8 @@ import json
 import os
 import shutil
 import sys
-import typing as t
 from dataclasses import dataclass
+from typing import Any, cast
 
 from project_config.config import Config
 from project_config.constants import Error, InterruptingError, ResultValue
@@ -20,7 +20,7 @@ from project_config.serializers import (
     guess_preferred_serializer,
 )
 from project_config.tree import Tree
-from project_config.types import ActionsContext, Rule
+from project_config.types import ActionsContext, ErrorDict, Rule
 
 
 class InterruptCheck(Exception):
@@ -54,9 +54,9 @@ class Project:
 
     config_path: str
     rootdir: str
-    reporter_: t.Dict[str, t.Any]
+    reporter_: dict[str, Any]
     color: bool
-    _actions_context: t.Optional[ActionsContext] = None
+    _actions_context: ActionsContext | None = None
     fix: bool = False
     only_hints: bool = False
 
@@ -103,7 +103,7 @@ class Project:
 
     def _check_files_existence(
         self,
-        files: t.List[t.Tuple[str, t.Any]],
+        files: list[tuple[str, Any]],
         rule_index: int,
     ) -> None:
         for f, (fpath, fcontent) in enumerate(files):
@@ -138,7 +138,7 @@ class Project:
 
     def _check_files_absence(
         self,
-        files: t.Union[t.List[str], t.Dict[str, str]],
+        files: list[str] | dict[str, str],
         rule_index: int,
     ) -> None:
         fixed_files = []
@@ -206,7 +206,7 @@ class Project:
 
     def _process_conditionals_for_rule(
         self,
-        conditionals: t.List[t.Tuple[str, t.Any]],
+        conditionals: list[tuple[str, Any]],
         tree: Tree,
         rule: Rule,
         rule_index: int,
@@ -311,6 +311,7 @@ class Project:
                     self._actions_context,
                 ):
                     if breakage_type == Error:
+                        breakage_value = cast(ErrorDict, breakage_value)
                         # prepend rule index to definition, so plugins do not
                         # need to specify them
                         breakage_value["definition"] = (
@@ -326,6 +327,7 @@ class Project:
                         self.reporter.report_error(breakage_value)
 
                     elif breakage_type == InterruptingError:
+                        breakage_value = cast(ErrorDict, breakage_value)
                         breakage_value["definition"] = (
                             f"rules[{r}]" + breakage_value["definition"]
                         )

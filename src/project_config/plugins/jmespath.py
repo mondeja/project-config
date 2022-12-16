@@ -5,7 +5,7 @@ from __future__ import annotations
 import copy
 import json
 import pprint
-import typing as t
+from typing import Any
 
 from project_config import (
     ActionsContext,
@@ -34,7 +34,7 @@ from project_config.utils.jmespath import (
 class JMESPathPlugin:
     @staticmethod
     def JMESPathsMatch(
-        value: t.List[t.List[t.Any]],
+        value: list[list[Any]],
         tree: Tree,
         rule: Rule,  # noqa: U100
         context: ActionsContext,
@@ -194,7 +194,7 @@ class JMESPathPlugin:
 
     @staticmethod
     def ifJMESPathsMatch(
-        value: t.Dict[str, t.List[t.List[str]]],
+        value: dict[str, list[list[str]]],
         tree: Tree,
         rule: Rule,  # noqa: U100
         context: ActionsContext,  # noqa: U100
@@ -327,7 +327,7 @@ class JMESPathPlugin:
 
     @staticmethod
     def crossJMESPathsMatch(
-        value: t.List[t.List[t.Any]],
+        value: list[list[Any]],
         tree: Tree,
         rule: Rule,  # noqa: U100
         context: ActionsContext,  # noqa: U100

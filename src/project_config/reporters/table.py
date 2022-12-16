@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-import typing as t
+from typing import cast
 
 from tabulate import tabulate
 
@@ -20,7 +20,7 @@ def _common_generate_rows(
     format_error_message: FormatterDefinitionType,
     format_definition: FormatterDefinitionType,
     format_hint: FormatterDefinitionType,
-) -> t.List[t.List[str]]:
+) -> list[list[str]]:
     rows = []
     for file, file_errors in errors.items():
         for i, error in enumerate(file_errors):
@@ -69,7 +69,7 @@ class TableReporter(BaseNoopFormattedReporter):
         """Generate an errors report in black/white table format."""
         return _common_generate_errors_report(
             self.errors,
-            t.cast(str, self.format),
+            cast(str, self.format),
             self.format_key,
             self.format_file,
             self.format_error_message,
@@ -85,7 +85,7 @@ class TableColorReporter(BaseColorReporter):
         """Generate an errors report in table format with colors."""
         return _common_generate_errors_report(
             self.errors,
-            t.cast(str, self.format),
+            cast(str, self.format),
             self.format_key,
             self.format_file,
             self.format_error_message,
