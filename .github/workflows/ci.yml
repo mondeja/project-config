@@ -72,13 +72,8 @@ jobs:
         run: pip install -U hatch
       - name: Run tests
         run: hatch run +py=${{ matrix.py }} tests:all
-      - name: Coveralls
-        run: |
-          pip install coveralls coverage[toml]
-          coveralls
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          COVERALLS_SERVICE_NAME: github
+      - name: Upload coverage
+        uses: codecov/codecov-action@v3
 
   test-docs:
     name: Test documentation build
