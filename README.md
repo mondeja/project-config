@@ -34,7 +34,7 @@ Lint the data files of your projects in a flexible way using JMESPaths.
 [tests-link]: https://github.com/mondeja/project-config/actions?query=workflow%3ACI
 [pypi-downloads-image]: https://img.shields.io/pypi/dm/project-config?logo=pypi&logoColor=white
 [pypi-downloads-link]: https://pypistats.org/packages/project-config
-[coverage-image]: https://img.shields.io/coveralls/github/mondeja/project-config?logo=coveralls
-[coverage-link]: https://coveralls.io/github/mondeja/project-config
+[coverage-image]: https://img.shields.io/codecov/c/github/mondeja/project-config?logo=codecov&logoColor=white
+[coverage-link]: https://app.codecov.io/gh/mondeja/project-config
 [npm-link]: https://www.npmjs.com/package/python-project-config
 [npm-version-image]: https://img.shields.io/npm/v/python-project-config?logo=npm
