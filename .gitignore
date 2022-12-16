@@ -20,3 +20,4 @@ docs/dev/reference/
 docs/examples.rst
 docs/_examples/
 docs/tutorials/pages/*.rst
+/*.json5
