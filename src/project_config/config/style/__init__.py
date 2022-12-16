@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 import os
-import typing as t
+from collections.abc import Iterator
+from typing import TYPE_CHECKING, Any
 
 from project_config.cache import Cache
+from project_config.compat import NotRequired, TypeAlias, TypedDict
 from project_config.config.exceptions import ProjectConfigInvalidConfigSchema
 from project_config.fetchers import (
     FetchError,
@@ -22,11 +24,17 @@ class ProjectConfigInvalidStyle(ProjectConfigInvalidConfigSchema):
     """Invalid style error."""
 
 
-PluginType = type
-# TODO: improve style type with TypedDict?
-# https://docs.python.org/3/library/typing.html#typing.TypedDict
-StyleType = t.Dict[str, t.List[t.Any]]
-StyleLoaderIterator = t.Iterator[t.Union[StyleType, str]]
+class StyleType(TypedDict):
+    """Style type."""
+
+    rules: NotRequired[list[Rule]]
+    plugins: NotRequired[list[str]]
+    extends: NotRequired[list[str]]
+
+
+if TYPE_CHECKING:
+    PluginType: TypeAlias = type
+    StyleLoaderIterator: TypeAlias = Iterator[StyleType | str]
 
 
 class Style:
@@ -36,12 +44,12 @@ class Style:
         config (dict): Configuration for the project.
     """
 
-    def __init__(self, config: t.Any) -> None:
+    def __init__(self, config: Any) -> None:
         self.plugins = Plugins()
         self.config = config
 
     @classmethod
-    def from_config(cls, config: t.Any) -> Style:
+    def from_config(cls, config: Any) -> Style:
         """Loads styles to the configuration passed as argument."""
         if os.environ.get("PROJECT_CONFIG_USE_CACHE") != "false":
             if (  # pragma: no cover
@@ -61,7 +69,7 @@ class Style:
         style = cls(config)
 
         style_gen = style._load_styles_from_config()
-        error_messages: t.List[str] = []
+        error_messages: list[str] = []
         while True:
             try:
                 style_or_error = next(style_gen)
@@ -152,7 +160,7 @@ class Style:
         parent_style_url: str,
         style: StyleType,
     ) -> StyleLoaderIterator:
-        for s, extend_url in enumerate(style.pop("extends")):
+        for s, extend_url in enumerate(style.pop("extends", [])):
             try:
                 partial_style = fetch(extend_url)
             except FetchError as exc:
@@ -195,8 +203,8 @@ class Style:
     def _add_new_rules_plugins_to_style(
         self,
         style: StyleType,
-        new_rules: t.List[Rule],
-        new_plugins: t.List[PluginType],
+        new_rules: list[Rule],
+        new_plugins: list[str],
         prepend: bool = False,
     ) -> None:
         style["plugins"] = style.pop("plugins", [])
@@ -211,8 +219,8 @@ class Style:
     def _validate_style_preparing_new_plugins(
         self,
         style_url: str,
-        style: t.Any,
-    ) -> t.Iterator[str]:
+        style: Any,
+    ) -> Iterator[str]:
 
         # validate extends urls
         if "extends" in style:
@@ -390,7 +398,7 @@ class Style:
                         )
 
 
-def _prefetch_urls(config: t.Any) -> None:
+def _prefetch_urls(config: Any) -> None:
     """Prefetch urls concurrently and store them in cache.
 
     This function is used to store urls in cache before they are used,
@@ -411,7 +419,7 @@ def _prefetch_urls(config: t.Any) -> None:
 
     def prefetch_partial_style(
         parent_style_url: str,
-        extend_urls: t.List[str],
+        extend_urls: list[str],
     ) -> None:
         urls = {}
         for extend_url in extend_urls:
@@ -436,7 +444,7 @@ def _prefetch_urls(config: t.Any) -> None:
             if isinstance(style_obj.get("extends"), list):
                 prefetch_partial_style(urls[resp.url], style_obj["extends"])
 
-    def prefetch_style(style_urls: t.List[str]) -> None:
+    def prefetch_style(style_urls: list[str]) -> None:
         urls = {}
         for style_url in style_urls:
             url, scheme = resolve_url(style_url)

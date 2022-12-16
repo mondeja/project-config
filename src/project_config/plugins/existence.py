@@ -3,22 +3,25 @@
 from __future__ import annotations
 
 import os
-import typing as t
+from typing import TYPE_CHECKING
 
 from project_config import (
     ActionsContext,
     InterruptingError,
-    Results,
     ResultValue,
     Rule,
     Tree,
 )
 
 
+if TYPE_CHECKING:
+    from project_config import Results
+
+
 class ExistencePlugin:
     @staticmethod
     def ifFilesExist(
-        value: t.List[str],
+        value: list[str],
         tree: Tree,
         rule: Rule,  # noqa: U100
         context: ActionsContext,  # noqa: U100

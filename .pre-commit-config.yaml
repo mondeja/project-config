@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/mondeja/project-config
-    rev: v0.7.8
+    rev: v0.7.9
     hooks:
       - id: project-config
   - repo: meta
@@ -10,7 +10,7 @@ repos:
       - id: check-useless-excludes
         name: check-useless-excludes
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.3.0
+    rev: v3.3.1
     hooks:
       - id: pyupgrade
         args:
@@ -26,7 +26,7 @@ repos:
           - --remove-duplicate-keys
           - --ignore-init-module-imports
   - repo: https://github.com/asottile/add-trailing-comma
-    rev: v2.3.0
+    rev: v2.4.0
     hooks:
       - id: add-trailing-comma
         name: add-trailing-comma
@@ -40,11 +40,11 @@ repos:
       - id: debug-statements
         name: debug-statements
   - repo: https://github.com/psf/black
-    rev: 22.10.0
+    rev: 22.12.0
     hooks:
       - id: black
   - repo: https://github.com/PyCQA/isort
-    rev: 5.10.1
+    rev: 5.11.2
     hooks:
       - id: isort
         name: isort-src
@@ -88,26 +88,33 @@ repos:
           - css
           - json
           - json5
+          - yaml
+          - markdown
         additional_dependencies:
           - prettier
           - prettier-plugin-toml
         minimum_pre_commit_version: 2.9.0
+  - repo: https://github.com/DavidAnson/markdownlint-cli2
+    rev: v0.5.1
+    hooks:
+      - id: markdownlint-cli2
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v0.991
     hooks:
       - id: mypy
         files: ^src
         additional_dependencies:
-          - types-PyYAML
+          - types-pyyaml
           - types-tabulate
           - types-jmespath
           - types-appdirs
+          - pytest
   - repo: https://github.com/Lucas-C/pre-commit-hooks
     rev: v1.3.1
     hooks:
       - id: remove-crlf
         files: \.bat$
-        name: '*.bat end of lines'
+        name: "*.bat end of lines"
   - repo: https://github.com/editorconfig-checker/editorconfig-checker.python
     rev: 2.6.2
     hooks:

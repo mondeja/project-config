@@ -3,21 +3,26 @@
 from __future__ import annotations
 
 import json
-import typing as t
+from typing import TYPE_CHECKING, Any
 
 import tomli_w
 
 from project_config.reporters.base import (
     BaseColorReporter,
     BaseNoopFormattedReporter,
-    FilesErrors,
-    FormatterDefinitionType,
 )
 
 
+if TYPE_CHECKING:
+    from project_config.reporters.base import (
+        FilesErrors,
+        FormatterDefinitionType,
+    )
+
+
 def _replace_nulls_by_repr_strings_in_dict(
-    data: t.Dict[str, t.Any],
-) -> t.Dict[str, t.Any]:
+    data: dict[str, Any],
+) -> dict[str, Any]:
     """Iterates through a dictionary and replaces nulls by empty strings."""
     if isinstance(data, dict):
         return {
@@ -33,7 +38,7 @@ def _replace_nulls_by_repr_strings_in_dict(
 
 def _normalize_indentation_to_2_spaces(string: str) -> str:
     """Normalizes indentation of the beginning of lines to 2 spaces."""
-    new_lines: t.List[str] = []
+    new_lines: list[str] = []
 
     for line in string.splitlines():
         # count number of spaces at the beginning of the line
@@ -108,7 +113,7 @@ class TomlReporter(BaseNoopFormattedReporter):
     def generate_data_report(
         self,
         data_key: str,  # noqa: U100
-        data: t.Dict[str, t.Any],
+        data: dict[str, Any],
     ) -> str:
         """Generate a data report in black/white TOML format."""
         report = ""
@@ -143,7 +148,7 @@ class TomlColorReporter(BaseColorReporter):
     def generate_data_report(
         self,
         data_key: str,
-        data: t.Dict[str, t.Any],
+        data: dict[str, Any],
     ) -> str:
         """Generate data report in TOML format with colors."""
         report = ""

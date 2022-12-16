@@ -4,24 +4,19 @@ from __future__ import annotations
 
 import importlib
 import os
-import typing as t
 import urllib.parse
+from typing import Any
 
-from project_config.compat import TypeAlias
 from project_config.exceptions import (
     ProjectConfigException,
     ProjectConfigNotImplementedError,
 )
 from project_config.serializers import (
     SerializerError,
-    SerializerResult,
     guess_preferred_serializer,
     serialize_for_url,
 )
 from project_config.utils.http import ProjectConfigTimeoutError
-
-
-FetchResult: TypeAlias = SerializerResult
 
 
 class FetchError(ProjectConfigException):
@@ -64,7 +59,7 @@ def _get_scheme_from_urlparts(url_parts: urllib.parse.SplitResult) -> str:
     )
 
 
-def fetch(url: str, **kwargs: t.Any) -> FetchResult:
+def fetch(url: str, **kwargs: Any) -> Any:
     """Fetch a result given an URI.
 
     Args:
@@ -92,7 +87,7 @@ def fetch(url: str, **kwargs: t.Any) -> FetchResult:
         raise FetchError(exc.message)
 
 
-def resolve_url(url: str) -> t.Tuple[str, str]:
+def resolve_url(url: str) -> tuple[str, str]:
     """Resolve an URL from a custom URI to their real counterpart.
 
     Args:

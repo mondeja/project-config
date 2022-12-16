@@ -4,7 +4,8 @@ from __future__ import annotations
 
 import abc
 import os
-import typing as t
+from collections.abc import Callable
+from typing import TYPE_CHECKING, Any
 
 import colored
 
@@ -16,14 +17,15 @@ from project_config.exceptions import (
 from project_config.types import ErrorDict
 
 
-FilesErrors: TypeAlias = t.Dict[str, t.List[ErrorDict]]
-FormatterDefinitionType: TypeAlias = t.Callable[[str], str]
+if TYPE_CHECKING:
+    FilesErrors: TypeAlias = dict[str, list[ErrorDict]]
+    FormatterDefinitionType: TypeAlias = Callable[[str], str]
 
 
 class InvalidColors(ProjectConfigException):
     """Invalid not supported colors in colored formatter."""
 
-    def __init__(self, errors: t.List[str]):
+    def __init__(self, errors: list[str]):
         message = (
             "Invalid colors or subjects in 'colors' configuration"
             " for reporters:\n"
@@ -49,7 +51,7 @@ class BaseReporter(abc.ABC):
     def __init__(
         self,
         rootdir: str,
-        fmt: t.Optional[str] = None,
+        fmt: str | None = None,
         only_hints: bool = False,
     ):
         self.rootdir = rootdir
@@ -58,7 +60,7 @@ class BaseReporter(abc.ABC):
         self.only_hints = only_hints
 
         # configuration, styles...
-        self.data: t.Dict[str, t.Any] = {}
+        self.data: dict[str, Any] = {}
 
     @abc.abstractmethod
     def generate_errors_report(self) -> str:
@@ -70,7 +72,7 @@ class BaseReporter(abc.ABC):
     def generate_data_report(
         self,
         data_key: str,  # noqa: U100
-        data: t.Dict[str, t.Any],  # noqa: U100
+        data: dict[str, Any],  # noqa: U100
     ) -> str:
         """Generate data report for configuration or styles.
 
@@ -177,7 +179,7 @@ class BaseFormattedReporter(BaseReporter, abc.ABC):
         raise NotImplementedError
 
 
-self_format_noop: t.Callable[[type, str], str] = lambda self, v: v
+self_format_noop: Callable[[type, str], str] = lambda self, v: v
 
 
 class BaseNoopFormattedReporter(BaseFormattedReporter):
@@ -253,16 +255,16 @@ class BaseColorReporter(BaseFormattedReporter):
 
     def __init__(
         self,
-        *args: t.Any,
-        colors: t.Optional[t.Dict[str, str]] = None,
-        **kwargs: t.Any,
+        *args: Any,
+        colors: dict[str, str] | None = None,
+        **kwargs: Any,
     ) -> None:
         self.colors = self._normalize_colors(colors or {})
         super().__init__(*args, **kwargs)
 
-    def _normalize_colors(self, colors: t.Dict[str, str]) -> t.Dict[str, str]:
-        normalized_colors: t.Dict[str, str] = {}
-        errors: t.List[str] = []
+    def _normalize_colors(self, colors: dict[str, str]) -> dict[str, str]:
+        normalized_colors: dict[str, str] = {}
+        errors: list[str] = []
         for subject, color in colors.items():
             normalized_subject = (
                 subject.lower().replace("-", "_").replace(" ", "_")

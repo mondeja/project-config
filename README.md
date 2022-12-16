@@ -8,12 +8,11 @@
 [![Coverage][coverage-image]][coverage-link]
 [![Downloads][pypi-downloads-image]][pypi-downloads-link]
 
-
 > Note for developers: This project is under heavy development.
-The testing and reporter APIs may change without warning before the
-first stable release (v1), but configuration, CLI and plugins are
-guaranteed to be backwards compatible, so you can safely write
-styles now.
+> The testing and reporter APIs may change without warning before the
+> first stable release (v1), but configuration, CLI and plugins are
+> guaranteed to be backwards compatible, so you can safely write
+> styles now.
 
 ## [Documentation](https://mondeja.github.io/project-config/latest/)
 
@@ -31,7 +30,7 @@ Lint the data files of your projects in a flexible way using JMESPaths.
 [pypi-version-badge-link]: https://img.shields.io/pypi/v/project-config?logo=pypi&logoColor=white
 [license-image]: https://img.shields.io/pypi/l/project-config?color=light-green&logo=freebsd&logoColor=white
 [license-link]: https://github.com/mondeja/project-config/blob/master/LICENSE
-[tests-image]: https://img.shields.io/github/workflow/status/mondeja/project-config/CI?logo=github&label=tests
+[tests-image]: https://img.shields.io/github/actions/workflow/status/mondeja/project-config/ci.yml?logo=github&label=tests&branch=master
 [tests-link]: https://github.com/mondeja/project-config/actions?query=workflow%3ACI
 [pypi-downloads-image]: https://img.shields.io/pypi/dm/project-config?logo=pypi&logoColor=white
 [pypi-downloads-link]: https://pypistats.org/packages/project-config

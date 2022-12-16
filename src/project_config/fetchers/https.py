@@ -2,12 +2,12 @@
 
 from __future__ import annotations
 
-import typing as t
 import urllib.request
+from typing import Any
 
 from project_config.utils.http import GET
 
 
-def fetch(url_parts: urllib.parse.SplitResult, **kwargs: t.Any) -> str:
+def fetch(url_parts: urllib.parse.SplitResult, **kwargs: Any) -> str:
     """Fetch an HTTP/s resource performing a GET request."""
     return GET(url_parts.geturl(), **kwargs)

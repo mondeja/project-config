@@ -4,10 +4,10 @@ from __future__ import annotations
 
 import configparser
 import io
-import typing as t
+from typing import Any
 
 
-def loads(string: str) -> t.Dict[str, t.Any]:
+def loads(string: str) -> dict[str, Any]:
     """Converts an INI file string to JSON.
 
     Args:
@@ -16,7 +16,7 @@ def loads(string: str) -> t.Dict[str, t.Any]:
     Returns:
         dict: Conversion result.
     """
-    result: t.Dict[str, t.Any] = {}
+    result: dict[str, Any] = {}
     ini = configparser.ConfigParser()
     ini.read_string(string)
     for section in ini.sections():
@@ -26,7 +26,7 @@ def loads(string: str) -> t.Dict[str, t.Any]:
     return result
 
 
-def dumps(obj: t.Any) -> str:
+def dumps(obj: Any) -> str:
     """Converts a JSON object to an INI file string.
 
     Args:

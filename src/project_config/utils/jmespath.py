@@ -10,8 +10,9 @@ import pprint
 import re
 import shlex
 import sys
-import typing as t
 import warnings
+from collections.abc import Callable
+from typing import Any
 
 import deepmerge
 from jmespath import Options as JMESPathOptions, compile as jmespath_compile
@@ -22,7 +23,12 @@ from jmespath.functions import (
 )
 from jmespath.parser import ParsedResult as JMESPathParsedResult, Parser
 
-from project_config.compat import removeprefix, removesuffix, shlex_join
+from project_config.compat import (
+    Literal,
+    removeprefix,
+    removesuffix,
+    shlex_join,
+)
 from project_config.exceptions import ProjectConfigException
 from project_config.tree import Tree
 
@@ -100,7 +106,7 @@ JMESPATH_READABLE_ERRORS = {
 
 def _create_simple_transform_function_for_string(
     func_name: str,
-) -> t.Callable[[type, str], str]:
+) -> Callable[[type, str], str]:
     func = getattr(str, func_name)
     return jmespath_func_signature({"types": ["string"]})(
         lambda self, value: func(value),
@@ -109,7 +115,7 @@ def _create_simple_transform_function_for_string(
 
 def _create_is_function_for_string(
     func_suffix: str,
-) -> t.Callable[[type, str], bool]:
+) -> Callable[[type, str], bool]:
     func = getattr(str, f"is{func_suffix}")
     return jmespath_func_signature({"types": ["string"]})(
         lambda self, value: func(value),
@@ -118,11 +124,11 @@ def _create_is_function_for_string(
 
 def _create_find_function_for_string_or_array(
     func_prefix: str,
-) -> t.Callable[[type, t.Union[t.List[t.Any], str], t.Any, t.Any], int]:
+) -> Callable[[type, list[Any] | str, Any, Any], int]:
     getattr(str, f"{func_prefix}find")
 
     def _wrapper(
-        self: type, value: t.Union[t.List[t.Any], str], sub: t.Any, *args: t.Any
+        self: type, value: list[Any] | str, sub: Any, *args: Any
     ) -> int:
         if isinstance(value, list):
             try:
@@ -138,7 +144,7 @@ def _create_find_function_for_string_or_array(
 
 def _create_just_function_for_string(
     func_prefix: str,
-) -> t.Callable[[type, str, int, t.Any], str]:
+) -> Callable[[type, str, int, Any], str]:
     func = getattr(str, f"{func_prefix}just")
     return jmespath_func_signature(
         {"types": ["string"]},
@@ -148,7 +154,7 @@ def _create_just_function_for_string(
 
 def _create_partition_function_for_string(
     func_prefix: str,
-) -> t.Callable[[type, str, str], t.List[str]]:
+) -> Callable[[type, str, str], list[str]]:
     func = getattr(str, f"{func_prefix}partition")
     return jmespath_func_signature(
         {"types": ["string"]},
@@ -158,7 +164,7 @@ def _create_partition_function_for_string(
 
 def _create_split_function_for_string(
     func_prefix: str,
-) -> t.Callable[[type, str, t.Any], t.List[str]]:
+) -> Callable[[type, str, Any], list[str]]:
     func = getattr(str, f"{func_prefix}split")
     return jmespath_func_signature(
         {"types": ["string"], "variadic": True},
@@ -167,7 +173,7 @@ def _create_split_function_for_string(
 
 def _create_strip_function_for_string(
     func_prefix: str,
-) -> t.Callable[[type, str], str]:
+) -> Callable[[type, str], str]:
     func = getattr(str, f"{func_prefix}strip")
     return jmespath_func_signature(
         {"types": ["string"], "variadic": True},
@@ -176,7 +182,7 @@ def _create_strip_function_for_string(
 
 def _create_removeaffix_function_for_string(
     func_suffix: str,
-) -> t.Callable[[type, str, str], str]:
+) -> Callable[[type, str, str], str]:
     func = removesuffix if func_suffix.startswith("s") else removeprefix
     return jmespath_func_signature(
         {"types": ["string"]},
@@ -184,7 +190,7 @@ def _create_removeaffix_function_for_string(
     )(lambda self, value, affix: func(value, affix))
 
 
-def _to_items(value: t.Any) -> t.List[t.Any]:
+def _to_items(value: Any) -> list[Any]:
     return [[key, value] for key, value in value.items()]
 
 
@@ -199,7 +205,7 @@ class JMESPathProjectConfigFunctions(JMESPathFunctions):
         {"types": ["string", "array-string"], "variadic": True},
     )
     def _func_starts_with(
-        self, search: str, suffix: t.Union[str, t.Tuple[str]], *args: t.Any
+        self, search: str, suffix: str | tuple[str], *args: Any
     ) -> bool:
         if isinstance(suffix, list):
             suffix = tuple(suffix)
@@ -210,7 +216,7 @@ class JMESPathProjectConfigFunctions(JMESPathFunctions):
         {"types": ["string", "array-string"], "variadic": True},
     )
     def _func_ends_with(
-        self, search: str, suffix: t.Union[str, t.Tuple[str]], *args: t.Any
+        self, search: str, suffix: str | tuple[str], *args: Any
     ) -> bool:
         if isinstance(suffix, list):
             suffix = tuple(suffix)
@@ -222,7 +228,7 @@ class JMESPathProjectConfigFunctions(JMESPathFunctions):
         {"types": ["string"]},
         {"types": ["string"], "variadic": True},
     )
-    def _func_regex_match(self, regex: str, value: str, *args: t.Any) -> bool:
+    def _func_regex_match(self, regex: str, value: str, *args: Any) -> bool:
         return bool(re.match(regex, value, *args))
 
     @jmespath_func_signature(
@@ -246,8 +252,8 @@ class JMESPathProjectConfigFunctions(JMESPathFunctions):
         {"types": ["string"], "variadic": True},
     )
     def _func_regex_search(
-        self, regex: str, value: str, *args: t.Any
-    ) -> t.List[str]:
+        self, regex: str, value: str, *args: Any
+    ) -> list[str]:
         match = re.search(regex, value, *args)
         if not match:
             return []
@@ -259,7 +265,7 @@ class JMESPathProjectConfigFunctions(JMESPathFunctions):
         {"types": ["string"], "variadic": True},
     )
     def _func_regex_sub(
-        self, regex: str, repl: str, value: str, *args: t.Any
+        self, regex: str, repl: str, value: str, *args: Any
     ) -> str:
         return re.sub(regex, repl, value, *args)
 
@@ -272,9 +278,7 @@ class JMESPathProjectConfigFunctions(JMESPathFunctions):
         {"types": ["string"]},
         {"types": [], "variadic": True},
     )
-    def _func_op(
-        self, a: float, operator: str, b: float, *args: t.Any
-    ) -> t.Any:
+    def _func_op(self, a: float, operator: str, b: float, *args: Any) -> Any:
         operators = []
         current_op = None
         for i, op_or_value in enumerate([operator, b] + (list(args) or [])):
@@ -310,11 +314,11 @@ class JMESPathProjectConfigFunctions(JMESPathFunctions):
         return partial_result
 
     @jmespath_func_signature({"types": ["array-string"]})
-    def _func_shlex_join(self, cmd_list: t.List[str]) -> str:
+    def _func_shlex_join(self, cmd_list: list[str]) -> str:
         return shlex_join(cmd_list)
 
     @jmespath_func_signature({"types": ["string"]})
-    def _func_shlex_split(self, cmd_str: str) -> t.List[str]:
+    def _func_shlex_split(self, cmd_str: str) -> list[str]:
         return shlex.split(cmd_str)
 
     @jmespath_func_signature(
@@ -323,7 +327,7 @@ class JMESPathProjectConfigFunctions(JMESPathFunctions):
             "variadic": True,
         },
     )
-    def _func_round(self, *args: t.Any) -> t.Any:
+    def _func_round(self, *args: Any) -> Any:
         return round(*args)
 
     @jmespath_func_signature(
@@ -332,14 +336,14 @@ class JMESPathProjectConfigFunctions(JMESPathFunctions):
             "variadic": True,
         },
     )
-    def _func_range(self, *args: t.Any) -> t.Union[t.List[float], t.List[int]]:
+    def _func_range(self, *args: Any) -> list[float] | list[int]:
         return list(range(*args))
 
     @jmespath_func_signature(
         {"types": ["string"]},
         {"types": ["number"], "variadic": True},
     )
-    def _func_center(self, value: str, width: int, *args: t.Any) -> str:
+    def _func_center(self, value: str, width: int, *args: Any) -> str:
         return value.center(width, *args)
 
     @jmespath_func_signature(
@@ -348,20 +352,20 @@ class JMESPathProjectConfigFunctions(JMESPathFunctions):
     )
     def _func_count(
         self,
-        value: t.Union[t.List[t.Any], str],
-        sub: t.Any,
-        *args: t.Any,
+        value: list[Any] | str,
+        sub: Any,
+        *args: Any,
     ) -> int:
         return value.count(sub, *args)
 
     @jmespath_func_signature(
         {"types": [], "variadic": True},
     )
-    def _func_format(self, schema: str, *args: t.Any) -> str:
+    def _func_format(self, schema: str, *args: Any) -> str:
         return schema.format(*args)
 
     @jmespath_func_signature({"types": ["string"], "variadic": True})
-    def _func_splitlines(self, value: str, *args: t.Any) -> t.List[str]:
+    def _func_splitlines(self, value: str, *args: Any) -> list[str]:
         return value.splitlines(*args)
 
     @jmespath_func_signature({"types": ["string"]}, {"types": ["number"]})
@@ -371,8 +375,8 @@ class JMESPathProjectConfigFunctions(JMESPathFunctions):
     @jmespath_func_signature({"types": ["string", "array", "object"]})
     def _func_enumerate(
         self,
-        value: t.Union[t.List[t.Any], str, t.Dict[str, t.Any]],
-    ) -> t.List[t.List[t.Any]]:
+        value: list[Any] | str | dict[str, Any],
+    ) -> list[list[Any]]:
         if isinstance(value, dict):
             return [list(item) for item in enumerate(_to_items(value))]
         return [list(item) for item in enumerate(value)]
@@ -380,12 +384,12 @@ class JMESPathProjectConfigFunctions(JMESPathFunctions):
     @jmespath_func_signature({"types": ["object"]})
     def _func_to_items(
         self,
-        value: t.Dict[str, t.Any],
-    ) -> t.List[t.List[t.Any]]:
+        value: dict[str, Any],
+    ) -> list[list[Any]]:
         return _to_items(value)
 
     @jmespath_func_signature({"types": ["array"]})
-    def _func_from_items(self, value: t.List[t.Any]) -> t.Dict[str, t.Any]:
+    def _func_from_items(self, value: list[Any]) -> dict[str, Any]:
         return {str(key): subv for key, subv in value}
 
     @jmespath_func_signature()
@@ -397,17 +401,14 @@ class JMESPathProjectConfigFunctions(JMESPathFunctions):
     )
     def _func_deepmerge(
         self,
-        base: t.Any,
-        nxt: t.Any,
-        *args: t.Any,
-    ) -> t.Any:
+        base: Any,
+        nxt: Any,
+        *args: Any,
+    ) -> Any:
         # TODO: if base and nxt are strings use merge with other
         #   strategies such as prepend or append text.
         if len(args) > 0:
-            strategies: t.Union[
-                str,
-                t.List[t.Union[t.Dict[str, t.List[str]], t.List[str]]],
-            ] = args[0]
+            strategies: str | list[dict[str, list[str]] | list[str]] = args[0]
         else:
             strategies = "conservative_merger"
         if isinstance(strategies, str):
@@ -448,9 +449,9 @@ class JMESPathProjectConfigFunctions(JMESPathFunctions):
     @jmespath_func_signature({"types": ["object"]}, {"types": ["object"]})
     def _func_update(
         self,
-        base: t.Dict[str, t.Any],
-        nxt: t.Dict[str, t.Any],
-    ) -> t.Dict[str, t.Any]:
+        base: dict[str, Any],
+        nxt: dict[str, Any],
+    ) -> dict[str, Any]:
         base.update(nxt)
         return base
 
@@ -461,10 +462,10 @@ class JMESPathProjectConfigFunctions(JMESPathFunctions):
     )
     def _func_insert(
         self,
-        base: t.List[t.Any],
+        base: list[Any],
         index: int,
-        item: t.Any,
-    ) -> t.List[t.Any]:
+        item: Any,
+    ) -> list[Any]:
         base.insert(index, item)
         return base
 
@@ -475,10 +476,10 @@ class JMESPathProjectConfigFunctions(JMESPathFunctions):
     )
     def _func_set(
         self,
-        base: t.Dict[str, t.Any],
+        base: dict[str, Any],
         key: str,
-        value: t.Any,
-    ) -> t.Dict[str, t.Any]:
+        value: Any,
+    ) -> dict[str, Any]:
         base[key] = value
         return base
 
@@ -488,9 +489,9 @@ class JMESPathProjectConfigFunctions(JMESPathFunctions):
     )
     def _func_unset(
         self,
-        base: t.Dict[str, t.Any],
+        base: dict[str, Any],
         key: str,
-    ) -> t.Dict[str, t.Any]:
+    ) -> dict[str, Any]:
         if key in base:
             del base[key]
         return base
@@ -504,7 +505,7 @@ class JMESPathProjectConfigFunctions(JMESPathFunctions):
         base: str,
         old: str,
         new: str,
-        *args: t.Any,  # count
+        *args: Any,  # count
     ) -> str:
         return base.replace(old, new, *args)
 
@@ -513,7 +514,7 @@ class JMESPathProjectConfigFunctions(JMESPathFunctions):
         return sys.platform
 
     @jmespath_func_signature({"types": ["string"]})
-    def _func_getenv(self, envvar: str) -> t.Optional[str]:
+    def _func_getenv(self, envvar: str) -> str | None:
         return os.environ.get(envvar)
 
     @jmespath_func_signature(
@@ -523,8 +524,8 @@ class JMESPathProjectConfigFunctions(JMESPathFunctions):
     def _func_setenv(
         self,
         envvar: str,
-        value: t.Optional[str],
-    ) -> t.Dict[str, str]:
+        value: str | None,
+    ) -> dict[str, str]:
         if value is None:
             del os.environ[envvar]
         else:
@@ -537,8 +538,8 @@ class JMESPathProjectConfigFunctions(JMESPathFunctions):
         {"types": ["string"], "variadic": True},
     )
     def _func_gh_tags(
-        self, repo_owner: str, repo_name: str, *args: t.Any
-    ) -> t.List[str]:
+        self, repo_owner: str, repo_name: str, *args: Any
+    ) -> list[str]:
         from project_config.fetchers.github import get_latest_release_tags
 
         kwargs = {}
@@ -673,7 +674,7 @@ def compile_JMESPath_expression_or_error(
 
 def compile_JMESPath_or_expected_value_error(
     expression: str,
-    expected_value: t.Any,
+    expected_value: Any,
 ) -> JMESPathParsedResult:
     """Compile a JMESPath expression or raise a ``JMESPathError``.
 
@@ -681,7 +682,7 @@ def compile_JMESPath_or_expected_value_error(
 
     Args:
         expression (str): JMESPath expression to compile.
-        expected_value (t.Any): Value that was expected to match against expression.
+        expected_value (Any): Value that was expected to match against expression.
 
     Returns:
         :py:class:`jmespath.parser.ParsedResult`: JMESPath expression compiled.
@@ -744,8 +745,8 @@ def compile_JMESPath_or_expected_value_from_other_file_error(
 
 def evaluate_JMESPath(
     compiled_expression: JMESPathParsedResult,
-    instance: t.Any,
-) -> t.Any:
+    instance: Any,
+) -> Any:
     """Evaluate a JMESPath expression against a instance.
 
     Args:
@@ -778,9 +779,9 @@ def evaluate_JMESPath(
 
 def evaluate_JMESPath_or_expected_value_error(
     compiled_expression: JMESPathParsedResult,
-    expected_value: t.Any,
-    instance: t.Any,
-) -> t.Any:
+    expected_value: Any,
+    instance: Any,
+) -> Any:
     """Evaluate a JMESPath expression against a instance or raise a ``JMESPathError``.
 
     You can pass a expected value that was being expected in the
@@ -819,7 +820,7 @@ def evaluate_JMESPath_or_expected_value_error(
 
 def fix_tree_serialized_file_by_jmespath(
     compiled_expression: JMESPathParsedResult,
-    instance: t.Any,
+    instance: Any,
     fpath: str,
     tree: Tree,
 ) -> bool:
@@ -846,7 +847,10 @@ def fix_tree_serialized_file_by_jmespath(
     return tree.edit_serialized_file(fpath, new_content)
 
 
-REVERSE_JMESPATH_TYPE_PYOBJECT: t.Dict[t.Optional[str], t.Any] = {
+REVERSE_JMESPATH_TYPE_PYOBJECT: dict[
+    str | None,
+    dict[Any, Any] | list[Any] | Literal[0, "", None],
+] = {
     "string": "",
     "number": 0,
     "object": {},
@@ -856,13 +860,13 @@ REVERSE_JMESPATH_TYPE_PYOBJECT: t.Dict[t.Optional[str], t.Any] = {
 }
 
 
-def _build_reverse_jmes_type_object(jmespath_type: str) -> t.Any:
+def _build_reverse_jmes_type_object(jmespath_type: str) -> Any:
     return REVERSE_JMESPATH_TYPE_PYOBJECT[jmespath_type]
 
 
 def smart_fixer_by_expected_value(
     compiled_expression: JMESPathParsedResult,
-    expected_value: t.Any,
+    expected_value: Any,
 ) -> str:
     """Smart JMESPath fixer queries creator.
 
@@ -881,8 +885,7 @@ def smart_fixer_by_expected_value(
     fixer_expression = ""
 
     parser = Parser()
-    # TODO: add types to JMESPath parser in typeshed
-    ast = parser.parse(compiled_expression.expression).parsed  # type: ignore
+    ast = parser.parse(compiled_expression.expression).parsed
 
     merge_strategy = "conservative_merger"
 
@@ -918,30 +921,27 @@ def smart_fixer_by_expected_value(
         if expected_value not in REVERSE_JMESPATH_TYPE_PYOBJECT:
             return ""
         temporal_object = {}
-        if (
-            len(ast.get("children")) == 1
-            and ast["children"][0]["type"] == "field"
-        ):
+        if len(ast["children"]) == 1 and ast["children"][0]["type"] == "field":
             temporal_object = {
                 ast["children"][0]["value"]: _build_reverse_jmes_type_object(
                     expected_value,
                 ),
             }
         elif (
-            len(ast.get("children")) == 1
+            len(ast["children"]) == 1
             and ast["children"][0]["type"] == "current"
         ):
             temporal_object = _build_reverse_jmes_type_object(expected_value)
             return f"`{json.dumps(temporal_object, indent=None)}`"
         else:
-            deep: t.List[t.Any] = []
+            deep: list[Any] = []
 
             def _iterate_expressions(
-                expressions: t.List[t.Any],
-                temporal_object: t.Any,
-                merge_strategy: t.Any,
-                deep: t.List[t.Any],
-            ) -> t.Tuple[t.List[t.Any], t.Any, t.Any]:
+                expressions: list[Any],
+                temporal_object: Any,
+                merge_strategy: Any,
+                deep: list[Any],
+            ) -> tuple[list[Any], Any, Any]:
 
                 for iexp, fexp in enumerate(reversed(expressions)):
                     _last_field_type_iexp = (
@@ -967,7 +967,7 @@ def smart_fixer_by_expected_value(
                         fexp_value = fexp["value"]
 
                     deep.append(fexp_value)
-                    _obj = {}
+                    _obj: Any = {}
                     for di, d in enumerate(deep):
                         if di == 0 and _last_field_type_iexp:
                             _obj = _build_reverse_jmes_type_object(
@@ -989,12 +989,12 @@ def smart_fixer_by_expected_value(
                                 ["override"],
                                 ["override"],
                             ]
-                            _obj = [_obj]  # type: ignore
+                            _obj = [_obj]
                     temporal_object = _obj
 
                 return (deep, temporal_object, merge_strategy)
 
-            for child in ast.get("children"):
+            for child in ast["children"]:
                 if child["type"] == "subexpression":
                     expressions = list(child.get("children", []))
                     (
@@ -1010,7 +1010,7 @@ def smart_fixer_by_expected_value(
     elif (
         ast["type"] == "function_expression"
         and ast["value"] == "contains"
-        and len(ast.get("children", [])) == 2
+        and len(ast["children"]) == 2
         and ast["children"][0]["type"] == "function_expression"
         and ast["children"][0]["value"] == "keys"
         and ast["children"][0].get("children")
@@ -1044,5 +1044,5 @@ def smart_fixer_by_expected_value(
 def is_literal_jmespath_expression(expression: str) -> bool:
     """Check if a JMESPath expression is a literal expression."""
     parser = Parser()
-    ast = parser.parse(expression).parsed  # type: ignore
-    return ast.get("type") == "literal"  # type: ignore
+    ast = parser.parse(expression).parsed
+    return ast["type"] == "literal"

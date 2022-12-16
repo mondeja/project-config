@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import os
 import time
-import typing as t
 import urllib.request
+from typing import Any
 
 from project_config.cache import Cache
 from project_config.exceptions import ProjectConfigException
@@ -21,7 +21,7 @@ class ProjectConfigTimeoutError(ProjectConfigHTTPError):
 
 def _GET(
     url: str,
-    timeout: t.Optional[float] = None,
+    timeout: float | None = None,
     sleep: float = 1.0,
 ) -> str:
     start = time.time()
@@ -50,7 +50,7 @@ def _GET(
     )
 
 
-def GET(url: str, use_cache: bool = True, **kwargs: t.Any) -> str:
+def GET(url: str, use_cache: bool = True, **kwargs: Any) -> str:
     """Perform an HTTP/s GET request and return the result.
 
     Args:

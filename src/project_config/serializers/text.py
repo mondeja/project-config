@@ -2,10 +2,8 @@
 
 from __future__ import annotations
 
-import typing as t
 
-
-def loads(string: str) -> t.List[str]:
+def loads(string: str) -> list[str]:
     """Converts a string to an array of lines.
 
     Args:
@@ -17,7 +15,7 @@ def loads(string: str) -> t.List[str]:
     return string.splitlines()
 
 
-def dumps(obj: t.List[str]) -> str:
+def dumps(obj: list[str]) -> str:
     """Converts an array of lines to a string.
 
     Args:

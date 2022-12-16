@@ -5,7 +5,8 @@ from __future__ import annotations
 import importlib
 import json
 import types
-import typing as t
+from collections.abc import Callable
+from typing import Any
 
 from tabulate import tabulate_formats
 
@@ -49,15 +50,15 @@ reporters_modules = {
 }
 
 
-def _parse_reporter_arguments(arguments_string: str) -> t.Dict[str, t.Any]:
-    result: t.Dict[str, str] = {}
+def _parse_reporter_arguments(arguments_string: str) -> dict[str, Any]:
+    result: dict[str, str] = {}
     for arg_value in arguments_string.split(";"):
         key, value = arg_value.split("=", maxsplit=1)
         result[key] = json.loads(value)
     return result
 
 
-def parse_reporter_id(value: str) -> t.Tuple[str, t.Dict[str, t.Any]]:
+def parse_reporter_id(value: str) -> tuple[str, dict[str, Any]]:
     """Parse a reporter identifier.
 
     Returns the reporter name and the optional arguments for his class.
@@ -83,11 +84,11 @@ def parse_reporter_id(value: str) -> t.Tuple[str, t.Dict[str, t.Any]]:
 
 def get_reporter(
     reporter_name: str,
-    reporter_kwargs: t.Dict[str, t.Any],
-    color: t.Optional[bool],
+    reporter_kwargs: dict[str, Any],
+    color: bool | None,
     rootdir: str,
     only_hints: bool = False,
-) -> t.Any:
+) -> Any:
     """Reporters factory.
 
     Args:
@@ -148,7 +149,7 @@ class ThirdPartyReporters:
     """Third party reporters loader from entrypoints."""
 
     # allow to reset the instance, just for testing purposes
-    instance: t.Optional[ThirdPartyReporters] = None
+    instance: ThirdPartyReporters | None = None
 
     def __new__(cls) -> ThirdPartyReporters:  # noqa: D102
         if cls.instance is None:
@@ -156,15 +157,15 @@ class ThirdPartyReporters:
         return cls.instance
 
     def __init__(self) -> None:
-        self.reporters_loaders: t.Dict[
+        self.reporters_loaders: dict[
             str,
-            t.Callable[[], types.ModuleType],
+            Callable[[], types.ModuleType],
         ] = {}
-        self.loaded_reporters: t.Dict[str, types.ModuleType] = {}
+        self.loaded_reporters: dict[str, types.ModuleType] = {}
         self._prepare_third_party_reporters()
 
     @property
-    def ids(self) -> t.List[str]:
+    def ids(self) -> list[str]:
         """Returns the identifiers of the 3rd party reporters."""
         return list(self.reporters_loaders.keys())
 
@@ -191,7 +192,7 @@ class ThirdPartyReporters:
     def validate_reporter_module(
         self,
         reporter_module: types.ModuleType,
-    ) -> t.Tuple[str, str]:
+    ) -> tuple[str, str]:
         """Validate a reporter module.
 
         Returns black/white and color reporter class names if the reporters
@@ -233,7 +234,7 @@ class ThirdPartyReporters:
             )
         return color_reporter_class_name, bw_reporter_class_name
 
-    def validate_reporter_class(self, reporter_class: t.Any) -> None:
+    def validate_reporter_class(self, reporter_class: Any) -> None:
         """Validate a reporter class.
 
         Args:

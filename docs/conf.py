@@ -71,6 +71,7 @@ nitpick_ignore = [
     ("py:class", "jmespath.functions.Functions"),
     ("py:class", "jmespath.parser.ParsedResult"),
     ("py:class", "project_config.types.Results"),
+    ("py:class", "project_config.tree.Tree"),
     ("py:class", "pytest.MonkeyPatch"),
     ("py:class", "_pytest.monkeypatch.MonkeyPatch"),
 ]
@@ -78,6 +79,12 @@ nitpick_ignore_regex = [
     ("py:class", r"^t.[A-Z]\w+$"),
     ("py:class", r"^[A-Za-z]+$"),  # internal references
     ("py:class", r"^typing_extensions\.\w+$"),
+]
+
+suppress_warnings = [
+    # TODO: Remove this hack entirely after Sphinx resolves this open issue:
+    #    https://github.com/sphinx-doc/sphinx/issues/4961
+    "ref.python",
 ]
 
 

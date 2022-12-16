@@ -10,24 +10,25 @@ import os
 import pathlib
 import re
 import types
-import typing as t
+from typing import TYPE_CHECKING, Any
 
 import pytest
 
 from project_config.tests.pytest_plugin.helpers import (
-    FilesType,
-    RootdirType,
     assert_expected_files,
     create_files,
     create_tree,
     get_reporter_class_from_module,
 )
-from project_config.types import (
-    ActionsContext,
-    ErrorDict,
-    Rule,
-    StrictResultType,
-)
+from project_config.types import ActionsContext, ErrorDict, Rule
+
+
+if TYPE_CHECKING:
+    from project_config.tests.pytest_plugin.helpers import (
+        FilesType,
+        RootdirType,
+    )
+    from project_config.types import StrictResultType
 
 
 def project_config_plugin_action_asserter(
@@ -35,14 +36,14 @@ def project_config_plugin_action_asserter(
     plugin_class: type,
     plugin_method_name: str,
     files: FilesType,
-    value: t.Any,
+    value: Any,
     rule: Rule,
-    expected_results: t.List[StrictResultType],
-    additional_files: t.Optional[FilesType] = None,
+    expected_results: list[StrictResultType],
+    additional_files: FilesType | None = None,
     assert_case_method_name: bool = True,
     deprecated: bool = False,
     fix: bool = False,
-    expected_files: t.Optional[FilesType] = None,
+    expected_files: FilesType | None = None,
 ) -> None:
     """Convenient function to test a plugin action.
 
@@ -57,7 +58,7 @@ def project_config_plugin_action_asserter(
             If the value is ``False``, the file will not be created.
             If the value is ``None``, the file will be created as a directory.
         value (typing.Any): Value passed to the action.
-        expected_results (list): List of expected results.
+        expected_results (list): Expected results.
         additional_files (dict): Dictionary of additional files to create.
             These will not be defined inside the ``files`` property of the rule.
             Follows the same format as ``files``.
@@ -133,7 +134,7 @@ def project_config_plugin_action_asserter(
 
     plugin_method = getattr(plugin_class, plugin_method_name)
 
-    deprecated_ctx = (
+    deprecated_ctx: Any = (
         contextlib.nullcontext if not deprecated else pytest.deprecated_call
     )
     with deprecated_ctx():
@@ -184,10 +185,10 @@ def project_config_plugin_action_asserter(
         assert_expected_files(expected_files, rootdir)
 
 
-@pytest.fixture  # type: ignore
+@pytest.fixture
 def assert_project_config_plugin_action(
     tmp_path: pathlib.Path,
-) -> t.Any:
+) -> Any:
     """Pytest fixture to assert a plugin action.
 
     Returns a function that can be used to assert a plugin action.
@@ -200,9 +201,9 @@ def project_config_errors_report_asserter(
     monkeypatch: pytest.MonkeyPatch,
     rootdir: pathlib.Path,
     reporter_module: types.ModuleType,
-    errors: t.List[ErrorDict],
+    errors: list[ErrorDict],
     expected_result: str,
-    fmt: t.Optional[str] = None,
+    fmt: str | None = None,
 ) -> None:
     r"""Asserts an error report from a reporter module.
 
@@ -212,7 +213,7 @@ def project_config_errors_report_asserter(
         rootdir (Path): Path to root directory. This is not needed to define
             in the fixture as is inserted before the execution.
         reporters_module (types.ModuleType): Module containing the reporters.
-        errors (list): List of errors.
+        errors (list): Errors.
         expected_result (str): Expected reported result.
 
     .. rubric:: Example
@@ -294,11 +295,11 @@ def project_config_errors_report_asserter(
     assert color_reporter.generate_errors_report() == expected_result
 
 
-@pytest.fixture  # type: ignore
+@pytest.fixture
 def assert_errors_report(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: pathlib.Path,
-) -> t.Any:
+) -> Any:
     """Pytest fixture to assert errors reports.
 
     Returns a function that can be used to assert an errors report
@@ -317,9 +318,9 @@ def project_config_data_report_asserter(
     rootdir: pathlib.Path,
     reporter_module: types.ModuleType,
     data_key: str,
-    data: t.Any,
+    data: Any,
     expected_result: str,
-    fmt: t.Optional[str] = None,
+    fmt: str | None = None,
 ) -> None:
     r"""Asserts a data report from a reporter module.
 
@@ -409,11 +410,11 @@ def project_config_data_report_asserter(
     )
 
 
-@pytest.fixture  # type: ignore
+@pytest.fixture
 def assert_data_report(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: pathlib.Path,
-) -> t.Any:
+) -> Any:
     """Pytest fixture to assert data reports.
 
     Returns a function that can be used to assert a data report

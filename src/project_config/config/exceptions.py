@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import os
-import typing as t
 
 from project_config.exceptions import ProjectConfigException
 
@@ -27,7 +26,7 @@ class ProjectConfigInvalidConfigSchema(ProjectConfigInvalidConfig):
     def __init__(
         self,
         config_path: str,
-        error_messages: t.List[str],
+        error_messages: list[str],
     ) -> None:
         errors = "\n".join([f"  - {msg}" for msg in error_messages])
         super().__init__(

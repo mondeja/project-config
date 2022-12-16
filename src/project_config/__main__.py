@@ -5,8 +5,9 @@ from __future__ import annotations
 import argparse
 import os
 import sys
-import typing as t
+from collections.abc import Sequence
 from gettext import gettext as _
+from typing import Any
 
 from importlib_metadata_argparse_version import ImportlibMetadataVersionAction
 
@@ -35,16 +36,15 @@ class ReporterAction(argparse.Action):
             },
         )
 
-    def __call__(  # type: ignore  # noqa: D102
+    def __call__(  # noqa: D102
         self,
         parser: argparse.ArgumentParser,  # noqa: U100
         namespace: argparse.Namespace,
-        value: str,
-        option_string: str,  # noqa: U100
+        value: str | Sequence[Any] | None,
+        option_string: str | None = None,  # noqa: U100
     ) -> None:
-        reporter: t.Dict[str, t.Any] = {}
-        if value:
-
+        reporter: dict[str, Any] = {}
+        if isinstance(value, str):
             try:
                 reporter_name, reporter_kwargs = parse_reporter_id(value)
             except Exception:
@@ -183,8 +183,8 @@ def build_main_parser() -> argparse.ArgumentParser:  # noqa: D103
 
 def _parse_command_args(
     command: str,
-    subcommand_args: t.List[str],
-) -> t.Tuple[argparse.Namespace, t.List[str]]:
+    subcommand_args: list[str],
+) -> tuple[argparse.Namespace, list[str]]:
     if command in ("show", "clean"):
         if command == "show":
             parser = argparse.ArgumentParser(prog="project-config show")
@@ -234,8 +234,8 @@ def _parse_command_args(
 
 def parse_cli_args_and_subargs(  # noqa: D103
     parser: argparse.ArgumentParser,
-    argv: t.List[str],
-) -> t.Tuple[argparse.Namespace, argparse.Namespace]:
+    argv: list[str],
+) -> tuple[argparse.Namespace, argparse.Namespace]:
     args, subcommand_args = parser.parse_known_args(argv)
     subargs, remaining = _parse_command_args(args.command, subcommand_args)
     if remaining:
@@ -244,7 +244,7 @@ def parse_cli_args_and_subargs(  # noqa: D103
     return args, subargs
 
 
-def parse_args(argv: t.List[str]) -> argparse.Namespace:  # noqa: D103
+def parse_args(argv: list[str]) -> argparse.Namespace:  # noqa: D103
     args, subargs = parse_cli_args_and_subargs(build_main_parser(), argv)
 
     if args.cache is False:
@@ -253,7 +253,7 @@ def parse_args(argv: t.List[str]) -> argparse.Namespace:  # noqa: D103
     return argparse.Namespace(**vars(args), **vars(subargs))
 
 
-def run(argv: t.List[str]) -> int:  # noqa: D103
+def run(argv: list[str]) -> int:  # noqa: D103
     os.environ["PROJECT_CONFIG"] = "true"
     args = parse_args(argv)
 

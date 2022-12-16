@@ -2,12 +2,12 @@
 
 from __future__ import annotations
 
-import typing as t
+from typing import Any
 
 import tomlkit
 
 
-def loads(string: str) -> t.Dict[str, t.Any]:
+def loads(string: str) -> dict[str, Any]:
     """Converts a TOML file string to an object.
 
     Args:
@@ -17,8 +17,8 @@ def loads(string: str) -> t.Dict[str, t.Any]:
         dict: Conversion result.
     """
 
-    def iterate_key_values(obj: t.Any) -> t.Any:
-        _partial_result: t.Union[t.Dict[str, t.Any], t.List[t.Any]]
+    def iterate_key_values(obj: Any) -> Any:
+        _partial_result: dict[str, Any] | list[Any]
 
         if isinstance(obj, dict):
             _partial_result = {}

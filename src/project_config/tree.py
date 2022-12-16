@@ -4,8 +4,10 @@ from __future__ import annotations
 
 import glob
 import os
-import typing as t
+from collections.abc import Iterable, Iterator
+from typing import TYPE_CHECKING, Any
 
+from project_config.compat import TypeAlias
 from project_config.fetchers import fetch
 from project_config.serializers import (
     deserialize_for_url,
@@ -14,11 +16,12 @@ from project_config.serializers import (
 )
 
 
-TreeDirectory = t.Iterator[str]
-TreeNode = t.Union[str, TreeDirectory]
-TreeNodeFiles = t.List[t.Tuple[str, TreeNode]]
-TreeNodeFilesIterator = t.Iterator[t.Tuple[str, TreeNode]]
-FilePathsArgument = t.Union[t.Iterator[str], t.List[str]]
+if TYPE_CHECKING:
+    TreeDirectory: TypeAlias = Iterator[str]
+    TreeNode: TypeAlias = str | TreeDirectory
+    TreeNodeFiles: TypeAlias = list[tuple[str, TreeNode]]
+    TreeNodeFilesIterator: TypeAlias = Iterator[tuple[str, TreeNode]]
+    FilePathsArgument: TypeAlias = Iterator[str] | list[str]
 
 
 class Tree:
@@ -84,16 +87,16 @@ class Tree:
         #
         # TODO: this type becomes recursive, in the future, define it properly
         # https://github.com/python/mypy/issues/731
-        self._files_cache: t.Dict[str, t.Tuple[bool, t.Optional[str]]] = {}
+        self._files_cache: dict[str, tuple[bool, str | None]] = {}
 
         # cache for serialized version of files
         #
         # JSON encodable version of files are cached here to avoid
         # multiple calls to serializer for the same file
-        self._serialized_files_cache: t.Dict[str, str] = {}
+        self._serialized_files_cache: dict[str, str] = {}
 
     @property
-    def files(self) -> t.List[t.Tuple[str, str]]:
+    def files(self) -> list[tuple[str, str | Iterator[str]]]:
         """Returns an array of the current cached files for a rule action.
 
         Returns:
@@ -110,7 +113,7 @@ class Tree:
                     _content,
                 ),
             )
-        return result  # type: ignore
+        return result
 
     def normalize_path(self, fpath: str) -> str:
         """Normalize a path given his relative path to the root directory.
@@ -155,7 +158,7 @@ class Tree:
     def _generator(
         self,
         fpaths: FilePathsArgument,
-    ) -> t.Iterable[t.Tuple[str, t.Optional[str]]]:
+    ) -> Iterable[tuple[str, str | None]]:
         for fpath_or_glob in fpaths:
             # try to get all existing files from glob
             #
@@ -187,7 +190,7 @@ class Tree:
         """
         return self._files_cache[self._cache_file(fpath)][1]  # type: ignore
 
-    def cache_files(self, fpaths: t.List[str]) -> None:
+    def cache_files(self, fpaths: list[str]) -> None:
         """Cache a set of files given their paths.
 
         Args:
@@ -200,7 +203,7 @@ class Tree:
                 if fpath in self._serialized_files_cache:
                     self._serialized_files_cache.pop(fpath)
 
-    def serialize_file(self, fpath: str) -> t.Any:
+    def serialize_file(self, fpath: str) -> Any:
         """Returns the object-serialized version of a file.
 
         This method is a convenient cache wrapper for
@@ -235,7 +238,7 @@ class Tree:
             self._serialized_files_cache[normalized_fpath] = result
         return fpath, result
 
-    def fetch_file(self, url: str) -> t.Any:
+    def fetch_file(self, url: str) -> Any:
         """Fetch a file from online or offline sources given a url or path.
 
         This method is a convenient cache wrapper for
@@ -258,7 +261,7 @@ class Tree:
 
         return result
 
-    def edit_serialized_file(self, fpath: str, new_content: t.Any) -> bool:
+    def edit_serialized_file(self, fpath: str, new_content: Any) -> bool:
         """Edit a file in the cache.
 
         Args:
