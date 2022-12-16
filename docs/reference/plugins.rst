@@ -327,8 +327,9 @@ always takes the regex to apply as the first parameter following the Python's
 
 .. function:: op(source: any, operation: str, target: any[, operation: str, target: any]...) -> any
 
-   Apply the operator ``operation`` between the two values ``source`` and ``target``
-   using the operators for two values defined in the module :py:mod:`op`.
+   Apply the operator ``operation`` between the values ``source`` and ``target``
+   using the operators defined in the Python standard library module :py:mod:`op`
+   for two or more values.
 
    The next operators are available:
 
@@ -413,7 +414,7 @@ always takes the regex to apply as the first parameter following the Python's
    You can pass multiple operators and values after the ``target`` argument
    chaining the operation with multiple operators. For example:
 
-   .. code-block:: text
+   .. code-block:: jmespath
 
       op(`5`, '+', `3`, '-', `4`)
 
@@ -683,7 +684,7 @@ you need to return fixed contents for files.
 
    .. rubric:: Example
 
-   .. code-block:: text
+   .. code-block:: jmespath
 
       deepmerge(@, `{"foo": "bar"}`, 'always_merger')
 
@@ -696,7 +697,7 @@ you need to return fixed contents for files.
 
    .. rubric:: Example
 
-   .. code-block:: text
+   .. code-block:: jmespath
 
       deepmerge(
          @,
@@ -828,7 +829,7 @@ and the expected value.
 
 The query will be a syntax like (example merging objects):
 
-.. code-block:: text
+.. code-block:: jmespath
 
    deepmerge(@, `{ "foo": "bar" }`)
 
