@@ -123,6 +123,11 @@ serializers_fallback: tuple[
     [{"module": "project_config.serializers.text"}],
 )
 
+EMPTY_CONTENT_BY_SERIALIZER = {
+    "json": "{}",
+    "json5": "{}",
+}
+
 
 def _identify_serializer(filename: str) -> str:
     tag: str | None = None

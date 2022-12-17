@@ -5,7 +5,7 @@ import sys
 import pytest
 
 from project_config.__main__ import run
-from project_config.cache import Cache
+from project_config.cache import CACHE_DIR
 
 
 @pytest.mark.skipif(
@@ -13,10 +13,9 @@ from project_config.cache import Cache
     reason="Failing on Windows due to PermissionError",
 )
 def test_clean_cache(capsys, tmp_path):
-    cache_dir = Cache.get_directory()
     temp_cache_dir = str(tmp_path / "cache")
-    if os.path.exists(cache_dir):
-        shutil.copytree(cache_dir, temp_cache_dir)
+    if os.path.exists(CACHE_DIR):
+        shutil.copytree(CACHE_DIR, temp_cache_dir)
 
     assert run(["clean", "cache"]) == 0
     out, err = capsys.readouterr()
@@ -24,4 +23,4 @@ def test_clean_cache(capsys, tmp_path):
     assert err == ""
 
     if os.path.exists(temp_cache_dir):
-        shutil.copytree(temp_cache_dir, cache_dir)
+        shutil.copytree(temp_cache_dir, CACHE_DIR)

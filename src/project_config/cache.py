@@ -10,22 +10,17 @@ from typing import Any
 import appdirs
 import diskcache
 
-from project_config.compat import cached_function, importlib_metadata
 
-
-@cached_function
-def _directory() -> str:
-    project_config_metadata = importlib_metadata.metadata("project_config")
-    return appdirs.user_data_dir(
-        appname=project_config_metadata["name"],
-        appauthor=project_config_metadata["author"],
-    )
+CACHE_DIR = appdirs.user_data_dir(
+    appname="project-config",
+    appauthor="m",
+)
 
 
 class Cache:
     """Wrapper for a unique :py:class:`diskcache.Cache` instance."""
 
-    _cache = diskcache.Cache(_directory())
+    _cache = diskcache.Cache(CACHE_DIR)
     _expiration_time: float | int | None = 30
 
     def __init__(self) -> None:  # pragma: no cover
@@ -50,16 +45,10 @@ class Cache:
         )
 
     @staticmethod
-    def clean() -> bool:
+    def clean() -> None:
         """Remove the cache directory."""
         with contextlib.suppress(FileNotFoundError):
-            shutil.rmtree(_directory())
-        return True
-
-    @staticmethod
-    def get_directory() -> str:
-        """Return the cache directory."""
-        return _directory()
+            shutil.rmtree(CACHE_DIR)
 
     @classmethod
     def set_expiration_time(

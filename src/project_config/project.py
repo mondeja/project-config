@@ -16,7 +16,7 @@ from project_config.fetchers import fetch
 from project_config.plugins import InvalidPluginFunction, Plugins
 from project_config.reporters import get_reporter
 from project_config.serializers import (
-    build_empty_file_for_serializer,
+    EMPTY_CONTENT_BY_SERIALIZER,
     guess_preferred_serializer,
 )
 from project_config.tree import Tree
@@ -109,23 +109,23 @@ class Project:
         for f, (fpath, fcontent) in enumerate(files):
             ftype = "directory" if fpath.endswith(("/", os.sep)) else "file"
             if fcontent is None:  # file or directory does not exist
-
                 if self.fix:
                     if ftype == "directory":
                         os.makedirs(fpath, exist_ok=True)
-                        self.tree.cache_files([fpath])
+
                     else:
                         _, serializer_name = guess_preferred_serializer(fpath)
                         new_content = (
                             ""
                             if not serializer_name
-                            else build_empty_file_for_serializer(
+                            else EMPTY_CONTENT_BY_SERIALIZER.get(
                                 serializer_name,
+                                "",
                             )
                         )
                         with open(fpath, "w", encoding="utf-8") as fd:
                             fd.write(new_content)
-                        self.tree.cache_files([fpath])
+                    self.tree.cache_files([fpath])
                 self.reporter.report_error(
                     {
                         "message": f"Expected existing {ftype} does not exists",
@@ -366,9 +366,9 @@ class Project:
             data = fetch(args.file)
             report = json.dumps(data, indent=indent)
         elif args.data == "cache":
-            from project_config.cache import Cache
-
-            report = Cache.get_directory()
+            from project_config.cache import (  # type: ignore
+                CACHE_DIR as report,
+            )
         else:
             if args.data == "config":
                 self._load(fetch_styles=False, init_tree=False)
@@ -390,8 +390,8 @@ class Project:
         """Cleaning command."""
         from project_config.cache import Cache
 
-        if Cache.clean():
-            sys.stdout.write("Cache removed successfully!\n")
+        Cache.clean()
+        sys.stdout.write("Cache removed successfully!\n")
 
     def init(self, args: argparse.Namespace) -> None:
         """Initialize the configuration for a project."""
