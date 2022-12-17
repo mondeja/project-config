@@ -8,7 +8,7 @@ import shutil
 from typing import Any
 
 import appdirs
-import diskcache
+from diskcache.core import Cache as DiskCache
 
 
 CACHE_DIR = appdirs.user_data_dir(
@@ -18,9 +18,9 @@ CACHE_DIR = appdirs.user_data_dir(
 
 
 class Cache:
-    """Wrapper for a unique :py:class:`diskcache.Cache` instance."""
+    """Wrapper for a unique :py:class:`diskcache.core.Cache` instance."""
 
-    _cache = diskcache.Cache(CACHE_DIR)
+    _cache = DiskCache(CACHE_DIR)
     _expiration_time: float | int | None = 30
 
     def __init__(self) -> None:  # pragma: no cover
