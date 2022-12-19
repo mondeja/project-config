@@ -262,8 +262,7 @@ class FileConfig:
 
     Stores the data of the project-config configuration defined in
     the file '.project-config.toml' or equivalent. The configuration
-    of the file is stored in the ``dict_`` attribute and can be accesed
-    with ``__getitem__`` and ``__setitems__`` calls.
+    of the file is stored in the ``dict_`` attribute.
 
     Args:
         rootdir (str): Project root directory.
