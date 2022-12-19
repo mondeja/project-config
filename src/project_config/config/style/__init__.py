@@ -53,11 +53,13 @@ class Style:
         """Loads styles to the configuration passed as argument."""
         if os.environ.get("PROJECT_CONFIG_USE_CACHE") != "false":
             if (  # pragma: no cover
-                isinstance(config["style"], str)
+                isinstance(config.dict_["style"], str)
                 and not os.path.isfile(config["style"])
             ) or (
-                isinstance(config["style"], list)
-                and not all([os.path.isfile(url) for url in config["style"]])
+                isinstance(config.dict_["style"], list)
+                and not all(
+                    [os.path.isfile(url) for url in config.dict_["style"]],
+                )
             ):
                 try:
                     _prefetch_urls(config)

@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 """Command line interface."""
 
 from __future__ import annotations
