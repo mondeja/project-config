@@ -7,7 +7,6 @@ import os
 from collections.abc import Iterable, Iterator
 from typing import TYPE_CHECKING, Any
 
-from project_config.compat import TypeAlias
 from project_config.fetchers import fetch
 from project_config.serializers import (
     deserialize_for_url,
@@ -17,6 +16,8 @@ from project_config.serializers import (
 
 
 if TYPE_CHECKING:
+    from project_config.compat import TypeAlias
+
     TreeDirectory: TypeAlias = Iterator[str]
     TreeNode: TypeAlias = str | TreeDirectory
     TreeNodeFiles: TypeAlias = list[tuple[str, TreeNode]]

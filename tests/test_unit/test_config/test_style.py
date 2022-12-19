@@ -1,15 +1,7 @@
-import sys
-
 import pytest
-from testing_helpers import mark_end2end
 
-from project_config.__main__ import run
-from project_config.cache import Cache
 from project_config.config import Config
-from project_config.config.style import (
-    ProjectConfigInvalidStyle,
-    _prefetch_urls,
-)
+from project_config.config.style import ProjectConfigInvalidStyle
 from project_config.plugins import Plugins
 
 
@@ -417,7 +409,14 @@ from project_config.plugins import Plugins
         ),
     ),
 )
-def test_load_style(tmp_path, create_files, chdir, files, expected_result):
+def test_load_style(
+    tmp_path,
+    create_files,
+    chdir,
+    files,
+    expected_result,
+    fake_cli_namespace,
+):
     if ".project-config.toml" not in files and "pyproject.toml" not in files:
         raise NotImplementedError(
             "Not implemented loading styles in test with no default"
@@ -432,7 +431,7 @@ def test_load_style(tmp_path, create_files, chdir, files, expected_result):
                 message.replace("{rootdir}", str(tmp_path))
                 for message in expected_result
             ]
-            config = Config(str(tmp_path), None)
+            config = Config(fake_cli_namespace(rootdir=str(tmp_path)))
             with pytest.raises(ProjectConfigInvalidStyle) as exc:
                 config.load_style()
             assert exc.value.args[0] == (
@@ -442,99 +441,6 @@ def test_load_style(tmp_path, create_files, chdir, files, expected_result):
             ), exc.value
             assert exc.value.args[1] == expected_result
         else:
-            config = Config(str(tmp_path), None)
+            config = Config(fake_cli_namespace(rootdir=str(tmp_path)))
             config.load_style()
             assert config.dict_["style"] == expected_result
-
-
-class FakeConfig:
-    def __init__(self, rootdir, dict_):
-        self.dict_ = dict_
-        self.rootdir = rootdir
-
-    def __getitem__(self, key):
-        return self.dict_[key]
-
-
-@mark_end2end
-@pytest.mark.skipif(
-    "win" in sys.platform,
-    reason="Windows have problems cleaning cache in CI",
-)
-def test__prefetch_urls_local_files(tmp_path, mocker, capsys, monkeypatch):
-    assert run(["clean", "cache"]) == 0
-    capsys.readouterr()
-
-    monkeypatch.setenv("PROJECT_CONFIG_USE_CACHE", "true")
-
-    extended_style_file = tmp_path / "bar.yaml"
-    extended_style_file.write_text("")
-
-    style_file = tmp_path / "foo.yaml"
-    style_file.write_text(f"extends:\n  - {str(extended_style_file)}\n")
-
-    cache_getter_spy = mocker.spy(Cache, "get")
-
-    _prefetch_urls(
-        FakeConfig(
-            str(tmp_path),
-            {
-                "style": str(style_file),
-            },
-        ),
-    )
-    _prefetch_urls(
-        FakeConfig(
-            str(tmp_path),
-            {
-                "style": [str(style_file)],
-            },
-        ),
-    )
-
-    # all are local files, don't fetch
-    assert cache_getter_spy.call_count == 0
-
-
-@mark_end2end
-@pytest.mark.skipif(
-    "win" in sys.platform,
-    reason="Windows have problems cleaning cache in CI",
-)
-def test__prefetch_urls_remote_files(tmp_path, mocker, monkeypatch, capsys):
-    assert run(["clean", "cache"]) == 0
-    capsys.readouterr()
-
-    monkeypatch.setenv("PROJECT_CONFIG_USE_CACHE", "true")
-
-    cache_getter_spy = mocker.spy(Cache, "get")
-    cache_setter_spy = mocker.spy(Cache, "set")
-
-    _prefetch_urls(
-        FakeConfig(
-            str(tmp_path),
-            {
-                "style": (
-                    "gh://mondeja/project-config"
-                    "/tests/data/styles/bar/style-2.yaml"
-                ),
-            },
-        ),
-    )
-    _prefetch_urls(
-        FakeConfig(
-            str(tmp_path),
-            {
-                "style": [
-                    (
-                        "gh://mondeja/project-config"
-                        "/tests/data/styles/foo/style-1.json5"
-                    ),
-                ],
-            },
-        ),
-    )
-
-    # all are local files, don't fetch
-    assert cache_getter_spy.call_count >= 3
-    assert cache_setter_spy.call_count >= 1

@@ -1,3 +1,4 @@
+import argparse
 import multiprocessing
 import os
 import sys
@@ -6,6 +7,7 @@ import time
 import pytest
 from contextlib_chdir import chdir as chdir_ctx
 
+from project_config.__main__ import parse_args
 from project_config.tests.pytest_plugin.helpers import (
     create_files as _create_files,
     create_tree as _create_tree,
@@ -24,13 +26,24 @@ from testing_helpers import (  # noqa: E402
 )
 
 
-# disable project-config cache
-os.environ["PROJECT_CONFIG_USE_CACHE"] = "false"
+# get default argparse namespace for CLI
+DEFAULT_ARGPARSE_NAMESPACE = parse_args(["check"])
 
 
 @pytest.fixture
 def chdir():
     return chdir_ctx
+
+
+@pytest.fixture
+def fake_cli_namespace():
+    def _fake_cli_namespace(**kwargs):
+        namespace = {}
+        namespace.update(vars(DEFAULT_ARGPARSE_NAMESPACE))
+        namespace.update(kwargs)
+        return argparse.Namespace(**namespace)
+
+    return _fake_cli_namespace
 
 
 def _assert_minimal_valid_config(config, expected_style="foo.json"):

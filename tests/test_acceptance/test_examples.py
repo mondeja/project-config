@@ -6,8 +6,8 @@ import pytest
 from testing_helpers import mark_end2end, rootdir
 
 from project_config.__main__ import run
+from project_config.commands.check import check
 from project_config.exceptions import ProjectConfigException
-from project_config.project import Project
 
 
 def _parse_example_metadata(example_dir):
@@ -64,12 +64,7 @@ def _collect_examples(online=False):
     return examples
 
 
-@pytest.mark.parametrize("interface", ("CLI", "API"))
-@pytest.mark.parametrize(
-    ("example_dir", "expected_exitcode", "expected_stderr", "fixable"),
-    _collect_examples(),
-)
-def test_examples(
+def _run_example(
     example_dir,
     expected_exitcode,
     expected_stderr,
@@ -78,12 +73,8 @@ def test_examples(
     chdir,
     capsys,
     tmp_path,
+    fake_cli_namespace,
 ):
-    if os.path.basename(example_dir).startswith(
-        "_005-conditional-files-existence-fails",
-    ):
-        if "win" in sys.platform:
-            pytest.skip("This example is not supported on Windows")
     if interface == "CLI":
         with chdir(example_dir):
             exitcode = run(["--nocolor", "check"])
@@ -123,13 +114,47 @@ def test_examples(
 
     else:
         with chdir(example_dir):
-            project = Project(None, example_dir, {"name": "default"}, False)
+            namespace = fake_cli_namespace(rootdir=example_dir, color=False)
             if expected_stderr:
                 with pytest.raises(ProjectConfigException) as exc:
-                    project.check([])
+                    check(namespace)
                 assert str(exc.value) == expected_stderr.rstrip("\n")
             else:
-                project.check([])
+                check(namespace)
+
+
+@pytest.mark.parametrize("interface", ("CLI", "API"))
+@pytest.mark.parametrize(
+    ("example_dir", "expected_exitcode", "expected_stderr", "fixable"),
+    _collect_examples(),
+)
+def test_examples(
+    example_dir,
+    expected_exitcode,
+    expected_stderr,
+    fixable,
+    interface,
+    chdir,
+    capsys,
+    tmp_path,
+    fake_cli_namespace,
+):
+    if os.path.basename(example_dir).startswith(
+        "_005-conditional-files-existence-fails",
+    ):
+        if "win" in sys.platform:
+            pytest.skip("This example is not supported on Windows")
+    _run_example(
+        example_dir,
+        expected_exitcode,
+        expected_stderr,
+        fixable,
+        interface,
+        chdir,
+        capsys,
+        tmp_path,
+        fake_cli_namespace,
+    )
 
 
 @mark_end2end
@@ -147,47 +172,16 @@ def test_examples_with_online_sources_check(
     chdir,
     capsys,
     tmp_path,
+    fake_cli_namespace,
 ):
-    if interface == "CLI":
-        with chdir(example_dir):
-            exitcode = run(["--nocolor", "check"])
-            out, err = capsys.readouterr()
-            assert exitcode == expected_exitcode, err
-            assert err == expected_stderr
-            assert out == ""
-
-        temp_example_dir = shutil.copytree(
-            example_dir,
-            tmp_path / os.path.basename(example_dir),
-        )
-
-        if exitcode == 0:
-            with chdir(temp_example_dir):
-                exitcode = run(["--nocolor", "fix"])
-                out, err = capsys.readouterr()
-                assert exitcode == 0, err
-                assert err == ""
-                assert out == ""
-        elif fixable:
-            with chdir(temp_example_dir):
-                exitcode = run(["--nocolor", "fix"])
-                out, err = capsys.readouterr()
-                assert exitcode == 1, err
-                assert "(FIXED)" in err
-                assert out == ""
-
-            with chdir(temp_example_dir):
-                exitcode = run(["--nocolor", "fix"])
-                out, err = capsys.readouterr()
-                assert exitcode == 0, err
-                assert err == ""
-                assert out == ""
-    else:
-        with chdir(example_dir):
-            project = Project(None, example_dir, {"name": "default"}, False)
-            if expected_stderr:
-                with pytest.raises(ProjectConfigException) as exc:
-                    project.check([])
-                assert str(exc.value) == expected_stderr.rstrip("\n")
-            else:
-                project.check([])
+    _run_example(
+        example_dir,
+        expected_exitcode,
+        expected_stderr,
+        fixable,
+        interface,
+        chdir,
+        capsys,
+        tmp_path,
+        fake_cli_namespace,
+    )

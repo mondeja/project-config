@@ -8,67 +8,103 @@ import shutil
 from typing import Any
 
 import appdirs
-import diskcache
-
-from project_config.compat import cached_function, importlib_metadata
 
 
-@cached_function
-def _directory() -> str:
-    project_config_metadata = importlib_metadata.metadata("project_config")
-    return appdirs.user_data_dir(
-        appname=project_config_metadata["name"],
-        appauthor=project_config_metadata["author"],
-    )
+CACHE_DIR = appdirs.user_data_dir(
+    appname="project-config",
+    appauthor="m",
+)
 
 
-class Cache:
-    """Wrapper for a unique :py:class:`diskcache.Cache` instance."""
-
-    _cache = diskcache.Cache(_directory())
-    _expiration_time: float | int | None = 30
-
+class BaseCache:  # noqa: D101
     def __init__(self) -> None:  # pragma: no cover
         raise NotImplementedError("Cache is a not instanceable interface.")
 
-    @classmethod
-    def set(cls, *args: Any, **kwargs: Any) -> Any:  # noqa: A003, D102
-        return cls._cache.set(
-            *args,
-            **dict(
-                expire=cls._expiration_time,
-                **kwargs,
-            ),
-        )
-
-    @classmethod
-    def get(cls, *args: Any, **kwargs: Any) -> str | None:  # noqa: D102
-        if os.environ.get("PROJECT_CONFIG_USE_CACHE") == "false":
-            return None
-        return cls._cache.get(  # type: ignore  # pragma: no cover
-            *args, **kwargs
-        )
-
     @staticmethod
-    def clean() -> bool:
+    def clean() -> None:  # pragma: no cover
         """Remove the cache directory."""
         with contextlib.suppress(FileNotFoundError):
-            shutil.rmtree(_directory())
-        return True
+            shutil.rmtree(CACHE_DIR)
 
-    @staticmethod
-    def get_directory() -> str:
-        """Return the cache directory."""
-        return _directory()
 
-    @classmethod
-    def set_expiration_time(
-        cls,
-        expiration_time: float | int | None = None,
-    ) -> None:
-        """Set the expiration time for the cache.
+if os.environ.get("PROJECT_CONFIG_USE_CACHE") == "false":
 
-        Args:
-            expiration_time (float): Time in seconds.
-        """
-        cls._expiration_time = expiration_time
+    class Cache(BaseCache):  # noqa: D101
+        @classmethod
+        def set(  # noqa: A003, D102
+            cls,
+            *args: Any,  # noqa: U100
+            **kwargs: Any,  # noqa: U100
+        ) -> None:  # pragma: no cover
+            pass
+
+        @classmethod
+        def get(  # noqa: D102
+            cls,
+            *args: Any,  # noqa: U100
+            **kwargs: Any,  # noqa: U100
+        ) -> None:  # pragma: no cover
+            pass
+
+        @classmethod
+        def set_expiration_time(  # noqa: D102 pragma: no cover
+            cls,
+            expiration_time: float | int | None = None,  # noqa: U100
+        ) -> None:  # pragma: no cover
+            pass
+
+else:
+    # Workaround for https://github.com/grantjenks/python-diskcache/pull/269
+    # TODO: Remove this workaround once the PR is merged and released.
+    import importlib.util
+
+    _diskcache_init_path = importlib.util.find_spec(
+        "diskcache",
+    ).origin  # type: ignore
+    _diskcache_core_spec = importlib.util.spec_from_file_location(
+        "diskcache.core",
+        os.path.join(
+            os.path.dirname(_diskcache_init_path),  # type: ignore
+            "core.py",
+        ),
+    )
+    _diskcache_core = importlib.util.module_from_spec(
+        _diskcache_core_spec,  # type: ignore
+    )
+    _diskcache_core_spec.loader.exec_module(_diskcache_core)  # type: ignore
+
+    DiskCache = _diskcache_core.Cache
+
+    class Cache(BaseCache):  # type: ignore
+        """Wrapper for a unique :py:class:`diskcache.core.Cache` instance."""
+
+        _cache = DiskCache(CACHE_DIR)
+        _expiration_time: float | int | None = 30
+
+        @classmethod
+        def set(cls, *args: Any, **kwargs: Any) -> Any:  # noqa: A003, D102
+            return cls._cache.set(
+                *args,
+                **dict(
+                    expire=cls._expiration_time,
+                    **kwargs,
+                ),
+            )
+
+        @classmethod
+        def get(cls, *args: Any, **kwargs: Any) -> str | None:  # noqa: D102
+            return cls._cache.get(  # type: ignore  # pragma: no cover
+                *args, **kwargs
+            )
+
+        @classmethod
+        def set_expiration_time(
+            cls,
+            expiration_time: float | int | None = None,
+        ) -> None:
+            """Set the expiration time for the cache.
+
+            Args:
+                expiration_time (float): Time in seconds.
+            """
+            cls._expiration_time = expiration_time

@@ -25,6 +25,6 @@ def dumps(obj: list[str]) -> str:
         str: The string created from joining the array of lines.
     """
     result = "\n".join(obj)
-    if result and obj[-1]:
+    if result:
         result += "\n"
     return result

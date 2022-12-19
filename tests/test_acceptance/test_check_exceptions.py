@@ -2,14 +2,20 @@ import json
 
 import pytest
 
+from project_config.commands.check import check
 from project_config.compat import importlib_metadata
 from project_config.exceptions import ProjectConfigCheckFailed
 from project_config.plugins import PROJECT_CONFIG_PLUGINS_ENTRYPOINTS_GROUP
-from project_config.project import Project
 
 
 @pytest.mark.parametrize("method_name", ("invalidFoo", "ifInvalidFoo"))
-def test_check_invalid_plugin_functions(tmp_path, chdir, mocker, method_name):
+def test_check_invalid_plugin_functions(
+    tmp_path,
+    chdir,
+    mocker,
+    method_name,
+    fake_cli_namespace,
+):
     project_config_file = tmp_path / ".project-config.toml"
     project_config_file.write_text('style = "style.json"')
 
@@ -40,14 +46,13 @@ def test_check_invalid_plugin_functions(tmp_path, chdir, mocker, method_name):
     style_file.write_text(json.dumps(style))
 
     with chdir(tmp_path):
-        project = Project(
-            str(project_config_file),
-            str(tmp_path),
-            {"name": "default"},
-            False,
+        namespace = fake_cli_namespace(
+            config=str(project_config_file),
+            rootdir=str(tmp_path),
+            color=False,
         )
         with pytest.raises(ProjectConfigCheckFailed) as exc:
-            project.check([])
+            check(namespace)
         assert str(exc.value) == (
             f"[CONFIGURATION]\n  - The method '{method_name}' of the"
             " plugin 'invalid-no-staticmethod' (class"
@@ -57,7 +62,13 @@ def test_check_invalid_plugin_functions(tmp_path, chdir, mocker, method_name):
 
 
 @pytest.mark.parametrize("method_name", ("invalidFoo", "ifInvalidFoo"))
-def test_check_invalid_breakage_types(tmp_path, chdir, mocker, method_name):
+def test_check_invalid_breakage_types(
+    tmp_path,
+    chdir,
+    mocker,
+    method_name,
+    fake_cli_namespace,
+):
     project_config_file = tmp_path / ".project-config.toml"
     project_config_file.write_text('style = "style.json"')
 
@@ -88,14 +99,13 @@ def test_check_invalid_breakage_types(tmp_path, chdir, mocker, method_name):
     style_file.write_text(json.dumps(style))
 
     with chdir(tmp_path):
-        project = Project(
-            str(project_config_file),
-            str(tmp_path),
-            {"name": "default"},
-            False,
+        namespace = fake_cli_namespace(
+            config=str(project_config_file),
+            rootdir=str(tmp_path),
+            color=False,
         )
         with pytest.raises(NotImplementedError) as exc:
-            project.check([])
+            check(namespace)
         expected_exc_message = (
             ("Breakage type 'foo' is not implemented for conditionals checking")
             if method_name.startswith("if")

@@ -2,13 +2,14 @@
 
 from __future__ import annotations
 
+import argparse
 import importlib
 import os
 import re
 from typing import TYPE_CHECKING, Any
 
 from project_config.cache import Cache
-from project_config.compat import TypeAlias, tomllib_package_name
+from project_config.compat import tomllib_package_name
 from project_config.config.exceptions import (
     ConfigurationFilesNotFound,
     CustomConfigFileNotFound,
@@ -19,7 +20,11 @@ from project_config.config.exceptions import (
 )
 from project_config.config.style import Style
 from project_config.fetchers import fetch
-from project_config.reporters import DEFAULT_REPORTER, POSSIBLE_REPORTER_IDS
+from project_config.reporters import (
+    DEFAULT_REPORTER,
+    POSSIBLE_REPORTER_IDS,
+    get_reporter,
+)
 
 
 CONFIG_CACHE_REGEX = (
@@ -27,12 +32,31 @@ CONFIG_CACHE_REGEX = (
 )
 
 if TYPE_CHECKING:
-    ConfigType: TypeAlias = dict[str, str | list[str]]
+    from project_config.compat import NotRequired, TypedDict
+    from project_config.config.style import StyleType
+
+    class CLIConfigType(TypedDict):  # noqa: D101
+        rootdir: str
+        reporter: str
+        color: bool
+        colors: dict[str, str]
+        only_hints: bool
+        _reporter_definition: dict[str, Any]
+
+    class BaseConfigType(TypedDict):  # noqa: D101
+        style: NotRequired[StyleType]
+        cli: CLIConfigType
+
+    class RawConfigType(BaseConfigType):  # noqa: D101
+        cache: int
+
+    class ConfigType(BaseConfigType):  # noqa: D101
+        """Type of the configuration."""
+
+        cache: str
 
 
-def read_config_from_pyproject_toml(
-    filepath: str = "pyproject.toml",
-) -> Any:
+def read_config_from_pyproject_toml(filepath: str) -> Any:
     """Read the configuration from the `pyproject.toml` file.
 
     Returns:
@@ -47,6 +71,7 @@ def read_config_from_pyproject_toml(
 
 
 def read_config(
+    rootdir: str,
     custom_file_path: str | None = None,
 ) -> tuple[str, Any]:
     """Read the configuration from a file.
@@ -64,17 +89,19 @@ def read_config(
             raise CustomConfigFileNotFound(custom_file_path)
         return custom_file_path, dict(fetch(custom_file_path))
 
-    pyproject_toml_exists = os.path.isfile("pyproject.toml")
+    pyproject_toml_path = os.path.join(rootdir, "pyproject.toml")
+    pyproject_toml_exists = os.path.isfile(pyproject_toml_path)
     config = None
     if pyproject_toml_exists:
-        config = read_config_from_pyproject_toml()
+        config = read_config_from_pyproject_toml(pyproject_toml_path)
     if config is not None:
         return '"pyproject.toml".[tool.project-config]', dict(config)
 
-    project_config_toml_exists = os.path.isfile(".project-config.toml")
+    project_config_toml_path = os.path.join(rootdir, ".project-config.toml")
+    project_config_toml_exists = os.path.isfile(project_config_toml_path)
     if project_config_toml_exists:
         tomllib = importlib.import_module(tomllib_package_name)
-        with open(".project-config.toml", "rb") as f:
+        with open(project_config_toml_path, "rb") as f:
             project_config_toml = tomllib.load(f)
         return ".project-config.toml", project_config_toml
 
@@ -230,105 +257,133 @@ def validate_cli_config(
     return config
 
 
-class Config:
-    """Configuration wrapper.
+class FileConfig:
+    """File configuration wrapper.
+
+    Stores the data of the project-config configuration defined in
+    the file '.project-config.toml' or equivalent. The configuration
+    of the file is stored in the ``dict_`` attribute.
 
     Args:
         rootdir (str): Project root directory.
         path (str): Path to the file from which the configuration
             will be loaded.
-        fetch_styles (bool): Whether to fetch the styles in the styles
-            loader.
-        validate_cli_config (bool): Whether to validate the CLI
-            configuration.
+        store_raw_config (bool): If ``True``, the raw configuration
+            of the file will be stored in the ``raw_`` attribute.
     """
 
     def __init__(
         self,
         rootdir: str,
         path: str | None,
+        store_raw_config: bool = False,
     ) -> None:
-        self.rootdir = rootdir
-        self.path, config = read_config(path)
+        self.path, config = read_config(rootdir, path)
+
+        if store_raw_config:
+            import copy
+
+            self.raw_: RawConfigType = copy.deepcopy(config)
+
         validate_config(self.path, config)
+        config["cache"] = _cache_string_to_seconds(config["cache"])
 
         # cli configuration in file
-        self.cli = validate_cli_config(self.path, config.pop("cli", {}))
-
-        config["_cache"] = config["cache"]
-        config["cache"] = _cache_string_to_seconds(config["cache"])
+        config["cli"] = validate_cli_config(self.path, config.get("cli", {}))
 
         # set the cache expiration time globally
         Cache.set_expiration_time(config["cache"])
 
-        # main configuration in file
+        # configuration
         self.dict_: ConfigType = config
 
     def load_style(self) -> None:  # noqa: D102
         self.style = Style.from_config(self)
 
-    def guess_from_cli_arguments(
-        self,
-        color: bool | None,
-        reporter: dict[str, Any],
-        rootdir: str,
-    ) -> tuple[Any, dict[str, Any], Any, bool]:
+
+class Config(FileConfig):
+    """Main configuration wrapper.
+
+    This class is the main configuration wrapper. It is used to
+    load a configuration object from CLI arguments.
+    """
+
+    def __init__(self, args: argparse.Namespace, **kwargs: Any) -> None:
         """Guess the final configuration merging file with CLI arguments."""
+        super().__init__(args.rootdir or os.getcwd(), args.config, **kwargs)
+
         # colorize output?
-        color = self.cli.get("color") if color is True else color
+        self.dict_["cli"]["color"] = (
+            self.dict_["cli"].get("color") if args.color is True else args.color
+        )
 
         # reporter definition
-        reporter_kwargs = reporter.get("kwargs", {})
-        reporter_id = reporter.get(
+        reporter_kwargs = args.reporter.get("kwargs", {})
+        reporter_id = args.reporter.get(
             "name",
-            self.cli.get("reporter", DEFAULT_REPORTER),
+            self.dict_["cli"].get("reporter", DEFAULT_REPORTER),
         )
         if ":" in reporter_id:
-            reporter["name"], reporter_kwargs["fmt"] = reporter_id.split(
+            args.reporter["name"], reporter_kwargs["fmt"] = reporter_id.split(
                 ":",
                 maxsplit=1,
             )
         else:
-            reporter["name"] = reporter_id
+            args.reporter["name"] = reporter_id
 
-        if color in (True, None):
-            if "colors" in self.cli:
-                colors = self.cli.get("colors", {})
+        if args.color in (True, None):
+            if "colors" in self.dict_["cli"]:
+                colors = self.dict_["cli"].get("colors", {})
                 for key, value in reporter_kwargs.get("colors", {}).items():
                     colors[key] = value  # cli overrides config
                 reporter_kwargs["colors"] = colors
-            reporter["kwargs"] = reporter_kwargs
+            args.reporter["kwargs"] = reporter_kwargs
         else:
-            reporter["kwargs"] = reporter_kwargs
+            args.reporter["kwargs"] = reporter_kwargs
+        self.dict_["cli"]["_reporter_definition"] = args.reporter
 
-        if not rootdir:
-            _rootdir = self.cli.get("rootdir")
+        if not args.rootdir:
+            _rootdir = self.dict_["cli"].get("rootdir")
             if isinstance(_rootdir, str):
-                self.rootdir = os.path.expanduser(_rootdir)
+                self.dict_["cli"]["rootdir"] = os.path.expanduser(_rootdir)
             else:
-                self.rootdir = os.getcwd()
+                self.dict_["cli"]["rootdir"] = os.getcwd()
         else:
-            self.rootdir = os.path.abspath(rootdir)
+            self.dict_["cli"]["rootdir"] = os.path.abspath(args.rootdir)
 
-        if not os.path.isdir(self.rootdir):  # pragma: no cover
+        if not os.path.isdir(self.dict_["cli"]["rootdir"]):  # pragma: no cover
+            rootdir = self.dict_["cli"]["rootdir"]
             raise ProjectConfigInvalidConfig(
                 f"Root directory '{rootdir}' must be an existing directory",
             )
+        else:
+            # set rootdir as an internal environment variable to be
+            # used by plugins
+            os.environ["PROJECT_CONFIG_ROOTDIR"] = self.dict_["cli"]["rootdir"]
 
-        only_hints = self.cli.get("only_hints") is True
-
-        return (
-            color,
-            reporter,
-            self.rootdir,
-            only_hints,
+        self.dict_["cli"]["only_hints"] = (
+            self.dict_["cli"].get("only_hints") is True
+            or args.only_hints is True
         )
 
-    def __getitem__(self, key: str) -> Any:
-        return self.dict_.__getitem__(key)
 
-    def __setitem__(self, key: str, value: Any) -> None:
-        self.dict_.__setitem__(key, value)
+def reporter_from_config(config: Config) -> Any:
+    """Instanciate a reporter from a configuration object.
+
+    Args:
+        config (Config): Configuration object.
+    """
+    config_cli = config.dict_.get("cli", {})
+    return get_reporter(
+        config_cli.get("_reporter_definition", {}).get(
+            "name",
+            DEFAULT_REPORTER,
+        ),
+        config_cli.get("_reporter_definition", {}).get("kwargs", {}),
+        config_cli.get("color", None),
+        config_cli.get("rootdir", os.getcwd()),
+        only_hints=config_cli.get("only_hints", False),
+    )
 
 
 def initialize_config(config_filepath: str) -> str:

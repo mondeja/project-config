@@ -20,7 +20,7 @@ from project_config.tests.pytest_plugin.helpers import (
     create_tree,
     get_reporter_class_from_module,
 )
-from project_config.types import ActionsContext, ErrorDict, Rule
+from project_config.types import ActionsContext
 
 
 if TYPE_CHECKING:
@@ -28,7 +28,7 @@ if TYPE_CHECKING:
         FilesType,
         RootdirType,
     )
-    from project_config.types import StrictResultType
+    from project_config.types import ErrorDict, Rule, StrictResultType
 
 
 def project_config_plugin_action_asserter(

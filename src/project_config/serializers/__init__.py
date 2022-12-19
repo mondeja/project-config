@@ -12,19 +12,7 @@ from typing import TYPE_CHECKING, Any
 
 from identify import identify
 
-from project_config.compat import NotRequired, Protocol, TypeAlias, TypedDict
 from project_config.exceptions import ProjectConfigException
-
-
-class SerializerFunction(Protocol):
-    """Typecheck protocol for function resolved by serialization factory."""
-
-    def __call__(  # noqa: D102
-        self,
-        value: Any,  # noqa: U100
-        **kwargs: Any,  # noqa: U100
-    ) -> Any:
-        ...
 
 
 class SerializerError(ProjectConfigException):
@@ -32,6 +20,23 @@ class SerializerError(ProjectConfigException):
 
 
 if TYPE_CHECKING:
+    from project_config.compat import (
+        NotRequired,
+        Protocol,
+        TypeAlias,
+        TypedDict,
+    )
+
+    class SerializerFunction(Protocol):
+        """Typecheck protocol for function resolved by serialization factory."""
+
+        def __call__(  # noqa: D102
+            self,
+            value: Any,  # noqa: U100
+            **kwargs: Any,  # noqa: U100
+        ) -> Any:
+            ...
+
     SerializerFunctionKwargs: TypeAlias = dict[str, Any]
 
     class SerializerDefinitionType(TypedDict):
@@ -45,6 +50,7 @@ if TYPE_CHECKING:
         ]
 
     SerializerDefinitionsType: TypeAlias = list[SerializerDefinitionType]
+
 
 serializers: dict[
     str,
@@ -123,6 +129,11 @@ serializers_fallback: tuple[
     [{"module": "project_config.serializers.text"}],
 )
 
+EMPTY_CONTENT_BY_SERIALIZER = {
+    "json": "{}",
+    "json5": "{}",
+}
+
 
 def _identify_serializer(filename: str) -> str:
     tag: str | None = None
@@ -133,7 +144,7 @@ def _identify_serializer(filename: str) -> str:
     return tag if tag is not None else "text"
 
 
-def _get_serializer(
+def _get_serializer_function(
     url: str,
     prefer_serializer: str | None = None,
     loader_function_name: str = "loads",
@@ -195,7 +206,7 @@ def _get_serializer(
         else:
             serializer_definition = serializer_def
             break
-    if serializer_definition is None:
+    if serializer_definition is None:  # pragma: no cover
         raise SerializerError(
             _file_can_not_be_serialized_as_object_error(
                 url,
@@ -255,10 +266,9 @@ def guess_preferred_serializer(url: str) -> tuple[str, str | None]:
         url (str): URL to guess serializer for.
 
     Returns:
-        str: Preferred serializer.
+        tuple: Filename and serializer.
     """
     try:
-        # forcing new serializer to get content
         url, serializer_name = url.rsplit("?", maxsplit=1)
     except ValueError:
         url_parts = urllib.parse.urlsplit(url)
@@ -292,7 +302,7 @@ def deserialize_for_url(
     Returns:
         str: Deserialized content.
     """
-    return _get_serializer(
+    return _get_serializer_function(
         url,
         prefer_serializer=prefer_serializer,
         loader_function_name="dumps",
@@ -318,7 +328,10 @@ def serialize_for_url(
     """
     try:
         # serialize
-        result = _get_serializer(url, prefer_serializer=prefer_serializer)(
+        result = _get_serializer_function(
+            url,
+            prefer_serializer=prefer_serializer,
+        )(
             string,
         )
     except Exception:
@@ -347,15 +360,3 @@ def serialize_for_url(
             )
         raise  # pragma: no cover
     return result
-
-
-def build_empty_file_for_serializer(serializer_name: str) -> str:
-    """Build empty file for serializer.
-
-    Args:
-        serializer_name (str): Serializer name.
-
-    Returns:
-        str: Empty file for serializer.
-    """
-    return "{}" if serializer_name == "json" else ""

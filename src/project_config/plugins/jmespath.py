@@ -12,13 +12,12 @@ from project_config import (
     Error,
     InterruptingError,
     ResultValue,
-    Rule,
     Tree,
 )
 
 
 if TYPE_CHECKING:
-    from project_config import Results
+    from project_config import Results, Rule
 
 from project_config.fetchers import FetchError
 from project_config.serializers import SerializerError

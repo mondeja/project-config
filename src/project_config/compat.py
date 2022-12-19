@@ -5,10 +5,12 @@ from __future__ import annotations
 import functools
 import shlex
 import sys
+from typing import TYPE_CHECKING
 
 
 if sys.version_info < (3, 8):
-    from typing_extensions import Literal, Protocol, TypedDict
+    if TYPE_CHECKING:
+        from typing_extensions import Literal, Protocol, TypedDict
 
     def shlex_join(cmd_list: list[str]) -> str:  # noqa: D103
         return " ".join(shlex.quote(x) for x in cmd_list)
@@ -37,17 +39,21 @@ else:
 if sys.version_info < (3, 10):
     import importlib_metadata
 
-    from typing_extensions import TypeAlias
+    if TYPE_CHECKING:
+        from typing_extensions import TypeAlias
 else:
     import importlib.metadata as importlib_metadata
     from typing import TypeAlias
 
 if sys.version_info < (3, 11):
-    from typing_extensions import NotRequired
+    from typing import NoReturn as Never
+
+    if TYPE_CHECKING:
+        from typing_extensions import NotRequired
 
     tomllib_package_name = "tomli"
 else:
-    from typing import NotRequired
+    from typing import Never, NotRequired
 
     tomllib_package_name = "tomllib"
 
@@ -58,6 +64,7 @@ __all__ = (
     "TypedDict",
     "Literal",
     "NotRequired",
+    "Never",
     "cached_function",
     "tomllib_package_name",
     "importlib_metadata",

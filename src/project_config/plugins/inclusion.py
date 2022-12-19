@@ -11,10 +11,8 @@ from project_config import (
     Error,
     InterruptingError,
     ResultValue,
-    Rule,
     Tree,
 )
-from project_config.types import ErrorDict
 from project_config.utils.jmespath import (
     JMESPathError,
     compile_JMESPath_expression_or_error,
@@ -23,7 +21,8 @@ from project_config.utils.jmespath import (
 
 
 if TYPE_CHECKING:
-    from project_config import Results
+    from project_config import Results, Rule
+    from project_config.types import ErrorDict
 
 
 def _directories_not_accepted_as_inputs_error(

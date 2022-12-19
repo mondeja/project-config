@@ -12,7 +12,7 @@ import shlex
 import sys
 import warnings
 from collections.abc import Callable
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import deepmerge
 from jmespath import Options as JMESPathOptions, compile as jmespath_compile
@@ -23,14 +23,13 @@ from jmespath.functions import (
 )
 from jmespath.parser import ParsedResult as JMESPathParsedResult, Parser
 
-from project_config.compat import (
-    Literal,
-    removeprefix,
-    removesuffix,
-    shlex_join,
-)
+from project_config.compat import removeprefix, removesuffix, shlex_join
 from project_config.exceptions import ProjectConfigException
 from project_config.tree import Tree
+
+
+if TYPE_CHECKING:
+    from project_config.compat import Literal
 
 
 class JMESPathError(ProjectConfigException):
@@ -902,21 +901,18 @@ def smart_fixer_by_expected_value(
         key = ast["value"]
         return f"set(@, '{key}' `{json.dumps(expected_value)}`)"
     elif ast["type"] == "subexpression":
-        try:
-            temporal_object = {}
+        temporal_object = {}
+        _obj = {}
+        for i, child in enumerate(reversed(ast["children"])):
+            # TODO: manage indexes in subexpressions
+            if child["type"] == "index_expression":
+                return ""
+            if i == 0:
+                _obj = {child["value"]: expected_value}
+            else:
+                _obj = {child["value"]: _obj}
+        temporal_object = _obj
 
-            _obj = {}
-            for i, child in enumerate(reversed(ast["children"])):
-                if child["type"] == "index_expression":
-                    return ""
-                if i == 0:
-                    _obj = {child["value"]: expected_value}
-                else:
-                    _obj = {child["value"]: _obj}
-        except KeyError:
-            return ""
-        else:
-            temporal_object = _obj
     elif ast["type"] == "function_expression" and ast["value"] == "type":
         if expected_value not in REVERSE_JMESPATH_TYPE_PYOBJECT:
             return ""

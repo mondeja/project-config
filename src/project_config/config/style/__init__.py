@@ -7,7 +7,6 @@ from collections.abc import Iterator
 from typing import TYPE_CHECKING, Any
 
 from project_config.cache import Cache
-from project_config.compat import NotRequired, TypeAlias, TypedDict
 from project_config.config.exceptions import ProjectConfigInvalidConfigSchema
 from project_config.fetchers import (
     FetchError,
@@ -17,22 +16,24 @@ from project_config.fetchers import (
 )
 from project_config.plugins import Plugins
 from project_config.serializers import serialize_for_url
-from project_config.types import Rule
 
 
 class ProjectConfigInvalidStyle(ProjectConfigInvalidConfigSchema):
     """Invalid style error."""
 
 
-class StyleType(TypedDict):
-    """Style type."""
-
-    rules: NotRequired[list[Rule]]
-    plugins: NotRequired[list[str]]
-    extends: NotRequired[list[str]]
-
-
 if TYPE_CHECKING:
+    from project_config.compat import NotRequired, TypeAlias, TypedDict
+    from project_config.config import ConfigType
+    from project_config.types import Rule
+
+    class StyleType(TypedDict):
+        """Style type."""
+
+        rules: NotRequired[list[Rule]]
+        plugins: NotRequired[list[str]]
+        extends: NotRequired[list[str]]
+
     PluginType: TypeAlias = type
     StyleLoaderIterator: TypeAlias = Iterator[StyleType | str]
 
@@ -53,16 +54,18 @@ class Style:
         """Loads styles to the configuration passed as argument."""
         if os.environ.get("PROJECT_CONFIG_USE_CACHE") != "false":
             if (  # pragma: no cover
-                isinstance(config["style"], str)
-                and not os.path.isfile(config["style"])
+                isinstance(config.dict_["style"], str)
+                and not os.path.isfile(config.dict_["style"])
             ) or (
-                isinstance(config["style"], list)
-                and not all([os.path.isfile(url) for url in config["style"]])
+                isinstance(config.dict_["style"], list)
+                and not all(
+                    [os.path.isfile(url) for url in config.dict_["style"]],
+                )
             ):
                 try:
                     _prefetch_urls(config)
                 except Exception:
-                    # if a exception is raised, will be raised again
+                    # if an exception is raised, will be raised again
                     # in the synchronous style loader
                     pass
 
@@ -78,7 +81,7 @@ class Style:
             else:
                 if isinstance(style_or_error, dict):
                     # final style collected
-                    style.config["style"] = style_or_error
+                    style.config.dict_["style"] = style_or_error
                 else:
                     error_messages.append(style_or_error)
         if error_messages:
@@ -92,8 +95,8 @@ class Style:
         Error messages are of type string and style is of type dict.
         If the first yielded value is a dict, we have a style without errors.
         """
-        self.config["_style"] = self.config["style"]
-        style_urls = self.config["style"]
+        self.config.dict_["_style"] = self.config.dict_["style"]
+        style_urls = self.config.dict_["style"]
         if isinstance(style_urls, str):
             try:
                 style = fetch(style_urls)
@@ -242,7 +245,7 @@ class Style:
                         style["extends"][u] = resolve_maybe_relative_url(
                             url,
                             style_url,
-                            self.config.rootdir,
+                            self.config.dict_["cli"]["rootdir"],
                         )
 
         # validate plugins data consistency
@@ -398,14 +401,14 @@ class Style:
                         )
 
 
-def _prefetch_urls(config: Any) -> None:
+def _prefetch_urls(config_dict: ConfigType) -> None:
     """Prefetch urls concurrently and store them in cache.
 
     This function is used to store urls in cache before they are used,
     so the network calls are speedup a lot.
 
     Args:
-        config: The config object.
+        config_dict: The config_dict object.
     """
     from concurrent.futures import as_completed
 
@@ -413,7 +416,7 @@ def _prefetch_urls(config: Any) -> None:
 
     session = FuturesSession()
 
-    style_urls_ = config["style"]
+    style_urls_ = config_dict["style"]
     if isinstance(style_urls_, str):
         style_urls_ = [style_urls_]
 
@@ -426,7 +429,7 @@ def _prefetch_urls(config: Any) -> None:
             resolved_extend_url = resolve_maybe_relative_url(
                 extend_url,
                 parent_style_url,
-                config.rootdir,
+                config_dict["cli"]["rootdir"],
             )
             url, _ = resolve_url(resolved_extend_url)
             if Cache.get(url) is not None:
@@ -444,7 +447,7 @@ def _prefetch_urls(config: Any) -> None:
             if isinstance(style_obj.get("extends"), list):
                 prefetch_partial_style(urls[resp.url], style_obj["extends"])
 
-    def prefetch_style(style_urls: list[str]) -> None:
+    def prefetch_style(style_urls: StyleType) -> None:
         urls = {}
         for style_url in style_urls:
             url, scheme = resolve_url(style_url)
