@@ -21,7 +21,7 @@ class BaseCache:  # noqa: D101
         raise NotImplementedError("Cache is a not instanceable interface.")
 
     @staticmethod
-    def clean() -> None:
+    def clean() -> None:  # pragma: no cover
         """Remove the cache directory."""
         with contextlib.suppress(FileNotFoundError):
             shutil.rmtree(CACHE_DIR)
@@ -35,18 +35,22 @@ if os.environ.get("PROJECT_CONFIG_USE_CACHE") == "false":
             cls,
             *args: Any,  # noqa: U100
             **kwargs: Any,  # noqa: U100
-        ) -> None:
+        ) -> None:  # pragma: no cover
             pass
 
         @classmethod
-        def get(cls, *args: Any, **kwargs: Any) -> None:  # noqa: D102, U100
+        def get(  # noqa: D102
+            cls,
+            *args: Any,  # noqa: U100
+            **kwargs: Any,  # noqa: U100
+        ) -> None:  # pragma: no cover
             pass
 
         @classmethod
-        def set_expiration_time(  # noqa: D102
+        def set_expiration_time(  # noqa: D102 pragma: no cover
             cls,
             expiration_time: float | int | None = None,  # noqa: U100
-        ) -> None:
+        ) -> None:  # pragma: no cover
             pass
 
 else:
