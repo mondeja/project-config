@@ -12,19 +12,7 @@ from typing import TYPE_CHECKING, Any
 
 from identify import identify
 
-from project_config.compat import Protocol, TypedDict
 from project_config.exceptions import ProjectConfigException
-
-
-class SerializerFunction(Protocol):
-    """Typecheck protocol for function resolved by serialization factory."""
-
-    def __call__(  # noqa: D102
-        self,
-        value: Any,  # noqa: U100
-        **kwargs: Any,  # noqa: U100
-    ) -> Any:
-        ...
 
 
 class SerializerError(ProjectConfigException):
@@ -32,7 +20,22 @@ class SerializerError(ProjectConfigException):
 
 
 if TYPE_CHECKING:
-    from project_config.compat import NotRequired, TypeAlias
+    from project_config.compat import (
+        NotRequired,
+        Protocol,
+        TypeAlias,
+        TypedDict,
+    )
+
+    class SerializerFunction(Protocol):
+        """Typecheck protocol for function resolved by serialization factory."""
+
+        def __call__(  # noqa: D102
+            self,
+            value: Any,  # noqa: U100
+            **kwargs: Any,  # noqa: U100
+        ) -> Any:
+            ...
 
     SerializerFunctionKwargs: TypeAlias = dict[str, Any]
 
@@ -47,6 +50,7 @@ if TYPE_CHECKING:
         ]
 
     SerializerDefinitionsType: TypeAlias = list[SerializerDefinitionType]
+
 
 serializers: dict[
     str,

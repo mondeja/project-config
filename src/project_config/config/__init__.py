@@ -9,7 +9,7 @@ import re
 from typing import TYPE_CHECKING, Any
 
 from project_config.cache import Cache
-from project_config.compat import TypedDict, tomllib_package_name
+from project_config.compat import tomllib_package_name
 from project_config.config.exceptions import (
     ConfigurationFilesNotFound,
     CustomConfigFileNotFound,
@@ -32,7 +32,7 @@ CONFIG_CACHE_REGEX = (
 )
 
 if TYPE_CHECKING:
-    from project_config.compat import NotRequired
+    from project_config.compat import NotRequired, TypedDict
     from project_config.config.style import StyleType
 
     class CLIConfigType(TypedDict):  # noqa: D101

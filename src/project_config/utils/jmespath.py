@@ -12,7 +12,7 @@ import shlex
 import sys
 import warnings
 from collections.abc import Callable
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import deepmerge
 from jmespath import Options as JMESPathOptions, compile as jmespath_compile
@@ -23,14 +23,13 @@ from jmespath.functions import (
 )
 from jmespath.parser import ParsedResult as JMESPathParsedResult, Parser
 
-from project_config.compat import (
-    Literal,
-    removeprefix,
-    removesuffix,
-    shlex_join,
-)
+from project_config.compat import removeprefix, removesuffix, shlex_join
 from project_config.exceptions import ProjectConfigException
 from project_config.tree import Tree
+
+
+if TYPE_CHECKING:
+    from project_config.compat import Literal
 
 
 class JMESPathError(ProjectConfigException):
