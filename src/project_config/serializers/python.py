@@ -33,7 +33,7 @@ def loads(
     exec(compile(string, "utf-8", "exec"), namespace)  # noqa: DUO105,DUO110
     try:
         del namespace["__builtins__"]  # we don't care about builtins
-    except KeyError:
+    except KeyError:  # pragma: no cover
         pass
     return namespace
 

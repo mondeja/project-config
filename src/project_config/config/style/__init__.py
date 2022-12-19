@@ -24,6 +24,7 @@ class ProjectConfigInvalidStyle(ProjectConfigInvalidConfigSchema):
 
 if TYPE_CHECKING:
     from project_config.compat import NotRequired, TypeAlias, TypedDict
+    from project_config.config import ConfigType
     from project_config.types import Rule
 
     class StyleType(TypedDict):
@@ -400,14 +401,14 @@ class Style:
                         )
 
 
-def _prefetch_urls(config: Any) -> None:
+def _prefetch_urls(config_dict: ConfigType) -> None:
     """Prefetch urls concurrently and store them in cache.
 
     This function is used to store urls in cache before they are used,
     so the network calls are speedup a lot.
 
     Args:
-        config: The config object.
+        config_dict: The config_dict object.
     """
     from concurrent.futures import as_completed
 
@@ -415,7 +416,7 @@ def _prefetch_urls(config: Any) -> None:
 
     session = FuturesSession()
 
-    style_urls_ = config["style"]
+    style_urls_ = config_dict["style"]
     if isinstance(style_urls_, str):
         style_urls_ = [style_urls_]
 
@@ -428,7 +429,7 @@ def _prefetch_urls(config: Any) -> None:
             resolved_extend_url = resolve_maybe_relative_url(
                 extend_url,
                 parent_style_url,
-                config["cli"]["rootdir"],
+                config_dict["cli"]["rootdir"],
             )
             url, _ = resolve_url(resolved_extend_url)
             if Cache.get(url) is not None:
@@ -446,7 +447,7 @@ def _prefetch_urls(config: Any) -> None:
             if isinstance(style_obj.get("extends"), list):
                 prefetch_partial_style(urls[resp.url], style_obj["extends"])
 
-    def prefetch_style(style_urls: list[str]) -> None:
+    def prefetch_style(style_urls: StyleType) -> None:
         urls = {}
         for style_url in style_urls:
             url, scheme = resolve_url(style_url)

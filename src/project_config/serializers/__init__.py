@@ -206,7 +206,7 @@ def _get_serializer_function(
         else:
             serializer_definition = serializer_def
             break
-    if serializer_definition is None:
+    if serializer_definition is None:  # pragma: no cover
         raise SerializerError(
             _file_can_not_be_serialized_as_object_error(
                 url,
