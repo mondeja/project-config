@@ -23,6 +23,7 @@ class Rule(TypedDict, total=False):
     """Style rule."""
 
     files: list[str]
+    hint: NotRequired[str]
 
 
 if TYPE_CHECKING:

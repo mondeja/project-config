@@ -54,7 +54,16 @@ else:
     # TODO: Remove this workaround once the PR is merged and released.
     import importlib.util
 
-    _diskcache_core_spec = importlib.util.find_spec("diskcache.core")
+    _diskcache_init_path = importlib.util.find_spec(
+        "diskcache",
+    ).origin  # type: ignore
+    _diskcache_core_spec = importlib.util.spec_from_file_location(
+        "diskcache.core",
+        os.path.join(
+            os.path.dirname(_diskcache_init_path),  # type: ignore
+            "core.py",
+        ),
+    )
     _diskcache_core = importlib.util.module_from_spec(
         _diskcache_core_spec,  # type: ignore
     )

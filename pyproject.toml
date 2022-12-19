@@ -39,7 +39,6 @@ dependencies = [
   "ruamel.yaml~=0.17",
   "appdirs~=1.0",
   "diskcache~=5.0",
-  "typing-extensions~=4.3",
   "requests",
   "requests-futures~=1.0",
   "deepmerge~=1.0",

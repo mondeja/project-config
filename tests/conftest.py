@@ -26,9 +26,6 @@ from testing_helpers import (  # noqa: E402
 )
 
 
-# disable project-config cache
-os.environ["PROJECT_CONFIG_USE_CACHE"] = "false"
-
 # get default argparse namespace for CLI
 DEFAULT_ARGPARSE_NAMESPACE = parse_args(["check"])
 

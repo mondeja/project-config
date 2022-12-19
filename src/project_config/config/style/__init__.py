@@ -54,7 +54,7 @@ class Style:
         if os.environ.get("PROJECT_CONFIG_USE_CACHE") != "false":
             if (  # pragma: no cover
                 isinstance(config.dict_["style"], str)
-                and not os.path.isfile(config["style"])
+                and not os.path.isfile(config.dict_["style"])
             ) or (
                 isinstance(config.dict_["style"], list)
                 and not all(
@@ -64,7 +64,7 @@ class Style:
                 try:
                     _prefetch_urls(config)
                 except Exception:
-                    # if a exception is raised, will be raised again
+                    # if an exception is raised, will be raised again
                     # in the synchronous style loader
                     pass
 

@@ -42,7 +42,7 @@ class ProjectConfigChecker:
         self.config = config
         self.reporter = reporter_from_config(config)
         self.config.load_style()
-        self.tree = Tree(self.config.dict_["cli"]["rootdir"])  # type: ignore
+        self.tree = Tree(self.config.dict_["cli"]["rootdir"])
         self.actions_context = ActionsContext(fix=fix_mode)
         self.fix = fix_mode
 
@@ -94,7 +94,7 @@ class ProjectConfigChecker:
 
         for fpath, reason_or_index in files.items():
             normalized_fpath = os.path.join(
-                self.config.dict_["cli"]["rootdir"],  # type: ignore
+                self.config.dict_["cli"]["rootdir"],
                 fpath,
             )
 
@@ -177,7 +177,7 @@ class ProjectConfigChecker:
 
     def _run_check(self) -> None:
         for r, rule in enumerate(
-            self.config.dict_["style"]["rules"],  # type: ignore
+            self.config.dict_["style"]["rules"],
         ):
             hint = rule.pop("hint", None)
             files = rule.pop("files")
@@ -241,7 +241,7 @@ class ProjectConfigChecker:
                     raise InterruptCheck()
                     # TODO: show 'INTERRUPTED' in report
                 for breakage_type, breakage_value in action_function(
-                    rule[verb],
+                    rule[verb],  # type: ignore
                     self.tree,
                     rule,
                     self.actions_context,

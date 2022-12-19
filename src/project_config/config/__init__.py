@@ -6,10 +6,10 @@ import argparse
 import importlib
 import os
 import re
-from typing import TYPE_CHECKING, Any, no_type_check
+from typing import TYPE_CHECKING, Any
 
 from project_config.cache import Cache
-from project_config.compat import TypeAlias, tomllib_package_name
+from project_config.compat import NotRequired, TypedDict, tomllib_package_name
 from project_config.config.exceptions import (
     ConfigurationFilesNotFound,
     CustomConfigFileNotFound,
@@ -18,14 +18,13 @@ from project_config.config.exceptions import (
     ProjectConfigInvalidConfigSchema,
     PyprojectTomlFoundButHasNoConfig,
 )
-from project_config.config.style import Style
+from project_config.config.style import Style, StyleType
 from project_config.fetchers import fetch
 from project_config.reporters import (
     DEFAULT_REPORTER,
     POSSIBLE_REPORTER_IDS,
     get_reporter,
 )
-from project_config.reporters.base import BaseReporter
 
 
 CONFIG_CACHE_REGEX = (
@@ -33,7 +32,26 @@ CONFIG_CACHE_REGEX = (
 )
 
 if TYPE_CHECKING:
-    ConfigType: TypeAlias = dict[str, str | list[str]]
+
+    class CLIConfigType(TypedDict):  # noqa: D101
+        rootdir: str
+        reporter: str
+        color: bool
+        colors: dict[str, str]
+        only_hints: bool
+        _reporter_definition: dict[str, Any]
+
+    class BaseConfigType(TypedDict):  # noqa: D101
+        style: NotRequired[StyleType]
+        cli: CLIConfigType
+
+    class RawConfigType(BaseConfigType):  # noqa: D101
+        cache: int
+
+    class ConfigType(BaseConfigType):  # noqa: D101
+        """Type of the configuration."""
+
+        cache: str
 
 
 def read_config_from_pyproject_toml(filepath: str) -> Any:
@@ -264,13 +282,13 @@ class FileConfig:
         if store_raw_config:
             import copy
 
-            self.raw_ = copy.deepcopy(config)
+            self.raw_: RawConfigType = copy.deepcopy(config)
 
         validate_config(self.path, config)
         config["cache"] = _cache_string_to_seconds(config["cache"])
 
         # cli configuration in file
-        config["cli"] = validate_cli_config(self.path, config.pop("cli", {}))
+        config["cli"] = validate_cli_config(self.path, config.get("cli", {}))
 
         # set the cache expiration time globally
         Cache.set_expiration_time(config["cache"])
@@ -289,8 +307,6 @@ class Config(FileConfig):
     load a configuration object from CLI arguments.
     """
 
-    # TODO: strict type checking for validated configuration
-    @no_type_check
     def __init__(self, args: argparse.Namespace, **kwargs: Any) -> None:
         """Guess the final configuration merging file with CLI arguments."""
         super().__init__(args.rootdir or os.getcwd(), args.config, **kwargs)
@@ -350,17 +366,18 @@ class Config(FileConfig):
         )
 
 
-# TODO: strict type checking for validated configuration
-@no_type_check
-def reporter_from_config(config: Config) -> BaseReporter:
+def reporter_from_config(config: Config) -> Any:
     """Instanciate a reporter from a configuration object.
 
     Args:
         config (Config): Configuration object.
     """
-    config_cli: dict[str, Any] = config.dict_.get("cli", {})
+    config_cli = config.dict_.get("cli", {})
     return get_reporter(
-        config_cli.get("reporter", {}).get("name", DEFAULT_REPORTER),
+        config_cli.get("_reporter_definition", {}).get(
+            "name",
+            DEFAULT_REPORTER,
+        ),
         config_cli.get("_reporter_definition", {}).get("kwargs", {}),
         config_cli.get("color", None),
         config_cli.get("rootdir", os.getcwd()),
