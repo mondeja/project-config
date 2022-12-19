@@ -9,15 +9,16 @@ from typing import TYPE_CHECKING, Any
 
 import colored
 
-from project_config.compat import TypeAlias
 from project_config.exceptions import (
     ProjectConfigCheckFailed,
     ProjectConfigException,
 )
-from project_config.types import ErrorDict
 
 
 if TYPE_CHECKING:
+    from project_config.compat import TypeAlias
+    from project_config.types import ErrorDict
+
     FilesErrors: TypeAlias = dict[str, list[ErrorDict]]
     FormatterDefinitionType: TypeAlias = Callable[[str], str]
 

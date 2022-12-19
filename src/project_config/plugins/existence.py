@@ -5,17 +5,11 @@ from __future__ import annotations
 import os
 from typing import TYPE_CHECKING
 
-from project_config import (
-    ActionsContext,
-    InterruptingError,
-    ResultValue,
-    Rule,
-    Tree,
-)
+from project_config import ActionsContext, InterruptingError, ResultValue, Tree
 
 
 if TYPE_CHECKING:
-    from project_config import Results
+    from project_config import Results, Rule
 
 
 class ExistencePlugin:

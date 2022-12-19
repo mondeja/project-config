@@ -12,7 +12,7 @@ from typing import TYPE_CHECKING, Any
 
 from identify import identify
 
-from project_config.compat import NotRequired, Protocol, TypeAlias, TypedDict
+from project_config.compat import Protocol, TypedDict
 from project_config.exceptions import ProjectConfigException
 
 
@@ -32,6 +32,8 @@ class SerializerError(ProjectConfigException):
 
 
 if TYPE_CHECKING:
+    from project_config.compat import NotRequired, TypeAlias
+
     SerializerFunctionKwargs: TypeAlias = dict[str, Any]
 
     class SerializerDefinitionType(TypedDict):

@@ -12,16 +12,17 @@ import re
 from collections.abc import Callable, Iterator
 from typing import TYPE_CHECKING, Any
 
-from project_config.compat import TypeAlias, importlib_metadata
+from project_config.compat import importlib_metadata
 from project_config.exceptions import ProjectConfigException
 from project_config.tree import Tree
-from project_config.types import ActionsContext, Rule
+from project_config.types import ActionsContext
 
 
 PROJECT_CONFIG_PLUGINS_ENTRYPOINTS_GROUP = "project_config.plugins"
 
 if TYPE_CHECKING:
-    from project_config.types import Results
+    from project_config.compat import TypeAlias
+    from project_config.types import Results, Rule
 
     PluginMethod: TypeAlias = Callable[
         [Any, Tree, Rule, ActionsContext | None],

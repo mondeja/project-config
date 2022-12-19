@@ -7,7 +7,7 @@ from collections.abc import Iterator
 from typing import TYPE_CHECKING, Any
 
 from project_config.cache import Cache
-from project_config.compat import NotRequired, TypeAlias, TypedDict
+from project_config.compat import TypedDict
 from project_config.config.exceptions import ProjectConfigInvalidConfigSchema
 from project_config.fetchers import (
     FetchError,
@@ -17,22 +17,23 @@ from project_config.fetchers import (
 )
 from project_config.plugins import Plugins
 from project_config.serializers import serialize_for_url
-from project_config.types import Rule
 
 
 class ProjectConfigInvalidStyle(ProjectConfigInvalidConfigSchema):
     """Invalid style error."""
 
 
-class StyleType(TypedDict):
-    """Style type."""
-
-    rules: NotRequired[list[Rule]]
-    plugins: NotRequired[list[str]]
-    extends: NotRequired[list[str]]
-
-
 if TYPE_CHECKING:
+    from project_config.compat import NotRequired, TypeAlias
+    from project_config.types import Rule
+
+    class StyleType(TypedDict):
+        """Style type."""
+
+        rules: NotRequired[list[Rule]]
+        plugins: NotRequired[list[str]]
+        extends: NotRequired[list[str]]
+
     PluginType: TypeAlias = type
     StyleLoaderIterator: TypeAlias = Iterator[StyleType | str]
 

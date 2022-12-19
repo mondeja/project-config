@@ -5,7 +5,7 @@ from __future__ import annotations
 import argparse
 import os
 import shutil
-from typing import Any, cast
+from typing import TYPE_CHECKING, Any
 
 from project_config.config import Config, reporter_from_config
 from project_config.constants import Error, InterruptingError, ResultValue
@@ -15,7 +15,11 @@ from project_config.serializers import (
     guess_preferred_serializer,
 )
 from project_config.tree import Tree
-from project_config.types import ActionsContext, ErrorDict, Rule
+from project_config.types import ActionsContext
+
+
+if TYPE_CHECKING:
+    from project_config.types import Rule
 
 
 class InterruptCheck(Exception):
@@ -240,32 +244,38 @@ class ProjectConfigChecker:
                     )
                     raise InterruptCheck()
                     # TODO: show 'INTERRUPTED' in report
-                for breakage_type, breakage_value in action_function(
+                for (breakage_type, breakage_value) in action_function(
                     rule[verb],  # type: ignore
                     self.tree,
                     rule,
                     self.actions_context,
                 ):
                     if breakage_type == Error:
-                        breakage_value = cast(ErrorDict, breakage_value)
                         # prepend rule index to definition, so plugins do not
                         # need to specify them
-                        breakage_value["definition"] = (
-                            f"rules[{r}]" + breakage_value["definition"]
+                        #
+                        # TODO: Currently the cast to ErrorDict is not available
+                        # at runtime without installing typing_extensions,
+                        # so we need to ignore the type here.
+                        breakage_value[
+                            "definition"
+                        ] = f"rules[{r}]" + (  # type: ignore
+                            breakage_value["definition"]  # type: ignore
                         )
 
                         if not self.fix:
-                            breakage_value["fixed"] = False
+                            breakage_value["fixed"] = False  # type: ignore
 
                         # show hint if defined in the rule
                         if hint:
-                            breakage_value["hint"] = hint
+                            breakage_value["hint"] = hint  # type: ignore
                         self.reporter.report_error(breakage_value)
 
                     elif breakage_type == InterruptingError:
-                        breakage_value = cast(ErrorDict, breakage_value)
-                        breakage_value["definition"] = (
-                            f"rules[{r}]" + breakage_value["definition"]
+                        breakage_value[
+                            "definition"
+                        ] = f"rules[{r}]" + (  # type: ignore
+                            breakage_value["definition"]  # type: ignore
                         )
                         self.reporter.report_error(breakage_value)
                         raise InterruptCheck()

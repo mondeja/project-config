@@ -9,11 +9,12 @@ from typing import TYPE_CHECKING, cast
 
 import pytest
 
-from project_config.compat import TypeAlias
 from project_config.tree import Tree
 
 
 if TYPE_CHECKING:
+    from project_config.compat import TypeAlias
+
     FileType: TypeAlias = str | bool | None
     FilesType: TypeAlias = list[tuple[str, FileType]] | dict[str, FileType]
     RootdirType: TypeAlias = str | pathlib.Path

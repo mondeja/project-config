@@ -9,7 +9,7 @@ import re
 from typing import TYPE_CHECKING, Any
 
 from project_config.cache import Cache
-from project_config.compat import NotRequired, TypedDict, tomllib_package_name
+from project_config.compat import TypedDict, tomllib_package_name
 from project_config.config.exceptions import (
     ConfigurationFilesNotFound,
     CustomConfigFileNotFound,
@@ -18,7 +18,7 @@ from project_config.config.exceptions import (
     ProjectConfigInvalidConfigSchema,
     PyprojectTomlFoundButHasNoConfig,
 )
-from project_config.config.style import Style, StyleType
+from project_config.config.style import Style
 from project_config.fetchers import fetch
 from project_config.reporters import (
     DEFAULT_REPORTER,
@@ -32,6 +32,8 @@ CONFIG_CACHE_REGEX = (
 )
 
 if TYPE_CHECKING:
+    from project_config.compat import NotRequired
+    from project_config.config.style import StyleType
 
     class CLIConfigType(TypedDict):  # noqa: D101
         rootdir: str

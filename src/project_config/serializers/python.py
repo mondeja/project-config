@@ -5,10 +5,10 @@ from __future__ import annotations
 import re
 from typing import TYPE_CHECKING, Any, cast
 
-from project_config.compat import TypeAlias
-
 
 if TYPE_CHECKING:
+    from project_config.compat import TypeAlias
+
     Namespace: TypeAlias = dict[str, Any]
 
 DEFAULT_NAMESPACE: Namespace = {}
