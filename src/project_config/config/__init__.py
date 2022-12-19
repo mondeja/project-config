@@ -157,8 +157,6 @@ def validate_config_cache(config: Any) -> list[str]:
             error_messages.append(
                 f"cache -> must match the regex {CONFIG_CACHE_REGEX}",
             )
-        else:
-            config["cache"] = config["cache"]
     else:
         # 5 minutes as default cache
         config["cache"] = "5 minutes"
