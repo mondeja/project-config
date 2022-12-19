@@ -78,7 +78,7 @@ class Style:
             else:
                 if isinstance(style_or_error, dict):
                     # final style collected
-                    style.config["style"] = style_or_error
+                    style.config.dict_["style"] = style_or_error
                 else:
                     error_messages.append(style_or_error)
         if error_messages:
@@ -92,8 +92,8 @@ class Style:
         Error messages are of type string and style is of type dict.
         If the first yielded value is a dict, we have a style without errors.
         """
-        self.config["_style"] = self.config["style"]
-        style_urls = self.config["style"]
+        self.config.dict_["_style"] = self.config.dict_["style"]
+        style_urls = self.config.dict_["style"]
         if isinstance(style_urls, str):
             try:
                 style = fetch(style_urls)
@@ -242,7 +242,7 @@ class Style:
                         style["extends"][u] = resolve_maybe_relative_url(
                             url,
                             style_url,
-                            self.config.rootdir,
+                            self.config.dict_["cli"]["rootdir"],
                         )
 
         # validate plugins data consistency
@@ -426,7 +426,7 @@ def _prefetch_urls(config: Any) -> None:
             resolved_extend_url = resolve_maybe_relative_url(
                 extend_url,
                 parent_style_url,
-                config.rootdir,
+                config["cli"]["rootdir"],
             )
             url, _ = resolve_url(resolved_extend_url)
             if Cache.get(url) is not None:

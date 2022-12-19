@@ -43,11 +43,13 @@ else:
     from typing import TypeAlias
 
 if sys.version_info < (3, 11):
+    from typing import NoReturn as Never
+
     from typing_extensions import NotRequired
 
     tomllib_package_name = "tomli"
 else:
-    from typing import NotRequired
+    from typing import Never, NotRequired
 
     tomllib_package_name = "tomllib"
 
@@ -58,6 +60,7 @@ __all__ = (
     "TypedDict",
     "Literal",
     "NotRequired",
+    "Never",
     "cached_function",
     "tomllib_package_name",
     "importlib_metadata",

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import importlib
 import os
 import sys
 from collections.abc import Sequence
@@ -12,7 +13,6 @@ from typing import Any
 from importlib_metadata_argparse_version import ImportlibMetadataVersionAction
 
 from project_config.exceptions import ProjectConfigException
-from project_config.project import Project
 from project_config.reporters import POSSIBLE_REPORTER_IDS, parse_reporter_id
 
 
@@ -258,16 +258,10 @@ def run(argv: list[str]) -> int:  # noqa: D103
     args = parse_args(argv)
 
     try:
-        project = Project(
-            args.config,
-            args.rootdir,
-            args.reporter,
-            args.color,
-            fix=args.command == "fix",
-            only_hints=args.only_hints,
+        command_module = importlib.import_module(
+            f"project_config.commands.{args.command}",
         )
-        method_name = "check" if args.command == "fix" else args.command
-        getattr(project, method_name)(args)
+        getattr(command_module, args.command)(args)
     except ProjectConfigException as exc:
         return _controlled_error(args.traceback, exc, exc.message)
     except FileNotFoundError as exc:  # pragma: no cover

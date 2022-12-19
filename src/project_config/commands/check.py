@@ -1,20 +1,15 @@
-"""High level logic for checking a project."""
+"""project-config check command."""
 
 from __future__ import annotations
 
 import argparse
-import json
 import os
 import shutil
-import sys
-from dataclasses import dataclass
 from typing import Any, cast
 
-from project_config.config import Config
+from project_config.config import Config, reporter_from_config
 from project_config.constants import Error, InterruptingError, ResultValue
-from project_config.fetchers import fetch
-from project_config.plugins import InvalidPluginFunction, Plugins
-from project_config.reporters import get_reporter
+from project_config.plugins import InvalidPluginFunction
 from project_config.serializers import (
     EMPTY_CONTENT_BY_SERIALIZER,
     guess_preferred_serializer,
@@ -34,72 +29,22 @@ class ConditionalsFalseResult(InterruptCheck):
     """A conditional must skip a rule."""
 
 
-@dataclass
-class Project:
-    """Wrapper for a single project.
-
-    This class encapsulates all the high level logic to execute all
-    CLI commands against a project.
-
-    Its public method expose the commands that can be executed through
-    the CLI.
+class ProjectConfigChecker:
+    """Project configuration checker.
 
     Args:
-        config_path (str): Custom configuration file path.
-        rootdir (str): Root directory of the project.
-        reporter_ (dict): Reporter to use.
-        color (bool): Colorized output in reporters.
-        fix (bool): Fix errors.
+        config (:py:class:`project_config.config.Config`):
+            Configuration to use.
+        fix_mode (bool): Whether to fix the errors or not.
     """
 
-    config_path: str
-    rootdir: str
-    reporter_: dict[str, Any]
-    color: bool
-    _actions_context: ActionsContext | None = None
-    fix: bool = False
-    only_hints: bool = False
-
-    def _load(
-        self,
-        fetch_styles: bool = True,
-        init_tree: bool = True,
-    ) -> None:
-        self.config = Config(
-            self.rootdir,
-            self.config_path,
-        )
-
-        (
-            self.color,
-            self.reporter_,
-            self.rootdir,
-            config_only_hints,
-        ) = self.config.guess_from_cli_arguments(
-            self.color,
-            self.reporter_,
-            self.rootdir,
-        )
-        # TODO: Configure fix from config file
-
-        if fetch_styles:
-            self.config.load_style()
-
-        if init_tree:
-            self.tree = Tree(self.rootdir)
-
-        self.reporter = get_reporter(
-            self.reporter_["name"],
-            self.reporter_["kwargs"],
-            self.color,
-            self.rootdir,
-            only_hints=self.only_hints or config_only_hints,
-        )
-
-        # set rootdir as an internal environment variable to be used by plugins
-        os.environ["PROJECT_CONFIG_ROOTDIR"] = self.rootdir
-
-        self._actions_context = ActionsContext(fix=self.fix)
+    def __init__(self, config: Config, fix_mode: bool = False):
+        self.config = config
+        self.reporter = reporter_from_config(config)
+        self.config.load_style()
+        self.tree = Tree(self.config.dict_["cli"]["rootdir"])  # type: ignore
+        self.actions_context = ActionsContext(fix=fix_mode)
+        self.fix = fix_mode
 
     def _check_files_existence(
         self,
@@ -112,7 +57,6 @@ class Project:
                 if self.fix:
                     if ftype == "directory":
                         os.makedirs(fpath, exist_ok=True)
-
                     else:
                         _, serializer_name = guess_preferred_serializer(fpath)
                         new_content = (
@@ -138,68 +82,58 @@ class Project:
 
     def _check_files_absence(
         self,
-        files: list[str] | dict[str, str],
+        files: list[str] | dict[str, str | int],
         rule_index: int,
     ) -> None:
         fixed_files = []
-        if isinstance(files, dict):
-            for fpath, reason in files.items():
-                normalized_fpath = os.path.join(self.rootdir, fpath)
-                ftype = "directory" if fpath.endswith(("/", os.sep)) else "file"
-                exists = (
-                    os.path.isdir(normalized_fpath)
-                    if ftype == "directory"
-                    else os.path.isfile(normalized_fpath)
-                )
-                if exists:
-                    if self.fix:
-                        if ftype == "directory":
-                            shutil.rmtree(normalized_fpath)
-                        else:
-                            os.remove(normalized_fpath)
-                        fixed_files.append(fpath)
-
-                    message = f"Expected absent {ftype} exists"
-                    if reason:
-                        message += f". {reason}"
-                    self.reporter.report_error(
-                        {
-                            "message": message,
-                            "file": f"{fpath}/"
-                            if ftype == "directory"
-                            else fpath,
-                            "definition": (
-                                f"rules[{rule_index}].files.not[{fpath}]"
-                            ),
-                            "fixed": self.fix,
-                            "fixable": True,
-                        },
-                    )
+        if isinstance(files, list):
+            # i used for file index in the rule
+            files = {fn: i for i, fn in enumerate(files)}
         else:
-            for f, fpath in enumerate(files):
-                normalized_fpath = os.path.join(self.rootdir, fpath)
-                ftype = "directory" if fpath.endswith(("/", os.sep)) else "file"
-                exists = (
-                    os.path.isdir(normalized_fpath)
-                    if ftype == "directory"
-                    else os.path.isfile(normalized_fpath)
+            files = files
+
+        for fpath, reason_or_index in files.items():
+            normalized_fpath = os.path.join(
+                self.config.dict_["cli"]["rootdir"],  # type: ignore
+                fpath,
+            )
+
+            isdir = False
+            if fpath.endswith("/"):
+                isdir = True
+                exists = os.path.isdir(normalized_fpath)
+            else:
+                exists = os.path.isfile(normalized_fpath)
+
+            if exists:
+                if self.fix:
+                    if isdir:
+                        shutil.rmtree(normalized_fpath)
+                    else:
+                        os.remove(normalized_fpath)
+                    fixed_files.append(fpath)
+
+                message = (
+                    f"Expected absent {'directory' if isdir else 'file'} exists"
                 )
-                if exists:
-                    if self.fix:
-                        if ftype == "directory":
-                            shutil.rmtree(normalized_fpath)
-                        else:
-                            os.remove(normalized_fpath)
-                        fixed_files.append(fpath)
-                    self.reporter.report_error(
-                        {
-                            "message": f"Expected absent {ftype} exists",
-                            "file": fpath,
-                            "definition": f"rules[{rule_index}].files.not[{f}]",
-                            "fixed": self.fix,
-                            "fixable": True,
-                        },
-                    )
+                if isinstance(reason_or_index, str):
+                    message += f". {reason_or_index}"
+                file_index = (
+                    fpath
+                    if isinstance(reason_or_index, str)
+                    else reason_or_index
+                )
+                self.reporter.report_error(
+                    {
+                        "message": message,
+                        "file": fpath,
+                        "definition": (
+                            f"rules[{rule_index}].files.not[{file_index}]"
+                        ),
+                        "fixed": self.fix,
+                        "fixable": True,
+                    },
+                )
 
         if fixed_files:
             self.tree.cache_files(fixed_files)
@@ -220,7 +154,7 @@ class Project:
                 rule[conditional],  # type: ignore
                 tree,
                 rule,
-                self._actions_context,
+                self.actions_context,
             ):
                 if breakage_type in (InterruptingError, Error):
                     breakage_value["definition"] = (
@@ -242,7 +176,9 @@ class Project:
             raise InterruptCheck()
 
     def _run_check(self) -> None:
-        for r, rule in enumerate(self.config["style"]["rules"]):
+        for r, rule in enumerate(
+            self.config.dict_["style"]["rules"],  # type: ignore
+        ):
             hint = rule.pop("hint", None)
             files = rule.pop("files")
 
@@ -308,7 +244,7 @@ class Project:
                     rule[verb],
                     self.tree,
                     rule,
-                    self._actions_context,
+                    self.actions_context,
                 ):
                     if breakage_type == Error:
                         breakage_value = cast(ErrorDict, breakage_value)
@@ -340,12 +276,8 @@ class Project:
                             " implemented for verbal checking",
                         )
 
-    def check(self, args: argparse.Namespace) -> None:  # noqa: U100
-        """Checks that the styles configured for a project match.
-
-        Raises an error if report errors.
-        """
-        self._load()
+    def run(self) -> None:
+        """Run the checker."""
         try:
             self._run_check()
         except InterruptCheck:
@@ -353,61 +285,12 @@ class Project:
         finally:
             self.reporter.raise_errors()
 
-    def show(self, args: argparse.Namespace) -> None:
-        """Show configuration or fetched style for a project.
 
-        It will depend in the ``args.data`` property.
-        """
-        if args.data == "file":
-            fmt = args.reporter.get("kwargs", {}).get("fmt", {})
-            indent = (
-                None if "pretty" not in fmt else (2 if fmt == "pretty" else 4)
-            )
-            data = fetch(args.file)
-            report = json.dumps(data, indent=indent)
-        elif args.data == "cache":
-            from project_config.cache import (  # type: ignore
-                CACHE_DIR as report,
-            )
-        else:
-            if args.data == "config":
-                self._load(fetch_styles=False, init_tree=False)
-                data = self.config.dict_
-                data.pop("cache")
-                data["cache"] = data.pop("_cache")
-            elif args.data == "plugins":
-                self._load(fetch_styles=False, init_tree=False)
-                data = Plugins(prepare_all=True).plugin_action_names
-            else:  # style
-                self._load(init_tree=False)
-                data = self.config.dict_.pop("style")
+def check(args: argparse.Namespace) -> None:  # noqa: U100
+    """Checks that the styles configured for a project match.
 
-            report = self.reporter.generate_data_report(args.data, data)
-
-        sys.stdout.write(f"{report}\n")
-
-    def clean(self, args: argparse.Namespace) -> None:  # noqa: U100
-        """Cleaning command."""
-        from project_config.cache import Cache
-
-        Cache.clean()
-        sys.stdout.write("Cache removed successfully!\n")
-
-    def init(self, args: argparse.Namespace) -> None:
-        """Initialize the configuration for a project."""
-        from project_config.config import initialize_config
-
-        cwd = os.getcwd()
-        rootdir = (
-            cwd if getattr(args, "rootdir", None) is None else args.rootdir
-        )
-        config_path = initialize_config(
-            os.path.join(
-                rootdir,
-                getattr(args, "config", None) or ".project-config.toml",
-            ),
-        )
-        sys.stdout.write(
-            "Configuration initialized at"
-            f" {os.path.relpath(config_path, cwd)}\n",
-        )
+    Raises errors if reported.
+    """
+    config = Config(args)
+    checker = ProjectConfigChecker(config, fix_mode=args.command == "fix")
+    checker.run()

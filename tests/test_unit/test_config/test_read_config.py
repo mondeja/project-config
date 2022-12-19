@@ -11,7 +11,7 @@ from project_config.config.exceptions import (
 def test_read_config_from_custom_file(tmp_path, minimal_valid_config):
     input_path = tmp_path / "custom-file.toml"
     input_path.write_text(minimal_valid_config.string)
-    output_path, config = read_config(str(input_path))
+    output_path, config = read_config(str(tmp_path), str(input_path))
 
     assert output_path == str(input_path)
     minimal_valid_config.asserts(config)
@@ -20,14 +20,14 @@ def test_read_config_from_custom_file(tmp_path, minimal_valid_config):
 def test_read_config_from_non_existent_custom_file(tmp_path):
     input_path = tmp_path / "custom-file.toml"
     with pytest.raises(CustomConfigFileNotFound):
-        read_config(input_path)
+        read_config(str(tmp_path), input_path)
 
 
 def test_read_config_from_empty_custom_file(tmp_path):
     """Succeeds because config files are validated later."""
     input_path = tmp_path / "custom-file.toml"
     input_path.write_text("")
-    read_config(str(input_path))
+    read_config(str(tmp_path), str(input_path))
 
 
 def test_read_config_from_project_config_toml(
@@ -38,7 +38,7 @@ def test_read_config_from_project_config_toml(
     path = tmp_path / ".project-config.toml"
     path.write_text(minimal_valid_config.string)
     with chdir(tmp_path):
-        output_path, config = read_config()
+        output_path, config = read_config(str(tmp_path))
     assert output_path == path.name
     minimal_valid_config.asserts(config)
 
@@ -47,7 +47,7 @@ def test_read_config_from_pyproject_toml(tmp_path, minimal_valid_config, chdir):
     path = tmp_path / "pyproject.toml"
     path.write_text(f"[tool.project-config]\n{minimal_valid_config.string}")
     with chdir(tmp_path):
-        output_path, config = read_config()
+        output_path, config = read_config(str(tmp_path))
 
     assert output_path == f'"{path.name}".[tool.project-config]'
     minimal_valid_config.asserts(config)
@@ -70,7 +70,7 @@ def test_read_config_from_default_files_project_config_toml_precedence(
     )
 
     with chdir(tmp_path):
-        output_path, config = read_config()
+        output_path, config = read_config(str(tmp_path))
     assert output_path == project_config_path.name
     minimal_valid_config.asserts(config, expected_style="project-config")
 
@@ -83,7 +83,7 @@ def test_pyproject_toml_no_section(
     path.write_text("")
 
     with chdir(tmp_path), pytest.raises(PyprojectTomlFoundButHasNoConfig):
-        read_config()
+        read_config(str(tmp_path))
 
 
 def test_config_files_not_found(
@@ -91,4 +91,4 @@ def test_config_files_not_found(
     chdir,
 ):
     with chdir(tmp_path), pytest.raises(ConfigurationFilesNotFound):
-        read_config()
+        read_config(str(tmp_path))
