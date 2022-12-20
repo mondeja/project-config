@@ -16,7 +16,7 @@ if TYPE_CHECKING:
     from project_config.compat import TypeAlias
 
     FileType: TypeAlias = str | bool | None
-    FilesType: TypeAlias = list[tuple[str, FileType]] | dict[str, FileType]
+    FilesType: TypeAlias = dict[str, FileType]
     RootdirType: TypeAlias = str | pathlib.Path
 
 
@@ -62,12 +62,17 @@ def create_tree(  # noqa: D103
     cache_files: bool = False,
 ) -> Tree:
     create_files(files, rootdir)
-    tree = Tree(str(rootdir))
+    tree = Tree()
     if cache_files:
         _files = (
             list(files) if isinstance(files, dict) else [f[0] for f in files]
         )
-        tree.cache_files(_files)
+        for fpath in _files:
+            tree.cache_file(
+                fpath,
+                forbid_serializers=("py",),
+                ignore_serialization_errors=True,
+            )
     return tree
 
 

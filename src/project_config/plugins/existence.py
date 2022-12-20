@@ -16,7 +16,7 @@ class ExistencePlugin:
     @staticmethod
     def ifFilesExist(
         value: list[str],
-        tree: Tree,
+        tree: Tree,  # noqa: U100
         rule: Rule,  # noqa: U100
         context: ActionsContext,  # noqa: U100
     ) -> Results:
@@ -57,9 +57,8 @@ class ExistencePlugin:
                     },
                 )
                 continue
-            normalized_fpath = tree.normalize_path(fpath)
             if fpath.endswith("/"):
-                if not os.path.isdir(normalized_fpath):
+                if not os.path.isdir(fpath):
                     yield ResultValue, False
-            elif not os.path.isfile(normalized_fpath):
+            elif not os.path.isfile(fpath):
                 yield ResultValue, False

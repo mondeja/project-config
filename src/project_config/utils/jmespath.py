@@ -16,7 +16,10 @@ from typing import TYPE_CHECKING, Any
 
 import deepmerge
 from jmespath import Options as JMESPathOptions, compile as jmespath_compile
-from jmespath.exceptions import JMESPathError as OriginalJMESPathError
+from jmespath.exceptions import (
+    JMESPathError as OriginalJMESPathError,
+    ParseError as JMESPathParserError,
+)
 from jmespath.functions import (
     Functions as JMESPathFunctions,
     signature as jmespath_func_signature,
@@ -843,7 +846,7 @@ def fix_tree_serialized_file_by_jmespath(
         compiled_expression,
         instance,
     )
-    return tree.edit_serialized_file(fpath, new_content)
+    return tree.edit_local_file(fpath, new_content)
 
 
 REVERSE_JMESPATH_TYPE_PYOBJECT: dict[
@@ -1040,5 +1043,8 @@ def smart_fixer_by_expected_value(
 def is_literal_jmespath_expression(expression: str) -> bool:
     """Check if a JMESPath expression is a literal expression."""
     parser = Parser()
-    ast = parser.parse(expression).parsed
+    try:
+        ast = parser.parse(expression).parsed
+    except JMESPathParserError:
+        return False
     return ast["type"] == "literal"

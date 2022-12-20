@@ -248,10 +248,6 @@ def parse_cli_args_and_subargs(  # noqa: D103
 
 def parse_args(argv: list[str]) -> argparse.Namespace:  # noqa: D103
     args, subargs = parse_cli_args_and_subargs(build_main_parser(), argv)
-
-    if args.cache is False:
-        os.environ["PROJECT_CONFIG_USE_CACHE"] = "false"
-
     return argparse.Namespace(**vars(args), **vars(subargs))
 
 

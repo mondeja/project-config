@@ -96,7 +96,7 @@ def resolve_url(url_parts: urllib.parse.SplitResult) -> str:
     )
 
 
-def fetch(url_parts: urllib.parse.SplitResult, **kwargs: Any) -> str:
+def fetch(url_parts: urllib.parse.SplitResult, **kwargs: Any) -> Any:
     """Fetch a resource through HTTPs protocol for a Github URI.
 
     Args:

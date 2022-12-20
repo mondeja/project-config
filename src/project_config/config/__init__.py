@@ -48,12 +48,10 @@ if TYPE_CHECKING:
         cli: CLIConfigType
 
     class RawConfigType(BaseConfigType):  # noqa: D101
-        cache: int
+        cache: str
 
     class ConfigType(BaseConfigType):  # noqa: D101
-        """Type of the configuration."""
-
-        cache: str
+        cache: int
 
 
 def read_config_from_pyproject_toml(filepath: str) -> Any:
@@ -142,7 +140,10 @@ def validate_config_style(config: Any) -> list[str]:
 
 def _cache_string_to_seconds(cache_string: str) -> int:
     if "never" in cache_string:
-        return 0
+        # The cache is not really disabled internally because
+        # is needed for project-config to run. Just use a very
+        # short time to "expire it" after the execution
+        return 1  # 1 second
     cache_number = int(cache_string.split(" ", maxsplit=1)[0])
 
     if "minute" in cache_string:
@@ -311,6 +312,13 @@ class Config(FileConfig):
     def __init__(self, args: argparse.Namespace, **kwargs: Any) -> None:
         """Guess the final configuration merging file with CLI arguments."""
         super().__init__(args.rootdir or os.getcwd(), args.config, **kwargs)
+
+        # Disable cache from CLI
+        if (
+            os.environ.get("PROJECT_CONFIG_USE_CACHE") == "false"
+            or args.cache is False
+        ) and self.dict_["cache"] < 1:
+            self.dict_["cache"] = 1
 
         # colorize output?
         self.dict_["cli"]["color"] = (

@@ -259,7 +259,7 @@ def _get_serializer_function(
     return functools.partial(loader_function, **function_kwargs)
 
 
-def guess_preferred_serializer(url: str) -> tuple[str, str | None]:
+def guess_preferred_serializer(url: str) -> tuple[str, str]:
     """Guess preferred serializer for URL.
 
     Args:

@@ -4,7 +4,9 @@ from __future__ import annotations
 
 import copy
 import json
+import os
 import pprint
+import stat
 from typing import TYPE_CHECKING, Any
 
 from project_config import (
@@ -12,8 +14,8 @@ from project_config import (
     Error,
     InterruptingError,
     ResultValue,
-    Tree,
 )
+from project_config.tree import Tree
 
 
 if TYPE_CHECKING:
@@ -91,11 +93,13 @@ class JMESPathPlugin:
                     }
                     return
 
-        files = copy.copy(tree.files)
-        for f, (fpath, fcontent) in enumerate(files):
-            if fcontent is None:
+        files = copy.copy(context.files)
+        for f, fpath in enumerate(files):
+            try:
+                fstat = os.stat(fpath)
+            except FileNotFoundError:
                 continue
-            elif not isinstance(fcontent, str):
+            if stat.S_ISDIR(fstat.st_mode):
                 yield InterruptingError, {
                     "message": (
                         "A JMES path can not be applied to a directory"
@@ -105,7 +109,7 @@ class JMESPathPlugin:
                 }
                 continue
 
-            _, instance = tree.serialize_file(fpath)
+            instance = tree.cached_local_file(fpath)
 
             for e, (expression, expected_value, fixer_query) in enumerate(
                 value,
@@ -140,46 +144,44 @@ class JMESPathPlugin:
                         "file": fpath,
                     }
                     continue
+
                 if expression_result != expected_value:
                     if not fixer_query:
                         fixer_query = smart_fixer_by_expected_value(
                             compiled_expression,
                             expected_value,
                         )
-                    if context.fix:
-                        if fixer_query:
-                            try:
-                                compiled_fixer_query = (
-                                    compile_JMESPath_expression_or_error(
-                                        fixer_query,
-                                    )
+                    if context.fix and fixer_query:
+                        try:
+                            compiled_fixer_query = (
+                                compile_JMESPath_expression_or_error(
+                                    fixer_query,
                                 )
-                            except JMESPathError as exc:
-                                yield InterruptingError, {
-                                    "message": exc.message,
-                                    "definition": f".JMESPathsMatch[{e}][2]",
-                                }
-                                continue
+                            )
+                        except JMESPathError as exc:
+                            yield InterruptingError, {
+                                "message": exc.message,
+                                "definition": f".JMESPathsMatch[{e}][2]",
+                            }
+                            continue
 
-                            try:
-                                diff = fix_tree_serialized_file_by_jmespath(
-                                    compiled_fixer_query,
-                                    instance,
-                                    fpath,
-                                    tree,
-                                )
-                            except JMESPathError as exc:
-                                yield InterruptingError, {
-                                    "message": exc.message,
-                                    "definition": f".JMESPathsMatch[{e}][2]",
-                                }
+                        try:
+                            diff = fix_tree_serialized_file_by_jmespath(
+                                compiled_fixer_query,
+                                instance,
+                                fpath,
+                                tree,
+                            )
+                        except JMESPathError as exc:
+                            yield InterruptingError, {
+                                "message": exc.message,
+                                "definition": f".JMESPathsMatch[{e}][2]",
+                            }
+                            continue
+                        else:
+                            fixed = True
+                            if not diff:  # pragma: no cover
                                 continue
-                            else:
-                                fixed = True
-                                if not diff:  # pragma: no cover
-                                    continue
-                        else:  # pragma: no cover
-                            fixed = False
                     else:
                         fixed = False
 
@@ -259,8 +261,9 @@ class JMESPathPlugin:
                     return
 
         for fpath, jmespath_match_tuples in value.items():
-            fcontent = tree.get_file_content(fpath)
-            if fcontent is None:
+            try:
+                fstat = os.stat(fpath)
+            except FileNotFoundError:
                 yield InterruptingError, {
                     "message": (
                         "The file to check if matches against JMES paths does"
@@ -270,7 +273,7 @@ class JMESPathPlugin:
                     "file": fpath,
                 }
                 continue
-            elif not isinstance(fcontent, str):
+            if stat.S_ISDIR(fstat.st_mode):
                 yield InterruptingError, {
                     "message": "A JMES path can not be applied to a directory",
                     "definition": f".ifJMESPathsMatch[{fpath}]",
@@ -279,7 +282,7 @@ class JMESPathPlugin:
                 continue
 
             try:
-                _, instance = tree.serialize_file(fpath)
+                instance = tree.cached_local_file(fpath)
             except SerializerError as exc:
                 yield InterruptingError, {
                     "message": exc.message,
@@ -349,10 +352,12 @@ class JMESPathPlugin:
             return
 
         # each pipe is evaluated for each file
-        for f, (fpath, fcontent) in enumerate(tree.files):
-            if fcontent is None:
+        for f, fpath in enumerate(context.files):
+            try:
+                fstat = os.stat(fpath)
+            except FileNotFoundError:
                 continue
-            elif not isinstance(fcontent, str):
+            if stat.S_ISDIR(fstat.st_mode):
                 yield InterruptingError, {
                     "message": (
                         "A JMES path can not be applied to a directory"
@@ -433,14 +438,10 @@ class JMESPathPlugin:
                     }
                     continue
 
-                if (
-                    files_expression.startswith("`")
-                    and files_expression.endswith("`")
-                    and is_literal_jmespath_expression(files_expression)
-                ):
+                if is_literal_jmespath_expression(files_expression):
                     files_result = json.loads(files_expression[1:-1])
                 else:
-                    _, files_instance = tree.serialize_file(fpath)
+                    files_instance = tree.cached_local_file(fpath)
 
                     try:
                         files_compiled_expression = (
@@ -549,8 +550,8 @@ class JMESPathPlugin:
                         return
 
                     try:
-                        other_instance = tree.fetch_file(other_fpath)
-                    except FetchError as exc:
+                        other_instance = tree.fetch_remote_file(other_fpath)
+                    except (SerializerError, FetchError) as exc:
                         yield InterruptingError, {
                             "message": exc.message,
                             "definition": (
@@ -558,7 +559,14 @@ class JMESPathPlugin:
                             ),
                             "file": other_fpath,
                         }
-                        return
+                    except FileNotFoundError:
+                        yield InterruptingError, {
+                            "message": f"'{other_fpath}' file not found",
+                            "definition": (
+                                f".crossJMESPathsMatch[{i}][{pipe_index}][0]"
+                            ),
+                            "file": other_fpath,
+                        }
 
                     try:
                         other_result = evaluate_JMESPath(

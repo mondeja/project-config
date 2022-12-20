@@ -52,22 +52,21 @@ class Style:
     @classmethod
     def from_config(cls, config: Any) -> Style:
         """Loads styles to the configuration passed as argument."""
-        if os.environ.get("PROJECT_CONFIG_USE_CACHE") != "false":
-            if (  # pragma: no cover
-                isinstance(config.dict_["style"], str)
-                and not os.path.isfile(config.dict_["style"])
-            ) or (
-                isinstance(config.dict_["style"], list)
-                and not all(
-                    [os.path.isfile(url) for url in config.dict_["style"]],
-                )
-            ):
-                try:
-                    _prefetch_urls(config)
-                except Exception:
-                    # if an exception is raised, will be raised again
-                    # in the synchronous style loader
-                    pass
+        if (  # pragma: no cover
+            isinstance(config.dict_["style"], str)
+            and not os.path.isfile(config.dict_["style"])
+        ) or (
+            isinstance(config.dict_["style"], list)
+            and not all(
+                [os.path.isfile(url) for url in config.dict_["style"]],
+            )
+        ):
+            try:
+                _prefetch_urls(config)
+            except Exception:
+                # if an exception is raised, will be raised again
+                # in the synchronous style loader
+                pass
 
         style = cls(config)
 
@@ -119,7 +118,10 @@ class Style:
                 if _partial_style_is_valid:
                     if "extends" in style:
                         # extend the style
-                        yield from self._extend_partial_style(style_urls, style)
+                        yield from self._extend_partial_style(
+                            style_urls,
+                            style,
+                        )
                     yield style
         elif isinstance(style_urls, list):
             style = {"rules": [], "plugins": []}
@@ -308,7 +310,10 @@ class Style:
                                 " -> when files is an object, must"
                                 " have one 'not' key"
                             )
-                        elif not isinstance(rule["files"]["not"], (dict, list)):
+                        elif not isinstance(
+                            rule["files"]["not"],
+                            (dict, list),
+                        ):
                             yield (
                                 f"{style_url}: .rules[{r}].files.not"
                                 " -> must be of type array or object"
@@ -344,7 +349,9 @@ class Style:
                                             " not be empty"
                                         )
                             else:
-                                for f, fpath in enumerate(rule["files"]["not"]):
+                                for f, fpath in enumerate(
+                                    rule["files"]["not"],
+                                ):
                                     if not isinstance(fpath, str):
                                         yield (
                                             f"{style_url}: .rules[{r}].files"

@@ -46,19 +46,24 @@ class ProjectConfigChecker:
         self.config = config
         self.reporter = reporter_from_config(config)
         self.config.load_style()
-        self.tree = Tree(self.config.dict_["cli"]["rootdir"])
-        self.actions_context = ActionsContext(fix=fix_mode)
-        self.fix = fix_mode
+        self.tree = Tree()
+        self.actions_context = ActionsContext(fix=fix_mode, files=[])
 
     def _check_files_existence(
         self,
-        files: list[tuple[str, Any]],
+        files: list[str],
         rule_index: int,
     ) -> None:
-        for f, (fpath, fcontent) in enumerate(files):
+        for findex, fpath in enumerate(files):
             ftype = "directory" if fpath.endswith(("/", os.sep)) else "file"
-            if fcontent is None:  # file or directory does not exist
-                if self.fix:
+
+            if ftype == "directory":
+                exists = os.path.isdir(fpath)
+            else:
+                exists = os.path.isfile(fpath)
+
+            if not exists:  # file or directory does not exist
+                if self.actions_context.fix:
                     if ftype == "directory":
                         os.makedirs(fpath, exist_ok=True)
                     else:
@@ -73,13 +78,22 @@ class ProjectConfigChecker:
                         )
                         with open(fpath, "w", encoding="utf-8") as fd:
                             fd.write(new_content)
-                    self.tree.cache_files([fpath])
+
+                        # Cache the file.
+                        #
+                        # Serialization errors can't be raised here
+                        # because the file is empty and created by the
+                        # checker itself (see above)
+                        self.tree.cache_file(
+                            fpath,
+                            forbid_serializers=("py",),
+                        )
                 self.reporter.report_error(
                     {
                         "message": f"Expected existing {ftype} does not exists",
                         "file": fpath,
-                        "definition": f"rules[{rule_index}].files[{f}]",
-                        "fixed": self.fix,
+                        "definition": f"rules[{rule_index}].files[{findex}]",
+                        "fixed": self.actions_context.fix,
                         "fixable": True,
                     },
                 )
@@ -89,7 +103,6 @@ class ProjectConfigChecker:
         files: list[str] | dict[str, str | int],
         rule_index: int,
     ) -> None:
-        fixed_files = []
         if isinstance(files, list):
             # i used for file index in the rule
             files = {fn: i for i, fn in enumerate(files)}
@@ -110,12 +123,14 @@ class ProjectConfigChecker:
                 exists = os.path.isfile(normalized_fpath)
 
             if exists:
-                if self.fix:
+                if self.actions_context.fix:
                     if isdir:
                         shutil.rmtree(normalized_fpath)
                     else:
                         os.remove(normalized_fpath)
-                    fixed_files.append(fpath)
+
+                    # Take into account that this removal don't need
+                    # to be cached as the mtime has been discarded
 
                 message = (
                     f"Expected absent {'directory' if isdir else 'file'} exists"
@@ -134,13 +149,10 @@ class ProjectConfigChecker:
                         "definition": (
                             f"rules[{rule_index}].files.not[{file_index}]"
                         ),
-                        "fixed": self.fix,
+                        "fixed": self.actions_context.fix,
                         "fixable": True,
                     },
                 )
-
-        if fixed_files:
-            self.tree.cache_files(fixed_files)
 
     def _process_conditionals_for_rule(
         self,
@@ -180,11 +192,11 @@ class ProjectConfigChecker:
             raise InterruptCheck()
 
     def _run_check(self) -> None:
-        for r, rule in enumerate(
-            self.config.dict_["style"]["rules"],
-        ):
+        for r, rule in enumerate(self.config.dict_["style"]["rules"]):
             hint = rule.pop("hint", None)
-            files = rule.pop("files")
+
+            # Discover files from glob
+            files = rule.pop("files", [])
 
             verbs, conditionals_functions = [], []
             for action in rule:
@@ -219,13 +231,20 @@ class ProjectConfigChecker:
                 continue
 
             if isinstance(files, list):
-                self.tree.cache_files(files)
+                for file in files:
+                    self.tree.cache_file(
+                        file,
+                        forbid_serializers=("py",),
+                        ignore_serialization_errors=True,
+                    )
                 # check if files exists
-                self._check_files_existence(self.tree.files, r)
+                self._check_files_existence(files, r)
             else:
                 # requiring absent of files
                 self._check_files_absence(files["not"], r)
                 continue  # no other verb can be used in the rule
+
+            self.actions_context.files = files
 
             # handle verbs
             for verb in verbs:
@@ -243,7 +262,7 @@ class ProjectConfigChecker:
                         },
                     )
                     raise InterruptCheck()
-                    # TODO: show 'INTERRUPTED' in report
+                    # TODO: show 'INTERRUPTED' in report?
                 for (breakage_type, breakage_value) in action_function(
                     rule[verb],  # type: ignore
                     self.tree,
@@ -263,7 +282,7 @@ class ProjectConfigChecker:
                             breakage_value["definition"]  # type: ignore
                         )
 
-                        if not self.fix:
+                        if not self.actions_context.fix:
                             breakage_value["fixed"] = False  # type: ignore
 
                         # show hint if defined in the rule
@@ -279,7 +298,7 @@ class ProjectConfigChecker:
                         )
                         self.reporter.report_error(breakage_value)
                         raise InterruptCheck()
-                        # TODO: show 'INTERRUPTED' in report
+                        # TODO: show 'INTERRUPTED' in report?
                     else:
                         raise NotImplementedError(
                             f"Breakage type '{breakage_type}' is not"

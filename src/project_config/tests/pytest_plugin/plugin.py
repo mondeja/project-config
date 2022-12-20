@@ -14,6 +14,7 @@ from typing import TYPE_CHECKING, Any
 
 import pytest
 
+from project_config.constants import InterruptingError
 from project_config.tests.pytest_plugin.helpers import (
     assert_expected_files,
     create_files,
@@ -139,14 +140,17 @@ def project_config_plugin_action_asserter(
     )
     with deprecated_ctx():
         os.chdir(rootdir)
-        results = list(
-            plugin_method(
-                value,
-                create_tree(files, rootdir, cache_files=True),
-                rule,
-                ActionsContext(fix=fix),
-            ),
-        )
+
+        results = []
+        for result_type, result_value in plugin_method(
+            value,
+            create_tree(files, rootdir, cache_files=True),
+            rule,
+            ActionsContext(fix=fix, files=list(files)),
+        ):
+            results.append((result_type, result_value))
+            if result_type is InterruptingError:
+                break
 
     assert re.match(
         r"\w",

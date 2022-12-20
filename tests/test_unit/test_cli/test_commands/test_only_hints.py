@@ -22,4 +22,13 @@ def test_only_hints(chdir, tmp_path, capsys):
     )
 
     with chdir(tmp_path):
-        assert run(["fix", "--only-hints"]) == 0
+        assert run(["fix", "--only-hints", "--nocolor"]) == 1, f"{out}\n{err}"
+
+    out, err = capsys.readouterr()
+    assert out == ""
+    assert (
+        err
+        == """style.json5
+  - (FIXED) The style root object must be an array rules[0].JMESPathsMatch[0]
+"""
+    )

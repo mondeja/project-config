@@ -66,6 +66,16 @@ from project_config.plugins.inclusion import InclusionPlugin
                         ),
                     },
                 ),
+                (
+                    Error,
+                    {
+                        "definition": ".includeLines[1]",
+                        "file": "file.txt",
+                        "fixable": True,
+                        "fixed": True,
+                        "message": "Expected line 'Other line' not found",
+                    },
+                ),
             ],
             {"file.txt": "foo\nOther inclusion\n"},
             id="fixer-query-override-ok",
@@ -90,18 +100,6 @@ from project_config.plugins.inclusion import InclusionPlugin
                         ),
                     },
                 ),
-                (
-                    InterruptingError,
-                    {
-                        "definition": ".includeLines[1]",
-                        "message": (
-                            'Invalid JMESPath expression "`[\'".'
-                            " Raised JMESPath lexing error:"
-                            " Bad jmespath expression: Unclosed"
-                            " ` delimiter:\n`['\n^"
-                        ),
-                    },
-                ),
             ],
             {"file.txt": ""},
             id="fixer-query-compilation-error",
@@ -118,19 +116,6 @@ from project_config.plugins.inclusion import InclusionPlugin
                     InterruptingError,
                     {
                         "definition": ".includeLines[0]",
-                        "message": (
-                            "Invalid JMESPath"
-                            " '[to_string(contains(`1`, `1`))]'. Raised"
-                            " JMESPath type error: In function contains(),"
-                            " invalid type for value: 1, expected one of:"
-                            " ['array', 'string'], received: \"number\""
-                        ),
-                    },
-                ),
-                (
-                    InterruptingError,
-                    {
-                        "definition": ".includeLines[1]",
                         "message": (
                             "Invalid JMESPath"
                             " '[to_string(contains(`1`, `1`))]'. Raised"
@@ -272,8 +257,21 @@ def test_includeLines_fix(
             [
                 ["Other line", "['Other line']"],
             ],
-            None,
-            [],
+            (),
+            [
+                (
+                    Error,
+                    {
+                        "definition": ".excludeContent[0]",
+                        "file": "file.txt",
+                        "fixable": True,
+                        "fixed": True,
+                        "message": (
+                            "Found expected content to exclude 'Other line'"
+                        ),
+                    },
+                ),
+            ],
             {"file.txt": "Other line\n"},
             id="fixer-query-not-diff-ok",
         ),

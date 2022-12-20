@@ -77,7 +77,12 @@ def test_serialize_for_url(url, string, expected_result):
 
 
 @pytest.mark.parametrize(
-    ("url", "string", "expected_exception_class", "expected_exception_message"),
+    (
+        "url",
+        "string",
+        "expected_exception_class",
+        "expected_exception_message",
+    ),
     (
         pytest.param(
             "https://example.com/file.json",

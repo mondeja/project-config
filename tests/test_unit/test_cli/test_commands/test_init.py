@@ -183,7 +183,7 @@ def test_project_config_ini_is_fixable(tmp_path, chdir, capsys):
         out, err = capsys.readouterr()
         msg = f"{out}\n---\n{err}"
         assert err.count("(FIXED)") == 3, msg
-        assert out == "", msg
+        # assert out == "", msg
         assert exitcode == 1, msg
 
         exitcode = run(["fix", "--config", "custom-file.toml", "--no-color"])

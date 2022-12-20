@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import os
 import pprint
+import stat
 from typing import TYPE_CHECKING
 
 from project_config import (
@@ -11,8 +12,8 @@ from project_config import (
     Error,
     InterruptingError,
     ResultValue,
-    Tree,
 )
+from project_config.tree import Tree
 from project_config.utils.jmespath import (
     JMESPathError,
     compile_JMESPath_expression_or_error,
@@ -119,10 +120,12 @@ class InclusionPlugin:
                 return
             expected_lines.append(clean_line)
 
-        for f, (fpath, fcontent) in enumerate(tree.files):
-            if fcontent is None:
+        for f, fpath in enumerate(context.files):
+            try:
+                fstat = os.stat(fpath)
+            except FileNotFoundError:
                 continue
-            elif not isinstance(fcontent, str):
+            if stat.S_ISDIR(fstat.st_mode):
                 yield (
                     InterruptingError,
                     _directories_not_accepted_as_inputs_error(
@@ -134,45 +137,54 @@ class InclusionPlugin:
                 )
                 continue
 
-            fcontent_lines = fcontent.splitlines()
+            fcontent_lines = tree.cached_local_file(fpath)
             for line_index, expected_line in enumerate(expected_lines):
                 if expected_line not in fcontent_lines:
                     if context.fix:
+                        instance = tree.cached_local_file(
+                            fpath,
+                            serializer="text",
+                        )
+
                         if not fixer_query:
-                            fixer_query = f"insert(@, `-1`, '{expected_line}')"
-
-                        try:
-                            compiled_fixer_query = (
-                                compile_JMESPath_expression_or_error(
-                                    fixer_query,
-                                )
-                            )
-                        except JMESPathError as exc:
-                            yield InterruptingError, {
-                                "message": exc.message,
-                                "definition": f".includeLines[{line_index}]",
-                            }
-                            continue
-
-                        _, instance = tree.serialize_file(fpath)
-
-                        try:
-                            diff = fix_tree_serialized_file_by_jmespath(
-                                compiled_fixer_query,
-                                instance,
-                                fpath,
-                                tree,
-                            )
-                        except JMESPathError as exc:
-                            yield InterruptingError, {
-                                "message": exc.message,
-                                "definition": f".includeLines[{line_index}]",
-                            }
-                            continue
-                        else:
+                            instance.append(expected_line)
+                            tree.edit_local_file(fpath, instance)
                             fixed = True
-                            if not diff:
+                        else:
+                            try:
+                                compiled_fixer_query = (
+                                    compile_JMESPath_expression_or_error(
+                                        fixer_query,
+                                    )
+                                )
+                            except JMESPathError as exc:
+                                yield InterruptingError, {
+                                    "message": exc.message,
+                                    "definition": (
+                                        f".includeLines[{line_index}]"
+                                    ),
+                                }
                                 continue
+
+                            try:
+                                diff = fix_tree_serialized_file_by_jmespath(
+                                    compiled_fixer_query,
+                                    instance,
+                                    fpath,
+                                    tree,
+                                )
+                            except JMESPathError as exc:
+                                yield InterruptingError, {
+                                    "message": exc.message,
+                                    "definition": (
+                                        f".includeLines[{line_index}]"
+                                    ),
+                                }
+                                continue
+                            else:
+                                fixed = True
+                                if not diff:
+                                    continue
                     else:
                         fixed = False
 
@@ -228,9 +240,9 @@ class InclusionPlugin:
                 }
                 return
 
-            fcontent = tree.get_file_content(fpath)
-
-            if fcontent is None:
+            try:
+                fstat = os.stat(fpath)
+            except FileNotFoundError:
                 yield InterruptingError, {
                     "message": (
                         "File specified in conditional 'ifIncludeLines'"
@@ -240,7 +252,7 @@ class InclusionPlugin:
                     "definition": f".ifIncludeLines[{fpath}]",
                 }
                 return
-            elif not isinstance(fcontent, str):
+            if stat.S_ISDIR(fstat.st_mode):
                 yield (
                     InterruptingError,
                     _directories_not_accepted_as_inputs_error(
@@ -252,7 +264,10 @@ class InclusionPlugin:
                 )
                 return
 
-            fcontent_lines = fcontent.splitlines()
+            fcontent_lines = tree.cached_local_file(
+                fpath,
+                serializer="text",
+            )
             checked_lines = []
             for i, line in enumerate(expected_lines):
                 if not isinstance(line, str):
@@ -309,10 +324,13 @@ class InclusionPlugin:
             }
             return
 
-        for f, (fpath, fcontent) in enumerate(tree.files):
-            if fcontent is None:
+        for f, fpath in enumerate(context.files):
+            try:
+                fstat = os.stat(fpath)
+            except FileNotFoundError:
                 continue
-            elif not isinstance(fcontent, str):
+
+            if stat.S_ISDIR(fstat.st_mode):
                 yield (
                     InterruptingError,
                     _directories_not_accepted_as_inputs_error(
@@ -375,6 +393,7 @@ class InclusionPlugin:
                     }
                     return
 
+                fcontent = tree.cached_local_file(fpath, serializer="_plain")
                 if content in fcontent:
                     if fixer_query:
                         fixable = True
@@ -393,7 +412,10 @@ class InclusionPlugin:
                                 }
                                 return
 
-                            _, instance = tree.serialize_file(fpath)
+                            instance = tree.cached_local_file(
+                                fpath,
+                                serializer="text",
+                            )
 
                             try:
                                 diff = fix_tree_serialized_file_by_jmespath(
