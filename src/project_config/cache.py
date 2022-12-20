@@ -6,6 +6,7 @@ import contextlib
 import importlib.util
 import os
 import shutil
+import sys
 from typing import Any
 
 import appdirs
@@ -37,7 +38,19 @@ DiskCache = _diskcache_core.Cache
 
 # ---
 
-CACHE_DIR = appdirs.user_data_dir(appname="project-config")
+CACHE_DIR = appdirs.user_data_dir(
+    appname=(
+        # Pickle protocols could change between Python versions. If a cache
+        # is created with a version of Python using an incompatible pickle
+        # protocol, errors like the next will probably occur:
+        #
+        # ValueError: unsupported pickle protocol: 5
+        #
+        # To avoid this, we create a different cache directory for each
+        # Python version
+        f"project-config-py{sys.version_info.major}{sys.version_info.minor}"
+    ),
+)
 
 
 class Cache:

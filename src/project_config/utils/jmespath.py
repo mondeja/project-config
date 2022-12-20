@@ -27,6 +27,7 @@ from jmespath.functions import (
 from jmespath.parser import ParsedResult as JMESPathParsedResult, Parser
 
 from project_config import tree
+from project_config.cache import Cache
 from project_config.compat import removeprefix, removesuffix, shlex_join
 from project_config.exceptions import ProjectConfigException
 
@@ -643,7 +644,11 @@ def compile_JMESPath_expression(expression: str) -> JMESPathParsedResult:
     Returns:
         :py:class:`jmespath.parser.ParsedResult`: JMESPath expression compiled.
     """
-    return jmespath_compile(expression)
+    compiled_expression: JMESPathParsedResult = Cache.get(f"jm://{expression}")
+    if compiled_expression is None:
+        compiled_expression = jmespath_compile(expression)
+        Cache.set(f"jm://{expression}", compiled_expression)
+    return compiled_expression
 
 
 def compile_JMESPath_expression_or_error(
@@ -762,21 +767,32 @@ def evaluate_JMESPath(
     Raises:
         ``JMESPathError``: If the expression cannot be evaluated.
     """
-    try:
-        return compiled_expression.search(
-            instance,
-            options=jmespath_options,
+    result = Cache.get(
+        f"jm://E?{compiled_expression.expression}:{str(instance)}",
+    )
+    if result is None:
+        try:
+            result = compiled_expression.search(
+                instance,
+                options=jmespath_options,
+            )
+        except OriginalJMESPathError as exc:
+            formatted_expression = pprint.pformat(
+                compiled_expression.expression,
+            )
+            error_type = JMESPATH_READABLE_ERRORS.get(
+                exc.__class__.__name__,
+                "error",
+            )
+            raise JMESPathError(
+                f"Invalid JMESPath {formatted_expression}."
+                f" Raised JMESPath {error_type}: {str(exc)}",
+            )
+        Cache.set(
+            f"jm://E?{compiled_expression.expression}:{str(instance)}",
+            result,
         )
-    except OriginalJMESPathError as exc:
-        formatted_expression = pprint.pformat(compiled_expression.expression)
-        error_type = JMESPATH_READABLE_ERRORS.get(
-            exc.__class__.__name__,
-            "error",
-        )
-        raise JMESPathError(
-            f"Invalid JMESPath {formatted_expression}."
-            f" Raised JMESPath {error_type}: {str(exc)}",
-        )
+    return result
 
 
 def evaluate_JMESPath_or_expected_value_error(
@@ -803,10 +819,7 @@ def evaluate_JMESPath_or_expected_value_error(
             expression cannot be evaluated.
     """  # noqa: E501
     try:
-        return compiled_expression.search(
-            instance,
-            options=jmespath_options,
-        )
+        return evaluate_JMESPath(compiled_expression, instance)
     except OriginalJMESPathError as exc:
         formatted_expression = pprint.pformat(compiled_expression.expression)
         error_type = JMESPATH_READABLE_ERRORS.get(
