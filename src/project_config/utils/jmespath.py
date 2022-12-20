@@ -836,7 +836,6 @@ def fix_tree_serialized_file_by_jmespath(
             expression to evaluate.
         instance (any): Instance to evaluate the expression against.
         fpath (str): Path to the file to fix.
-        tree (:py:class:`project_config.Tree`): Tree used to cache the file.
 
     Returns:
         bool: True if the file was fixed, False otherwise.
