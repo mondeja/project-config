@@ -26,9 +26,9 @@ from jmespath.functions import (
 )
 from jmespath.parser import ParsedResult as JMESPathParsedResult, Parser
 
+from project_config import tree
 from project_config.compat import removeprefix, removesuffix, shlex_join
 from project_config.exceptions import ProjectConfigException
-from project_config.tree import Tree
 
 
 if TYPE_CHECKING:
@@ -824,7 +824,6 @@ def fix_tree_serialized_file_by_jmespath(
     compiled_expression: JMESPathParsedResult,
     instance: Any,
     fpath: str,
-    tree: Tree,
 ) -> bool:
     """Fix a file by aplying a JMESPath expression to an instance.
 

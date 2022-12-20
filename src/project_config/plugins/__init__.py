@@ -14,7 +14,6 @@ from typing import TYPE_CHECKING, Any
 
 from project_config.compat import importlib_metadata
 from project_config.exceptions import ProjectConfigException
-from project_config.tree import Tree
 from project_config.types import ActionsContext
 
 
@@ -25,7 +24,7 @@ if TYPE_CHECKING:
     from project_config.types import Results, Rule
 
     PluginMethod: TypeAlias = Callable[
-        [Any, Tree, Rule, ActionsContext | None],
+        [Any, Rule, ActionsContext | None],
         Results,
     ]
 

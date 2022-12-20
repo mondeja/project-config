@@ -12,8 +12,8 @@ from project_config import (
     Error,
     InterruptingError,
     ResultValue,
+    tree,
 )
-from project_config.tree import Tree
 from project_config.utils.jmespath import (
     JMESPathError,
     compile_JMESPath_expression_or_error,
@@ -46,7 +46,6 @@ class InclusionPlugin:
     @staticmethod
     def includeLines(
         value: list[str],
-        tree: Tree,
         rule: Rule,  # noqa: U100
         context: ActionsContext,
     ) -> Results:
@@ -171,7 +170,6 @@ class InclusionPlugin:
                                     compiled_fixer_query,
                                     instance,
                                     fpath,
-                                    tree,
                                 )
                             except JMESPathError as exc:
                                 yield InterruptingError, {
@@ -199,7 +197,6 @@ class InclusionPlugin:
     @staticmethod
     def ifIncludeLines(
         value: dict[str, list[str]],
-        tree: Tree,
         rule: Rule,  # noqa: U100
         context: ActionsContext,  # noqa: U100
     ) -> Results:
@@ -305,7 +302,6 @@ class InclusionPlugin:
     @staticmethod
     def excludeContent(
         value: list[str],
-        tree: Tree,
         rule: Rule,  # noqa: U100
         context: ActionsContext,
     ) -> Results:
@@ -422,7 +418,6 @@ class InclusionPlugin:
                                     compiled_fixer_query,
                                     instance,
                                     fpath,
-                                    tree,
                                 )
                             except JMESPathError as exc:
                                 yield InterruptingError, {

@@ -14,8 +14,8 @@ from project_config import (
     Error,
     InterruptingError,
     ResultValue,
+    tree,
 )
-from project_config.tree import Tree
 
 
 if TYPE_CHECKING:
@@ -40,7 +40,6 @@ class JMESPathPlugin:
     @staticmethod
     def JMESPathsMatch(
         value: list[list[Any]],
-        tree: Tree,
         rule: Rule,  # noqa: U100
         context: ActionsContext,
     ) -> Results:
@@ -170,7 +169,6 @@ class JMESPathPlugin:
                                 compiled_fixer_query,
                                 instance,
                                 fpath,
-                                tree,
                             )
                         except JMESPathError as exc:
                             yield InterruptingError, {
@@ -200,7 +198,6 @@ class JMESPathPlugin:
     @staticmethod
     def ifJMESPathsMatch(
         value: dict[str, list[list[str]]],
-        tree: Tree,
         rule: Rule,  # noqa: U100
         context: ActionsContext,  # noqa: U100
     ) -> Results:
@@ -334,7 +331,6 @@ class JMESPathPlugin:
     @staticmethod
     def crossJMESPathsMatch(
         value: list[list[Any]],
-        tree: Tree,
         rule: Rule,  # noqa: U100
         context: ActionsContext,  # noqa: U100
     ) -> Results:

@@ -7,6 +7,7 @@ import os
 import shutil
 from typing import TYPE_CHECKING, Any
 
+from project_config import tree
 from project_config.config import Config, reporter_from_config
 from project_config.constants import Error, InterruptingError, ResultValue
 from project_config.plugins import InvalidPluginFunction
@@ -14,7 +15,6 @@ from project_config.serializers import (
     EMPTY_CONTENT_BY_SERIALIZER,
     guess_preferred_serializer,
 )
-from project_config.tree import Tree
 from project_config.types import ActionsContext
 
 
@@ -46,7 +46,6 @@ class ProjectConfigChecker:
         self.config = config
         self.reporter = reporter_from_config(config)
         self.config.load_style()
-        self.tree = Tree()
         self.actions_context = ActionsContext(fix=fix_mode, files=[])
 
     def _check_files_existence(
@@ -84,7 +83,7 @@ class ProjectConfigChecker:
                         # Serialization errors can't be raised here
                         # because the file is empty and created by the
                         # checker itself (see above)
-                        self.tree.cache_file(
+                        tree.cache_file(
                             fpath,
                             forbid_serializers=("py",),
                         )
@@ -157,7 +156,6 @@ class ProjectConfigChecker:
     def _process_conditionals_for_rule(
         self,
         conditionals: list[tuple[str, Any]],
-        tree: Tree,
         rule: Rule,
         rule_index: int,
     ) -> None:
@@ -168,7 +166,6 @@ class ProjectConfigChecker:
                 # until some literal quirk comes, see:
                 # https://stackoverflow.com/a/59583427/9167585
                 rule[conditional],  # type: ignore
-                tree,
                 rule,
                 self.actions_context,
             ):
@@ -222,7 +219,6 @@ class ProjectConfigChecker:
             try:
                 self._process_conditionals_for_rule(
                     conditionals_functions,
-                    self.tree,
                     rule,
                     r,
                 )
@@ -232,7 +228,7 @@ class ProjectConfigChecker:
 
             if isinstance(files, list):
                 for file in files:
-                    self.tree.cache_file(
+                    tree.cache_file(
                         file,
                         forbid_serializers=("py",),
                         ignore_serialization_errors=True,
@@ -265,7 +261,6 @@ class ProjectConfigChecker:
                     # TODO: show 'INTERRUPTED' in report?
                 for (breakage_type, breakage_value) in action_function(
                     rule[verb],  # type: ignore
-                    self.tree,
                     rule,
                     self.actions_context,
                 ):

@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING, cast
 
 import pytest
 
-from project_config.tree import Tree
+from project_config import tree
 
 
 if TYPE_CHECKING:
@@ -60,9 +60,8 @@ def create_tree(  # noqa: D103
     files: FilesType,
     rootdir: RootdirType,
     cache_files: bool = False,
-) -> Tree:
+) -> None:
     create_files(files, rootdir)
-    tree = Tree()
     if cache_files:
         _files = (
             list(files) if isinstance(files, dict) else [f[0] for f in files]
@@ -73,7 +72,6 @@ def create_tree(  # noqa: D103
                 forbid_serializers=("py",),
                 ignore_serialization_errors=True,
             )
-    return tree
 
 
 def assert_expected_files(  # noqa: D103

@@ -5,7 +5,7 @@ from __future__ import annotations
 import os
 from typing import TYPE_CHECKING
 
-from project_config import ActionsContext, InterruptingError, ResultValue, Tree
+from project_config import ActionsContext, InterruptingError, ResultValue
 
 
 if TYPE_CHECKING:
@@ -16,7 +16,6 @@ class ExistencePlugin:
     @staticmethod
     def ifFilesExist(
         value: list[str],
-        tree: Tree,  # noqa: U100
         rule: Rule,  # noqa: U100
         context: ActionsContext,  # noqa: U100
     ) -> Results:

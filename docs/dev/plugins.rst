@@ -57,13 +57,12 @@ methods. For example:
 .. code-block:: python
 
    from typing import Any
-   from project_config import ActionsContext, Tree, Rule, Results
+   from project_config import ActionsContext, Rule, Results, tree
 
    class PluginClass:
        @staticmethod
        def verb(  # public method names which do not start with 'if' are verbs
            value: Any,
-           tree: Tree,
            rule: Rule,
            context: ActionsContext,
        ) -> Results:
@@ -72,23 +71,20 @@ methods. For example:
        @staticmethod
        def ifConditional(  # conditional starts with 'if'
            value: Any,
-           tree: Tree,
            rule: Rule,
            context: ActionsContext,
        ) -> Results:
            ...
 
-.. function:: action(value: typing.Any, tree: project_config.tree.Tree, rule: project_config.types.Rule, context: project_config.types.ActionsContext) -> project_config.types.Results
+.. function:: action(value: typing.Any, rule: project_config.types.Rule, context: project_config.types.ActionsContext) -> project_config.types.Results
 
    Action definition.
 
    :param value: Value that takes the action. It could be of any type, it depends to the action.
    :type value: typing.Any
-   :param tree: Tree of files and directories that takes the action in the ``files`` property of the rule.
-   :type tree: :py:class:`project_config.tree.Tree`
    :param rule: Complete rule dictionary in which the action is being executed.
    :type rule: :py:class:`project_config.types.Rule`
-   :param context: Context of the actions. It has a property ``fix`` which is used to determine if the user has enabled the `fix` mode in the current execution.
+   :param context: Context of the actions. It has a property ``fix`` which is used to determine if the user has enabled the `fix` mode in the current execution and other property ``files`` which stores the content of the ``files`` array of the rule.
    :type context: :py:class:`project_config.types.ActionsContext`
 
    :yield: Checking results.
