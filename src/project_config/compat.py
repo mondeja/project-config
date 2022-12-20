@@ -15,10 +15,16 @@ if sys.version_info < (3, 8):
     def shlex_join(cmd_list: list[str]) -> str:  # noqa: D103
         return " ".join(shlex.quote(x) for x in cmd_list)
 
+    # For some reason pickle is failing on Python3.7 saying that the
+    # protocol 4 is not supported.
+    pickle_HIGHEST_PROTOCOL = 3
 else:
+    import pickle
     from typing import Literal, Protocol, TypedDict
 
     shlex_join = shlex.join
+
+    pickle_HIGHEST_PROTOCOL = pickle.HIGHEST_PROTOCOL
 
 
 if sys.version_info < (3, 9):
@@ -71,4 +77,5 @@ __all__ = (
     "shlex_join",
     "removeprefix",
     "removesuffix",
+    "pickle_HIGHEST_PROTOCOL",
 )

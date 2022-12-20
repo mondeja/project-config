@@ -5,12 +5,12 @@ from __future__ import annotations
 import contextlib
 import importlib.util
 import os
-import pickle
 import shutil
-import sys
 from typing import Any
 
 import appdirs
+
+from project_config.compat import pickle_HIGHEST_PROTOCOL
 
 
 # ---
@@ -45,14 +45,7 @@ class Cache:
 
     _cache = DiskCache(
         directory=CACHE_DIR,
-        # For some reason pickle is failing on Python3.7 saying that the
-        # protocol is not supported. This is a workaround for that.
-        #
-        # TODO: Remove this workaround when Python3.7 is no longer
-        # supported.
-        disk_pickle_protocol=(
-            3 if sys.version_info < (3, 8) else pickle.HIGHEST_PROTOCOL
-        ),
+        disk_pickle_protocol=pickle_HIGHEST_PROTOCOL,
     )
     _expiration_time: float | int | None = 30
 
