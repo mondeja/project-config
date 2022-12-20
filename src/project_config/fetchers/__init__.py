@@ -93,7 +93,7 @@ def download_file_from_urlsplit_scheme(
         raise FetchError(exc.message)
 
 
-def fetch(url: str) -> Any:
+def fetch(url: str, **kwargs: Any) -> Any:
     """Fetch a result given an URI.
 
     Args:
@@ -104,7 +104,12 @@ def fetch(url: str) -> Any:
     url_parts = urllib.parse.urlsplit(url)
     scheme = _get_scheme_from_urlparts(url_parts)
 
-    string = download_file_from_urlsplit_scheme(url, url_parts, scheme)
+    string = download_file_from_urlsplit_scheme(
+        url,
+        url_parts,
+        scheme,
+        **kwargs,
+    )
 
     try:
         return serialize_for_url(
