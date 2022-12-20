@@ -122,8 +122,8 @@ from project_config.plugins.jmespath import JMESPathPlugin
                         "file": "foo.json",
                         "message": (
                             "Invalid JMESPath \"op(foo, 'has the same"
-                            " letters than', foo)\". Expected to return"
-                            " True, raised JMESPath error: Invalid operator"
+                            " letters than', foo)\". Raised JMESPath error:"
+                            " Invalid operator"
                             " 'has the same letters than' passed to op()"
                             " function at index 0, expected one of: <, <=,"
                             " ==, !=, >=, >, is, is_not, is-not, is not,"
@@ -211,7 +211,7 @@ from project_config.plugins.jmespath import JMESPathPlugin
                         "file": "foo.json",
                         "message": (
                             "Invalid JMESPath \"op(foo, '+', bar, `5`, baz)\"."
-                            " Expected to return 4, raised JMESPath error:"
+                            " Raised JMESPath error:"
                             " Invalid operator '5' passed to op() function at"
                             " index 2, expected one of: <, <=, ==, !=, >=, >,"
                             " is, is_not, is-not, is not, isNot, +, &, and,"

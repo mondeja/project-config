@@ -767,6 +767,27 @@ def evaluate_JMESPath(
     Raises:
         ``JMESPathError``: If the expression cannot be evaluated.
     """
+    # This caching is a bit tricky, because some things as if a
+    # directory exists can not be cached, can change.
+    # TODO: This needs to be properly tested, currently a cache
+    #       inconsistency is affecting the example 008.
+    not_cacheable = [
+        "rootdir",  # rootdir_name()
+        "listdir",  # ...
+        "isfile",
+        "isdir",
+        "exists",
+        "glob",
+    ]
+    if any(
+        not_cacheable_expression in compiled_expression.expression
+        for not_cacheable_expression in not_cacheable
+    ):
+        return compiled_expression.search(
+            instance,
+            options=jmespath_options,
+        )
+
     result = Cache.get(
         f"jm://E?{compiled_expression.expression}:{str(instance)}",
     )

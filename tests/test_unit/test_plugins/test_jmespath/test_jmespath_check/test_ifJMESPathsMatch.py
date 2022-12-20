@@ -234,8 +234,8 @@ from project_config.plugins.jmespath import JMESPathPlugin
                         "definition": ".ifJMESPathsMatch[foo.json][0]",
                         "message": (
                             "Invalid JMESPath 'contains(@)'."
-                            " Expected to return 'a', raised"
-                            " JMESPath arity error: Expected 2 arguments"
+                            " Raised JMESPath arity error:"
+                            " Expected 2 arguments"
                             " for function contains(),"
                             " received 1"
                         ),

@@ -69,7 +69,12 @@ class Cache:
     def clean() -> None:  # pragma: no cover
         """Remove the cache directory."""
         with contextlib.suppress(FileNotFoundError):
-            shutil.rmtree(CACHE_DIR)
+            for possible_py_dir in range(7, 15):
+                dirpath = appdirs.user_data_dir(
+                    appname=f"project-config-py3{possible_py_dir}",
+                )
+                if os.path.isdir(dirpath):
+                    shutil.rmtree(dirpath)
 
     @classmethod
     def set(cls, *args: Any, **kwargs: Any) -> Any:  # noqa: A003, D102
