@@ -23,6 +23,7 @@ project-config CLI
 * ``project-config show plugins`` - Show all available plugins with their actions.
 * ``project-config show cache`` - Show cache directory location.
 * ``project-config show file <resource>`` - Print JSON-serialized version of the file or URL passed as argument.
+* ``project-config show reporters`` - Show all available reporters.
 * ``project-config clean cache`` - Clean the persistent cache of remote collected sources.
 
 .. tip::

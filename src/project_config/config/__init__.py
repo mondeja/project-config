@@ -18,11 +18,7 @@ from project_config.config.exceptions import (
     PyprojectTomlFoundButHasNoConfig,
 )
 from project_config.config.style import Style
-from project_config.reporters import (
-    DEFAULT_REPORTER,
-    POSSIBLE_REPORTER_IDS,
-    get_reporter,
-)
+from project_config.reporters import DEFAULT_REPORTER, get_reporter, reporters
 
 
 CONFIG_CACHE_REGEX = (
@@ -212,7 +208,7 @@ def _validate_cli_config(config: dict[str, Any]) -> list[str]:
             errors.append("cli.reporter -> must be of type string")
         elif not config["reporter"]:
             errors.append("cli.reporter -> must not be empty")
-        elif config["reporter"] not in POSSIBLE_REPORTER_IDS:
+        elif config["reporter"] not in reporters:
             errors.append(
                 "cli.reporter -> must be one of the available reporters",
             )

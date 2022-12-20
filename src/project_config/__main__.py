@@ -15,7 +15,7 @@ from typing import Any
 from importlib_metadata_argparse_version import ImportlibMetadataVersionAction
 
 from project_config.exceptions import ProjectConfigException
-from project_config.reporters import POSSIBLE_REPORTER_IDS, parse_reporter_id
+from project_config.reporters import parse_reporter_id, reporters
 
 
 SPHINX_IS_RUNNING = "sphinx" in sys.modules
@@ -27,13 +27,16 @@ class ReporterAction(argparse.Action):
     """Custom argparse action for reporter CLI option."""
 
     def _raise_invalid_reporter_error(self, reporter_id: str) -> None:
+        from project_config.reporters import ThirdPartyReporters
+
+        reporters_ids = list(reporters) + ThirdPartyReporters().ids
         raise argparse.ArgumentError(
             self,
             _("invalid choice: %(value)r (choose from %(choices)s)")
             % {
                 "value": reporter_id,
                 "choices": ", ".join(
-                    [f"'{rep}'" for rep in POSSIBLE_REPORTER_IDS],
+                    [f"'{rep}'" for rep in reporters_ids],
                 ),
             },
         )
@@ -55,8 +58,9 @@ class ReporterAction(argparse.Action):
             if reporter_kwargs["fmt"]:
                 reporter_id += f':{reporter_kwargs["fmt"]}'
 
-            if reporter_id not in POSSIBLE_REPORTER_IDS:
+            if reporter_id not in reporters:
                 self._raise_invalid_reporter_error(reporter_id)
+
             reporter["name"] = reporter_name
             reporter["kwargs"] = reporter_kwargs
 
@@ -124,9 +128,6 @@ def build_main_parser() -> argparse.ArgumentParser:  # noqa: D103
             " current working directory."
         ),
     )
-    possible_reporters_msg = ", ".join(
-        [f"'{rep}'" for rep in POSSIBLE_REPORTER_IDS],
-    )
     example = (
         f"{OPEN_QUOTE_CHAR}file{CLOSE_QUOTE_CHAR}:"
         f"{OPEN_QUOTE_CHAR}blue{CLOSE_QUOTE_CHAR}"
@@ -139,12 +140,13 @@ def build_main_parser() -> argparse.ArgumentParser:  # noqa: D103
         metavar="NAME[:FORMAT];OPTION=VALUE",
         help=(
             "Reporter for generated output when failed. Possible values"
-            f" are {possible_reporters_msg}. Additionally, options can be"
+            " are shown executing project-config show reporters."
+            "Additionally, options can be"
             " passed to the reporter appending ';' to the end of the reporter"
             " id with the syntax '<OPTION>=<JSON VALUE>'. Console reporters can"
             " take an argument 'color' which accepts a JSON object to customize"
             " the colors for parts of the report like files, for example:"
-            " table:simple;colors={%s}." % example
+            f" table:simple;colors={example}."
         ),
     )
     parser.add_argument(
@@ -192,13 +194,21 @@ def _parse_command_args(
             parser = argparse.ArgumentParser(prog="project-config show")
             parser.add_argument(
                 "data",
-                choices=["config", "style", "cache", "plugins", "file"],
+                choices=[
+                    "config",
+                    "style",
+                    "cache",
+                    "plugins",
+                    "file",
+                    "reporters",
+                ],
                 help=(
                     "Indicate which data must be shown, discovered"
                     " configuration (config), extended style (style),"
                     " cache directory location (cache), plugins with"
-                    " their actions (plugins) or a file as a"
-                    " serialized object (file <path>)."
+                    " their actions (plugins), a file as a"
+                    " serialized object (file <path>) or the available"
+                    " reporters (reporters)."
                 ),
             )
             args, remaining = parser.parse_known_args(subcommand_args)

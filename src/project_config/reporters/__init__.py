@@ -245,6 +245,3 @@ class ThirdPartyReporters:
                 f"Reporter class '{reporter_class.__name__}' is not"
                 " a subclass of BaseReporter",
             )
-
-
-POSSIBLE_REPORTER_IDS = list(reporters) + ThirdPartyReporters().ids

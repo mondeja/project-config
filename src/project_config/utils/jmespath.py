@@ -106,6 +106,18 @@ JMESPATH_READABLE_ERRORS = {
     "UnknownFunctionError": "unknown function error",
 }
 
+# JMESPath variables that can not be cached in evaluations
+# as are not deterministic
+UNCACHEABLE_JMESPATH_VARIABLES = {
+    "rootdir",  # rootdir_name()
+    "listdir",  # ...
+    "isfile",
+    "isdir",
+    "exists",
+    "glob",
+    "getenv",
+}
+
 
 def _create_simple_transform_function_for_string(
     func_name: str,
@@ -771,17 +783,9 @@ def evaluate_JMESPath(
     # directory exists can not be cached, can change.
     # TODO: This needs to be properly tested, currently a cache
     #       inconsistency is affecting the example 008.
-    not_cacheable = [
-        "rootdir",  # rootdir_name()
-        "listdir",  # ...
-        "isfile",
-        "isdir",
-        "exists",
-        "glob",
-    ]
     if any(
         not_cacheable_expression in compiled_expression.expression
-        for not_cacheable_expression in not_cacheable
+        for not_cacheable_expression in UNCACHEABLE_JMESPATH_VARIABLES
     ):
         return compiled_expression.search(
             instance,

@@ -313,6 +313,7 @@ def check(args: argparse.Namespace) -> None:  # noqa: U100
 
     Raises errors if reported.
     """
-    config = Config(args)
-    checker = ProjectConfigChecker(config, fix_mode=args.command == "fix")
-    checker.run()
+    ProjectConfigChecker(
+        Config(args),
+        fix_mode=args.command == "fix",
+    ).run()
