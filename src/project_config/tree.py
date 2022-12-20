@@ -24,6 +24,14 @@ from project_config.serializers import (
 from project_config.utils.crypto import hash_file
 
 
+__all__ = (
+    "cache_file",
+    "cached_local_file",
+    "fetch_remote_file",
+    "edit_local_file",
+)
+
+
 IGNORE_SERIALIZATION_ERRORS_CTX = functools.partial(
     contextlib.suppress,
     SerializerError,

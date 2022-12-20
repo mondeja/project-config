@@ -6,14 +6,10 @@ import os
 from collections.abc import Iterator
 from typing import TYPE_CHECKING, Any
 
+from project_config import tree
 from project_config.cache import Cache
 from project_config.config.exceptions import ProjectConfigInvalidConfigSchema
-from project_config.fetchers import (
-    FetchError,
-    fetch,
-    resolve_maybe_relative_url,
-    resolve_url,
-)
+from project_config.fetchers import resolve_maybe_relative_url, resolve_url
 from project_config.plugins import Plugins
 from project_config.serializers import serialize_for_url
 
@@ -98,9 +94,9 @@ class Style:
         style_urls = self.config.dict_["style"]
         if isinstance(style_urls, str):
             try:
-                style = fetch(style_urls)
-            except FetchError as exc:
-                yield f"style -> {exc.message}"
+                style = tree.fetch_remote_file(style_urls)
+            except FileNotFoundError:
+                yield f"style -> '{style_urls}' file not found"
             else:
                 _partial_style_is_valid = True
                 validator = self._validate_style_preparing_new_plugins(
@@ -127,9 +123,9 @@ class Style:
             style = {"rules": [], "plugins": []}
             for s, partial_style_url in enumerate(style_urls):
                 try:
-                    partial_style = fetch(partial_style_url)
-                except FetchError as exc:
-                    yield f"style[{s}] -> {exc.message}"
+                    partial_style = tree.fetch_remote_file(partial_style_url)
+                except FileNotFoundError:
+                    yield f"style[{s}] -> '{partial_style_url}' file not found"
                     continue
 
                 # extend style only if it is valid
@@ -167,9 +163,12 @@ class Style:
     ) -> StyleLoaderIterator:
         for s, extend_url in enumerate(style.pop("extends", [])):
             try:
-                partial_style = fetch(extend_url)
-            except FetchError as exc:
-                yield f"{parent_style_url}: .extends[{s}] -> {exc.message}"
+                partial_style = tree.fetch_remote_file(extend_url)
+            except FileNotFoundError:
+                yield (
+                    f"{parent_style_url}: .extends[{s}]"
+                    f" -> '{extend_url}' file not found"
+                )
                 continue
 
             _partial_style_is_valid = True
