@@ -129,7 +129,8 @@ class ProjectConfigChecker:
                         os.remove(normalized_fpath)
 
                     # Take into account that this removal don't need
-                    # to be cached as the mtime has been discarded
+                    # to be cached as the digest of the file has been
+                    # discarded
 
                 message = (
                     f"Expected absent {'directory' if isdir else 'file'} exists"
