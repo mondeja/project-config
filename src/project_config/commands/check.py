@@ -191,8 +191,6 @@ class ProjectConfigChecker:
     def _run_check(self) -> None:
         for r, rule in enumerate(self.config.dict_["style"]["rules"]):
             hint = rule.pop("hint", None)
-
-            # Discover files from glob
             files = rule.pop("files", [])
 
             verbs, conditionals_functions = [], []

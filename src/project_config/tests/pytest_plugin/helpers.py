@@ -52,7 +52,7 @@ def create_files(  # noqa: D103
                 with open(full_path, "w", encoding="utf-8") as f:
                     f.write(content)
             except OSError:
-                # globs raising here in Windows
+                # globs raising here on Windows
                 continue
 
 

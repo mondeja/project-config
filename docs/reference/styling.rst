@@ -37,10 +37,6 @@ If they don't exist will raise errors, and additionally created in ``fix`` mode.
 The existence of these files and directories is mandatory for execute the rest
 of actions of the rule.
 
-The items of ``files`` can also be globs to match a set of existent files.
-Keep in mind that if the files do not exist when the rule is executed, the
-glob itself will be treated as a file name and will be checked for existence.
-
 .. rubric:: Examples
 
 .. tabs::
