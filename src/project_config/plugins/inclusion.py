@@ -54,13 +54,11 @@ class InclusionPlugin:
                 "message": "The value must be of type array",
                 "definition": ".includeLines",
             }
-            return
         elif not value:
             yield InterruptingError, {
                 "message": "The value must not be empty",
                 "definition": ".includeLines",
             }
-            return
 
         expected_lines = []
         for i, line in enumerate(value):
@@ -93,7 +91,6 @@ class InclusionPlugin:
                         ),
                         "definition": f".includeLines[{i}]",
                     }
-                    return
 
             elif not isinstance(line, str):
                 yield InterruptingError, {
@@ -103,20 +100,17 @@ class InclusionPlugin:
                     ),
                     "definition": f".includeLines[{i}]",
                 }
-                return
             clean_line = line.strip("\r\n")
             if clean_line in expected_lines:
                 yield InterruptingError, {
                     "message": f"Duplicated expected line '{clean_line}'",
                     "definition": f".includeLines[{i}]",
                 }
-                return
             elif not clean_line:
                 yield InterruptingError, {
                     "message": "Expected line must not be empty",
                     "definition": f".includeLines[{i}]",
                 }
-                return
             expected_lines.append(clean_line)
 
         for f, fpath in enumerate(context.files):
@@ -163,7 +157,6 @@ class InclusionPlugin:
                                         f".includeLines[{line_index}]"
                                     ),
                                 }
-                                continue
 
                             try:
                                 diff = fix_tree_serialized_file_by_jmespath(
@@ -178,7 +171,6 @@ class InclusionPlugin:
                                         f".includeLines[{line_index}]"
                                     ),
                                 }
-                                continue
                             else:
                                 fixed = True
                                 if not diff:
@@ -205,13 +197,11 @@ class InclusionPlugin:
                 "message": "The value must be of type object",
                 "definition": ".ifIncludeLines",
             }
-            return
         elif not value:
             yield InterruptingError, {
                 "message": "The value must not be empty",
                 "definition": ".ifIncludeLines",
             }
-            return
 
         for fpath, expected_lines in value.items():
             if not fpath:
@@ -219,7 +209,6 @@ class InclusionPlugin:
                     "message": "File paths must not be empty",
                     "definition": ".ifIncludeLines",
                 }
-                return
 
             if not isinstance(expected_lines, list):
                 yield InterruptingError, {
@@ -229,13 +218,11 @@ class InclusionPlugin:
                     ),
                     "definition": f".ifIncludeLines[{fpath}]",
                 }
-                return
             elif not expected_lines:
                 yield InterruptingError, {
                     "message": "Expected lines must not be empty",
                     "definition": f".ifIncludeLines[{fpath}]",
                 }
-                return
 
             try:
                 fstat = os.stat(fpath)
@@ -248,7 +235,6 @@ class InclusionPlugin:
                     "file": fpath,
                     "definition": f".ifIncludeLines[{fpath}]",
                 }
-                return
             if stat.S_ISDIR(fstat.st_mode):
                 yield (
                     InterruptingError,
@@ -276,7 +262,6 @@ class InclusionPlugin:
                         "definition": f".ifIncludeLines[{fpath}][{i}]",
                         "file": fpath,
                     }
-                    return
                 clean_line = line.strip("\r\n")
                 if not clean_line:
                     yield InterruptingError, {
@@ -284,14 +269,12 @@ class InclusionPlugin:
                         "definition": f".ifIncludeLines[{fpath}][{i}]",
                         "file": fpath,
                     }
-                    return
                 elif clean_line in checked_lines:
                     yield InterruptingError, {
                         "message": f"Duplicated expected line '{clean_line}'",
                         "definition": f".ifIncludeLines[{fpath}][{i}]",
                         "file": fpath,
                     }
-                    return
 
                 if clean_line not in fcontent_lines:
                     yield ResultValue, False
@@ -312,13 +295,11 @@ class InclusionPlugin:
                 "message": "The contents to exclude must be of type array",
                 "definition": ".excludeContent",
             }
-            return
         elif not value:
             yield InterruptingError, {
                 "message": "The contents to exclude must not be empty",
                 "definition": ".excludeContent",
             }
-            return
 
         for f, fpath in enumerate(context.files):
             try:
@@ -361,7 +342,6 @@ class InclusionPlugin:
                                 ),
                                 "definition": f".excludeContent[{i}]",
                             }
-                            return
                 else:
                     yield InterruptingError, {
                         "message": (
@@ -372,7 +352,6 @@ class InclusionPlugin:
                         "definition": f".excludeContent[{i}]",
                         "file": fpath,
                     }
-                    return
 
                 if not content:
                     yield InterruptingError, {
@@ -380,14 +359,12 @@ class InclusionPlugin:
                         "definition": f".excludeContent[{i}]",
                         "file": fpath,
                     }
-                    return
                 elif content in checked_content:
                     yield InterruptingError, {
                         "message": f"Duplicated content to exclude '{content}'",
                         "definition": f".excludeContent[{i}]",
                         "file": fpath,
                     }
-                    return
 
                 fcontent = tree.cached_local_file(fpath, serializer="_plain")
                 if content in fcontent:
@@ -406,7 +383,6 @@ class InclusionPlugin:
                                     "message": exc.message,
                                     "definition": f".excludeContent[{i}]",
                                 }
-                                return
 
                             instance = tree.cached_local_file(
                                 fpath,
@@ -424,7 +400,6 @@ class InclusionPlugin:
                                     "message": exc.message,
                                     "definition": f".excludeContent[{i}]",
                                 }
-                                return
                             else:
                                 fixed = True
                                 if not diff:

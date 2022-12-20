@@ -203,5 +203,7 @@ def resolve_maybe_relative_url(url: str, parent_url: str, rootdir: str) -> str:
             action="Resolving",
         )
 
-    # other protocols like https uses absolute URLs
+    # other protocols like https are supposed to use absolute URLs
+    #
+    # TODO: Implement (or test) relative URLs for other protocols
     return url
