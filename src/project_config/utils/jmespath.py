@@ -117,6 +117,11 @@ UNCACHEABLE_JMESPATH_VARIABLES = {
     "exists",
     "glob",
     "getenv",
+    "gh_tags",
+    # other useful
+    "dirname",
+    "basename",
+    "extname",
 }
 
 
@@ -641,10 +646,10 @@ class JMESPathProjectConfigFunctions(JMESPathFunctions):
     )
 
 
-project_config_options = JMESPathProjectConfigFunctions()
+jmespath_project_config_options = JMESPathProjectConfigFunctions()
 
 jmespath_options = JMESPathOptions(
-    custom_functions=project_config_options,
+    custom_functions=jmespath_project_config_options,
 )
 
 
