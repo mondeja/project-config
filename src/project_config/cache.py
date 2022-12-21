@@ -2,16 +2,16 @@
 
 from __future__ import annotations
 
-import contextlib
 import importlib.util
 import os
+import re
 import shutil
 import sys
-from typing import Any
+from typing import Any, Iterator
 
 import appdirs
 
-from project_config.compat import pickle_HIGHEST_PROTOCOL
+from project_config.compat import importlib_metadata, pickle_HIGHEST_PROTOCOL
 
 
 # ---
@@ -53,6 +53,22 @@ CACHE_DIR = appdirs.user_data_dir(
 )
 
 
+def generate_possible_cache_dirs() -> Iterator[str]:
+    """Generate the possible cache directories."""
+    requires_python = importlib_metadata.metadata(
+        "project-config",
+    )["Requires-Python"]
+
+    max_minor_version = re.search(  # type: ignore
+        "<\\d+\\.(\\d+)",
+        requires_python,
+    ).group(1)
+    for possible_py_dir in range(7, int(max_minor_version) + 1):
+        yield appdirs.user_data_dir(
+            appname=f"project-config-py3{possible_py_dir}",
+        )
+
+
 class Cache:
     """Wrapper for a unique :py:class:`diskcache.core.Cache` instance."""
 
@@ -68,13 +84,9 @@ class Cache:
     @staticmethod
     def clean() -> None:  # pragma: no cover
         """Remove the cache directory."""
-        with contextlib.suppress(FileNotFoundError):
-            for possible_py_dir in range(7, 15):
-                dirpath = appdirs.user_data_dir(
-                    appname=f"project-config-py3{possible_py_dir}",
-                )
-                if os.path.isdir(dirpath):
-                    shutil.rmtree(dirpath)
+        for possible_cache_dirpath in generate_possible_cache_dirs():
+            if os.path.isdir(possible_cache_dirpath):
+                shutil.rmtree(possible_cache_dirpath)
 
     @classmethod
     def set(cls, *args: Any, **kwargs: Any) -> Any:  # noqa: A003, D102

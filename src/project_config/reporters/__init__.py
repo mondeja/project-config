@@ -19,6 +19,26 @@ DEFAULT_REPORTER = "default"
 PROJECT_CONFIG_REPORTERS_ENTRYPOINTS_GROUP = "project_config.reporters"
 
 
+class UnparseableReporterError(ProjectConfigException):
+    """Reporter can't be parsed."""
+
+    def __init__(self, reporter_id: str) -> None:
+        super().__init__(
+            f"Reporter '{reporter_id}' can't be parsed. "
+            "See 'project-config --help' for more information.",
+        )
+
+
+class InvalidThirdPartyReporterName(ProjectConfigException):
+    """A third party reporter can't be loaded by his identifier."""
+
+    def __init__(self, reporter_id: str) -> None:
+        super().__init__(
+            f"Reporter '{reporter_id}' not found. See all"
+            " available running 'project-config show reporters'",
+        )
+
+
 class InvalidNotBasedThirdPartyReporter(ProjectConfigException):
     """Reporter not based on base reporter class.
 
@@ -184,9 +204,13 @@ class ThirdPartyReporters:
             reporter_name (str): Reporter module entrypoint name.
         """
         if reporter_name not in self.loaded_reporters:
-            self.loaded_reporters[reporter_name] = self.reporters_loaders[
-                reporter_name
-            ]()
+            try:
+                reporter_impl = self.reporters_loaders[reporter_name]
+            except KeyError:
+                # A third party reporter was not found
+                raise InvalidThirdPartyReporterName(reporter_name)
+            else:
+                self.loaded_reporters[reporter_name] = reporter_impl()
         return self.loaded_reporters[reporter_name]
 
     def validate_reporter_module(

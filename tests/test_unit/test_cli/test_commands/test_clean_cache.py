@@ -5,7 +5,7 @@ import sys
 import pytest
 
 from project_config.__main__ import run
-from project_config.cache import CACHE_DIR
+from project_config.cache import CACHE_DIR, generate_possible_cache_dirs
 
 
 @pytest.mark.skipif(
@@ -22,5 +22,8 @@ def test_clean_cache(capsys, tmp_path):
     assert out == "Cache removed successfully!\n"
     assert err == ""
 
-    if os.path.exists(temp_cache_dir):
+    for possible_cache_dirpath in generate_possible_cache_dirs():
+        assert not os.path.isdir(possible_cache_dirpath)
+
+    if os.path.exists(CACHE_DIR):
         shutil.copytree(temp_cache_dir, CACHE_DIR)

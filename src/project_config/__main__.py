@@ -9,13 +9,11 @@ import importlib
 import os
 import sys
 from collections.abc import Sequence
-from gettext import gettext as _
 from typing import Any
 
 from importlib_metadata_argparse_version import ImportlibMetadataVersionAction
 
 from project_config.exceptions import ProjectConfigException
-from project_config.reporters import parse_reporter_id, reporters
 
 
 SPHINX_IS_RUNNING = "sphinx" in sys.modules
@@ -26,21 +24,6 @@ CLOSE_QUOTE_CHAR = "”" if SPHINX_IS_RUNNING else '"'
 class ReporterAction(argparse.Action):
     """Custom argparse action for reporter CLI option."""
 
-    def _raise_invalid_reporter_error(self, reporter_id: str) -> None:
-        from project_config.reporters import ThirdPartyReporters
-
-        reporters_ids = list(reporters) + ThirdPartyReporters().ids
-        raise argparse.ArgumentError(
-            self,
-            _("invalid choice: %(value)r (choose from %(choices)s)")
-            % {
-                "value": reporter_id,
-                "choices": ", ".join(
-                    [f"'{rep}'" for rep in reporters_ids],
-                ),
-            },
-        )
-
     def __call__(  # noqa: D102
         self,
         parser: argparse.ArgumentParser,  # noqa: U100
@@ -50,16 +33,18 @@ class ReporterAction(argparse.Action):
     ) -> None:
         reporter: dict[str, Any] = {}
         if isinstance(value, str):
+            from project_config.reporters import (
+                UnparseableReporterError,
+                parse_reporter_id,
+            )
+
             try:
                 reporter_name, reporter_kwargs = parse_reporter_id(value)
             except Exception:
-                self._raise_invalid_reporter_error(value)
+                raise UnparseableReporterError(value)
             reporter_id = reporter_name
             if reporter_kwargs["fmt"]:
                 reporter_id += f':{reporter_kwargs["fmt"]}'
-
-            if reporter_id not in reporters:
-                self._raise_invalid_reporter_error(reporter_id)
 
             reporter["name"] = reporter_name
             reporter["kwargs"] = reporter_kwargs
@@ -263,18 +248,20 @@ def parse_args(argv: list[str]) -> argparse.Namespace:  # noqa: D103
 
 def run(argv: list[str]) -> int:  # noqa: D103
     os.environ["PROJECT_CONFIG"] = "true"
-    args = parse_args(argv)
 
+    show_traceback = False
     try:
+        args = parse_args(argv)
+        show_traceback = args.traceback
         command_module = importlib.import_module(
             f"project_config.commands.{args.command}",
         )
         getattr(command_module, args.command)(args)
     except ProjectConfigException as exc:
-        return _controlled_error(args.traceback, exc, exc.message)
+        return _controlled_error(show_traceback, exc, exc.message)
     except FileNotFoundError as exc:  # pragma: no cover
         return _controlled_error(
-            args.traceback,
+            show_traceback,
             exc,
             f"{exc.args[1]} '{exc.filename}'",
         )

@@ -34,7 +34,7 @@ def test_style_file_not_found(tmp_path, capsys, chdir):
 
 @pytest.mark.parametrize(
     "reporter_id",
-    ("unexistent", "not-parseable;color="),
+    ("unexistent", "not-parseable;color=", "not-parseable;fmt="),
 )
 def test_invalid_reporter_option(
     tmp_path,
@@ -42,17 +42,19 @@ def test_invalid_reporter_option(
     capsys,
     reporter_id,
 ):
-    with chdir(tmp_path), pytest.raises(SystemExit) as exc:
-        run(["check", "-r", reporter_id])
-    assert exc.value.code == 2
+    (tmp_path / ".project-config.toml").write_text('style = "style.json5"')
+    (tmp_path / "style.json5").write_text(
+        "{rules: [{files: ['.project-config.toml']}]}",
+    )
+
+    with chdir(tmp_path):
+        exitcode = run(["check", "-r", reporter_id])
+    assert exitcode == 1
 
     out, err = capsys.readouterr()
 
     assert out == ""
-
-    assert err.startswith("usage: project-config [-h]")
-    assert f"invalid choice: '{reporter_id}'" in err
-    assert "choose from 'default', 'json'" in err
+    assert "project-config" in err
 
 
 def test_remaining_args(tmp_path, chdir, capsys):
