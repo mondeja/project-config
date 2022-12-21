@@ -158,7 +158,7 @@ class InclusionPlugin:
                                 }
 
                             try:
-                                diff = fix_tree_serialized_file_by_jmespath(
+                                changed = fix_tree_serialized_file_by_jmespath(
                                     compiled_fixer_query,
                                     instance,
                                     fpath,
@@ -172,7 +172,7 @@ class InclusionPlugin:
                                 }
                             else:
                                 fixed = True
-                                if not diff:
+                                if not changed:  # pragma: no cover
                                     continue
                     else:
                         fixed = False
@@ -387,7 +387,7 @@ class InclusionPlugin:
                             )
 
                             try:
-                                diff = fix_tree_serialized_file_by_jmespath(
+                                changed = fix_tree_serialized_file_by_jmespath(
                                     compiled_fixer_query,
                                     instance,
                                     fpath,
@@ -399,7 +399,7 @@ class InclusionPlugin:
                                 }
                             else:
                                 fixed = True
-                                if not diff:
+                                if not changed:  # pragma: no cover
                                     continue
                     else:
                         fixed = False

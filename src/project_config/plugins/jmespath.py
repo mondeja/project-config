@@ -156,7 +156,7 @@ class JMESPathPlugin:
                             }
 
                         try:
-                            diff = fix_tree_serialized_file_by_jmespath(
+                            changed = fix_tree_serialized_file_by_jmespath(
                                 compiled_fixer_query,
                                 instance,
                                 fpath,
@@ -168,7 +168,7 @@ class JMESPathPlugin:
                             }
                         else:
                             fixed = True
-                            if not diff:  # pragma: no cover
+                            if not changed:  # pragma: no cover
                                 continue
                     else:
                         fixed = False
