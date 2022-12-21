@@ -128,7 +128,6 @@ class InclusionPlugin:
                         f".files[{f}]",
                     ),
                 )
-                continue
 
             fcontent_lines = tree.cached_local_file(fpath)
             for line_index, expected_line in enumerate(expected_lines):
@@ -245,7 +244,6 @@ class InclusionPlugin:
                         f".ifIncludeLines[{fpath}]",
                     ),
                 )
-                return
 
             fcontent_lines = tree.cached_local_file(
                 fpath,
@@ -317,7 +315,6 @@ class InclusionPlugin:
                         f".files[{f}]",
                     ),
                 )
-                continue
 
             # Normalize newlines
             checked_content = []

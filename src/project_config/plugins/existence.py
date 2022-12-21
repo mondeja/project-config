@@ -30,7 +30,6 @@ class ExistencePlugin:
                     "definition": ".ifFilesExist",
                 },
             )
-            return
         elif not value:
             yield (
                 InterruptingError,
@@ -41,7 +40,6 @@ class ExistencePlugin:
                     "definition": ".ifFilesExist",
                 },
             )
-            return
 
         for f, fpath in enumerate(value):
             if not isinstance(fpath, str):
@@ -55,7 +53,6 @@ class ExistencePlugin:
                         "definition": f".ifFilesExist[{f}]",
                     },
                 )
-                continue
             if fpath.endswith("/"):
                 if not os.path.isdir(fpath):
                     yield ResultValue, False
