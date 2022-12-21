@@ -14,6 +14,14 @@ def show(args: argparse.Namespace) -> None:
     """
     if args.data == "cache":
         from project_config.cache import CACHE_DIR as report
+    elif args.data == "reporters":
+        # TODO: Add tests for this
+        from project_config.reporters import ThirdPartyReporters, reporters
+
+        reporters_ids = list(reporters) + ThirdPartyReporters().ids
+        report = ", ".join(
+            [f"'{rep}'" for rep in reporters_ids],
+        )
     else:
         if args.data == "file":
             from project_config.fetchers import fetch

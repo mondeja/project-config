@@ -153,8 +153,8 @@ from project_config.plugins.jmespath import JMESPathPlugin
                         "definition": ".JMESPathsMatch[0]",
                         "message": (
                             "Invalid JMESPath 'contains(@)'."
-                            " Expected to return 'a', raised"
-                            " JMESPath arity error: Expected 2 arguments"
+                            " Raised JMESPath arity error:"
+                            " Expected 2 arguments"
                             " for function contains(),"
                             " received 1"
                         ),
@@ -203,8 +203,7 @@ from project_config.plugins.jmespath import JMESPathPlugin
                         "definition": ".JMESPathsMatch[0]",
                         "message": (
                             "Invalid JMESPath \"contains(a, 'foobarbaz')\"."
-                            " Expected to return True, raised"
-                            " JMESPath type error: In function"
+                            " Raised JMESPath type error: In function"
                             " contains(), invalid type for value: 4, expected"
                             " one of: ['array', 'string'], received: \"number\""
                         ),

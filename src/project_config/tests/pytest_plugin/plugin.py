@@ -14,10 +14,10 @@ from typing import TYPE_CHECKING, Any
 
 import pytest
 
+from project_config.constants import InterruptingError
 from project_config.tests.pytest_plugin.helpers import (
     assert_expected_files,
     create_files,
-    create_tree,
     get_reporter_class_from_module,
 )
 from project_config.types import ActionsContext
@@ -124,6 +124,8 @@ def project_config_plugin_action_asserter(
                expected_results,
            )
     """  # noqa: D417 -> this seems not needed, error in flake8-docstrings?
+    create_files(files, rootdir)
+
     if additional_files is not None:
         create_files(additional_files, rootdir)
 
@@ -139,14 +141,16 @@ def project_config_plugin_action_asserter(
     )
     with deprecated_ctx():
         os.chdir(rootdir)
-        results = list(
-            plugin_method(
-                value,
-                create_tree(files, rootdir, cache_files=True),
-                rule,
-                ActionsContext(fix=fix),
-            ),
-        )
+
+        results = []
+        for result_type, result_value in plugin_method(
+            value,
+            rule,
+            ActionsContext(fix=fix, files=list(files)),
+        ):
+            results.append((result_type, result_value))
+            if result_type is InterruptingError:
+                break
 
     assert re.match(
         r"\w",

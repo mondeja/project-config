@@ -43,7 +43,11 @@ def test_read_config_from_project_config_toml(
     minimal_valid_config.asserts(config)
 
 
-def test_read_config_from_pyproject_toml(tmp_path, minimal_valid_config, chdir):
+def test_read_config_from_pyproject_toml(
+    tmp_path,
+    minimal_valid_config,
+    chdir,
+):
     path = tmp_path / "pyproject.toml"
     path.write_text(f"[tool.project-config]\n{minimal_valid_config.string}")
     with chdir(tmp_path):

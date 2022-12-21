@@ -3,13 +3,12 @@
 from __future__ import annotations
 
 import argparse
-import importlib
 import os
 import re
 from typing import TYPE_CHECKING, Any
 
+from project_config import tree
 from project_config.cache import Cache
-from project_config.compat import tomllib_package_name
 from project_config.config.exceptions import (
     ConfigurationFilesNotFound,
     CustomConfigFileNotFound,
@@ -19,12 +18,7 @@ from project_config.config.exceptions import (
     PyprojectTomlFoundButHasNoConfig,
 )
 from project_config.config.style import Style
-from project_config.fetchers import fetch
-from project_config.reporters import (
-    DEFAULT_REPORTER,
-    POSSIBLE_REPORTER_IDS,
-    get_reporter,
-)
+from project_config.reporters import DEFAULT_REPORTER, get_reporter, reporters
 
 
 CONFIG_CACHE_REGEX = (
@@ -48,23 +42,20 @@ if TYPE_CHECKING:
         cli: CLIConfigType
 
     class RawConfigType(BaseConfigType):  # noqa: D101
-        cache: int
-
-    class ConfigType(BaseConfigType):  # noqa: D101
-        """Type of the configuration."""
-
         cache: str
 
+    class ConfigType(BaseConfigType):  # noqa: D101
+        cache: int
 
-def read_config_from_pyproject_toml(filepath: str) -> Any:
+
+def read_config_from_pyproject_toml(fpath: str) -> Any:
     """Read the configuration from the `pyproject.toml` file.
 
     Returns:
         object: ``None`` if not found, configuration data otherwise.
     """
-    tomllib = importlib.import_module(tomllib_package_name)
-    with open(filepath, "rb") as f:
-        pyproject_toml = tomllib.load(f)
+    tree.cache_file(fpath)
+    pyproject_toml = tree.cached_local_file(fpath, serializer="toml")
     if "tool" in pyproject_toml and "project-config" in pyproject_toml["tool"]:
         return pyproject_toml["tool"]["project-config"]
     return None
@@ -72,22 +63,26 @@ def read_config_from_pyproject_toml(filepath: str) -> Any:
 
 def read_config(
     rootdir: str,
-    custom_file_path: str | None = None,
+    custom_fpath: str | None = None,
 ) -> tuple[str, Any]:
     """Read the configuration from a file.
 
     Args:
-        custom_file_path (str): Custom configuration file path
+        custom_fpath (str): Custom configuration file path
             or ``None`` if the configuration must be read from
             one of the default configuration file paths.
 
     Returns:
         object: Configuration data.
     """
-    if custom_file_path:
-        if not os.path.isfile(custom_file_path):
-            raise CustomConfigFileNotFound(custom_file_path)
-        return custom_file_path, dict(fetch(custom_file_path))
+    if custom_fpath:
+        if not os.path.isfile(custom_fpath):
+            raise CustomConfigFileNotFound(custom_fpath)
+        tree.cache_file(custom_fpath)
+        return custom_fpath, tree.cached_local_file(
+            custom_fpath,
+            serializer="toml",
+        )
 
     pyproject_toml_path = os.path.join(rootdir, "pyproject.toml")
     pyproject_toml_exists = os.path.isfile(pyproject_toml_path)
@@ -95,15 +90,16 @@ def read_config(
     if pyproject_toml_exists:
         config = read_config_from_pyproject_toml(pyproject_toml_path)
     if config is not None:
-        return '"pyproject.toml".[tool.project-config]', dict(config)
+        return '"pyproject.toml".[tool.project-config]', config
 
     project_config_toml_path = os.path.join(rootdir, ".project-config.toml")
     project_config_toml_exists = os.path.isfile(project_config_toml_path)
     if project_config_toml_exists:
-        tomllib = importlib.import_module(tomllib_package_name)
-        with open(project_config_toml_path, "rb") as f:
-            project_config_toml = tomllib.load(f)
-        return ".project-config.toml", project_config_toml
+        tree.cache_file(".project-config.toml")
+        return ".project-config.toml", tree.cached_local_file(
+            ".project-config.toml",
+            serializer="toml",
+        )
 
     if pyproject_toml_exists:
         raise PyprojectTomlFoundButHasNoConfig()
@@ -142,7 +138,10 @@ def validate_config_style(config: Any) -> list[str]:
 
 def _cache_string_to_seconds(cache_string: str) -> int:
     if "never" in cache_string:
-        return 0
+        # The cache is not really disabled internally because
+        # is needed for project-config to run. Just use a very
+        # short time to "expire it" after the execution
+        return 1  # 1 second
     cache_number = int(cache_string.split(" ", maxsplit=1)[0])
 
     if "minute" in cache_string:
@@ -209,7 +208,7 @@ def _validate_cli_config(config: dict[str, Any]) -> list[str]:
             errors.append("cli.reporter -> must be of type string")
         elif not config["reporter"]:
             errors.append("cli.reporter -> must not be empty")
-        elif config["reporter"] not in POSSIBLE_REPORTER_IDS:
+        elif config["reporter"] not in reporters:
             errors.append(
                 "cli.reporter -> must be one of the available reporters",
             )
@@ -312,6 +311,13 @@ class Config(FileConfig):
         """Guess the final configuration merging file with CLI arguments."""
         super().__init__(args.rootdir or os.getcwd(), args.config, **kwargs)
 
+        # Disable cache from CLI
+        if (
+            os.environ.get("PROJECT_CONFIG_USE_CACHE") == "false"
+            or args.cache is False
+        ) and self.dict_["cache"] < 1:
+            self.dict_["cache"] = 1
+
         # colorize output?
         self.dict_["cli"]["color"] = (
             self.dict_["cli"].get("color") if args.color is True else args.color
@@ -386,28 +392,28 @@ def reporter_from_config(config: Config) -> Any:
     )
 
 
-def initialize_config(config_filepath: str) -> str:
+def initialize_config(config_fpath: str) -> str:
     """Initialize the configuration.
 
     Args:
-        config_filepath (str): Path to the file in which the configuration will
+        config_fpath (str): Path to the file in which the configuration will
             be stored.
 
     Returns:
         str: Path to the configuration.
     """
     config_dirpath = os.path.join(
-        os.path.abspath(os.path.dirname(config_filepath)),
+        os.path.abspath(os.path.dirname(config_fpath)),
     )
     os.makedirs(config_dirpath, exist_ok=True)
 
-    if not os.path.isfile(config_filepath):
-        with open(config_filepath, "w", encoding="ascii") as f:
+    if not os.path.isfile(config_fpath):
+        with open(config_fpath, "w", encoding="ascii") as f:
             f.write("")
 
-    style_filepath = os.path.join(config_dirpath, "style.json5")
+    style_fpath = os.path.join(config_dirpath, "style.json5")
 
-    config_file_basename = os.path.basename(config_filepath)
+    config_file_basename = os.path.basename(config_fpath)
 
     def create_default_style_file(
         config_prefix: str = "@",
@@ -437,7 +443,7 @@ def initialize_config(config_filepath: str) -> str:
                 " 'cache', '5 minutes')))"
             )
 
-        with open(style_filepath, "w", encoding="ascii") as f:
+        with open(style_fpath, "w", encoding="ascii") as f:
             f.write(
                 '''{
   rules: [
@@ -485,23 +491,23 @@ def initialize_config(config_filepath: str) -> str:
         return f'{result}style = ["style.json5"]\ncache = "5 minutes"\n'
 
     def add_config_string_to_file(string: str) -> None:
-        with open(config_filepath, encoding="ascii") as f:
+        with open(config_fpath, encoding="ascii") as f:
             config_lines = f.read().splitlines()
         if config_lines:
             add_separator = config_lines[-1] != ""
         else:
             add_separator = False
 
-        with open(config_filepath, "a", encoding="ascii") as f:
+        with open(config_fpath, "a", encoding="ascii") as f:
             if add_separator:
                 f.write("\n")
             f.write(string)
 
     if config_file_basename == "pyproject.toml":
-        config = read_config_from_pyproject_toml(config_filepath)
+        config = read_config_from_pyproject_toml(config_fpath)
         if config:
             raise ProjectConfigAlreadyInitialized(
-                f"{config_filepath}[tool.project-config]",
+                f"{config_fpath}[tool.project-config]",
             )
 
         add_config_string_to_file(build_config_string(pyproject_toml=True))
@@ -514,13 +520,13 @@ def initialize_config(config_filepath: str) -> str:
                 "\n        "
             ),
         )
-        return f"{config_filepath}[tool.project-config]"
+        return f"{config_fpath}[tool.project-config]"
 
-    if os.path.isfile(config_filepath):
-        with open(config_filepath, encoding="ascii") as f:
+    if os.path.isfile(config_fpath):
+        with open(config_fpath, encoding="ascii") as f:
             if f.read():
-                raise ProjectConfigAlreadyInitialized(config_filepath)
+                raise ProjectConfigAlreadyInitialized(config_fpath)
 
     add_config_string_to_file(build_config_string())
     create_default_style_file()
-    return config_filepath
+    return config_fpath

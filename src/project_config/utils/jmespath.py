@@ -6,6 +6,7 @@ import builtins
 import json
 import operator
 import os
+import pickle
 import pprint
 import re
 import shlex
@@ -16,16 +17,20 @@ from typing import TYPE_CHECKING, Any
 
 import deepmerge
 from jmespath import Options as JMESPathOptions, compile as jmespath_compile
-from jmespath.exceptions import JMESPathError as OriginalJMESPathError
+from jmespath.exceptions import (
+    JMESPathError as OriginalJMESPathError,
+    ParseError as JMESPathParserError,
+)
 from jmespath.functions import (
     Functions as JMESPathFunctions,
     signature as jmespath_func_signature,
 )
 from jmespath.parser import ParsedResult as JMESPathParsedResult, Parser
 
+from project_config import tree
+from project_config.cache import Cache
 from project_config.compat import removeprefix, removesuffix, shlex_join
 from project_config.exceptions import ProjectConfigException
-from project_config.tree import Tree
 
 
 if TYPE_CHECKING:
@@ -100,6 +105,23 @@ JMESPATH_READABLE_ERRORS = {
     "JMESPathTypeError": "type error",
     "EmptyExpressionError": "empty expression error",
     "UnknownFunctionError": "unknown function error",
+}
+
+# JMESPath variables that can not be cached in evaluations
+# as are not deterministic
+UNCACHEABLE_JMESPATH_VARIABLES = {
+    "rootdir",  # rootdir_name()
+    "listdir",  # ...
+    "isfile",
+    "isdir",
+    "exists",
+    "glob",
+    "getenv",
+    "gh_tags",
+    # other useful
+    "dirname",
+    "basename",
+    "extname",
 }
 
 
@@ -624,10 +646,10 @@ class JMESPathProjectConfigFunctions(JMESPathFunctions):
     )
 
 
-project_config_options = JMESPathProjectConfigFunctions()
+jmespath_project_config_options = JMESPathProjectConfigFunctions()
 
 jmespath_options = JMESPathOptions(
-    custom_functions=project_config_options,
+    custom_functions=jmespath_project_config_options,
 )
 
 
@@ -640,7 +662,11 @@ def compile_JMESPath_expression(expression: str) -> JMESPathParsedResult:
     Returns:
         :py:class:`jmespath.parser.ParsedResult`: JMESPath expression compiled.
     """
-    return jmespath_compile(expression)
+    compiled_expression: JMESPathParsedResult = Cache.get(f"jm://{expression}")
+    if compiled_expression is None:
+        compiled_expression = jmespath_compile(expression)
+        Cache.set(f"jm://{expression}", compiled_expression)
+    return compiled_expression
 
 
 def compile_JMESPath_expression_or_error(
@@ -759,21 +785,56 @@ def evaluate_JMESPath(
     Raises:
         ``JMESPathError``: If the expression cannot be evaluated.
     """
-    try:
+    # This caching is a bit tricky, because some things as if a
+    # directory exists can not be cached, can change.
+    #
+    # Also, Python modules can't be pickled, so we can't cache them.
+    #
+    # TODO: This needs to be properly tested, currently a cache
+    #       inconsistency is affecting the example 008.
+    if any(
+        not_cacheable_expression in compiled_expression.expression
+        for not_cacheable_expression in UNCACHEABLE_JMESPATH_VARIABLES
+    ):
         return compiled_expression.search(
             instance,
             options=jmespath_options,
         )
-    except OriginalJMESPathError as exc:
-        formatted_expression = pprint.pformat(compiled_expression.expression)
-        error_type = JMESPATH_READABLE_ERRORS.get(
-            exc.__class__.__name__,
-            "error",
+
+    try:
+        pickled_instance = pickle.dumps(instance)
+    except TypeError:
+        return compiled_expression.search(
+            instance,
+            options=jmespath_options,
         )
-        raise JMESPathError(
-            f"Invalid JMESPath {formatted_expression}."
-            f" Raised JMESPath {error_type}: {str(exc)}",
+
+    result = Cache.get(
+        f"jm://E?{compiled_expression.expression}:{hash(pickled_instance)}",
+    )
+    if result is None:
+        try:
+            result = compiled_expression.search(
+                instance,
+                options=jmespath_options,
+            )
+        except OriginalJMESPathError as exc:
+            formatted_expression = pprint.pformat(
+                compiled_expression.expression,
+            )
+            error_type = JMESPATH_READABLE_ERRORS.get(
+                exc.__class__.__name__,
+                "error",
+            )
+            raise JMESPathError(
+                f"Invalid JMESPath {formatted_expression}."
+                f" Raised JMESPath {error_type}: {str(exc)}",
+            )
+        Cache.set(
+            f"jm://E?{compiled_expression.expression}:{str(instance)}",
+            result,
         )
+    return result
 
 
 def evaluate_JMESPath_or_expected_value_error(
@@ -800,10 +861,7 @@ def evaluate_JMESPath_or_expected_value_error(
             expression cannot be evaluated.
     """  # noqa: E501
     try:
-        return compiled_expression.search(
-            instance,
-            options=jmespath_options,
-        )
+        return evaluate_JMESPath(compiled_expression, instance)
     except OriginalJMESPathError as exc:
         formatted_expression = pprint.pformat(compiled_expression.expression)
         error_type = JMESPATH_READABLE_ERRORS.get(
@@ -821,7 +879,6 @@ def fix_tree_serialized_file_by_jmespath(
     compiled_expression: JMESPathParsedResult,
     instance: Any,
     fpath: str,
-    tree: Tree,
 ) -> bool:
     """Fix a file by aplying a JMESPath expression to an instance.
 
@@ -834,7 +891,6 @@ def fix_tree_serialized_file_by_jmespath(
             expression to evaluate.
         instance (any): Instance to evaluate the expression against.
         fpath (str): Path to the file to fix.
-        tree (:py:class:`project_config.Tree`): Tree used to cache the file.
 
     Returns:
         bool: True if the file was fixed, False otherwise.
@@ -843,7 +899,7 @@ def fix_tree_serialized_file_by_jmespath(
         compiled_expression,
         instance,
     )
-    return tree.edit_serialized_file(fpath, new_content)
+    return tree.edit_local_file(fpath, new_content)
 
 
 REVERSE_JMESPATH_TYPE_PYOBJECT: dict[
@@ -1040,5 +1096,8 @@ def smart_fixer_by_expected_value(
 def is_literal_jmespath_expression(expression: str) -> bool:
     """Check if a JMESPath expression is a literal expression."""
     parser = Parser()
-    ast = parser.parse(expression).parsed
+    try:
+        ast = parser.parse(expression).parsed
+    except JMESPathParserError:
+        return False
     return ast["type"] == "literal"

@@ -73,7 +73,6 @@ nitpick_ignore = [
     ("py:class", "project_config.types.Results"),
     ("py:class", "project_config.types.Rule"),
     ("py:class", "project_config.types.ErrorDict"),
-    ("py:class", "project_config.tree.Tree"),
     ("py:class", "pytest.MonkeyPatch"),
     ("py:class", "_pytest.monkeypatch.MonkeyPatch"),
 ]

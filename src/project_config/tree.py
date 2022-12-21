@@ -1,292 +1,340 @@
-"""Cached files tree used by the linter when using checker commands."""
+"""File system tree API."""
 
 from __future__ import annotations
 
-import glob
+import contextlib
+import functools
 import os
-from collections.abc import Iterable, Iterator
-from typing import TYPE_CHECKING, Any
+import stat
+from collections.abc import Iterable
+from typing import Any
+from urllib.parse import SplitResult
 
-from project_config.fetchers import fetch
+from project_config.cache import Cache
+from project_config.fetchers import (
+    download_file_from_urlsplit_scheme,
+    urlsplit_with_scheme,
+)
 from project_config.serializers import (
+    SerializerError,
     deserialize_for_url,
     guess_preferred_serializer,
     serialize_for_url,
 )
+from project_config.utils.crypto import hash_file
 
 
-if TYPE_CHECKING:
-    from project_config.compat import TypeAlias
-
-    TreeDirectory: TypeAlias = Iterator[str]
-    TreeNode: TypeAlias = str | TreeDirectory
-    TreeNodeFiles: TypeAlias = list[tuple[str, TreeNode]]
-    TreeNodeFilesIterator: TypeAlias = Iterator[tuple[str, TreeNode]]
-    FilePathsArgument: TypeAlias = Iterator[str] | list[str]
+__all__ = (
+    "cache_file",
+    "cached_local_file",
+    "fetch_remote_file",
+    "edit_local_file",
+)
 
 
-class Tree:
-    """Files cache used by the linter in checking processes.
+IGNORE_SERIALIZATION_ERRORS_CTX = functools.partial(
+    contextlib.suppress,
+    SerializerError,
+)
 
-    It represents the tree of files and directories starting
-    at the root directory of the project.
 
-    Instances of :py:class:`project_config.tree.Tree` can be
-    iterated with:
+def _split_fname_preferred_serializer(
+    fpath: str,
+) -> tuple[str, str | None]:
+    preferred_serializer: str | None = None
+    fname = fpath
+    if "?" in fpath:
+        fname, preferred_serializer = fpath.split("?", maxsplit=1)
+        # check if the serializer is really an URL with arguments after '?'
+        if "&" in preferred_serializer or "=" in preferred_serializer:
+            preferred_serializer = None
+            fname = fpath
+    return (fname, preferred_serializer)
 
-    .. code-block:: python
 
-       for fpath, fcontent in tree.files:
-           if fcontent is None:
-                # file does not exist
-                ...
-           elif not isinstance(fcontent, str):
-                # file is a directory
-                #
-                # so `fcontent` is another Tree instance here
-                for nested_fpath, nested_fcontent in fcontent.files:
-                    ...
+def _split_fpath_parts(
+    fpath: str,
+) -> tuple[str, str | None, SplitResult, str]:
+    fname, preferred_serializer = _split_fname_preferred_serializer(
+        fpath,
+    )
+    uri_parts, scheme = urlsplit_with_scheme(fname)
+    return (fname, preferred_serializer, uri_parts, scheme)
 
-    If you want to get the serialialized version of the file you can
-    use the method :py:meth:`project_config.tree.Tree.serialize_file`:
 
-    .. code-block:: python
+def cache_file(
+    fpath: str,
+    serializers: list[str] | None = None,
+    forbid_serializers: Iterable[str] | None = None,
+    ignore_serialization_errors: bool = False,
+) -> None:
+    """Cache the file content and its serialized version.
 
-       instance = fpath, tree.serialize_file(fpath)
-
-    If you are not inside a context were you have the content
-    of the files (a common scenario for conditional actions)
-    you can get them calling the method
-    :py:meth:`project_config.tree.Tree.get_file_content`:
-
-    .. code-block:: python
-
-       fcontent = tree.get_file_content(fpath)
-
-    This class caches the files contents along with their
-    serialized versions, so subsequent access to the same
-    files in the project tree are fast.
+    If the file is local, the cache key is the file path, its last
+    modification time and root directory name. If the file is remote,
+    the cache key is the file URL.
 
     Args:
-        rootdir (str): Root directory of the project.
+        fpath (str): The file path or URL.
+        serializers (Iterable[str], optional): The serializers to use.
+        forbid_serializers (Iterable[str], optional): The serializers to
+            forbid. Only makes sense for serializers guessed for the
+            file.
+        ignore_serialization_errors (bool, optional): If True, ignore
+            serialization errors.
     """
+    (
+        fname,
+        preferred_serializer,
+        uri_parts,
+        scheme,
+    ) = _split_fpath_parts(fpath)
+    is_local_file = scheme == "file"
 
-    __slots__ = {
-        "rootdir",
-        "_serialized_files_cache",
-        "_files_cache",
-        "_files",
-    }
+    if serializers is None:
+        serializers = []
+    if preferred_serializer is None:
+        preferred_serializer = guess_preferred_serializer(fname)[1]
+        if preferred_serializer is not None:
+            serializers.append(preferred_serializer)
 
-    def __init__(self, rootdir: str) -> None:
-        self.rootdir = rootdir
+    # some serializers are forbidden in some calls, like the Python
+    # one when we are precaching a Python file before executing
+    # plugins
+    if forbid_serializers:
+        for serializer in forbid_serializers:
+            if serializer in serializers:
+                serializers.remove(serializer)
 
-        # latest cached files
-        self._files: TreeNodeFiles = []
+    serialization_context = (
+        IGNORE_SERIALIZATION_ERRORS_CTX
+        if ignore_serialization_errors
+        else contextlib.nullcontext
+    )
 
-        # cache for all files
-        #
-        # TODO: this type becomes recursive, in the future, define it properly
-        # https://github.com/python/mypy/issues/731
-        self._files_cache: dict[str, tuple[bool, str | None]] = {}
+    previous_value_in_cache: dict[str, str] | None = None
 
-        # cache for serialized version of files
-        #
-        # JSON encodable version of files are cached here to avoid
-        # multiple calls to serializer for the same file
-        self._serialized_files_cache: dict[str, str] = {}
+    if is_local_file:
+        # the file is local, check if exists in the cache unmodified
+        try:
+            fstat = os.stat(fname)
+        except FileNotFoundError:
+            # the file does not exist, skip caching
+            return
+        if stat.S_ISDIR(fstat.st_mode):
+            # the file is a directory, skip caching
+            return
 
-    @property
-    def files(self) -> list[tuple[str, str | Iterator[str]]]:
-        """Returns an array of the current cached files for a rule action.
+        fhash = hash_file(fname)
 
-        Returns:
-            list: Array of tuples with the relative path to the file
-                ``rootdir`` as the first item and the content of the file
-                as the second one.
-        """
-        result = []
-        for fpath, _content in self._files:
-            result.append(
-                (
-                    os.path.relpath(fpath, self.rootdir)
-                    + ("/" if fpath.endswith("/") else ""),
-                    _content,
-                ),
-            )
-        return result
+        previous_value_in_cache = Cache.get(fhash)
+        if previous_value_in_cache is None:
+            # if not, cache the file content
+            with open(fname, encoding="utf-8") as f:
+                plain_fcontent = f.read()
 
-    def normalize_path(self, fpath: str) -> str:
-        """Normalize a path given his relative path to the root directory.
+            new_cache_value = {"_plain": plain_fcontent}
 
-        Args:
-            fpath (str): Path to the file relative to the root directory.
+            with serialization_context():  # type: ignore
+                for serializer in serializers or []:
+                    new_cache_value[serializer] = serialize_for_url(
+                        fname,
+                        plain_fcontent,
+                        prefer_serializer=serializer,
+                    )
 
-        Returns:
-            str: Normalized absolute path.
-        """
-        return os.path.join(self.rootdir, fpath)
-
-    def _cache_file(self, fpath: str) -> str:
-        """Cache a file normalizing its path.
-
-        Args:
-            fpath (str): Relative path from root directory.
-
-        Returns:
-            str: Normalized absolute path.
-        """
-        normalized_fpath = self.normalize_path(fpath)
-
-        if os.path.isfile(normalized_fpath):
-            with open(normalized_fpath, encoding="utf-8") as f:
-                self._files_cache[normalized_fpath] = (False, f.read())
-        elif os.path.isdir(normalized_fpath):
-            # recursive generation
-            self._files_cache[normalized_fpath] = (  # type: ignore
-                True,
-                self._generator(
-                    os.path.join(normalized_fpath, fname)
-                    for fname in os.listdir(normalized_fpath)
-                ),
+            Cache.set(
+                fhash,
+                new_cache_value,
             )
         else:
-            # file or directory does not exist
-            self._files_cache[normalized_fpath] = (False, None)
+            # file is already cached, just update serialized versions
+            _changed = False
+            with serialization_context():  # type: ignore
+                for serializer in serializers or []:
+                    if serializer not in previous_value_in_cache:
+                        previous_value_in_cache[serializer] = serialize_for_url(
+                            fname,
+                            previous_value_in_cache["_plain"],
+                            prefer_serializer=serializer,
+                        )
+                        _changed = True
 
-        return normalized_fpath
-
-    def _generator(
-        self,
-        fpaths: FilePathsArgument,
-    ) -> Iterable[tuple[str, str | None]]:
-        for fpath_or_glob in fpaths:
-            # try to get all existing files from glob
-            #
-            # note that when a glob does not match any files,
-            # is because the file does not exist, so the generator
-            # will yield it as is, which would lead to a unexistent
-            # file error when an user specifies a glob that do not
-            # match any files
-            fpaths_from_glob = glob.glob(fpath_or_glob)
-            if fpaths_from_glob:
-                for fpath in fpaths_from_glob:
-                    yield self.normalize_path(fpath), self._files_cache[
-                        self._cache_file(fpath)
-                    ][1]
-            else:
-                yield self.normalize_path(fpath_or_glob), self._files_cache[
-                    self._cache_file(fpath_or_glob)
-                ][1]
-
-    def get_file_content(self, fpath: str) -> str:
-        """Returns the content of a file given his relative path.
-
-        This method is tipically used by ``if`` plugin action conditionals
-        to get the content of the files that are not defined in ``files``
-        subject rules fields.
-
-        Args:
-            fpath (str): Path to the file relative to the root directory.
-        """
-        return self._files_cache[self._cache_file(fpath)][1]  # type: ignore
-
-    def cache_files(self, fpaths: list[str]) -> None:
-        """Cache a set of files given their paths.
-
-        Args:
-            fpaths (list): Paths to the files to store in cache.
-        """
-        self._files = list(self._generator(fpaths))  # type: ignore
-
-        for fpath, _content in self._files:
-            if _content is None:
-                if fpath in self._serialized_files_cache:
-                    self._serialized_files_cache.pop(fpath)
-
-    def serialize_file(self, fpath: str) -> Any:
-        """Returns the object-serialized version of a file.
-
-        This method is a convenient cache wrapper for
-        :py:func:`project_config.serializers.serialize_for_url`.
-        Is used by plugin actions which need an object-serialized
-        version of files to perform operations against them, like
-        the :ref:`reference/plugins:jmespath` one.
-
-        Args:
-            fpath (str): Path to the file to serialize.
-
-        Returns:
-            object: Object-serialized version of the file.
-        """
-        fpath, serializer_name = guess_preferred_serializer(fpath)
-
-        normalized_fpath = self.normalize_path(fpath)
-        try:
-            result = self._serialized_files_cache[normalized_fpath]
-        except KeyError:
-            fcontent = self.get_file_content(fpath)
-            if fcontent is None:
-                raise FileNotFoundError(
-                    f"No such file or directory: '{fpath}'",
+            if _changed:
+                Cache.set(
+                    fhash,
+                    previous_value_in_cache,
                 )
+    else:
+        # the file is remote, check if resides in the cache
+        previous_value_in_cache = Cache.get(fname)
 
-            result = serialize_for_url(
-                fpath,
-                fcontent,
-                prefer_serializer=serializer_name,
+        if previous_value_in_cache is None:
+            # TODO: What happens trying to download a directory?
+            plain_fcontent = download_file_from_urlsplit_scheme(
+                fname,
+                uri_parts,
+                scheme,
             )
-            self._serialized_files_cache[normalized_fpath] = result
-        return fpath, result
+            new_cache_value = {"_plain": plain_fcontent}
 
-    def fetch_file(self, url: str) -> Any:
-        """Fetch a file from online or offline sources given a url or path.
+            with serialization_context():  # type: ignore
+                for serializer in serializers or []:
+                    new_cache_value[serializer] = serialize_for_url(
+                        fname,
+                        plain_fcontent,
+                        prefer_serializer=serializer,
+                    )
 
-        This method is a convenient cache wrapper for
-        :py:func:`project_config.fetchers.fetch`. Used by plugin actions
-        which need an object-serialized version of files to perform
-        operations against them, like the :ref:`reference/plugins:jmespath`
-        one.
+            Cache.set(fname, new_cache_value)
+        else:
+            # file is already cached, just update serialized versions
+            _changed = False
+            with serialization_context():  # type: ignore
+                for serializer in serializers or []:
+                    if serializer not in previous_value_in_cache:
+                        previous_value_in_cache[serializer] = serialize_for_url(
+                            fname,
+                            previous_value_in_cache["_plain"],
+                            prefer_serializer=serializer,
+                        )
+                        _changed = True
 
-        Args:
-            url (str): Url or path to the file to fetch.
+            if _changed:
+                Cache.set(fname, previous_value_in_cache)
 
-        Returns:
-            object: Object-serialized version of the file.
-        """
-        try:
-            result = self._serialized_files_cache[url]
-        except KeyError:
-            result = fetch(url)
-            self._serialized_files_cache[url] = result
 
-        return result
+def cached_local_file(
+    fpath: str,
+    serializer: str | None = None,
+) -> Any:
+    """Get the cached file content.
 
-    def edit_serialized_file(self, fpath: str, new_content: Any) -> bool:
-        """Edit a file in the cache.
+    Args:
+        fpath (str): The file path.
 
-        Args:
-            fpath (str): Path to the file to edit.
-            new_content (object): New content for the file.
+    Returns:
+        str: The cached file content.
+    """
+    fname, preferred_serializer = _split_fname_preferred_serializer(fpath)
 
-        Returns:
-            bool: True if the file content has changed, False otherwise.
-        """
-        fpath, serializer_name = guess_preferred_serializer(fpath)
+    if serializer is None:
+        if preferred_serializer is None:
+            preferred_serializer = guess_preferred_serializer(fname)[1]
+        serializer = preferred_serializer
 
-        normalized_fpath = self.normalize_path(fpath)
-        previous_content_string = self.get_file_content(fpath)
-        self._serialized_files_cache[normalized_fpath] = new_content
+    fhash = hash_file(fname)
+    previous_value_in_cache: dict[str, str] | None = Cache.get(fhash)
 
-        new_content_string = deserialize_for_url(
+    if previous_value_in_cache is None:
+        # A file could be requested but is not inside `files`
+        # object, so it is not cached yet
+        cache_file(
             fpath,
-            new_content,
-            prefer_serializer=serializer_name,
+            serializers=(
+                [serializer] if serializer not in ("_plain", None) else []
+            ),
         )
-        self._files_cache[normalized_fpath] = (False, new_content_string)
+        return cached_local_file(fpath, serializer=serializer)
 
-        if previous_content_string != new_content_string:
-            with open(fpath, "w", encoding="utf-8") as f:
-                f.write(new_content_string)
-            return True
-        return False
+    if serializer not in previous_value_in_cache:
+        previous_value_in_cache[serializer] = serialize_for_url(
+            fname,
+            previous_value_in_cache["_plain"],
+            prefer_serializer=serializer,
+        )
+
+        # Don't serialize Python files because some types like
+        # modules can't be serialized by pickle
+        #
+        # TODO: Manage this in a better way
+        if serializer == "py":
+            result = previous_value_in_cache.pop("py")
+        else:
+            result = previous_value_in_cache[serializer]
+        Cache.set(
+            fhash,
+            previous_value_in_cache,
+        )
+    else:
+        result = previous_value_in_cache[serializer]
+    return result
+
+
+def fetch_remote_file(
+    uri: str,
+    serializer: str | None = None,
+) -> Any:
+    """Fetch the remote file content.
+
+    Args:
+        uri (str): The file uri.
+        serializer (str, optional): The serializer to use.
+    """
+    (
+        fname,
+        preferred_serializer,
+        uri_parts,
+        scheme,
+    ) = _split_fpath_parts(uri)
+    if scheme == "file":
+        cache_file(uri)
+        return cached_local_file(uri)
+
+    if serializer is None:
+        if preferred_serializer is None:
+            _, serializer = guess_preferred_serializer(fname)
+        serializer = preferred_serializer
+
+    previous_value_in_cache: dict[str, str] | None = Cache.get(fname)
+
+    if previous_value_in_cache is None:
+        plain_fcontent = download_file_from_urlsplit_scheme(
+            fname,
+            uri_parts,
+            scheme,
+        )
+        new_cache_value = {"_plain": plain_fcontent}
+    else:
+        new_cache_value = previous_value_in_cache
+
+    if serializer not in new_cache_value:
+        new_cache_value[serializer] = serialize_for_url(  # type: ignore
+            fname,
+            plain_fcontent,
+            prefer_serializer=serializer,
+        )
+
+        Cache.set(fname, new_cache_value)
+    return new_cache_value[serializer]  # type: ignore
+
+
+def edit_local_file(fpath: str, new_content: Any) -> bool:
+    """Edit the local file and update the cache.
+
+    Args:
+        fpath (str): The file path.
+        new_content (Any): The new object to serialize.
+    """
+    fpath, preferred_serializer = guess_preferred_serializer(fpath)
+    previous_content_string = cached_local_file(fpath)
+
+    new_content_string = deserialize_for_url(
+        fpath,
+        new_content,
+        prefer_serializer=preferred_serializer,
+    )
+
+    if previous_content_string != new_content_string:
+        with open(fpath, "w", encoding="utf-8") as f:
+            f.write(new_content_string)
+        cache_file(
+            fpath,
+            serializers=(
+                [preferred_serializer]
+                if preferred_serializer is not None
+                else []
+            ),
+        )
+        return True
+    return False

@@ -3,7 +3,11 @@ import pytest
 from project_config.__main__ import run
 
 
-def test_conditionals_run_before_files_existence_check(tmp_path, capsys, chdir):
+def test_conditionals_run_before_files_existence_check(
+    tmp_path,
+    capsys,
+    chdir,
+):
     project_config_toml = tmp_path / ".project-config.toml"
     project_config_toml.write_text(
         'style = "style.json5"\n',

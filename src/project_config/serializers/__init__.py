@@ -170,7 +170,7 @@ def _get_serializer_function(
         ext = os.path.splitext(url_parts.path)[-1]
         try:
             serializer = serializers[ext]
-        except KeyError:
+        except KeyError:  # pragma: no cover
             # try to guess the file type with identify
             serializer_name = _identify_serializer(
                 os.path.basename(url_parts.path),
@@ -259,7 +259,7 @@ def _get_serializer_function(
     return functools.partial(loader_function, **function_kwargs)
 
 
-def guess_preferred_serializer(url: str) -> tuple[str, str | None]:
+def guess_preferred_serializer(url: str) -> tuple[str, str]:
     """Guess preferred serializer for URL.
 
     Args:

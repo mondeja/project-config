@@ -5,7 +5,7 @@ from __future__ import annotations
 import os
 from typing import TYPE_CHECKING
 
-from project_config import ActionsContext, InterruptingError, ResultValue, Tree
+from project_config import ActionsContext, InterruptingError, ResultValue
 
 
 if TYPE_CHECKING:
@@ -16,7 +16,6 @@ class ExistencePlugin:
     @staticmethod
     def ifFilesExist(
         value: list[str],
-        tree: Tree,
         rule: Rule,  # noqa: U100
         context: ActionsContext,  # noqa: U100
     ) -> Results:
@@ -31,7 +30,6 @@ class ExistencePlugin:
                     "definition": ".ifFilesExist",
                 },
             )
-            return
         elif not value:
             yield (
                 InterruptingError,
@@ -42,7 +40,6 @@ class ExistencePlugin:
                     "definition": ".ifFilesExist",
                 },
             )
-            return
 
         for f, fpath in enumerate(value):
             if not isinstance(fpath, str):
@@ -56,10 +53,8 @@ class ExistencePlugin:
                         "definition": f".ifFilesExist[{f}]",
                     },
                 )
-                continue
-            normalized_fpath = tree.normalize_path(fpath)
             if fpath.endswith("/"):
-                if not os.path.isdir(normalized_fpath):
+                if not os.path.isdir(fpath):
                     yield ResultValue, False
-            elif not os.path.isfile(normalized_fpath):
+            elif not os.path.isfile(fpath):
                 yield ResultValue, False

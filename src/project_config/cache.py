@@ -2,109 +2,114 @@
 
 from __future__ import annotations
 
-import contextlib
+import importlib.util
 import os
+import re
 import shutil
-from typing import Any
+import sys
+from typing import Any, Iterator
 
 import appdirs
 
+from project_config.compat import importlib_metadata, pickle_HIGHEST_PROTOCOL
+
+
+# ---
+
+# Workaround for https://github.com/grantjenks/python-diskcache/pull/269
+# TODO: Remove this workaround once the PR is merged and released.
+
+_diskcache_init_path = importlib.util.find_spec(
+    "diskcache",
+).origin  # type: ignore
+_diskcache_core_spec = importlib.util.spec_from_file_location(
+    "diskcache.core",
+    os.path.join(
+        os.path.dirname(_diskcache_init_path),  # type: ignore
+        "core.py",
+    ),
+)
+_diskcache_core = importlib.util.module_from_spec(
+    _diskcache_core_spec,  # type: ignore
+)
+_diskcache_core_spec.loader.exec_module(_diskcache_core)  # type: ignore
+
+DiskCache = _diskcache_core.Cache
+
+# ---
 
 CACHE_DIR = appdirs.user_data_dir(
-    appname="project-config",
-    appauthor="m",
+    appname=(
+        # Pickle protocols could change between Python versions. If a cache
+        # is created with a version of Python using an incompatible pickle
+        # protocol, errors like the next will probably occur:
+        #
+        # ValueError: unsupported pickle protocol: 5
+        #
+        # To avoid this, we create a different cache directory for each
+        # Python version
+        f"project-config-py{sys.version_info.major}{sys.version_info.minor}"
+    ),
 )
 
 
-class BaseCache:  # noqa: D101
+def generate_possible_cache_dirs() -> Iterator[str]:
+    """Generate the possible cache directories."""
+    requires_python = importlib_metadata.metadata(
+        "project-config",
+    )["Requires-Python"]
+
+    max_minor_version = re.search(  # type: ignore
+        "<\\d+\\.(\\d+)",
+        requires_python,
+    ).group(1)
+    for possible_py_dir in range(7, int(max_minor_version) + 1):
+        yield appdirs.user_data_dir(
+            appname=f"project-config-py3{possible_py_dir}",
+        )
+
+
+class Cache:
+    """Wrapper for a unique :py:class:`diskcache.core.Cache` instance."""
+
+    _cache = DiskCache(
+        directory=CACHE_DIR,
+        disk_pickle_protocol=pickle_HIGHEST_PROTOCOL,
+    )
+    _expiration_time: float | int | None = 30
+
     def __init__(self) -> None:  # pragma: no cover
         raise NotImplementedError("Cache is a not instanceable interface.")
 
     @staticmethod
     def clean() -> None:  # pragma: no cover
         """Remove the cache directory."""
-        with contextlib.suppress(FileNotFoundError):
-            shutil.rmtree(CACHE_DIR)
+        for possible_cache_dirpath in generate_possible_cache_dirs():
+            if os.path.isdir(possible_cache_dirpath):
+                shutil.rmtree(possible_cache_dirpath)
 
+    @classmethod
+    def set(cls, *args: Any, **kwargs: Any) -> Any:  # noqa: A003, D102
+        return cls._cache.set(
+            *args,
+            **dict(
+                expire=cls._expiration_time,
+                **kwargs,
+            ),
+        )
 
-if os.environ.get("PROJECT_CONFIG_USE_CACHE") == "false":
+    @classmethod
+    def get(cls, *args: Any, **kwargs: Any) -> Any:  # noqa: D102
+        return cls._cache.get(*args, **kwargs)  # pragma: no cover
 
-    class Cache(BaseCache):  # noqa: D101
-        @classmethod
-        def set(  # noqa: A003, D102
-            cls,
-            *args: Any,  # noqa: U100
-            **kwargs: Any,  # noqa: U100
-        ) -> None:  # pragma: no cover
-            pass
+    @classmethod
+    def set_expiration_time(
+        cls,
+        expiration_time: float | int | None = None,
+    ) -> None:
+        """Set the expiration time for the cache.
 
-        @classmethod
-        def get(  # noqa: D102
-            cls,
-            *args: Any,  # noqa: U100
-            **kwargs: Any,  # noqa: U100
-        ) -> None:  # pragma: no cover
-            pass
-
-        @classmethod
-        def set_expiration_time(  # noqa: D102 pragma: no cover
-            cls,
-            expiration_time: float | int | None = None,  # noqa: U100
-        ) -> None:  # pragma: no cover
-            pass
-
-else:
-    # Workaround for https://github.com/grantjenks/python-diskcache/pull/269
-    # TODO: Remove this workaround once the PR is merged and released.
-    import importlib.util
-
-    _diskcache_init_path = importlib.util.find_spec(
-        "diskcache",
-    ).origin  # type: ignore
-    _diskcache_core_spec = importlib.util.spec_from_file_location(
-        "diskcache.core",
-        os.path.join(
-            os.path.dirname(_diskcache_init_path),  # type: ignore
-            "core.py",
-        ),
-    )
-    _diskcache_core = importlib.util.module_from_spec(
-        _diskcache_core_spec,  # type: ignore
-    )
-    _diskcache_core_spec.loader.exec_module(_diskcache_core)  # type: ignore
-
-    DiskCache = _diskcache_core.Cache
-
-    class Cache(BaseCache):  # type: ignore
-        """Wrapper for a unique :py:class:`diskcache.core.Cache` instance."""
-
-        _cache = DiskCache(CACHE_DIR)
-        _expiration_time: float | int | None = 30
-
-        @classmethod
-        def set(cls, *args: Any, **kwargs: Any) -> Any:  # noqa: A003, D102
-            return cls._cache.set(
-                *args,
-                **dict(
-                    expire=cls._expiration_time,
-                    **kwargs,
-                ),
-            )
-
-        @classmethod
-        def get(cls, *args: Any, **kwargs: Any) -> str | None:  # noqa: D102
-            return cls._cache.get(  # type: ignore  # pragma: no cover
-                *args, **kwargs
-            )
-
-        @classmethod
-        def set_expiration_time(
-            cls,
-            expiration_time: float | int | None = None,
-        ) -> None:
-            """Set the expiration time for the cache.
-
-            Args:
-                expiration_time (float): Time in seconds.
-            """
-            cls._expiration_time = expiration_time
+        Args:
+            expiration_time (float): Time in seconds.
+        """
+        cls._expiration_time = expiration_time

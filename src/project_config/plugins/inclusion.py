@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import os
 import pprint
+import stat
 from typing import TYPE_CHECKING
 
 from project_config import (
@@ -11,7 +12,7 @@ from project_config import (
     Error,
     InterruptingError,
     ResultValue,
-    Tree,
+    tree,
 )
 from project_config.utils.jmespath import (
     JMESPathError,
@@ -45,7 +46,6 @@ class InclusionPlugin:
     @staticmethod
     def includeLines(
         value: list[str],
-        tree: Tree,
         rule: Rule,  # noqa: U100
         context: ActionsContext,
     ) -> Results:
@@ -54,13 +54,11 @@ class InclusionPlugin:
                 "message": "The value must be of type array",
                 "definition": ".includeLines",
             }
-            return
         elif not value:
             yield InterruptingError, {
                 "message": "The value must not be empty",
                 "definition": ".includeLines",
             }
-            return
 
         expected_lines = []
         for i, line in enumerate(value):
@@ -93,7 +91,6 @@ class InclusionPlugin:
                         ),
                         "definition": f".includeLines[{i}]",
                     }
-                    return
 
             elif not isinstance(line, str):
                 yield InterruptingError, {
@@ -103,26 +100,25 @@ class InclusionPlugin:
                     ),
                     "definition": f".includeLines[{i}]",
                 }
-                return
             clean_line = line.strip("\r\n")
             if clean_line in expected_lines:
                 yield InterruptingError, {
                     "message": f"Duplicated expected line '{clean_line}'",
                     "definition": f".includeLines[{i}]",
                 }
-                return
             elif not clean_line:
                 yield InterruptingError, {
                     "message": "Expected line must not be empty",
                     "definition": f".includeLines[{i}]",
                 }
-                return
             expected_lines.append(clean_line)
 
-        for f, (fpath, fcontent) in enumerate(tree.files):
-            if fcontent is None:
+        for f, fpath in enumerate(context.files):
+            try:
+                fstat = os.stat(fpath)
+            except FileNotFoundError:
                 continue
-            elif not isinstance(fcontent, str):
+            if stat.S_ISDIR(fstat.st_mode):
                 yield (
                     InterruptingError,
                     _directories_not_accepted_as_inputs_error(
@@ -132,47 +128,52 @@ class InclusionPlugin:
                         f".files[{f}]",
                     ),
                 )
-                continue
 
-            fcontent_lines = fcontent.splitlines()
+            fcontent_lines = tree.cached_local_file(fpath)
             for line_index, expected_line in enumerate(expected_lines):
                 if expected_line not in fcontent_lines:
                     if context.fix:
+                        instance = tree.cached_local_file(
+                            fpath,
+                            serializer="text",
+                        )
+
                         if not fixer_query:
-                            fixer_query = f"insert(@, `-1`, '{expected_line}')"
-
-                        try:
-                            compiled_fixer_query = (
-                                compile_JMESPath_expression_or_error(
-                                    fixer_query,
-                                )
-                            )
-                        except JMESPathError as exc:
-                            yield InterruptingError, {
-                                "message": exc.message,
-                                "definition": f".includeLines[{line_index}]",
-                            }
-                            continue
-
-                        _, instance = tree.serialize_file(fpath)
-
-                        try:
-                            diff = fix_tree_serialized_file_by_jmespath(
-                                compiled_fixer_query,
-                                instance,
-                                fpath,
-                                tree,
-                            )
-                        except JMESPathError as exc:
-                            yield InterruptingError, {
-                                "message": exc.message,
-                                "definition": f".includeLines[{line_index}]",
-                            }
-                            continue
-                        else:
+                            instance.append(expected_line)
+                            tree.edit_local_file(fpath, instance)
                             fixed = True
-                            if not diff:
-                                continue
+                        else:
+                            try:
+                                compiled_fixer_query = (
+                                    compile_JMESPath_expression_or_error(
+                                        fixer_query,
+                                    )
+                                )
+                            except JMESPathError as exc:
+                                yield InterruptingError, {
+                                    "message": exc.message,
+                                    "definition": (
+                                        f".includeLines[{line_index}]"
+                                    ),
+                                }
+
+                            try:
+                                changed = fix_tree_serialized_file_by_jmespath(
+                                    compiled_fixer_query,
+                                    instance,
+                                    fpath,
+                                )
+                            except JMESPathError as exc:
+                                yield InterruptingError, {
+                                    "message": exc.message,
+                                    "definition": (
+                                        f".includeLines[{line_index}]"
+                                    ),
+                                }
+                            else:
+                                fixed = True
+                                if not changed:  # pragma: no cover
+                                    continue
                     else:
                         fixed = False
 
@@ -187,7 +188,6 @@ class InclusionPlugin:
     @staticmethod
     def ifIncludeLines(
         value: dict[str, list[str]],
-        tree: Tree,
         rule: Rule,  # noqa: U100
         context: ActionsContext,  # noqa: U100
     ) -> Results:
@@ -196,13 +196,11 @@ class InclusionPlugin:
                 "message": "The value must be of type object",
                 "definition": ".ifIncludeLines",
             }
-            return
         elif not value:
             yield InterruptingError, {
                 "message": "The value must not be empty",
                 "definition": ".ifIncludeLines",
             }
-            return
 
         for fpath, expected_lines in value.items():
             if not fpath:
@@ -210,7 +208,6 @@ class InclusionPlugin:
                     "message": "File paths must not be empty",
                     "definition": ".ifIncludeLines",
                 }
-                return
 
             if not isinstance(expected_lines, list):
                 yield InterruptingError, {
@@ -220,17 +217,15 @@ class InclusionPlugin:
                     ),
                     "definition": f".ifIncludeLines[{fpath}]",
                 }
-                return
             elif not expected_lines:
                 yield InterruptingError, {
                     "message": "Expected lines must not be empty",
                     "definition": f".ifIncludeLines[{fpath}]",
                 }
-                return
 
-            fcontent = tree.get_file_content(fpath)
-
-            if fcontent is None:
+            try:
+                fstat = os.stat(fpath)
+            except FileNotFoundError:
                 yield InterruptingError, {
                     "message": (
                         "File specified in conditional 'ifIncludeLines'"
@@ -239,8 +234,7 @@ class InclusionPlugin:
                     "file": fpath,
                     "definition": f".ifIncludeLines[{fpath}]",
                 }
-                return
-            elif not isinstance(fcontent, str):
+            if stat.S_ISDIR(fstat.st_mode):
                 yield (
                     InterruptingError,
                     _directories_not_accepted_as_inputs_error(
@@ -250,9 +244,11 @@ class InclusionPlugin:
                         f".ifIncludeLines[{fpath}]",
                     ),
                 )
-                return
 
-            fcontent_lines = fcontent.splitlines()
+            fcontent_lines = tree.cached_local_file(
+                fpath,
+                serializer="text",
+            )
             checked_lines = []
             for i, line in enumerate(expected_lines):
                 if not isinstance(line, str):
@@ -264,7 +260,6 @@ class InclusionPlugin:
                         "definition": f".ifIncludeLines[{fpath}][{i}]",
                         "file": fpath,
                     }
-                    return
                 clean_line = line.strip("\r\n")
                 if not clean_line:
                     yield InterruptingError, {
@@ -272,14 +267,12 @@ class InclusionPlugin:
                         "definition": f".ifIncludeLines[{fpath}][{i}]",
                         "file": fpath,
                     }
-                    return
                 elif clean_line in checked_lines:
                     yield InterruptingError, {
                         "message": f"Duplicated expected line '{clean_line}'",
                         "definition": f".ifIncludeLines[{fpath}][{i}]",
                         "file": fpath,
                     }
-                    return
 
                 if clean_line not in fcontent_lines:
                     yield ResultValue, False
@@ -290,7 +283,6 @@ class InclusionPlugin:
     @staticmethod
     def excludeContent(
         value: list[str],
-        tree: Tree,
         rule: Rule,  # noqa: U100
         context: ActionsContext,
     ) -> Results:
@@ -301,18 +293,19 @@ class InclusionPlugin:
                 "message": "The contents to exclude must be of type array",
                 "definition": ".excludeContent",
             }
-            return
         elif not value:
             yield InterruptingError, {
                 "message": "The contents to exclude must not be empty",
                 "definition": ".excludeContent",
             }
-            return
 
-        for f, (fpath, fcontent) in enumerate(tree.files):
-            if fcontent is None:
+        for f, fpath in enumerate(context.files):
+            try:
+                fstat = os.stat(fpath)
+            except FileNotFoundError:
                 continue
-            elif not isinstance(fcontent, str):
+
+            if stat.S_ISDIR(fstat.st_mode):
                 yield (
                     InterruptingError,
                     _directories_not_accepted_as_inputs_error(
@@ -322,7 +315,6 @@ class InclusionPlugin:
                         f".files[{f}]",
                     ),
                 )
-                continue
 
             # Normalize newlines
             checked_content = []
@@ -347,7 +339,6 @@ class InclusionPlugin:
                                 ),
                                 "definition": f".excludeContent[{i}]",
                             }
-                            return
                 else:
                     yield InterruptingError, {
                         "message": (
@@ -358,7 +349,6 @@ class InclusionPlugin:
                         "definition": f".excludeContent[{i}]",
                         "file": fpath,
                     }
-                    return
 
                 if not content:
                     yield InterruptingError, {
@@ -366,15 +356,14 @@ class InclusionPlugin:
                         "definition": f".excludeContent[{i}]",
                         "file": fpath,
                     }
-                    return
                 elif content in checked_content:
                     yield InterruptingError, {
                         "message": f"Duplicated content to exclude '{content}'",
                         "definition": f".excludeContent[{i}]",
                         "file": fpath,
                     }
-                    return
 
+                fcontent = tree.cached_local_file(fpath, serializer="_plain")
                 if content in fcontent:
                     if fixer_query:
                         fixable = True
@@ -391,26 +380,26 @@ class InclusionPlugin:
                                     "message": exc.message,
                                     "definition": f".excludeContent[{i}]",
                                 }
-                                return
 
-                            _, instance = tree.serialize_file(fpath)
+                            instance = tree.cached_local_file(
+                                fpath,
+                                serializer="text",
+                            )
 
                             try:
-                                diff = fix_tree_serialized_file_by_jmespath(
+                                changed = fix_tree_serialized_file_by_jmespath(
                                     compiled_fixer_query,
                                     instance,
                                     fpath,
-                                    tree,
                                 )
                             except JMESPathError as exc:
                                 yield InterruptingError, {
                                     "message": exc.message,
                                     "definition": f".excludeContent[{i}]",
                                 }
-                                return
                             else:
                                 fixed = True
-                                if not diff:
+                                if not changed:  # pragma: no cover
                                     continue
                     else:
                         fixed = False

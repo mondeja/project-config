@@ -20,7 +20,7 @@ from project_config.config import CONFIG_CACHE_REGEX, _cache_string_to_seconds
         ("300 tropecientos de trillones de decenios", ValueError),
         ("750 foobarbazes", ValueError),
         ("45 secondhours", 45 * 60**2),  # the comparation is lazy
-        ("never", 0),
+        ("never", 1),  # minimum for Tree working
         ("4 weeks", 60**2 * 24 * 7 * 4),
         ("2 week", 60**2 * 24 * 7 * 2),
     ),

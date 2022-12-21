@@ -543,7 +543,9 @@ def test_JMESPathsMatch_fix(
                 ),
             ],
             {
-                "package.json": JSON_2_INDENTED('{"foo": "baz", "bar": "qux"}'),
+                "package.json": JSON_2_INDENTED(
+                    '{"foo": "baz", "bar": "qux"}',
+                ),
             },
             id="update()",
         ),

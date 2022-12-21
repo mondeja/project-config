@@ -59,6 +59,40 @@ def _get_scheme_from_urlparts(url_parts: urllib.parse.SplitResult) -> str:
     )
 
 
+def uri_is_pointing_to_local_file(uri: str) -> bool:
+    """Return True if an URI is pointing to a local file."""
+    url_parts = urllib.parse.urlsplit(uri)
+    return _get_scheme_from_urlparts(url_parts) == "file"
+
+
+def urlsplit_with_scheme(url: str) -> tuple[urllib.parse.SplitResult, str]:
+    """Return a tuple with the URL parts and the scheme."""
+    url_parts = urllib.parse.urlsplit(url)
+    scheme = _get_scheme_from_urlparts(url_parts)
+    return url_parts, scheme
+
+
+def download_file_from_urlsplit_scheme(
+    url: str,
+    url_parts: urllib.parse.SplitResult,
+    scheme: str,
+    **kwargs: Any,
+) -> str:
+    """Download a file from a URL knowing its scheme."""
+    try:
+        module = importlib.import_module(f"project_config.fetchers.{scheme}")
+    except ImportError:
+        raise SchemeProtocolNotImplementedError(scheme)
+
+    try:
+        # TODO: ModuleType with protocol here?
+        return module.fetch(url_parts, **kwargs)  # type: ignore
+    except FileNotFoundError:
+        raise FetchError(f"'{url}' file not found")
+    except ProjectConfigTimeoutError as exc:
+        raise FetchError(exc.message)
+
+
 def fetch(url: str, **kwargs: Any) -> Any:
     """Fetch a result given an URI.
 
@@ -69,20 +103,20 @@ def fetch(url: str, **kwargs: Any) -> Any:
 
     url_parts = urllib.parse.urlsplit(url)
     scheme = _get_scheme_from_urlparts(url_parts)
-    try:
-        module = importlib.import_module(f"project_config.fetchers.{scheme}")
-    except ImportError:
-        raise SchemeProtocolNotImplementedError(scheme)
+
+    string = download_file_from_urlsplit_scheme(
+        url,
+        url_parts,
+        scheme,
+        **kwargs,
+    )
 
     try:
-        string = module.fetch(url_parts, **kwargs)
-    except FileNotFoundError:
-        raise FetchError(f"'{url}' file not found")
-    except ProjectConfigTimeoutError as exc:
-        raise FetchError(exc.message)
-
-    try:
-        return serialize_for_url(url, string, prefer_serializer=serializer_name)
+        return serialize_for_url(
+            url,
+            string,
+            prefer_serializer=serializer_name,
+        )
     except SerializerError as exc:
         raise FetchError(exc.message)
 
@@ -169,5 +203,7 @@ def resolve_maybe_relative_url(url: str, parent_url: str, rootdir: str) -> str:
             action="Resolving",
         )
 
-    # other protocols like https uses absolute URLs
+    # other protocols like https are supposed to use absolute URLs
+    #
+    # TODO: Implement (or test) relative URLs for other protocols
     return url

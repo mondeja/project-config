@@ -46,7 +46,9 @@ def _normalize_indentation_to_2_spaces(string: str) -> str:
         if spaces_at_start < 3:
             new_lines.append(line)
         else:
-            new_lines.append(f'{" " * int(spaces_at_start / 2)}{line.lstrip()}')
+            new_lines.append(
+                f'{" " * int(spaces_at_start / 2)}{line.lstrip()}',
+            )
 
     return "\n".join(new_lines)
 

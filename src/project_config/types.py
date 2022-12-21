@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
+import dataclasses
 from collections.abc import Iterator
-from typing import TYPE_CHECKING, NamedTuple
+from typing import TYPE_CHECKING
 
 
 if TYPE_CHECKING:
@@ -30,10 +31,12 @@ if TYPE_CHECKING:
     Results: TypeAlias = Iterator[LazyGenericResultType]
 
 
-class ActionsContext(NamedTuple):
-    """Context of global data passed to rule verbs."""
+@dataclasses.dataclass
+class ActionsContext:
+    """State of project config when executing rule verbs."""
 
     fix: bool
+    files: list[str] = dataclasses.field(default_factory=list)
 
 
 __all__ = ("Rule", "Results", "ErrorDict", "ActionsContext")

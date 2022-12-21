@@ -104,10 +104,10 @@ docs/
     )
 
 
-def test_fixed_files_dirs_are_recached(tmp_path, chdir, monkeypatch, capsys):
-    """Assert that fixed files and directories are updated in ``tree`` cache."""
-    monkeypatch.setenv("NO_COLOR", "true")
-
+def test_fixed_files_dirs_are_recached(tmp_path, chdir, capsys):
+    """Assert that fixed files and directories are updated in
+    ``tree`` cache.
+    """
     (tmp_path / ".project-config.toml").write_text('style = "style.json5"')
     (tmp_path / "style.json5").write_text(
         """{
@@ -130,8 +130,9 @@ def test_fixed_files_dirs_are_recached(tmp_path, chdir, monkeypatch, capsys):
     )
 
     with chdir(tmp_path):
-        assert run(["fix"]) == 1
+        exitcode = run(["fix", "--nocolor"])
         out, err = capsys.readouterr()
+        assert exitcode == 1, f"{out}\n{err}"
         assert (tmp_path / "README.md").exists()
         assert (tmp_path / "README.md").read_text() == ""
         assert (tmp_path / ".gitignore").exists()

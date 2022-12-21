@@ -154,12 +154,11 @@ from project_config.plugins.jmespath import JMESPathPlugin
                         "definition": ".ifJMESPathsMatch[bar.ext]",
                         "file": "bar.ext",
                         "message": (
-                            "The file to check if matches against JMES paths"
-                            " does not exist"
+                            "The file to check if matches against"
+                            " JMES paths does not exist"
                         ),
                     },
                 ),
-                (ResultValue, True),
             ],
             id="unexistent-file",
         ),
@@ -178,7 +177,6 @@ from project_config.plugins.jmespath import JMESPathPlugin
                         "file": "bar/",
                     },
                 ),
-                (ResultValue, True),
             ],
             id="directory",
         ),
@@ -193,12 +191,12 @@ from project_config.plugins.jmespath import JMESPathPlugin
                         "definition": ".ifJMESPathsMatch[foo.json]",
                         "file": "foo.json",
                         "message": (
-                            "'foo.json' can't be serialized as a valid object:"
-                            " Expecting value: line 1 column 6 (char 5)"
+                            "'foo.json' can't be serialized as a"
+                            " valid object: Expecting value: line"
+                            " 1 column 6 (char 5)"
                         ),
                     },
                 ),
-                (ResultValue, True),
             ],
             id="unserializable-file",
         ),
@@ -222,7 +220,6 @@ from project_config.plugins.jmespath import JMESPathPlugin
                         "file": "foo.json",
                     },
                 ),
-                (ResultValue, True),
             ],
             id="invalid-expression-compilation",
         ),
@@ -237,8 +234,8 @@ from project_config.plugins.jmespath import JMESPathPlugin
                         "definition": ".ifJMESPathsMatch[foo.json][0]",
                         "message": (
                             "Invalid JMESPath 'contains(@)'."
-                            " Expected to return 'a', raised"
-                            " JMESPath arity error: Expected 2 arguments"
+                            " Raised JMESPath arity error:"
+                            " Expected 2 arguments"
                             " for function contains(),"
                             " received 1"
                         ),

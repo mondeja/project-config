@@ -9,14 +9,14 @@ from typing import TYPE_CHECKING, cast
 
 import pytest
 
-from project_config.tree import Tree
+from project_config import tree
 
 
 if TYPE_CHECKING:
     from project_config.compat import TypeAlias
 
     FileType: TypeAlias = str | bool | None
-    FilesType: TypeAlias = list[tuple[str, FileType]] | dict[str, FileType]
+    FilesType: TypeAlias = dict[str, FileType]
     RootdirType: TypeAlias = str | pathlib.Path
 
 
@@ -52,7 +52,7 @@ def create_files(  # noqa: D103
                 with open(full_path, "w", encoding="utf-8") as f:
                     f.write(content)
             except OSError:
-                # globs raising here in Windows
+                # globs raising here on Windows
                 continue
 
 
@@ -60,15 +60,18 @@ def create_tree(  # noqa: D103
     files: FilesType,
     rootdir: RootdirType,
     cache_files: bool = False,
-) -> Tree:
+) -> None:
     create_files(files, rootdir)
-    tree = Tree(str(rootdir))
     if cache_files:
         _files = (
             list(files) if isinstance(files, dict) else [f[0] for f in files]
         )
-        tree.cache_files(_files)
-    return tree
+        for fpath in _files:
+            tree.cache_file(
+                fpath,
+                forbid_serializers=("py",),
+                ignore_serialization_errors=True,
+            )
 
 
 def assert_expected_files(  # noqa: D103

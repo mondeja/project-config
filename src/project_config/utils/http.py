@@ -50,7 +50,7 @@ def _GET(
     )
 
 
-def GET(url: str, use_cache: bool = True, **kwargs: Any) -> str:
+def GET(url: str, use_cache: bool = True, **kwargs: Any) -> Any:
     """Perform an HTTP/s GET request and return the result.
 
     Args:
@@ -59,7 +59,7 @@ def GET(url: str, use_cache: bool = True, **kwargs: Any) -> str:
             requesting the resource.
     """
     if use_cache:
-        result = Cache.get(url)
+        result = Cache.get(url)  # this could return Any
         if result is None:
             result = _GET(url, **kwargs)
             Cache.set(url, result)

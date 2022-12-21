@@ -4,11 +4,11 @@
       // Setting environment variables
       //
       // If `cache` field is of type string, set an environment
-      // variable `PREVIOUS_PROJECT_CONFIG_CACHE` with the value
+      // variable `PROJECT_CONFIG_TEST` with the value
       files: [".project-config.toml"],
       JMESPathsMatch: [
         [
-          "op(op(type(cache), '!=', 'string'), '|', op(type(setenv('PREVIOUS_PROJECT_CONFIG_CACHE', cache)), '==', 'object'))",
+          "op(op(type(cache), '!=', 'string'), '|', op(type(setenv('PROJECT_CONFIG_TEST', cache)), '==', 'object'))",
           true,
         ],
       ],
@@ -21,7 +21,7 @@
       files: [".project-config.toml"],
       ifJMESPathsMatch: {
         ".project-config.toml": [
-          ["type(getenv('PREVIOUS_PROJECT_CONFIG_CACHE'))", "string"],
+          ["type(getenv('PROJECT_CONFIG_TEST'))", "string"],
         ],
       },
       JMESPathsMatch: [["cache", "never"]],
@@ -33,12 +33,10 @@
       files: [".project-config.toml"],
       ifJMESPathsMatch: {
         ".project-config.toml": [
-          ["type(getenv('PREVIOUS_PROJECT_CONFIG_CACHE'))", "string"],
+          ["type(getenv('PROJECT_CONFIG_TEST'))", "string"],
         ],
       },
-      JMESPathsMatch: [
-        ["type(setenv('PREVIOUS_PROJECT_CONFIG_CACHE', null))", "object"],
-      ],
+      JMESPathsMatch: [["type(setenv('PROJECT_CONFIG_TEST', null))", "object"]],
     },
   ],
 }
