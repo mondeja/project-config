@@ -6,6 +6,7 @@ import builtins
 import json
 import operator
 import os
+import pickle
 import pprint
 import re
 import shlex
@@ -781,6 +782,9 @@ def evaluate_JMESPath(
     """
     # This caching is a bit tricky, because some things as if a
     # directory exists can not be cached, can change.
+    #
+    # Also, Python modules can't be pickled, so we can't cache them.
+    #
     # TODO: This needs to be properly tested, currently a cache
     #       inconsistency is affecting the example 008.
     if any(
@@ -792,8 +796,16 @@ def evaluate_JMESPath(
             options=jmespath_options,
         )
 
+    try:
+        pickled_instance = pickle.dumps(instance)
+    except TypeError:
+        return compiled_expression.search(
+            instance,
+            options=jmespath_options,
+        )
+
     result = Cache.get(
-        f"jm://E?{compiled_expression.expression}:{str(instance)}",
+        f"jm://E?{compiled_expression.expression}:{hash(pickled_instance)}",
     )
     if result is None:
         try:
