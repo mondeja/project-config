@@ -48,9 +48,8 @@ class CustomConfigFileNotFound(ProjectConfigInvalidConfig):
     """A custom configuration file has not been found."""
 
     def __init__(self, fpath: str) -> None:
-        relfpath = os.path.relpath(fpath, os.getcwd())
         super().__init__(
-            f"Custom configuration file '{relfpath}' not found",
+            f"Custom configuration file '{fpath}' not found",
         )
 
 

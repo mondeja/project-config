@@ -15,7 +15,7 @@ def test_config_file_not_found(tmp_path, capsys, chdir):
 def test_config_file_not_found_with_traceback(tmp_path, chdir):
     with chdir(tmp_path), pytest.raises(
         CustomConfigFileNotFound,
-        match=r"unexistent-file\.toml$",
+        match=r"^unexistent-file\.toml$",
     ):
         run(["check", "-c", "unexistent-file.toml", "-T"])
 

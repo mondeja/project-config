@@ -77,7 +77,9 @@ def read_config(
     """
     if custom_fpath:
         if not os.path.isfile(custom_fpath):
-            raise CustomConfigFileNotFound(custom_fpath)
+            raise CustomConfigFileNotFound(
+                os.path.relpath(custom_fpath, rootdir),
+            )
         tree.cache_file(custom_fpath)
         return custom_fpath, tree.cached_local_file(
             custom_fpath,
