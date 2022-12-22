@@ -135,6 +135,8 @@ contents are substrings of each file content.
      ]
    }
 
+.. versionadded:: 0.8.0
+
 excludeContent
 ==============
 
