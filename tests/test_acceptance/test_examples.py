@@ -81,9 +81,10 @@ def _run_example(
         assert err == expected_stderr
         assert out == ""
 
+        temp_example_dir = str(tmp_path / os.path.basename(example_dir))
         temp_example_dir = shutil.copytree(
             example_dir,
-            tmp_path / os.path.basename(example_dir),
+            temp_example_dir,
         )
 
         if exitcode == 0:
@@ -128,7 +129,6 @@ def test_examples(
     expected_stderr,
     fixable,
     interface,
-    chdir,
     capsys,
     tmp_path,
     fake_cli_namespace,
@@ -144,7 +144,6 @@ def test_examples(
         expected_stderr,
         fixable,
         interface,
-        chdir,
         capsys,
         tmp_path,
         fake_cli_namespace,
@@ -163,7 +162,6 @@ def test_examples_with_online_sources_check(
     expected_stderr,
     fixable,
     interface,
-    chdir,
     capsys,
     tmp_path,
     fake_cli_namespace,
@@ -174,7 +172,6 @@ def test_examples_with_online_sources_check(
         expected_stderr,
         fixable,
         interface,
-        chdir,
         capsys,
         tmp_path,
         fake_cli_namespace,
