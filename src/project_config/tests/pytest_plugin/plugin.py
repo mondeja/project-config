@@ -150,7 +150,7 @@ def project_config_plugin_action_asserter(
             ActionsContext(fix=fix, files=list(files)),
         ):
             results.append((result_type, result_value))
-            if (result_type is InterruptingError) or (
+            if result_type is InterruptingError or (
                 result_type is ResultValue and result_value is False
             ):
                 break
