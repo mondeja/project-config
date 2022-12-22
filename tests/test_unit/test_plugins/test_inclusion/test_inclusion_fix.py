@@ -343,6 +343,28 @@ def test_includeContent_fix(
         ),
         pytest.param(
             {"file.txt": "This line must not be in .gitgnore\nfoo\nbar"},
+            ["This line must not be in .gitgnore"],
+            None,
+            [
+                (
+                    Error,
+                    {
+                        "definition": ".excludeLines[0]",
+                        "file": "file.txt",
+                        "fixable": True,
+                        "fixed": True,
+                        "message": (
+                            "Found expected line to exclude"
+                            " 'This line must not be in .gitgnore'"
+                        ),
+                    },
+                ),
+            ],
+            {"file.txt": "foo\nbar\n"},
+            id="smart-fixer-query",
+        ),
+        pytest.param(
+            {"file.txt": "This line must not be in .gitgnore\nfoo\nbar"},
             [
                 "Other line",
                 [

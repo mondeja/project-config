@@ -373,7 +373,7 @@ class InclusionPlugin:
                         )
 
                         if not fixer_query:
-                            instance.append(expected_line)
+                            instance.remove(expected_line)
                             tree.edit_local_file(fpath, instance)
                             fixed = True
                         else:
