@@ -121,7 +121,6 @@ UNCACHEABLE_JMESPATH_VARIABLES = {
     "rmdir",
     "glob",
     "getenv",
-    "gh_tags",
     # other useful
     "dirname",
     "basename",

@@ -27,12 +27,6 @@ ROOTDIR_NAME = os.path.basename(os.getcwd())
             id="getenv(...)",
         ),
         pytest.param(
-            "gh_tags",
-            {},
-            None,
-            id="gh_tags",
-        ),
-        pytest.param(
             "listdir",
             {"listdir": "bar"},
             "bar",
