@@ -59,17 +59,18 @@ def project_config_plugin_action_asserter(
             If the value is ``None``, the file will be created as a directory.
         value (typing.Any): Value passed to the action.
         expected_results (list): Expected results.
-        additional_files (dict): Dictionary of additional files to create.
-            These will not be defined inside the ``files`` property of the rule.
-            Follows the same format as ``files``.
-        assert_case_method_name (bool): If ``True``, the method name will
-            be checked to match against camelCase or PascalCase style.
-        deprecated (bool): If ``True``, the action must raise a deprecation
-            warning.
-        fix (bool): If ``True``, the action will be called with the ``fix``
-            mode active. Use ``expected_files`` to check the content of the
-            files after the fix is applyed.
-        expected_files (dict): Dictionary of expected files.
+        additional_files (dict, optional): Dictionary of additional files to
+            create. These will not be defined inside the ``files`` property of
+            the rule. Follows the same format as ``files``.
+        assert_case_method_name (bool, optional): If ``True`` (default), the
+            method name will be checked to match against camelCase or
+            PascalCase style.
+        deprecated (bool, optional): If ``True``, the action must raise a
+            deprecation warning. Default value is ``False``.
+        fix (bool, optional): If ``True``, the action will be called with
+            the ``fix`` mode active. Use ``expected_files`` to check the content
+            of the files after the fix is applyed.
+        expected_files (dict, optional): Dictionary of expected files.
 
     .. rubric:: Example
 
@@ -123,7 +124,7 @@ def project_config_plugin_action_asserter(
                rule,
                expected_results,
            )
-    """  # noqa: D417 -> this seems not needed, error in flake8-docstrings?
+    """  # noqa: D417  (TODO: bug in flake8-docstrings?)
     create_files(files, rootdir)
 
     if additional_files is not None:

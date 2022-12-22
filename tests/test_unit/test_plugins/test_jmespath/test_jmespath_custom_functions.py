@@ -7,6 +7,10 @@ from project_config import Error
 from project_config.plugins.jmespath import JMESPathPlugin
 
 
+def is_deprecated_function(value):
+    return "regex_matchall" in value[0][0]
+
+
 @pytest.mark.parametrize(
     ("files", "value", "rule", "expected_results"),
     (
@@ -561,7 +565,7 @@ def test_JMESPath_custom_functions(
         value,
         rule,
         expected_results,
-        deprecated="regex_matchall" in value[0][0],
+        deprecated=is_deprecated_function(value),
     )
 
 
@@ -614,5 +618,131 @@ def test_JMESPath_expanded_standard_functions(
         value,
         rule,
         expected_results,
-        deprecated="regex_matchall" in value[0][0],
+        deprecated=is_deprecated_function(value),
+    )
+
+
+@pytest.mark.parametrize(
+    ("files", "value", "rule", "expected_results"),
+    (
+        pytest.param(
+            {"foo.json": "{}"},
+            [
+                ["isfile('foo.json')", True],
+                ["isfile('bar.json')", False],
+            ],
+            None,
+            [],
+            id="isfile()",
+        ),
+        pytest.param(
+            {},
+            [
+                ["isdir('foo')", False],
+                ["isdir('bar')", False],
+                ["mkdir('foo')", None],
+                ["isdir('foo')", True],
+                ["isdir('bar')", False],
+            ],
+            None,
+            [],
+            id="isdir()",
+        ),
+        pytest.param(
+            {"foo.json": "{}"},
+            [
+                ["exists('foo.json')", True],
+                ["exists('bar.json')", False],
+                ["isdir('baz')", False],
+                ["mkdir('baz')", True],
+                ["isdir('baz')", True],
+                ["exists('baz')", True],
+            ],
+            None,
+            [],
+            id="exists()",
+        ),
+        pytest.param(
+            {"foo.json": "{}"},
+            [
+                ["exists('bar')", False],
+                ["mkdir('bar')", True],
+                ["isdir('bar')", True],
+                ["listdir('bar')", []],
+                ["mkdir('bar/baz')", True],
+                ["mkdir('bar')", False],
+                ["listdir('bar')", ["baz"]],
+            ],
+            None,
+            [],
+            id="mkdir()",
+        ),
+        pytest.param(
+            {"foo.json": "{}"},
+            [
+                ["isdir('baz')", False],
+                ["mkdir('baz')", True],
+                ["isdir('baz')", True],
+                ["rmdir('baz')", True],
+                ["exists('baz')", False],
+                ["rmdir('baz')", False],
+            ],
+            None,
+            [],
+            id="rmdir()",
+        ),
+        pytest.param(
+            {"bar.json": "{}"},
+            [
+                ["listdir('foo')", None],
+                ["isdir('baz')", False],
+                ["mkdir('baz')", True],
+                ["isdir('baz')", True],
+                ["mkdir('baz/qux')", True],
+                ["listdir('baz')", ["qux"]],
+            ],
+            None,
+            [],
+            id="listdir()",
+        ),
+        pytest.param(
+            {"bar.json": "{}"},
+            [
+                ["glob('*.json')", ["bar.json"]],
+            ],
+            None,
+            [],
+            id="glob(pattern)",
+        ),
+        pytest.param(
+            {"bar.json": "{}"},
+            [
+                ["mkdir('foo')", True],
+                ["mkdir('foo/bar')", True],
+                ["mkdir('foo/bar/baz')", True],
+                ["mkdir('foo/bar/qux')", True],
+                ["length(glob('**'))", 3],
+                ["length(glob('**', `true`))", 6],
+            ],
+            None,
+            [],
+            id="glob(pattern, recursive=true)",
+        ),
+    ),
+)
+def test_JMESPath_file_system_functions(
+    files,
+    value,
+    rule,
+    expected_results,
+    assert_project_config_plugin_action,
+):
+    assert_project_config_plugin_action(
+        JMESPathPlugin,
+        "JMESPathsMatch",
+        files,
+        value,
+        rule,
+        expected_results,
+        deprecated=is_deprecated_function(value),
     )
