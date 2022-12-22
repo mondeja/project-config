@@ -48,7 +48,9 @@ class CustomConfigFileNotFound(ProjectConfigInvalidConfig):
     """A custom configuration file has not been found."""
 
     def __init__(self, fpath: str) -> None:
-        super().__init__(f"Custom configuration file '{fpath}' not found")
+        super().__init__(
+            f"Custom configuration file '{fpath}' not found",
+        )
 
 
 class PyprojectTomlFoundButHasNoConfig(ProjectConfigInvalidConfig):

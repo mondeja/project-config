@@ -77,7 +77,9 @@ def read_config(
     """
     if custom_fpath:
         if not os.path.isfile(custom_fpath):
-            raise CustomConfigFileNotFound(custom_fpath)
+            raise CustomConfigFileNotFound(
+                os.path.relpath(custom_fpath, rootdir),
+            )
         tree.cache_file(custom_fpath)
         return custom_fpath, tree.cached_local_file(
             custom_fpath,
@@ -131,8 +133,19 @@ def validate_config_style(config: Any) -> list[str]:
                     )
                 elif not style:
                     error_messages.append(f"style[{i}] -> must not be empty")
+                else:
+                    fpath = os.path.join(
+                        os.path.dirname(config["_path"]),
+                        style,
+                    )
+                    if os.path.isfile(fpath):
+                        config["style"][i] = fpath
     elif not config["style"]:
         error_messages.append("style -> must not be empty")
+    else:
+        fpath = os.path.join(os.path.dirname(config["_path"]), config["style"])
+        if os.path.isfile(fpath):
+            config["style"] = fpath
     return error_messages
 
 
@@ -284,11 +297,16 @@ class FileConfig:
 
             self.raw_: RawConfigType = copy.deepcopy(config)
 
+        # Temporally store configuration path to use in validation
+        config["_path"] = self.path
+
         validate_config(self.path, config)
         config["cache"] = _cache_string_to_seconds(config["cache"])
 
         # cli configuration in file
         config["cli"] = validate_cli_config(self.path, config.get("cli", {}))
+
+        del config["_path"]
 
         # set the cache expiration time globally
         Cache.set_expiration_time(config["cache"])

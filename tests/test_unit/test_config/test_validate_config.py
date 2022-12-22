@@ -1,3 +1,5 @@
+import os
+
 import pytest
 
 from project_config.config import (
@@ -82,12 +84,19 @@ for style_case in VALIDATE_CONFIG_STYLE_CASES:
         )
 
 
+def cfg_with_path(config):
+    config["_path"] = os.getcwd()
+    return config
+
+
 @pytest.mark.parametrize(
     ("config", "expected_error_messages"),
     VALIDATE_CONFIG_STYLE_CASES,
 )
 def test_validate_config_style(config, expected_error_messages):
-    assert validate_config_style(config) == expected_error_messages
+    assert (
+        validate_config_style(cfg_with_path(config)) == expected_error_messages
+    )
 
 
 @pytest.mark.parametrize(
@@ -104,10 +113,10 @@ def test_validate_config_cache(config, expected_error_messages):
 )
 def test_validate_config(config, expected_error_messages):
     if not expected_error_messages:
-        validate_config("foo", config)
+        validate_config("foo", cfg_with_path(config))
     else:
         with pytest.raises(ProjectConfigInvalidConfigSchema) as exc_info:
-            validate_config("foo", config)
+            validate_config("foo", cfg_with_path(config))
 
         # replace because there are escape characters in regexes
         exc_messages = str(exc_info.value).replace("\\\\", "\\")

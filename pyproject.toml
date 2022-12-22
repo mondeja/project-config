@@ -30,6 +30,7 @@ keywords = [
 ]
 dependencies = [
   "importlib-metadata-argparse-version",
+  "contextlib-chdir",
   "tomli-w~=1.0",
   'pyjson5',
   "colored",

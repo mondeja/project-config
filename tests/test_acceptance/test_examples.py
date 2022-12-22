@@ -70,57 +70,52 @@ def _run_example(
     expected_stderr,
     fixable,
     interface,
-    chdir,
     capsys,
     tmp_path,
     fake_cli_namespace,
 ):
     if interface == "CLI":
-        with chdir(example_dir):
-            exitcode = run(["--nocolor", "check"])
-            out, err = capsys.readouterr()
-            assert exitcode == expected_exitcode, err
-            assert err == expected_stderr
-            assert out == ""
+        exitcode = run(["--nocolor", "--rootdir", example_dir, "check"])
+        out, err = capsys.readouterr()
+        assert exitcode == expected_exitcode, err
+        assert err == expected_stderr
+        assert out == ""
 
+        temp_example_dir = str(tmp_path / os.path.basename(example_dir))
         temp_example_dir = shutil.copytree(
             example_dir,
-            tmp_path / os.path.basename(example_dir),
+            temp_example_dir,
         )
 
         if exitcode == 0:
-            with chdir(temp_example_dir):
-                exitcode = run(["--nocolor", "fix"])
-                out, err = capsys.readouterr()
-                assert exitcode == 0, err
-                assert err == ""
-                assert out == ""
+            exitcode = run(["--nocolor", "--rootdir", temp_example_dir, "fix"])
+            out, err = capsys.readouterr()
+            assert exitcode == 0, err
+            assert err == ""
+            assert out == ""
         elif fixable:
-            with chdir(temp_example_dir):
-                exitcode = run(["--nocolor", "fix"])
-                out, err = capsys.readouterr()
-                msg = f"{out}\n---\n{err}"
-                assert out == "", msg
-                assert "(FIXED)" in err, msg
-                assert exitcode == 1, msg
+            exitcode = run(["--nocolor", "--rootdir", temp_example_dir, "fix"])
+            out, err = capsys.readouterr()
+            msg = f"{out}\n---\n{err}"
+            assert out == "", msg
+            assert "(FIXED)" in err, msg
+            assert exitcode == 1, msg
 
-            with chdir(temp_example_dir):
-                exitcode = run(["--nocolor", "fix"])
-                out, err = capsys.readouterr()
-                msg = f"{out}\n---\n{err}"
-                assert out == "", msg
-                assert err == "", msg
-                assert exitcode == 0, msg
+            exitcode = run(["--nocolor", "--rootdir", temp_example_dir, "fix"])
+            out, err = capsys.readouterr()
+            msg = f"{out}\n---\n{err}"
+            assert out == "", msg
+            assert err == "", msg
+            assert exitcode == 0, msg
 
     else:
-        with chdir(example_dir):
-            namespace = fake_cli_namespace(rootdir=example_dir, color=False)
-            if expected_stderr:
-                with pytest.raises(ProjectConfigException) as exc:
-                    check(namespace)
-                assert str(exc.value) == expected_stderr.rstrip("\n")
-            else:
+        namespace = fake_cli_namespace(rootdir=example_dir, color=False)
+        if expected_stderr:
+            with pytest.raises(ProjectConfigException) as exc:
                 check(namespace)
+            assert str(exc.value) == expected_stderr.rstrip("\n")
+        else:
+            check(namespace)
 
 
 @pytest.mark.parametrize("interface", ("CLI", "API"))
@@ -134,7 +129,6 @@ def test_examples(
     expected_stderr,
     fixable,
     interface,
-    chdir,
     capsys,
     tmp_path,
     fake_cli_namespace,
@@ -150,7 +144,6 @@ def test_examples(
         expected_stderr,
         fixable,
         interface,
-        chdir,
         capsys,
         tmp_path,
         fake_cli_namespace,
@@ -169,7 +162,6 @@ def test_examples_with_online_sources_check(
     expected_stderr,
     fixable,
     interface,
-    chdir,
     capsys,
     tmp_path,
     fake_cli_namespace,
@@ -180,7 +172,6 @@ def test_examples_with_online_sources_check(
         expected_stderr,
         fixable,
         interface,
-        chdir,
         capsys,
         tmp_path,
         fake_cli_namespace,
