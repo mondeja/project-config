@@ -678,7 +678,7 @@ def test_JMESPath_expanded_standard_functions(
             id="mkdir()",
         ),
         pytest.param(
-            {},
+            {"foo.json": "{}"},
             [
                 ["isdir('baz')", False],
                 ["mkdir('baz')", True],
@@ -694,6 +694,7 @@ def test_JMESPath_expanded_standard_functions(
         pytest.param(
             {"bar.json": "{}"},
             [
+                ["listdir('foo')", None],
                 ["isdir('baz')", False],
                 ["mkdir('baz')", True],
                 ["isdir('baz')", True],
