@@ -423,6 +423,166 @@ def test_ifIncludeLines(
                 (
                     InterruptingError,
                     {
+                        "definition": ".includeContent",
+                        "message": (
+                            "The contents to include must be of type array"
+                        ),
+                    },
+                ),
+            ],
+            id="invalid-value-type",
+        ),
+        pytest.param(
+            {"foo.ext": False},
+            [],
+            None,
+            [
+                (
+                    InterruptingError,
+                    {
+                        "definition": ".includeContent",
+                        "message": (
+                            "The contents to include must not be empty"
+                        ),
+                    },
+                ),
+            ],
+            id="invalid-empty-value",
+        ),
+        pytest.param(
+            {"foo.ext": "bar"},
+            ["bar", 5],
+            None,
+            [
+                (
+                    InterruptingError,
+                    {
+                        "definition": ".includeContent[1]",
+                        "message": (
+                            "The content to include '5' must be"
+                            " of type string or array"
+                        ),
+                        "file": "foo.ext",
+                    },
+                ),
+            ],
+            id="invalid-value-item-type",
+        ),
+        pytest.param(
+            {"foo.ext": "bar"},
+            ["bar", ""],
+            None,
+            [
+                (
+                    InterruptingError,
+                    {
+                        "definition": ".includeContent[1]",
+                        "message": "The content to include must not be empty",
+                        "file": "foo.ext",
+                    },
+                ),
+            ],
+            id="invalid-empty-value-item",
+        ),
+        pytest.param(
+            {"foo.ext": "bar \n  baz"},
+            ["bar", "baz", "bar"],
+            None,
+            [
+                (
+                    InterruptingError,
+                    {
+                        "definition": ".includeContent[2]",
+                        "message": "Duplicated content to include 'bar'",
+                        "file": "foo.ext",
+                    },
+                ),
+            ],
+            id="invalid-duplicated-value-item",
+        ),
+        pytest.param(
+            {"foo.ext": False},
+            ["foo"],
+            None,
+            [],
+            id="unexistent-file",
+        ),
+        pytest.param(
+            {"foo": None},
+            ["foo"],
+            None,
+            [
+                (
+                    InterruptingError,
+                    {
+                        "definition": ".files[0]",
+                        "file": "foo/",
+                        "message": (
+                            "Directory found but the verb 'includeContent'"
+                            " does not accepts directories as inputs"
+                        ),
+                    },
+                ),
+            ],
+            id="apply-to-directory",
+        ),
+        pytest.param(
+            {"foo.ext": "foo bar\nbaz"},
+            ["qux"],
+            None,
+            [
+                (
+                    Error,
+                    {
+                        "definition": ".includeContent[0]",
+                        "file": "foo.ext",
+                        "message": (
+                            "Content 'qux' expected to be included not found"
+                        ),
+                        "fixable": False,
+                        "fixed": False,
+                    },
+                ),
+            ],
+            id="content-not-included",
+        ),
+        pytest.param(
+            {"foo.ext": "foo bar\nbaz"},
+            ["foo"],
+            None,
+            [],
+            id="content-included",
+        ),
+    ),
+)
+def test_includeContent(
+    files,
+    value,
+    rule,
+    expected_results,
+    assert_project_config_plugin_action,
+):
+    assert_project_config_plugin_action(
+        InclusionPlugin,
+        "includeContent",
+        files,
+        value,
+        rule,
+        expected_results,
+    )
+
+
+@pytest.mark.parametrize(
+    ("files", "value", "rule", "expected_results"),
+    (
+        pytest.param(
+            {"foo.ext": False},
+            5,
+            None,
+            [
+                (
+                    InterruptingError,
+                    {
                         "definition": ".excludeContent",
                         "message": (
                             "The contents to exclude must be of type array"
@@ -542,7 +702,7 @@ def test_ifIncludeLines(
                     },
                 ),
             ],
-            id="content-included",
+            id="content-not-excluded",
         ),
         pytest.param(
             {"foo.ext": "foo bar\nbaz"},

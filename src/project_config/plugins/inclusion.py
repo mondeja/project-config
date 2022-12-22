@@ -281,13 +281,146 @@ class InclusionPlugin:
                     checked_lines.append(clean_line)
 
     @staticmethod
+    def includeContent(
+        value: list[str],
+        rule: Rule,  # noqa: U100
+        context: ActionsContext,
+    ) -> Results:
+        if not isinstance(value, list):
+            yield InterruptingError, {
+                "message": "The contents to include must be of type array",
+                "definition": ".includeContent",
+            }
+        elif not value:
+            yield InterruptingError, {
+                "message": "The contents to include must not be empty",
+                "definition": ".includeContent",
+            }
+
+        for f, fpath in enumerate(context.files):
+            try:
+                fstat = os.stat(fpath)
+            except FileNotFoundError:
+                continue
+
+            if stat.S_ISDIR(fstat.st_mode):
+                yield (
+                    InterruptingError,
+                    _directories_not_accepted_as_inputs_error(
+                        "verb",
+                        "includeContent",
+                        fpath,
+                        f".files[{f}]",
+                    ),
+                )
+
+            # Normalize newlines
+            checked_content = []
+            for i, content in enumerate(value):
+                fixer_query = ""
+                if isinstance(content, str) or isinstance(content, list):
+                    if isinstance(content, list):
+                        content, fixer_query = content
+
+                        if not isinstance(content, str) or not isinstance(
+                            fixer_query,
+                            str,
+                        ):
+                            content_query = pprint.pformat(
+                                [content, fixer_query],
+                            )
+                            yield InterruptingError, {
+                                "message": (
+                                    "The '[content-to-include, fixer_query]'"
+                                    f" array  items '{content_query}'"
+                                    " must be of type string"
+                                ),
+                                "definition": f".includeContent[{i}]",
+                            }
+                else:
+                    yield InterruptingError, {
+                        "message": (
+                            "The content to include"
+                            f" '{pprint.pformat(content)}'"
+                            " must be of type string or array"
+                        ),
+                        "definition": f".includeContent[{i}]",
+                        "file": fpath,
+                    }
+
+                if not content:
+                    yield InterruptingError, {
+                        "message": "The content to include must not be empty",
+                        "definition": f".includeContent[{i}]",
+                        "file": fpath,
+                    }
+                elif content in checked_content:
+                    yield InterruptingError, {
+                        "message": f"Duplicated content to include '{content}'",
+                        "definition": f".includeContent[{i}]",
+                        "file": fpath,
+                    }
+
+                fcontent = tree.cached_local_file(fpath, serializer="_plain")
+                if content not in fcontent:
+                    if fixer_query:
+                        fixable = True
+                        fixed = False
+                        if context.fix:
+                            try:
+                                compiled_fixer_query = (
+                                    compile_JMESPath_expression_or_error(
+                                        fixer_query,
+                                    )
+                                )
+                            except JMESPathError as exc:
+                                yield InterruptingError, {
+                                    "message": exc.message,
+                                    "definition": f".includeContent[{i}]",
+                                }
+
+                            instance = tree.cached_local_file(
+                                fpath,
+                                serializer="text",
+                            )
+
+                            try:
+                                changed = fix_tree_serialized_file_by_jmespath(
+                                    compiled_fixer_query,
+                                    instance,
+                                    fpath,
+                                )
+                            except JMESPathError as exc:
+                                yield InterruptingError, {
+                                    "message": exc.message,
+                                    "definition": f".includeContent[{i}]",
+                                }
+                            else:
+                                fixed = True
+                                if not changed:  # pragma: no cover
+                                    continue
+                    else:
+                        fixed = False
+                        fixable = False
+                    yield Error, {
+                        "message": (
+                            f"Content '{content}' expected to be"
+                            " included not found"
+                        ),
+                        "file": fpath,
+                        "definition": f".includeContent[{i}]",
+                        "fixed": fixed,
+                        "fixable": fixable,
+                    }
+                else:
+                    checked_content.append(content)
+
+    @staticmethod
     def excludeContent(
         value: list[str],
         rule: Rule,  # noqa: U100
         context: ActionsContext,
     ) -> Results:
-        # TODO: allow to fix this rule passing a JMESPath as plain text
-        #   (content as string)
         if not isinstance(value, list):
             yield InterruptingError, {
                 "message": "The contents to exclude must be of type array",

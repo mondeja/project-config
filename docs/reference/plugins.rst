@@ -109,10 +109,40 @@ must correspont:
 
 .. versionadded:: 0.1.0
 
+includeContent
+==============
+
+Check that the files do not include certain content.
+
+Accepts an array of strings as the contents to exclude or
+an array of arrays with the content to exclude and the fixer query
+as two strings.
+
+The specified partial contents can match multiple lines
+and line ending characters. It just raises errors if the passed
+contents are substrings of each file content.
+
+.. rubric:: Example
+
+.. code-block:: js
+
+   {
+     rules: [
+       files: ["setup.py"],
+       includeContent: [
+         '"""Installation using setup.py is no longer supported.'
+       ]
+     ]
+   }
+
 excludeContent
 ==============
 
 Check that the files do not include certain content.
+
+Accepts an array of strings as the contents to exclude or
+an array of arrays with the content to exclude and the fixer query
+as two strings.
 
 The specified partial contents can match multiple lines
 and line ending characters. It just raises errors if the passed
@@ -131,7 +161,7 @@ contents are substrings of each file content.
 
 .. versionchanged:: 0.7.0
 
-   Accepts an array ``['content-to-exclude', fixer-query]`` for each item
+   Accepts an array ``['content-to-exclude', 'fixer-query']`` for each item
    in the array to perform editions in the file if the content is found.
 
 *********
