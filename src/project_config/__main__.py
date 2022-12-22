@@ -106,6 +106,7 @@ def build_main_parser() -> argparse.ArgumentParser:  # noqa: D103
         "--root",
         "--rootdir",
         dest="rootdir",
+        default=os.getcwd(),
         type=str,
         help=(
             "Root directory of the project. Useful if you want to"
@@ -243,6 +244,17 @@ def parse_cli_args_and_subargs(  # noqa: D103
 
 def parse_args(argv: list[str]) -> argparse.Namespace:  # noqa: D103
     args, subargs = parse_cli_args_and_subargs(build_main_parser(), argv)
+
+    # Manage config and rootdir paths
+    if not os.path.isabs(args.rootdir):
+        args.rootdir = os.path.abspath(
+            os.path.relpath(args.rootdir, os.getcwd()),
+        )
+    if args.config is not None and not os.path.isabs(args.config):
+        args.config = os.path.abspath(
+            os.path.relpath(args.config, os.getcwd()),
+        )
+
     return argparse.Namespace(**vars(args), **vars(subargs))
 
 

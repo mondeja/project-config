@@ -7,6 +7,8 @@ import os
 import shutil
 from typing import TYPE_CHECKING, Any
 
+from contextlib_chdir import chdir as chdir_ctx
+
 from project_config import tree
 from project_config.config import Config, reporter_from_config
 from project_config.constants import Error, InterruptingError, ResultValue
@@ -314,7 +316,8 @@ def check(args: argparse.Namespace) -> None:  # noqa: U100
 
     Raises errors if reported.
     """
-    ProjectConfigChecker(
-        Config(args),
-        fix_mode=args.command == "fix",
-    ).run()
+    with chdir_ctx(args.rootdir):
+        ProjectConfigChecker(
+            Config(args),
+            fix_mode=args.command == "fix",
+        ).run()
