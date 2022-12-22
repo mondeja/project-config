@@ -585,7 +585,7 @@ def test_JMESPath_custom_functions(
             ],
             None,
             [],
-            id="starts_with() accepts an array",
+            id="starts_with() accept an array",
         ),
         pytest.param(
             {"foo.json": '{"foo": "bar1234"}'},
@@ -600,7 +600,7 @@ def test_JMESPath_custom_functions(
             ],
             None,
             [],
-            id="ends_with() accepts an array",
+            id="ends_with() accept an array",
         ),
     ),
 )

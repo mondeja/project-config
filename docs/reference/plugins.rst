@@ -23,7 +23,7 @@ includeLines
 
 Check that the files include expected lines.
 
-Accepts an array of strings as the lines to exclude or
+Accept an array of strings as the lines to exclude or
 an array of arrays with the content to exclude and the fixer query
 as two strings.
 
@@ -85,7 +85,7 @@ Conditional to exclude rule only if some files include a set of lines.
 If one file don't include all lines passed as parameter,
 the rule will be ignored.
 
-Accepts an object mapping files to lines that must be included in order
+Accept an object mapping files to lines that must be included in order
 to execute the rule.
 
 .. rubric:: Example
@@ -114,7 +114,7 @@ includeContent
 
 Check that the files include certain contents.
 
-Accepts an array of strings as the contents to include or
+Accept an array of strings as the contents to include or
 an array of arrays with the content to include and the fixer query
 as two strings.
 
@@ -142,7 +142,7 @@ excludeLines
 
 Check that the files do not include certain lines.
 
-Accepts an array of strings as the lines to exclude or
+Accept an array of strings as the lines to exclude or
 an array of arrays with the line to exclude and the fixer query
 as two strings.
 
@@ -170,7 +170,7 @@ excludeContent
 
 Check that the files do not include certain content.
 
-Accepts an array of strings as the contents to exclude or
+Accept an array of strings as the contents to exclude or
 an array of arrays with the content to exclude and the fixer query
 as two strings.
 
@@ -191,7 +191,7 @@ contents are substrings of each file content.
 
 .. versionchanged:: 0.7.0
 
-   Accepts an array ``['content-to-exclude', 'fixer-query']`` for each item
+   Accept an array ``['content-to-exclude', 'fixer-query']`` for each item
    in the array to perform editions in the file if the content is found.
 
 *********
@@ -205,7 +205,7 @@ ifFilesExist
 
 Check if a set of files and/or directories exists.
 
-Accepts an array of paths. If a path ends with ``/`` character it is
+Accept an array of paths. If a path ends with ``/`` character it is
 considered a directory.
 
 .. rubric:: Examples
@@ -1044,7 +1044,7 @@ crossJMESPathsMatch
 
 JMESPaths matching between multiple files.
 
-Accepts an array of arrays. Each one of these arrays must have the syntax:
+Accept an array of arrays. Each one of these arrays must have the syntax:
 
 .. code-block:: js
 

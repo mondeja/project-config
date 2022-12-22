@@ -84,7 +84,7 @@ Time unit can be one of these (plural or singular, it doesn’t matter):
 * ``days / day``
 * ``weeks / week``
 
-Also accepts the next string to not use the cache at all.
+Also accept the next string to not use the cache at all.
 
 * ``never``
 
