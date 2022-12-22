@@ -21,11 +21,11 @@ Files content inclusion management.
 includeLines
 ============
 
-Check that the files include all lines passed as argument.
+Check that the files include expected lines.
 
-If the files don't include all lines specified as argument,
-it will raise a checking error. Newlines are ignored, so they
-should not be specified.
+Accepts an array of strings as the lines to exclude or
+an array of arrays with the content to exclude and the fixer query
+as two strings.
 
 .. rubric:: Examples
 
@@ -112,10 +112,10 @@ must correspont:
 includeContent
 ==============
 
-Check that the files do not include certain content.
+Check that the files include certain contents.
 
-Accepts an array of strings as the contents to exclude or
-an array of arrays with the content to exclude and the fixer query
+Accepts an array of strings as the contents to include or
+an array of arrays with the content to include and the fixer query
 as two strings.
 
 The specified partial contents can match multiple lines
@@ -130,7 +130,35 @@ contents are substrings of each file content.
      rules: [
        files: ["setup.py"],
        includeContent: [
-         '"""Installation using setup.py is no longer supported.'
+         'Installation using setup.py is no longer supported.',
+       ]
+     ]
+   }
+
+.. versionadded:: 0.8.0
+
+excludeLines
+============
+
+Check that the files do not include certain lines.
+
+Accepts an array of strings as the lines to exclude or
+an array of arrays with the line to exclude and the fixer query
+as two strings.
+
+.. rubric:: Example
+
+.. code-block:: js
+
+   {
+     rules: [
+       hint: 'Keep the .vscode folder',
+       files: ['.gitignore'],
+       excludeLines: [
+         '.vscode'
+         '.vscode/',
+         '/.vscode',
+         '/.vscode/',
        ]
      ]
    }

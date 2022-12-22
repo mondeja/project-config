@@ -90,7 +90,7 @@ from project_config.plugins.inclusion import InclusionPlugin
             ["foo"],
             None,
             [],
-            id="file-one-line-match-one-line",
+            id="included-basic",
         ),
         pytest.param(
             {"foo.ext": "foo"},
@@ -108,14 +108,14 @@ from project_config.plugins.inclusion import InclusionPlugin
                     },
                 ),
             ],
-            id="file-one-line-no-match-one-line",
+            id="included-error",
         ),
         pytest.param(
             {"foo.ext": "foo\r\nbar\r\nbaz\r\n"},
             ["foo", "baz"],
             None,
             [],
-            id="file-two-lines-match-two-lines",
+            id="windows-newlines",
         ),
         pytest.param(
             {"foo": None},
@@ -405,6 +405,164 @@ def test_ifIncludeLines(
     assert_project_config_plugin_action(
         InclusionPlugin,
         "ifIncludeLines",
+        files,
+        value,
+        rule,
+        expected_results,
+    )
+
+
+@pytest.mark.parametrize(
+    ("files", "value", "rule", "expected_results"),
+    (
+        pytest.param(
+            {"foo.ext": "foo"},
+            5,
+            None,
+            [
+                (
+                    InterruptingError,
+                    {
+                        "message": "The value must be of type array",
+                        "definition": ".excludeLines",
+                    },
+                ),
+            ],
+            id="invalid-value-type",
+        ),
+        pytest.param(
+            {"foo.ext": "foo"},
+            [],
+            None,
+            [
+                (
+                    InterruptingError,
+                    {
+                        "message": "The value must not be empty",
+                        "definition": ".excludeLines",
+                    },
+                ),
+            ],
+            id="invalid-empty-value",
+        ),
+        pytest.param(
+            {"foo.ext": "foo"},
+            ["bar", 5],
+            None,
+            [
+                (
+                    InterruptingError,
+                    {
+                        "message": (
+                            "The expected line '5' must be of type"
+                            " string or array"
+                        ),
+                        "definition": ".excludeLines[1]",
+                    },
+                ),
+            ],
+            id="invalid-value-item-type",
+        ),
+        pytest.param(
+            {"foo.ext": "foo"},
+            ["bar", ""],
+            None,
+            [
+                (
+                    InterruptingError,
+                    {
+                        "message": "Expected line must not be empty",
+                        "definition": ".excludeLines[1]",
+                    },
+                ),
+            ],
+            id="invalid-empty-value-item",
+        ),
+        pytest.param(
+            {"foo.ext": "foo"},
+            ["bar", "baz", "bar", "qux"],
+            None,
+            [
+                (
+                    InterruptingError,
+                    {
+                        "message": "Duplicated expected line 'bar'",
+                        "definition": ".excludeLines[2]",
+                    },
+                ),
+            ],
+            id="invalid-duplicated-value-item",
+        ),
+        pytest.param(
+            {"foo.ext": "foo"},
+            ["bar"],
+            None,
+            [],
+            id="excluded-basic",
+        ),
+        pytest.param(
+            {"foo.ext": "foo"},
+            ["foo"],
+            None,
+            [
+                (
+                    Error,
+                    {
+                        "definition": ".excludeLines[0]",
+                        "file": "foo.ext",
+                        "fixed": False,
+                        "fixable": True,
+                        "message": "Found expected line to exclude 'foo'",
+                    },
+                ),
+            ],
+            id="excluded-error",
+        ),
+        pytest.param(
+            {"foo.ext": "foo\r\nbar\r\nbaz\r\n"},
+            ["qux", "quux"],
+            None,
+            [],
+            id="windows-newlines",
+        ),
+        pytest.param(
+            {"foo": None},
+            ["foo", "baz"],
+            None,
+            [
+                (
+                    InterruptingError,
+                    {
+                        "definition": ".files[0]",
+                        "file": "foo/",
+                        "message": (
+                            "Directory found but the verb 'excludeLines'"
+                            " does not accepts directories as inputs"
+                        ),
+                    },
+                ),
+            ],
+            id="directory",
+        ),
+        pytest.param(
+            {"foo": False},
+            ["foo", "baz"],
+            None,
+            [],
+            id="file-not-exists",
+        ),
+    ),
+)
+def test_excludeLines(
+    files,
+    value,
+    rule,
+    expected_results,
+    assert_project_config_plugin_action,
+):
+    assert_project_config_plugin_action(
+        InclusionPlugin,
+        "excludeLines",
         files,
         value,
         rule,
