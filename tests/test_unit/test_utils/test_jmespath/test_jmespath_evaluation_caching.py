@@ -3,7 +3,6 @@
 import os
 
 import pytest
-from testing_helpers import mark_end2end
 
 from project_config.utils import jmespath as jmespath_utils
 
@@ -11,7 +10,6 @@ from project_config.utils import jmespath as jmespath_utils
 ROOTDIR_NAME = os.path.basename(os.getcwd())
 
 
-@mark_end2end
 @pytest.mark.parametrize(
     ("expression", "instance", "expected_result"),
     (
@@ -29,53 +27,70 @@ ROOTDIR_NAME = os.path.basename(os.getcwd())
             id="getenv(...)",
         ),
         pytest.param(
-            r"regex_match('v\d', gh_tags('mondeja', 'project-config')[0])",
+            "gh_tags",
             {},
-            True,
-            id="gh_tags(...)",
+            None,
+            id="gh_tags",
         ),
-        # TODO: add tests for listdir, isfile, isdir... functions calls
         pytest.param(
-            r"listdir",
+            "listdir",
             {"listdir": "bar"},
             "bar",
             id="listdir",
         ),
         pytest.param(
-            r"isfile",
+            "isfile",
             {"isfile": "bar"},
             "bar",
             id="isfile",
         ),
         pytest.param(
-            r"isdir",
+            "isdir",
             {"isdir": "bar"},
             "bar",
             id="isdir",
         ),
         pytest.param(
-            r"exists",
+            "exists",
             {"exists": "bar"},
             "bar",
             id="exists",
         ),
         pytest.param(
-            r"dirname",
+            "dirname",
             {"dirname": "bar"},
             "bar",
             id="dirname",
         ),
         pytest.param(
-            r"basename",
+            "basename",
             {"basename": "bar"},
             "bar",
             id="basename",
         ),
         pytest.param(
-            r"extname",
+            "extname",
             {"extname": "bar"},
             "bar",
             id="extname",
+        ),
+        pytest.param(
+            "mkdir",
+            {"mkdir": "bar"},
+            "bar",
+            id="mkdir",
+        ),
+        pytest.param(
+            "rmdir",
+            {"rmdir": "bar"},
+            "bar",
+            id="rmdir",
+        ),
+        pytest.param(
+            "glob",
+            {"glob": "bar"},
+            "bar",
+            id="glob",
         ),
     ),
 )
@@ -91,10 +106,10 @@ def test_excluded_expressions_from_caching_are_not_cached(
     monkeypatch.setenv("PROJECT_CONFIG", "true")
     monkeypatch.setenv("PROJECT_CONFIG_ROOTDIR", ROOTDIR_NAME)
 
-    cache_spy = mocker.spy(jmespath_utils, "Cache")
+    cache_spy = mocker.spy(jmespath_utils.Cache, "get")
     result = jmespath_utils.evaluate_JMESPath(
         jmespath_utils.jmespath_compile(expression),
         instance,
     )
     assert result == expected_result
-    assert cache_spy.call_count == 0
+    assert cache_spy.call_count == 0, "Cache.get() has been called"

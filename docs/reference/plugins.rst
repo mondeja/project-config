@@ -650,6 +650,59 @@ always takes the regex to apply as the first parameter following the Python's
 
    .. versionadded:: 0.5.0
 
+.. rubric:: File system functions
+
+The next functions are useful for file system operations.
+
+.. function:: isfile(path: str) -> bool
+
+   Return ``true`` if the given ``path`` is a file,  ``false`` otherwise.
+
+   .. versionadded:: 0.8.0
+
+.. function:: isdir(path: str) -> bool
+
+   Return ``true`` if the given ``path`` is a directory,
+   ``false`` otherwise.
+
+   .. versionadded:: 0.8.0
+
+.. function:: exists(path: str) -> bool
+
+   Return ``true`` if the given ``path`` exists, ``false`` otherwise.
+
+   .. versionadded:: 0.8.0
+
+.. function:: listdir(path: str) -> list[str] | null
+
+   Return a list of the files and directories in the given ``path``.
+   If the ``path`` does not exist, return ``null``.
+
+   .. versionadded:: 0.8.0
+
+.. function:: mkdir(path: str) -> bool
+
+   Create a directory in the given ``path``. Return ``true`` if the
+   directory has been created, ``false`` if it already exists.
+
+   .. versionadded:: 0.8.0
+
+.. function:: rmdir(path: str) -> bool
+
+   Remove the directory in the given ``path``. Return ``true`` if the
+   directory has been removed, ``false`` if it does not exist.
+
+   .. versionadded:: 0.8.0
+
+.. function:: glob(pattern: str[, recursive: bool = false]) -> list[str]
+
+   Return a list of the files and directories in the given ``path`` using
+   the :py:mod:`glob` module. If recursive is true, the pattern ``**``
+   will match any files and zero or more directories, subdirectories and
+   symbolic links to directories.
+
+   .. versionadded:: 0.8.0
+
 .. rubric:: Updater functions
 
 The next functions take an value as the first argument, make some update

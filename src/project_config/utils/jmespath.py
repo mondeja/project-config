@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import builtins
+import glob
 import json
 import operator
 import os
@@ -10,6 +11,7 @@ import pickle
 import pprint
 import re
 import shlex
+import shutil
 import sys
 import warnings
 from collections.abc import Callable
@@ -115,6 +117,8 @@ UNCACHEABLE_JMESPATH_VARIABLES = {
     "isfile",
     "isdir",
     "exists",
+    "mkdir",
+    "rmdir",
     "glob",
     "getenv",
     "gh_tags",
@@ -519,6 +523,7 @@ class JMESPathProjectConfigFunctions(JMESPathFunctions):
 
     @jmespath_func_signature(
         {"types": ["string"]},
+        {"types": ["string"]},
         {"types": ["string"], "variadic": True},
     )
     def _func_replace(
@@ -552,6 +557,58 @@ class JMESPathProjectConfigFunctions(JMESPathFunctions):
         else:
             os.environ[envvar] = value
         return dict(os.environ)
+
+    # File system functions
+    @jmespath_func_signature({"types": ["string"]})
+    def _func_isfile(self, path: str) -> bool:
+        return os.path.isfile(path)
+
+    @jmespath_func_signature({"types": ["string"]})
+    def _func_isdir(self, path: str) -> bool:
+        return os.path.isdir(path)
+
+    @jmespath_func_signature({"types": ["string"]})
+    def _func_exists(self, path: str) -> bool:
+        try:
+            os.stat(path)
+        except FileNotFoundError:
+            return False
+        return True
+
+    @jmespath_func_signature({"types": ["string"]})
+    def _func_mkdir(self, path: str) -> bool:
+        try:
+            os.stat(path)
+        except FileNotFoundError:
+            os.mkdir(path)
+            return True
+        return False
+
+    @jmespath_func_signature({"types": ["string"]})
+    def _func_rmdir(self, path: str) -> bool:
+        try:
+            os.stat(path)
+        except FileNotFoundError:
+            return False
+        shutil.rmtree(path)
+        return True
+
+    @jmespath_func_signature({"types": ["string"]})
+    def _func_listdir(self, path: str) -> list[str] | None:
+        try:
+            return os.listdir(path)
+        except FileNotFoundError:
+            return None
+
+    @jmespath_func_signature(
+        {"types": ["string"], "variadic": True},
+    )
+    def _func_glob(
+        self,
+        pattern: str,
+        *args: Any,  # recursive
+    ) -> list[str]:
+        return glob.glob(pattern, recursive=args[0] if args else False)
 
     # Github functions
     @jmespath_func_signature(
@@ -792,10 +849,12 @@ def evaluate_JMESPath(
     #
     # TODO: This needs to be properly tested, currently a cache
     #       inconsistency is affecting the example 008.
-    if any(
-        not_cacheable_expression in compiled_expression.expression
-        for not_cacheable_expression in UNCACHEABLE_JMESPATH_VARIABLES
-    ):
+    is_cacheable_expression = True
+    for uncacheable_variable in UNCACHEABLE_JMESPATH_VARIABLES:
+        if uncacheable_variable in compiled_expression.expression:
+            is_cacheable_expression = False
+            break
+    if is_cacheable_expression is False:
         return compiled_expression.search(
             instance,
             options=jmespath_options,
