@@ -150,7 +150,7 @@ JSON with 4 spaces using the ``json:pretty4`` reporter:
      show file gh://mondeja/project-config/pyproject.toml
 
 Print the result of a JMESPath query works against a file
-(accepts paths or URLs):
+(accept paths or URLs):
 
 .. code-block:: sh
 
