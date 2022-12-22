@@ -705,9 +705,9 @@ def test_JMESPath_expanded_standard_functions(
             id="listdir()",
         ),
         pytest.param(
-            {"bar.json": "{}", "baz.json": "{}"},
+            {"bar.json": "{}"},
             [
-                ["glob('*.json')", ["bar.json", "baz.json"]],
+                ["glob('*.json')", ["bar.json"]],
             ],
             None,
             [],
@@ -720,18 +720,8 @@ def test_JMESPath_expanded_standard_functions(
                 ["mkdir('foo/bar')", True],
                 ["mkdir('foo/bar/baz')", True],
                 ["mkdir('foo/bar/qux')", True],
-                ["glob('**')", ["bar.json", "bar", "foo"]],
-                [
-                    "glob('**', `true`)",
-                    [
-                        "bar.json",
-                        "bar",
-                        "foo",
-                        "foo/bar",
-                        "foo/bar/qux",
-                        "foo/bar/baz",
-                    ],
-                ],
+                ["length(glob('**'))", 3],
+                ["length(glob('**', `true`))", 6],
             ],
             None,
             [],
