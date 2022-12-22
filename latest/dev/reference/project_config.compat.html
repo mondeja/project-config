@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.compat module &mdash; project-config 0.7.9 documentation</title>
+  <title>project_config.compat module &mdash; project-config 0.8.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -34,7 +34,7 @@
             <a href="../../index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.7
+                0.8
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -78,7 +78,6 @@
 <li class="toctree-l4 current"><a class="current reference internal" href="#">project_config.compat module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="project_config.constants.html">project_config.constants module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="project_config.exceptions.html">project_config.exceptions module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="project_config.project.html">project_config.project module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="project_config.tree.html">project_config.tree module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="project_config.types.html">project_config.types module</a></li>
 </ul>
@@ -214,6 +213,23 @@ syntax forms work for Python 2.7 and 3.2+</p>
 <dt class="sig sig-object py" id="project_config.compat.cached_function">
 <span class="sig-prename descclassname"><span class="pre">project_config.compat.</span></span><span class="sig-name descname"><span class="pre">cached_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_function</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#project_config.compat.cached_function" title="Permalink to this definition"></a></dt>
 <dd><p>Simple lightweight unbounded cache.  Sometimes called “memoize”.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="project_config.compat.removeprefix">
+<span class="sig-prename descclassname"><span class="pre">project_config.compat.</span></span><span class="sig-name descname"><span class="pre">removeprefix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#project_config.compat.removeprefix" title="Permalink to this definition"></a></dt>
+<dd><p>Return a str with the given prefix string removed if present.</p>
+<p>If the string starts with the prefix string, return string[len(prefix):].
+Otherwise, return a copy of the original string.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="project_config.compat.removesuffix">
+<span class="sig-prename descclassname"><span class="pre">project_config.compat.</span></span><span class="sig-name descname"><span class="pre">removesuffix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suffix</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#project_config.compat.removesuffix" title="Permalink to this definition"></a></dt>
+<dd><p>Return a str with the given suffix string removed if present.</p>
+<p>If the string ends with the suffix string and that suffix is not empty,
+return string[:-len(suffix)]. Otherwise, return a copy of the original
+string.</p>
 </dd></dl>
 
 <dl class="py function">

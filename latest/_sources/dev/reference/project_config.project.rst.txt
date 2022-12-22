@@ -1,8 +1,0 @@
-project\_config.project module
-==============================
-
-.. automodule:: project_config.project
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :private-members:

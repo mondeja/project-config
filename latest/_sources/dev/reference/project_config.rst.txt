@@ -13,6 +13,7 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
+   project_config.commands
    project_config.config
    project_config.fetchers
    project_config.plugins
@@ -32,6 +33,5 @@ Submodules
    project_config.compat
    project_config.constants
    project_config.exceptions
-   project_config.project
    project_config.tree
    project_config.types

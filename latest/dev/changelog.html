@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Changelog &mdash; project-config 0.7.9 documentation</title>
+  <title>Changelog &mdash; project-config 0.8.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -34,7 +34,7 @@
             <a href="../index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.7
+                0.8
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -68,6 +68,8 @@
 <li class="toctree-l1"><a class="reference internal" href="plugins.html">Writing third party plugins</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reporters.html">Writing third party reporters</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#release-v0-8-0">v0.8.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#release-v0-7-9">v0.7.9</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#release-v0-7-8">v0.7.8</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#release-v0-7-7">v0.7.7</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#release-v0-7-6">v0.7.6</a></li>
@@ -116,6 +118,35 @@
              
   <section id="changelog">
 <h1>Changelog<a class="headerlink" href="#changelog" title="Permalink to this headline"></a></h1>
+<section id="release-v0-8-0">
+<h2>v0.8.0<a class="headerlink" href="#release-v0-8-0" title="Permalink to this headline"></a></h2>
+<p><em>Released on 2022-12-22 - <a class="reference external" href="https://github.com/mondeja/project-config/releases/tag/v0.8.0">GitHub</a> - <a class="reference external" href="https://pypi.org/project/project-config/v0.8.0/">PyPI</a></em></p>
+<p><g-emoji class="g-emoji" alias="warning" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/26a0.png">⚠️</g-emoji> Breaking changes:</p>
+<ul>
+<li>Globs are not allowed inside <code>files</code> arrays of rules</li>
+<li>Tree API has been changed, so third party plugins must be updated accordingly</li>
+</ul>
+<p>Bug fixes:</p>
+<ul>
+<li>Fixed some inconsistencies using <code>--rootdir</code> and <code>--config</code> CLI options.</li>
+</ul>
+<p>Enhancements:</p>
+<ul>
+<li>This version comes with a big refactor of some crucial parts of the program, which has allowed a x5 speedup improvement</li>
+<li>Don't depend on <code>typing_extensions</code> at runtime</li>
+</ul>
+<p>New features:</p>
+<ul>
+<li>Added <code>project-config show reporters</code> command to show all available reporters</li>
+<li>Added JMESPath functions for some file system operations: <code>isfile</code>, <code>isdir</code>, <code>exists</code>, <code>mkdir</code>, <code>rmdir</code> and <code>glob</code></li>
+<li>Added new actions for <code>inclusion</code> plugin: <code>exludeLines</code> and <code>includeContent</code></li>
+</ul></section>
+<section id="release-v0-7-9">
+<h2>v0.7.9<a class="headerlink" href="#release-v0-7-9" title="Permalink to this headline"></a></h2>
+<p><em>Released on 2022-12-06 - <a class="reference external" href="https://github.com/mondeja/project-config/releases/tag/v0.7.9">GitHub</a> - <a class="reference external" href="https://pypi.org/project/project-config/v0.7.9/">PyPI</a></em></p>
+<ul>
+<li>Added support for JSON5 files on Python3.11.</li>
+</ul></section>
 <section id="release-v0-7-8">
 <h2>v0.7.8<a class="headerlink" href="#release-v0-7-8" title="Permalink to this headline"></a></h2>
 <p><em>Released on 2022-11-30 - <a class="reference external" href="https://github.com/mondeja/project-config/releases/tag/v0.7.8">GitHub</a> - <a class="reference external" href="https://pypi.org/project/project-config/v0.7.8/">PyPI</a></em></p>

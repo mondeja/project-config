@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Examples &mdash; project-config 0.7.9 documentation</title>
+  <title>Examples &mdash; project-config 0.8.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -35,7 +35,7 @@
             <a href="index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.7
+                0.8
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -54,7 +54,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#project-config-self-configuration">project-config self configuration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#files-absence">Files absence</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#conditionals">Conditionals</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#conditionals-files-existence">Conditionals files existence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#intercommunication-between-rules">Intercommunication between rules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#compare-values-between-files">Compare values between files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#jmespath-against-online-sources">JMESPath against online sources</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#assert-root-directory-name">Assert root directory name</a></li>
@@ -63,7 +63,6 @@
 <li class="toctree-l2"><a class="reference internal" href="#replacing-code-blocks-languages-in-rst-documents">Replacing code blocks languages in RST documents</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#autofixing-editorconfig">Autofixing .editorconfig</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#setting-hooks-in-pre-commit-config-yaml">Setting hooks in .pre-commit-config.yaml</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#intercommunication-between-rules">Intercommunication between rules</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials/index.html">Tutorials</a></li>
@@ -219,40 +218,56 @@
 </div>
 </div></div>
 </section>
-<section id="conditionals-files-existence">
-<h2>Conditionals files existence<a class="headerlink" href="#conditionals-files-existence" title="Permalink to this headline"></a></h2>
-<dl class="simple">
-<dt>Follows the next rules:</dt><dd><ul class="simple">
-<li><p>If the directory <cite>src/</cite> exists, the file <cite>pyproject.toml</cite> must exists too.</p></li>
-<li><p>If the file <cite>pyproject.toml</cite> exists, a Python file must be present in the root directory.</p></li>
-</ul>
-</dd>
-</dl>
+<section id="intercommunication-between-rules">
+<h2>Intercommunication between rules<a class="headerlink" href="#intercommunication-between-rules" title="Permalink to this headline"></a></h2>
+<p>Using <a class="reference internal" href="reference/plugins.html#getenv" title="getenv"><code class="xref py py-func docutils literal notranslate"><span class="pre">getenv()</span></code></a> and <a class="reference internal" href="reference/plugins.html#setenv" title="setenv"><code class="xref py py-func docutils literal notranslate"><span class="pre">setenv()</span></code></a> functions to pass arbitrary data between rules.</p>
 <div class="sphinx-tabs docutils container">
-<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-4-4-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-4-4-0" name="4-0" role="tab" tabindex="0">style.json5</button><button aria-controls="panel-4-4-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-4-4-1" name="4-1" role="tab" tabindex="-1">.project-config.toml</button><button aria-controls="panel-4-4-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-4-4-2" name="4-2" role="tab" tabindex="-1">pyproject.toml</button><button aria-controls="panel-4-4-3" aria-selected="false" class="sphinx-tabs-tab" id="tab-4-4-3" name="4-3" role="tab" tabindex="-1">file.py</button><button aria-controls="panel-4-4-4" aria-selected="false" class="sphinx-tabs-tab" id="tab-4-4-4" name="4-4" role="tab" tabindex="-1">src/</button></div><div aria-labelledby="tab-4-4-0" class="sphinx-tabs-panel" id="panel-4-4-0" name="4-0" role="tabpanel" tabindex="0"><div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-4-4-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-4-4-0" name="4-0" role="tab" tabindex="0">style.json5</button><button aria-controls="panel-4-4-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-4-4-1" name="4-1" role="tab" tabindex="-1">.project-config.toml</button></div><div aria-labelledby="tab-4-4-0" class="sphinx-tabs-panel" id="panel-4-4-0" name="4-0" role="tabpanel" tabindex="0"><div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
 <span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
 <span class="w">    </span><span class="p">{</span><span class="w"></span>
-<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;pyproject.toml&quot;</span><span class="p">],</span><span class="w"></span>
-<span class="w">      </span><span class="nx">ifFilesExist</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;src/&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">      </span><span class="c1">// Setting environment variables</span><span class="w"></span>
+<span class="w">      </span><span class="c1">//</span><span class="w"></span>
+<span class="w">      </span><span class="c1">// If `cache` field is of type string, set an environment</span><span class="w"></span>
+<span class="w">      </span><span class="c1">// variable `PROJECT_CONFIG_TEST` with the value</span><span class="w"></span>
+<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.project-config.toml&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">      </span><span class="nx">JMESPathsMatch</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">        </span><span class="p">[</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;op(op(type(cache), &#39;!=&#39;, &#39;string&#39;), &#39;|&#39;, op(type(setenv(&#39;PROJECT_CONFIG_TEST&#39;, cache)), &#39;==&#39;, &#39;object&#39;))&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="kc">true</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="p">],</span><span class="w"></span>
+<span class="w">      </span><span class="p">],</span><span class="w"></span>
 <span class="w">    </span><span class="p">},</span><span class="w"></span>
 <span class="w">    </span><span class="p">{</span><span class="w"></span>
-<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;*.py&quot;</span><span class="p">],</span><span class="w"></span>
-<span class="w">      </span><span class="nx">ifFilesExist</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;pyproject.toml&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">      </span><span class="c1">// Getting environment variables</span><span class="w"></span>
+<span class="w">      </span><span class="c1">//</span><span class="w"></span>
+<span class="w">      </span><span class="c1">// If the previous environment variable is setted, change `cache`</span><span class="w"></span>
+<span class="w">      </span><span class="c1">// to `never`.</span><span class="w"></span>
+<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.project-config.toml&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">      </span><span class="nx">ifJMESPathsMatch</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="s2">&quot;.project-config.toml&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">          </span><span class="p">[</span><span class="s2">&quot;type(getenv(&#39;PROJECT_CONFIG_TEST&#39;))&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">        </span><span class="p">],</span><span class="w"></span>
+<span class="w">      </span><span class="p">},</span><span class="w"></span>
+<span class="w">      </span><span class="nx">JMESPathsMatch</span><span class="o">:</span><span class="w"> </span><span class="p">[[</span><span class="s2">&quot;cache&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;never&quot;</span><span class="p">]],</span><span class="w"></span>
+<span class="w">    </span><span class="p">},</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="c1">// Deleting environment variables</span><span class="w"></span>
+<span class="w">      </span><span class="c1">//</span><span class="w"></span>
+<span class="w">      </span><span class="c1">// If the previous environment variable is setted, delete it.</span><span class="w"></span>
+<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.project-config.toml&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">      </span><span class="nx">ifJMESPathsMatch</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="s2">&quot;.project-config.toml&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">          </span><span class="p">[</span><span class="s2">&quot;type(getenv(&#39;PROJECT_CONFIG_TEST&#39;))&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">        </span><span class="p">],</span><span class="w"></span>
+<span class="w">      </span><span class="p">},</span><span class="w"></span>
+<span class="w">      </span><span class="nx">JMESPathsMatch</span><span class="o">:</span><span class="w"> </span><span class="p">[[</span><span class="s2">&quot;type(setenv(&#39;PROJECT_CONFIG_TEST&#39;, null))&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">]],</span><span class="w"></span>
 <span class="w">    </span><span class="p">},</span><span class="w"></span>
 <span class="w">  </span><span class="p">],</span><span class="w"></span>
 <span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
 </div><div aria-labelledby="tab-4-4-1" class="sphinx-tabs-panel" hidden="true" id="panel-4-4-1" name="4-1" role="tabpanel" tabindex="0"><div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="n">style</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;style.json5&quot;</span><span class="w"></span>
-</pre></div>
-</div>
-</div><div aria-labelledby="tab-4-4-2" class="sphinx-tabs-panel" hidden="true" id="panel-4-4-2" name="4-2" role="tabpanel" tabindex="0"><div class="highlight-toml notranslate"><div class="highlight"><pre><span></span>
-</pre></div>
-</div>
-</div><div aria-labelledby="tab-4-4-3" class="sphinx-tabs-panel" hidden="true" id="panel-4-4-3" name="4-3" role="tabpanel" tabindex="0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
-</pre></div>
-</div>
-</div><div aria-labelledby="tab-4-4-4" class="sphinx-tabs-panel" hidden="true" id="panel-4-4-4" name="4-4" role="tabpanel" tabindex="0"><div class="highlight-text notranslate"><div class="highlight"><pre><span></span>
+<span class="n">cache</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;never&quot;</span><span class="w"></span>
 </pre></div>
 </div>
 </div></div>
@@ -588,62 +603,6 @@ dist/
 </pre></div>
 </div>
 </div><div aria-labelledby="tab-12-12-2" class="sphinx-tabs-panel" hidden="true" id="panel-12-12-2" name="12-2" role="tabpanel" tabindex="0"><div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="n">style</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;style.json5&quot;</span><span class="w"></span>
-</pre></div>
-</div>
-</div></div>
-</section>
-<section id="intercommunication-between-rules">
-<h2>Intercommunication between rules<a class="headerlink" href="#intercommunication-between-rules" title="Permalink to this headline"></a></h2>
-<p>Using <a class="reference internal" href="reference/plugins.html#getenv" title="getenv"><code class="xref py py-func docutils literal notranslate"><span class="pre">getenv()</span></code></a> and <a class="reference internal" href="reference/plugins.html#setenv" title="setenv"><code class="xref py py-func docutils literal notranslate"><span class="pre">setenv()</span></code></a> functions to pass arbitrary data between rules.</p>
-<div class="sphinx-tabs docutils container">
-<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-13-13-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-13-13-0" name="13-0" role="tab" tabindex="0">style.json5</button><button aria-controls="panel-13-13-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-13-13-1" name="13-1" role="tab" tabindex="-1">.project-config.toml</button></div><div aria-labelledby="tab-13-13-0" class="sphinx-tabs-panel" id="panel-13-13-0" name="13-0" role="tabpanel" tabindex="0"><div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
-<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
-<span class="w">    </span><span class="p">{</span><span class="w"></span>
-<span class="w">      </span><span class="c1">// Setting environment variables</span><span class="w"></span>
-<span class="w">      </span><span class="c1">//</span><span class="w"></span>
-<span class="w">      </span><span class="c1">// If `cache` field is of type string, set an environment</span><span class="w"></span>
-<span class="w">      </span><span class="c1">// variable `PREVIOUS_PROJECT_CONFIG_CACHE` with the value</span><span class="w"></span>
-<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.project-config.toml&quot;</span><span class="p">],</span><span class="w"></span>
-<span class="w">      </span><span class="nx">JMESPathsMatch</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
-<span class="w">        </span><span class="p">[</span><span class="w"></span>
-<span class="w">          </span><span class="s2">&quot;op(op(type(cache), &#39;!=&#39;, &#39;string&#39;), &#39;|&#39;, op(type(setenv(&#39;PREVIOUS_PROJECT_CONFIG_CACHE&#39;, cache)), &#39;==&#39;, &#39;object&#39;))&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">          </span><span class="kc">true</span><span class="p">,</span><span class="w"></span>
-<span class="w">        </span><span class="p">],</span><span class="w"></span>
-<span class="w">      </span><span class="p">],</span><span class="w"></span>
-<span class="w">    </span><span class="p">},</span><span class="w"></span>
-<span class="w">    </span><span class="p">{</span><span class="w"></span>
-<span class="w">      </span><span class="c1">// Getting environment variables</span><span class="w"></span>
-<span class="w">      </span><span class="c1">//</span><span class="w"></span>
-<span class="w">      </span><span class="c1">// If the previous environment variable is setted, change `cache`</span><span class="w"></span>
-<span class="w">      </span><span class="c1">// to `never`.</span><span class="w"></span>
-<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.project-config.toml&quot;</span><span class="p">],</span><span class="w"></span>
-<span class="w">      </span><span class="nx">ifJMESPathsMatch</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="s2">&quot;.project-config.toml&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
-<span class="w">          </span><span class="p">[</span><span class="s2">&quot;type(getenv(&#39;PREVIOUS_PROJECT_CONFIG_CACHE&#39;))&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">],</span><span class="w"></span>
-<span class="w">        </span><span class="p">],</span><span class="w"></span>
-<span class="w">      </span><span class="p">},</span><span class="w"></span>
-<span class="w">      </span><span class="nx">JMESPathsMatch</span><span class="o">:</span><span class="w"> </span><span class="p">[[</span><span class="s2">&quot;cache&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;never&quot;</span><span class="p">]],</span><span class="w"></span>
-<span class="w">    </span><span class="p">},</span><span class="w"></span>
-<span class="w">    </span><span class="p">{</span><span class="w"></span>
-<span class="w">      </span><span class="c1">// Deleting environment variables</span><span class="w"></span>
-<span class="w">      </span><span class="c1">//</span><span class="w"></span>
-<span class="w">      </span><span class="c1">// If the previous environment variable is setted, delete it.</span><span class="w"></span>
-<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.project-config.toml&quot;</span><span class="p">],</span><span class="w"></span>
-<span class="w">      </span><span class="nx">ifJMESPathsMatch</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="s2">&quot;.project-config.toml&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
-<span class="w">          </span><span class="p">[</span><span class="s2">&quot;type(getenv(&#39;PREVIOUS_PROJECT_CONFIG_CACHE&#39;))&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">],</span><span class="w"></span>
-<span class="w">        </span><span class="p">],</span><span class="w"></span>
-<span class="w">      </span><span class="p">},</span><span class="w"></span>
-<span class="w">      </span><span class="nx">JMESPathsMatch</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
-<span class="w">        </span><span class="p">[</span><span class="s2">&quot;type(setenv(&#39;PREVIOUS_PROJECT_CONFIG_CACHE&#39;, null))&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">],</span><span class="w"></span>
-<span class="w">      </span><span class="p">],</span><span class="w"></span>
-<span class="w">    </span><span class="p">},</span><span class="w"></span>
-<span class="w">  </span><span class="p">],</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
-</pre></div>
-</div>
-</div><div aria-labelledby="tab-13-13-1" class="sphinx-tabs-panel" hidden="true" id="panel-13-13-1" name="13-1" role="tabpanel" tabindex="0"><div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="n">style</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;style.json5&quot;</span><span class="w"></span>
-<span class="n">cache</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;never&quot;</span><span class="w"></span>
 </pre></div>
 </div>
 </div></div>

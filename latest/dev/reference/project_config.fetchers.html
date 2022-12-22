@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.fetchers package &mdash; project-config 0.7.9 documentation</title>
+  <title>project_config.fetchers package &mdash; project-config 0.8.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -34,7 +34,7 @@
             <a href="../../index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.7
+                0.8
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -72,6 +72,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">Reference</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="project_config.html">project_config package</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="project_config.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="project_config.commands.html">project_config.commands package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="project_config.config.html">project_config.config package</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">project_config.fetchers package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="project_config.plugins.html">project_config.plugins package</a></li>
@@ -137,6 +138,12 @@
 <dd></dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="project_config.fetchers.download_file_from_urlsplit_scheme">
+<span class="sig-prename descclassname"><span class="pre">project_config.fetchers.</span></span><span class="sig-name descname"><span class="pre">download_file_from_urlsplit_scheme</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">url_parts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/urllib.parse.html#urllib.parse.SplitResult" title="(in Python v3.11)"><span class="pre">urllib.parse.SplitResult</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">scheme</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><span class="pre">Any</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../_modules/project_config/fetchers.html#download_file_from_urlsplit_scheme"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.fetchers.download_file_from_urlsplit_scheme" title="Permalink to this definition"></a></dt>
+<dd><p>Download a file from a URL knowing its scheme.</p>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="project_config.fetchers.fetch">
 <span class="sig-prename descclassname"><span class="pre">project_config.fetchers.</span></span><span class="sig-name descname"><span class="pre">fetch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><span class="pre">Any</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><span class="pre">Any</span></a></span></span><a class="reference internal" href="../../_modules/project_config/fetchers.html#fetch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.fetchers.fetch" title="Permalink to this definition"></a></dt>
 <dd><p>Fetch a result given an URI.</p>
@@ -170,7 +177,7 @@ acts as the requester.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="project_config.fetchers.resolve_url">
-<span class="sig-prename descclassname"><span class="pre">project_config.fetchers.</span></span><span class="sig-name descname"><span class="pre">resolve_url</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.11)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/project_config/fetchers.html#resolve_url"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.fetchers.resolve_url" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">project_config.fetchers.</span></span><span class="sig-name descname"><span class="pre">resolve_url</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/project_config/fetchers.html#resolve_url"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.fetchers.resolve_url" title="Permalink to this definition"></a></dt>
 <dd><p>Resolve an URL from a custom URI to their real counterpart.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -183,6 +190,18 @@ acts as the requester.</p></li>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)">tuple</a></p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="project_config.fetchers.uri_is_pointing_to_local_file">
+<span class="sig-prename descclassname"><span class="pre">project_config.fetchers.</span></span><span class="sig-name descname"><span class="pre">uri_is_pointing_to_local_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="../../_modules/project_config/fetchers.html#uri_is_pointing_to_local_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.fetchers.uri_is_pointing_to_local_file" title="Permalink to this definition"></a></dt>
+<dd><p>Return True if an URI is pointing to a local file.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="project_config.fetchers.urlsplit_with_scheme">
+<span class="sig-prename descclassname"><span class="pre">project_config.fetchers.</span></span><span class="sig-name descname"><span class="pre">urlsplit_with_scheme</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/urllib.parse.html#urllib.parse.SplitResult" title="(in Python v3.11)"><span class="pre">urllib.parse.SplitResult</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/project_config/fetchers.html#urlsplit_with_scheme"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.fetchers.urlsplit_with_scheme" title="Permalink to this definition"></a></dt>
+<dd><p>Return a tuple with the URL parts and the scheme.</p>
 </dd></dl>
 
 <section id="submodules">

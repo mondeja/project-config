@@ -23,6 +23,7 @@ project-config CLI
 * ``project-config show plugins`` - Show all available plugins with their actions.
 * ``project-config show cache`` - Show cache directory location.
 * ``project-config show file <resource>`` - Print JSON-serialized version of the file or URL passed as argument.
+* ``project-config show reporters`` - Show all available reporters.
 * ``project-config clean cache`` - Clean the persistent cache of remote collected sources.
 
 .. tip::
@@ -149,7 +150,7 @@ JSON with 4 spaces using the ``json:pretty4`` reporter:
      show file gh://mondeja/project-config/pyproject.toml
 
 Print the result of a JMESPath query works against a file
-(accepts paths or URLs):
+(accept paths or URLs):
 
 .. code-block:: sh
 

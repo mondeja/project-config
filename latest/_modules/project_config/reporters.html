@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.reporters &mdash; project-config 0.7.9 documentation</title>
+  <title>project_config.reporters &mdash; project-config 0.8.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -32,7 +32,7 @@
             <a href="../../index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.7
+                0.8
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -102,7 +102,8 @@
 <span class="kn">import</span> <span class="nn">importlib</span>
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">types</span>
-<span class="kn">import</span> <span class="nn">typing</span> <span class="k">as</span> <span class="nn">t</span>
+<span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Callable</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
 
 <span class="kn">from</span> <span class="nn">tabulate</span> <span class="kn">import</span> <span class="n">tabulate_formats</span>
 
@@ -113,6 +114,26 @@
 
 <span class="n">DEFAULT_REPORTER</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span>
 <span class="n">PROJECT_CONFIG_REPORTERS_ENTRYPOINTS_GROUP</span> <span class="o">=</span> <span class="s2">&quot;project_config.reporters&quot;</span>
+
+
+<div class="viewcode-block" id="UnparseableReporterError"><a class="viewcode-back" href="../../dev/reference/project_config.reporters.html#project_config.reporters.UnparseableReporterError">[docs]</a><span class="k">class</span> <span class="nc">UnparseableReporterError</span><span class="p">(</span><span class="n">ProjectConfigException</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Reporter can&#39;t be parsed.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reporter_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Reporter &#39;</span><span class="si">{</span><span class="n">reporter_id</span><span class="si">}</span><span class="s2">&#39; can&#39;t be parsed. &quot;</span>
+            <span class="s2">&quot;See &#39;project-config --help&#39; for more information.&quot;</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="InvalidThirdPartyReporterName"><a class="viewcode-back" href="../../dev/reference/project_config.reporters.html#project_config.reporters.InvalidThirdPartyReporterName">[docs]</a><span class="k">class</span> <span class="nc">InvalidThirdPartyReporterName</span><span class="p">(</span><span class="n">ProjectConfigException</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A third party reporter can&#39;t be loaded by his identifier.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reporter_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Reporter &#39;</span><span class="si">{</span><span class="n">reporter_id</span><span class="si">}</span><span class="s2">&#39; not found. See all&quot;</span>
+            <span class="s2">&quot; available running &#39;project-config show reporters&#39;&quot;</span><span class="p">,</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="InvalidNotBasedThirdPartyReporter"><a class="viewcode-back" href="../../dev/reference/project_config.reporters.html#project_config.reporters.InvalidNotBasedThirdPartyReporter">[docs]</a><span class="k">class</span> <span class="nc">InvalidNotBasedThirdPartyReporter</span><span class="p">(</span><span class="n">ProjectConfigException</span><span class="p">):</span>
@@ -146,15 +167,15 @@
 <span class="p">}</span>
 
 
-<div class="viewcode-block" id="_parse_reporter_arguments"><a class="viewcode-back" href="../../dev/reference/project_config.reporters.html#project_config.reporters._parse_reporter_arguments">[docs]</a><span class="k">def</span> <span class="nf">_parse_reporter_arguments</span><span class="p">(</span><span class="n">arguments_string</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">]:</span>
-    <span class="n">result</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+<div class="viewcode-block" id="_parse_reporter_arguments"><a class="viewcode-back" href="../../dev/reference/project_config.reporters.html#project_config.reporters._parse_reporter_arguments">[docs]</a><span class="k">def</span> <span class="nf">_parse_reporter_arguments</span><span class="p">(</span><span class="n">arguments_string</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">arg_value</span> <span class="ow">in</span> <span class="n">arguments_string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">):</span>
         <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="n">arg_value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="n">maxsplit</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">result</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">result</span></div>
 
 
-<div class="viewcode-block" id="parse_reporter_id"><a class="viewcode-back" href="../../dev/reference/project_config.reporters.html#project_config.reporters.parse_reporter_id">[docs]</a><span class="k">def</span> <span class="nf">parse_reporter_id</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">]]:</span>
+<div class="viewcode-block" id="parse_reporter_id"><a class="viewcode-back" href="../../dev/reference/project_config.reporters.html#project_config.reporters.parse_reporter_id">[docs]</a><span class="k">def</span> <span class="nf">parse_reporter_id</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
     <span class="sd">&quot;&quot;&quot;Parse a reporter identifier.</span>
 
 <span class="sd">    Returns the reporter name and the optional arguments for his class.</span>
@@ -180,11 +201,11 @@
 
 <div class="viewcode-block" id="get_reporter"><a class="viewcode-back" href="../../dev/reference/project_config.reporters.html#project_config.reporters.get_reporter">[docs]</a><span class="k">def</span> <span class="nf">get_reporter</span><span class="p">(</span>
     <span class="n">reporter_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="n">reporter_kwargs</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">],</span>
-    <span class="n">color</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">],</span>
+    <span class="n">reporter_kwargs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+    <span class="n">color</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">rootdir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">only_hints</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Reporters factory.</span>
 
 <span class="sd">    Args:</span>
@@ -245,7 +266,7 @@
     <span class="sd">&quot;&quot;&quot;Third party reporters loader from entrypoints.&quot;&quot;&quot;</span>
 
     <span class="c1"># allow to reset the instance, just for testing purposes</span>
-    <span class="n">instance</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">ThirdPartyReporters</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">instance</span><span class="p">:</span> <span class="n">ThirdPartyReporters</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ThirdPartyReporters</span><span class="p">:</span>  <span class="c1"># noqa: D102</span>
         <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">instance</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -253,15 +274,15 @@
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">instance</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">reporters_loaders</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reporters_loaders</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span>
             <span class="nb">str</span><span class="p">,</span>
-            <span class="n">t</span><span class="o">.</span><span class="n">Callable</span><span class="p">[[],</span> <span class="n">types</span><span class="o">.</span><span class="n">ModuleType</span><span class="p">],</span>
+            <span class="n">Callable</span><span class="p">[[],</span> <span class="n">types</span><span class="o">.</span><span class="n">ModuleType</span><span class="p">],</span>
         <span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">loaded_reporters</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">ModuleType</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loaded_reporters</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">ModuleType</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_third_party_reporters</span><span class="p">()</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">ids</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">ids</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Returns the identifiers of the 3rd party reporters.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reporters_loaders</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
 
@@ -280,15 +301,19 @@
 <span class="sd">            reporter_name (str): Reporter module entrypoint name.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">reporter_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">loaded_reporters</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">loaded_reporters</span><span class="p">[</span><span class="n">reporter_name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reporters_loaders</span><span class="p">[</span>
-                <span class="n">reporter_name</span>
-            <span class="p">]()</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">reporter_impl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reporters_loaders</span><span class="p">[</span><span class="n">reporter_name</span><span class="p">]</span>
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="c1"># A third party reporter was not found</span>
+                <span class="k">raise</span> <span class="n">InvalidThirdPartyReporterName</span><span class="p">(</span><span class="n">reporter_name</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">loaded_reporters</span><span class="p">[</span><span class="n">reporter_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">reporter_impl</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">loaded_reporters</span><span class="p">[</span><span class="n">reporter_name</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="ThirdPartyReporters.validate_reporter_module"><a class="viewcode-back" href="../../dev/reference/project_config.reporters.html#project_config.reporters.ThirdPartyReporters.validate_reporter_module">[docs]</a>    <span class="k">def</span> <span class="nf">validate_reporter_module</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">reporter_module</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">ModuleType</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Validate a reporter module.</span>
 
 <span class="sd">        Returns black/white and color reporter class names if the reporters</span>
@@ -330,7 +355,7 @@
             <span class="p">)</span>
         <span class="k">return</span> <span class="n">color_reporter_class_name</span><span class="p">,</span> <span class="n">bw_reporter_class_name</span></div>
 
-<div class="viewcode-block" id="ThirdPartyReporters.validate_reporter_class"><a class="viewcode-back" href="../../dev/reference/project_config.reporters.html#project_config.reporters.ThirdPartyReporters.validate_reporter_class">[docs]</a>    <span class="k">def</span> <span class="nf">validate_reporter_class</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reporter_class</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="ThirdPartyReporters.validate_reporter_class"><a class="viewcode-back" href="../../dev/reference/project_config.reporters.html#project_config.reporters.ThirdPartyReporters.validate_reporter_class">[docs]</a>    <span class="k">def</span> <span class="nf">validate_reporter_class</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reporter_class</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Validate a reporter class.</span>
 
 <span class="sd">        Args:</span>
@@ -341,9 +366,6 @@
                 <span class="sa">f</span><span class="s2">&quot;Reporter class &#39;</span><span class="si">{</span><span class="n">reporter_class</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&#39; is not&quot;</span>
                 <span class="s2">&quot; a subclass of BaseReporter&quot;</span><span class="p">,</span>
             <span class="p">)</span></div></div>
-
-
-<span class="n">POSSIBLE_REPORTER_IDS</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">reporters</span><span class="p">)</span> <span class="o">+</span> <span class="n">ThirdPartyReporters</span><span class="p">()</span><span class="o">.</span><span class="n">ids</span>
 </pre></div>
 
            </div>

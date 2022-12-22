@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.plugins.inclusion &mdash; project-config 0.7.9 documentation</title>
+  <title>project_config.plugins.inclusion &mdash; project-config 0.8.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
@@ -32,7 +32,7 @@
             <a href="../../../index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.7
+                0.8
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -102,16 +102,15 @@
 
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">pprint</span>
-<span class="kn">import</span> <span class="nn">typing</span> <span class="k">as</span> <span class="nn">t</span>
+<span class="kn">import</span> <span class="nn">stat</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
 
 <span class="kn">from</span> <span class="nn">project_config</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">ActionsContext</span><span class="p">,</span>
     <span class="n">Error</span><span class="p">,</span>
     <span class="n">InterruptingError</span><span class="p">,</span>
-    <span class="n">Results</span><span class="p">,</span>
     <span class="n">ResultValue</span><span class="p">,</span>
-    <span class="n">Rule</span><span class="p">,</span>
-    <span class="n">Tree</span><span class="p">,</span>
+    <span class="n">tree</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">project_config.utils.jmespath</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">JMESPathError</span><span class="p">,</span>
@@ -120,12 +119,17 @@
 <span class="p">)</span>
 
 
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">project_config</span> <span class="kn">import</span> <span class="n">Results</span><span class="p">,</span> <span class="n">Rule</span>
+    <span class="kn">from</span> <span class="nn">project_config.types</span> <span class="kn">import</span> <span class="n">ErrorDict</span>
+
+
 <div class="viewcode-block" id="_directories_not_accepted_as_inputs_error"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.inclusion.html#project_config.plugins.inclusion._directories_not_accepted_as_inputs_error">[docs]</a><span class="k">def</span> <span class="nf">_directories_not_accepted_as_inputs_error</span><span class="p">(</span>
     <span class="n">action_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">action_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">dir_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">definition</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ErrorDict</span><span class="p">:</span>
     <span class="k">return</span> <span class="p">{</span>
         <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;Directory found but the </span><span class="si">{</span><span class="n">action_type</span><span class="si">}</span><span class="s2"> &#39;</span><span class="si">{</span><span class="n">action_name</span><span class="si">}</span><span class="s2">&#39; does not&quot;</span>
@@ -139,8 +143,7 @@
 <div class="viewcode-block" id="InclusionPlugin"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.inclusion.html#project_config.plugins.inclusion.InclusionPlugin">[docs]</a><span class="k">class</span> <span class="nc">InclusionPlugin</span><span class="p">:</span>
 <div class="viewcode-block" id="InclusionPlugin.includeLines"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.inclusion.html#project_config.plugins.inclusion.InclusionPlugin.includeLines">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">includeLines</span><span class="p">(</span>
-        <span class="n">value</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
-        <span class="n">tree</span><span class="p">:</span> <span class="n">Tree</span><span class="p">,</span>
+        <span class="n">value</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
         <span class="n">rule</span><span class="p">:</span> <span class="n">Rule</span><span class="p">,</span>  <span class="c1"># noqa: U100</span>
         <span class="n">context</span><span class="p">:</span> <span class="n">ActionsContext</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Results</span><span class="p">:</span>
@@ -149,13 +152,11 @@
                 <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;The value must be of type array&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="s2">&quot;.includeLines&quot;</span><span class="p">,</span>
             <span class="p">}</span>
-            <span class="k">return</span>
         <span class="k">elif</span> <span class="ow">not</span> <span class="n">value</span><span class="p">:</span>
             <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
                 <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;The value must not be empty&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="s2">&quot;.includeLines&quot;</span><span class="p">,</span>
             <span class="p">}</span>
-            <span class="k">return</span>
 
         <span class="n">expected_lines</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
@@ -172,7 +173,6 @@
                         <span class="p">),</span>
                         <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.includeLines[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
                     <span class="p">}</span>
-                    <span class="k">return</span>
 
                 <span class="n">line</span><span class="p">,</span> <span class="n">fixer_query</span> <span class="o">=</span> <span class="n">line</span>
 
@@ -188,7 +188,6 @@
                         <span class="p">),</span>
                         <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.includeLines[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
                     <span class="p">}</span>
-                    <span class="k">return</span>
 
             <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
                 <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
@@ -198,26 +197,25 @@
                     <span class="p">),</span>
                     <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.includeLines[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
                 <span class="p">}</span>
-                <span class="k">return</span>
             <span class="n">clean_line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\r\n</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">clean_line</span> <span class="ow">in</span> <span class="n">expected_lines</span><span class="p">:</span>
                 <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
                     <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Duplicated expected line &#39;</span><span class="si">{</span><span class="n">clean_line</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">,</span>
                     <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.includeLines[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
                 <span class="p">}</span>
-                <span class="k">return</span>
             <span class="k">elif</span> <span class="ow">not</span> <span class="n">clean_line</span><span class="p">:</span>
                 <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
                     <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Expected line must not be empty&quot;</span><span class="p">,</span>
                     <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.includeLines[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
                 <span class="p">}</span>
-                <span class="k">return</span>
             <span class="n">expected_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">clean_line</span><span class="p">)</span>
 
-        <span class="k">for</span> <span class="n">f</span><span class="p">,</span> <span class="p">(</span><span class="n">fpath</span><span class="p">,</span> <span class="n">fcontent</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tree</span><span class="o">.</span><span class="n">files</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">fcontent</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">f</span><span class="p">,</span> <span class="n">fpath</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">files</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">fstat</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">fpath</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
                 <span class="k">continue</span>
-            <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fcontent</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_ISDIR</span><span class="p">(</span><span class="n">fstat</span><span class="o">.</span><span class="n">st_mode</span><span class="p">):</span>
                 <span class="k">yield</span> <span class="p">(</span>
                     <span class="n">InterruptingError</span><span class="p">,</span>
                     <span class="n">_directories_not_accepted_as_inputs_error</span><span class="p">(</span>
@@ -227,47 +225,52 @@
                         <span class="sa">f</span><span class="s2">&quot;.files[</span><span class="si">{</span><span class="n">f</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
                     <span class="p">),</span>
                 <span class="p">)</span>
-                <span class="k">continue</span>
 
-            <span class="n">fcontent_lines</span> <span class="o">=</span> <span class="n">fcontent</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+            <span class="n">fcontent_lines</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">cached_local_file</span><span class="p">(</span><span class="n">fpath</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">line_index</span><span class="p">,</span> <span class="n">expected_line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">expected_lines</span><span class="p">):</span>
                 <span class="k">if</span> <span class="n">expected_line</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">fcontent_lines</span><span class="p">:</span>
                     <span class="k">if</span> <span class="n">context</span><span class="o">.</span><span class="n">fix</span><span class="p">:</span>
+                        <span class="n">instance</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">cached_local_file</span><span class="p">(</span>
+                            <span class="n">fpath</span><span class="p">,</span>
+                            <span class="n">serializer</span><span class="o">=</span><span class="s2">&quot;text&quot;</span><span class="p">,</span>
+                        <span class="p">)</span>
+
                         <span class="k">if</span> <span class="ow">not</span> <span class="n">fixer_query</span><span class="p">:</span>
-                            <span class="n">fixer_query</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;insert(@, `-1`, &#39;</span><span class="si">{</span><span class="n">expected_line</span><span class="si">}</span><span class="s2">&#39;)&quot;</span>
-
-                        <span class="k">try</span><span class="p">:</span>
-                            <span class="n">compiled_fixer_query</span> <span class="o">=</span> <span class="p">(</span>
-                                <span class="n">compile_JMESPath_expression_or_error</span><span class="p">(</span>
-                                    <span class="n">fixer_query</span><span class="p">,</span>
-                                <span class="p">)</span>
-                            <span class="p">)</span>
-                        <span class="k">except</span> <span class="n">JMESPathError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
-                            <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
-                                <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">exc</span><span class="o">.</span><span class="n">message</span><span class="p">,</span>
-                                <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.includeLines[</span><span class="si">{</span><span class="n">line_index</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
-                            <span class="p">}</span>
-                            <span class="k">continue</span>
-
-                        <span class="n">_</span><span class="p">,</span> <span class="n">instance</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">serialize_file</span><span class="p">(</span><span class="n">fpath</span><span class="p">)</span>
-
-                        <span class="k">try</span><span class="p">:</span>
-                            <span class="n">diff</span> <span class="o">=</span> <span class="n">fix_tree_serialized_file_by_jmespath</span><span class="p">(</span>
-                                <span class="n">compiled_fixer_query</span><span class="p">,</span>
-                                <span class="n">instance</span><span class="p">,</span>
-                                <span class="n">fpath</span><span class="p">,</span>
-                                <span class="n">tree</span><span class="p">,</span>
-                            <span class="p">)</span>
-                        <span class="k">except</span> <span class="n">JMESPathError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
-                            <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
-                                <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">exc</span><span class="o">.</span><span class="n">message</span><span class="p">,</span>
-                                <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.includeLines[</span><span class="si">{</span><span class="n">line_index</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
-                            <span class="p">}</span>
-                            <span class="k">continue</span>
-                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">instance</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">expected_line</span><span class="p">)</span>
+                            <span class="n">tree</span><span class="o">.</span><span class="n">edit_local_file</span><span class="p">(</span><span class="n">fpath</span><span class="p">,</span> <span class="n">instance</span><span class="p">)</span>
                             <span class="n">fixed</span> <span class="o">=</span> <span class="kc">True</span>
-                            <span class="k">if</span> <span class="ow">not</span> <span class="n">diff</span><span class="p">:</span>
-                                <span class="k">continue</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="k">try</span><span class="p">:</span>
+                                <span class="n">compiled_fixer_query</span> <span class="o">=</span> <span class="p">(</span>
+                                    <span class="n">compile_JMESPath_expression_or_error</span><span class="p">(</span>
+                                        <span class="n">fixer_query</span><span class="p">,</span>
+                                    <span class="p">)</span>
+                                <span class="p">)</span>
+                            <span class="k">except</span> <span class="n">JMESPathError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                                <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                                    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">exc</span><span class="o">.</span><span class="n">message</span><span class="p">,</span>
+                                    <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="p">(</span>
+                                        <span class="sa">f</span><span class="s2">&quot;.includeLines[</span><span class="si">{</span><span class="n">line_index</span><span class="si">}</span><span class="s2">]&quot;</span>
+                                    <span class="p">),</span>
+                                <span class="p">}</span>
+
+                            <span class="k">try</span><span class="p">:</span>
+                                <span class="n">changed</span> <span class="o">=</span> <span class="n">fix_tree_serialized_file_by_jmespath</span><span class="p">(</span>
+                                    <span class="n">compiled_fixer_query</span><span class="p">,</span>
+                                    <span class="n">instance</span><span class="p">,</span>
+                                    <span class="n">fpath</span><span class="p">,</span>
+                                <span class="p">)</span>
+                            <span class="k">except</span> <span class="n">JMESPathError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                                <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                                    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">exc</span><span class="o">.</span><span class="n">message</span><span class="p">,</span>
+                                    <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="p">(</span>
+                                        <span class="sa">f</span><span class="s2">&quot;.includeLines[</span><span class="si">{</span><span class="n">line_index</span><span class="si">}</span><span class="s2">]&quot;</span>
+                                    <span class="p">),</span>
+                                <span class="p">}</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="n">fixed</span> <span class="o">=</span> <span class="kc">True</span>
+                                <span class="k">if</span> <span class="ow">not</span> <span class="n">changed</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+                                    <span class="k">continue</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="n">fixed</span> <span class="o">=</span> <span class="kc">False</span>
 
@@ -281,8 +284,7 @@
 
 <div class="viewcode-block" id="InclusionPlugin.ifIncludeLines"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.inclusion.html#project_config.plugins.inclusion.InclusionPlugin.ifIncludeLines">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">ifIncludeLines</span><span class="p">(</span>
-        <span class="n">value</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-        <span class="n">tree</span><span class="p">:</span> <span class="n">Tree</span><span class="p">,</span>
+        <span class="n">value</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
         <span class="n">rule</span><span class="p">:</span> <span class="n">Rule</span><span class="p">,</span>  <span class="c1"># noqa: U100</span>
         <span class="n">context</span><span class="p">:</span> <span class="n">ActionsContext</span><span class="p">,</span>  <span class="c1"># noqa: U100</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Results</span><span class="p">:</span>
@@ -291,13 +293,11 @@
                 <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;The value must be of type object&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="s2">&quot;.ifIncludeLines&quot;</span><span class="p">,</span>
             <span class="p">}</span>
-            <span class="k">return</span>
         <span class="k">elif</span> <span class="ow">not</span> <span class="n">value</span><span class="p">:</span>
             <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
                 <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;The value must not be empty&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="s2">&quot;.ifIncludeLines&quot;</span><span class="p">,</span>
             <span class="p">}</span>
-            <span class="k">return</span>
 
         <span class="k">for</span> <span class="n">fpath</span><span class="p">,</span> <span class="n">expected_lines</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">fpath</span><span class="p">:</span>
@@ -305,7 +305,6 @@
                     <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;File paths must not be empty&quot;</span><span class="p">,</span>
                     <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="s2">&quot;.ifIncludeLines&quot;</span><span class="p">,</span>
                 <span class="p">}</span>
-                <span class="k">return</span>
 
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">expected_lines</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
                 <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
@@ -315,17 +314,15 @@
                     <span class="p">),</span>
                     <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.ifIncludeLines[</span><span class="si">{</span><span class="n">fpath</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
                 <span class="p">}</span>
-                <span class="k">return</span>
             <span class="k">elif</span> <span class="ow">not</span> <span class="n">expected_lines</span><span class="p">:</span>
                 <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
                     <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Expected lines must not be empty&quot;</span><span class="p">,</span>
                     <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.ifIncludeLines[</span><span class="si">{</span><span class="n">fpath</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
                 <span class="p">}</span>
-                <span class="k">return</span>
 
-            <span class="n">fcontent</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">get_file_content</span><span class="p">(</span><span class="n">fpath</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="n">fcontent</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">fstat</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">fpath</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
                 <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
                     <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="p">(</span>
                         <span class="s2">&quot;File specified in conditional &#39;ifIncludeLines&#39;&quot;</span>
@@ -334,8 +331,7 @@
                     <span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="n">fpath</span><span class="p">,</span>
                     <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.ifIncludeLines[</span><span class="si">{</span><span class="n">fpath</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
                 <span class="p">}</span>
-                <span class="k">return</span>
-            <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fcontent</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_ISDIR</span><span class="p">(</span><span class="n">fstat</span><span class="o">.</span><span class="n">st_mode</span><span class="p">):</span>
                 <span class="k">yield</span> <span class="p">(</span>
                     <span class="n">InterruptingError</span><span class="p">,</span>
                     <span class="n">_directories_not_accepted_as_inputs_error</span><span class="p">(</span>
@@ -345,9 +341,11 @@
                         <span class="sa">f</span><span class="s2">&quot;.ifIncludeLines[</span><span class="si">{</span><span class="n">fpath</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
                     <span class="p">),</span>
                 <span class="p">)</span>
-                <span class="k">return</span>
 
-            <span class="n">fcontent_lines</span> <span class="o">=</span> <span class="n">fcontent</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+            <span class="n">fcontent_lines</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">cached_local_file</span><span class="p">(</span>
+                <span class="n">fpath</span><span class="p">,</span>
+                <span class="n">serializer</span><span class="o">=</span><span class="s2">&quot;text&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
             <span class="n">checked_lines</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">expected_lines</span><span class="p">):</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
@@ -359,7 +357,6 @@
                         <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.ifIncludeLines[</span><span class="si">{</span><span class="n">fpath</span><span class="si">}</span><span class="s2">][</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
                         <span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="n">fpath</span><span class="p">,</span>
                     <span class="p">}</span>
-                    <span class="k">return</span>
                 <span class="n">clean_line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\r\n</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">clean_line</span><span class="p">:</span>
                     <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
@@ -367,47 +364,320 @@
                         <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.ifIncludeLines[</span><span class="si">{</span><span class="n">fpath</span><span class="si">}</span><span class="s2">][</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
                         <span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="n">fpath</span><span class="p">,</span>
                     <span class="p">}</span>
-                    <span class="k">return</span>
                 <span class="k">elif</span> <span class="n">clean_line</span> <span class="ow">in</span> <span class="n">checked_lines</span><span class="p">:</span>
                     <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
                         <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Duplicated expected line &#39;</span><span class="si">{</span><span class="n">clean_line</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">,</span>
                         <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.ifIncludeLines[</span><span class="si">{</span><span class="n">fpath</span><span class="si">}</span><span class="s2">][</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
                         <span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="n">fpath</span><span class="p">,</span>
                     <span class="p">}</span>
-                    <span class="k">return</span>
 
                 <span class="k">if</span> <span class="n">clean_line</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">fcontent_lines</span><span class="p">:</span>
                     <span class="k">yield</span> <span class="n">ResultValue</span><span class="p">,</span> <span class="kc">False</span>
-                    <span class="k">return</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">checked_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">clean_line</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="InclusionPlugin.excludeContent"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.inclusion.html#project_config.plugins.inclusion.InclusionPlugin.excludeContent">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">excludeContent</span><span class="p">(</span>
-        <span class="n">value</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
-        <span class="n">tree</span><span class="p">:</span> <span class="n">Tree</span><span class="p">,</span>
+<div class="viewcode-block" id="InclusionPlugin.excludeLines"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.inclusion.html#project_config.plugins.inclusion.InclusionPlugin.excludeLines">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">excludeLines</span><span class="p">(</span>
+        <span class="n">value</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
         <span class="n">rule</span><span class="p">:</span> <span class="n">Rule</span><span class="p">,</span>  <span class="c1"># noqa: U100</span>
         <span class="n">context</span><span class="p">:</span> <span class="n">ActionsContext</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Results</span><span class="p">:</span>
-        <span class="c1"># TODO: allow to fix this rule passing a JMESPath as plain text</span>
-        <span class="c1">#   (content as string)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;The value must be of type array&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="s2">&quot;.excludeLines&quot;</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="n">value</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;The value must not be empty&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="s2">&quot;.excludeLines&quot;</span><span class="p">,</span>
+            <span class="p">}</span>
+
+        <span class="n">expected_lines</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+            <span class="n">fixer_query</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="c1"># Fixer query expression</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                        <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="p">(</span>
+                            <span class="s2">&quot;The &#39;[expected-line, fixer_query]&#39; array&quot;</span>
+                            <span class="sa">f</span><span class="s2">&quot; &#39;</span><span class="si">{</span><span class="n">pprint</span><span class="o">.</span><span class="n">pformat</span><span class="p">(</span><span class="n">line</span><span class="p">)</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+                            <span class="s2">&quot; must be of length 2&quot;</span>
+                        <span class="p">),</span>
+                        <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.excludeLines[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+                    <span class="p">}</span>
+
+                <span class="n">line</span><span class="p">,</span> <span class="n">fixer_query</span> <span class="o">=</span> <span class="n">line</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span>
+                    <span class="n">fixer_query</span><span class="p">,</span>
+                    <span class="nb">str</span><span class="p">,</span>
+                <span class="p">):</span>
+                    <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                        <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="p">(</span>
+                            <span class="s2">&quot;The &#39;[expected-line, fixer_query]&#39; array items&quot;</span>
+                            <span class="sa">f</span><span class="s2">&quot; &#39;</span><span class="si">{</span><span class="n">pprint</span><span class="o">.</span><span class="n">pformat</span><span class="p">([</span><span class="n">line</span><span class="p">,</span> <span class="n">fixer_query</span><span class="p">])</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+                            <span class="s2">&quot; must be of type string&quot;</span>
+                        <span class="p">),</span>
+                        <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.excludeLines[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+                    <span class="p">}</span>
+
+            <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;The expected line &#39;</span><span class="si">{</span><span class="n">pprint</span><span class="o">.</span><span class="n">pformat</span><span class="p">(</span><span class="n">line</span><span class="p">)</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+                        <span class="s2">&quot; must be of type string or array&quot;</span>
+                    <span class="p">),</span>
+                    <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.excludeLines[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+                <span class="p">}</span>
+            <span class="n">clean_line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\r\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">clean_line</span> <span class="ow">in</span> <span class="n">expected_lines</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Duplicated expected line &#39;</span><span class="si">{</span><span class="n">clean_line</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.excludeLines[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+                <span class="p">}</span>
+            <span class="k">elif</span> <span class="ow">not</span> <span class="n">clean_line</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Expected line must not be empty&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.excludeLines[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+                <span class="p">}</span>
+            <span class="n">expected_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">clean_line</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">f</span><span class="p">,</span> <span class="n">fpath</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">files</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">fstat</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">fpath</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_ISDIR</span><span class="p">(</span><span class="n">fstat</span><span class="o">.</span><span class="n">st_mode</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="p">(</span>
+                    <span class="n">InterruptingError</span><span class="p">,</span>
+                    <span class="n">_directories_not_accepted_as_inputs_error</span><span class="p">(</span>
+                        <span class="s2">&quot;verb&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;excludeLines&quot;</span><span class="p">,</span>
+                        <span class="n">fpath</span><span class="p">,</span>
+                        <span class="sa">f</span><span class="s2">&quot;.files[</span><span class="si">{</span><span class="n">f</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+                    <span class="p">),</span>
+                <span class="p">)</span>
+
+            <span class="n">fcontent_lines</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">cached_local_file</span><span class="p">(</span><span class="n">fpath</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">line_index</span><span class="p">,</span> <span class="n">expected_line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">expected_lines</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">expected_line</span> <span class="ow">in</span> <span class="n">fcontent_lines</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">context</span><span class="o">.</span><span class="n">fix</span><span class="p">:</span>
+                        <span class="n">instance</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">cached_local_file</span><span class="p">(</span>
+                            <span class="n">fpath</span><span class="p">,</span>
+                            <span class="n">serializer</span><span class="o">=</span><span class="s2">&quot;text&quot;</span><span class="p">,</span>
+                        <span class="p">)</span>
+
+                        <span class="k">if</span> <span class="ow">not</span> <span class="n">fixer_query</span><span class="p">:</span>
+                            <span class="n">instance</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">expected_line</span><span class="p">)</span>
+                            <span class="n">tree</span><span class="o">.</span><span class="n">edit_local_file</span><span class="p">(</span><span class="n">fpath</span><span class="p">,</span> <span class="n">instance</span><span class="p">)</span>
+                            <span class="n">fixed</span> <span class="o">=</span> <span class="kc">True</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="k">try</span><span class="p">:</span>
+                                <span class="n">compiled_fixer_query</span> <span class="o">=</span> <span class="p">(</span>
+                                    <span class="n">compile_JMESPath_expression_or_error</span><span class="p">(</span>
+                                        <span class="n">fixer_query</span><span class="p">,</span>
+                                    <span class="p">)</span>
+                                <span class="p">)</span>
+                            <span class="k">except</span> <span class="n">JMESPathError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                                <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                                    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">exc</span><span class="o">.</span><span class="n">message</span><span class="p">,</span>
+                                    <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="p">(</span>
+                                        <span class="sa">f</span><span class="s2">&quot;.excludeLines[</span><span class="si">{</span><span class="n">line_index</span><span class="si">}</span><span class="s2">]&quot;</span>
+                                    <span class="p">),</span>
+                                <span class="p">}</span>
+
+                            <span class="k">try</span><span class="p">:</span>
+                                <span class="n">changed</span> <span class="o">=</span> <span class="n">fix_tree_serialized_file_by_jmespath</span><span class="p">(</span>
+                                    <span class="n">compiled_fixer_query</span><span class="p">,</span>
+                                    <span class="n">instance</span><span class="p">,</span>
+                                    <span class="n">fpath</span><span class="p">,</span>
+                                <span class="p">)</span>
+                            <span class="k">except</span> <span class="n">JMESPathError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                                <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                                    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">exc</span><span class="o">.</span><span class="n">message</span><span class="p">,</span>
+                                    <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="p">(</span>
+                                        <span class="sa">f</span><span class="s2">&quot;.excludeLines[</span><span class="si">{</span><span class="n">line_index</span><span class="si">}</span><span class="s2">]&quot;</span>
+                                    <span class="p">),</span>
+                                <span class="p">}</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="n">fixed</span> <span class="o">=</span> <span class="kc">True</span>
+                                <span class="k">if</span> <span class="ow">not</span> <span class="n">changed</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+                                    <span class="k">continue</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">fixed</span> <span class="o">=</span> <span class="kc">False</span>
+
+                    <span class="k">yield</span> <span class="n">Error</span><span class="p">,</span> <span class="p">{</span>
+                        <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;Found expected line to exclude &#39;</span><span class="si">{</span><span class="n">expected_line</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+                        <span class="p">),</span>
+                        <span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="n">fpath</span><span class="p">,</span>
+                        <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.excludeLines[</span><span class="si">{</span><span class="n">line_index</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;fixed&quot;</span><span class="p">:</span> <span class="n">fixed</span><span class="p">,</span>
+                        <span class="s2">&quot;fixable&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                    <span class="p">}</span></div>
+
+<div class="viewcode-block" id="InclusionPlugin.includeContent"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.inclusion.html#project_config.plugins.inclusion.InclusionPlugin.includeContent">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">includeContent</span><span class="p">(</span>
+        <span class="n">value</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">rule</span><span class="p">:</span> <span class="n">Rule</span><span class="p">,</span>  <span class="c1"># noqa: U100</span>
+        <span class="n">context</span><span class="p">:</span> <span class="n">ActionsContext</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Results</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;The contents to include must be of type array&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="s2">&quot;.includeContent&quot;</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="n">value</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;The contents to include must not be empty&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="s2">&quot;.includeContent&quot;</span><span class="p">,</span>
+            <span class="p">}</span>
+
+        <span class="k">for</span> <span class="n">f</span><span class="p">,</span> <span class="n">fpath</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">files</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">fstat</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">fpath</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_ISDIR</span><span class="p">(</span><span class="n">fstat</span><span class="o">.</span><span class="n">st_mode</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="p">(</span>
+                    <span class="n">InterruptingError</span><span class="p">,</span>
+                    <span class="n">_directories_not_accepted_as_inputs_error</span><span class="p">(</span>
+                        <span class="s2">&quot;verb&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;includeContent&quot;</span><span class="p">,</span>
+                        <span class="n">fpath</span><span class="p">,</span>
+                        <span class="sa">f</span><span class="s2">&quot;.files[</span><span class="si">{</span><span class="n">f</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+                    <span class="p">),</span>
+                <span class="p">)</span>
+
+            <span class="c1"># Normalize newlines</span>
+            <span class="n">checked_content</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">content</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+                <span class="n">fixer_query</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                        <span class="n">content</span><span class="p">,</span> <span class="n">fixer_query</span> <span class="o">=</span> <span class="n">content</span>
+
+                        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span>
+                            <span class="n">fixer_query</span><span class="p">,</span>
+                            <span class="nb">str</span><span class="p">,</span>
+                        <span class="p">):</span>
+                            <span class="n">content_query</span> <span class="o">=</span> <span class="n">pprint</span><span class="o">.</span><span class="n">pformat</span><span class="p">(</span>
+                                <span class="p">[</span><span class="n">content</span><span class="p">,</span> <span class="n">fixer_query</span><span class="p">],</span>
+                            <span class="p">)</span>
+                            <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                                <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="p">(</span>
+                                    <span class="s2">&quot;The &#39;[content-to-include, fixer_query]&#39;&quot;</span>
+                                    <span class="sa">f</span><span class="s2">&quot; array  items &#39;</span><span class="si">{</span><span class="n">content_query</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+                                    <span class="s2">&quot; must be of type string&quot;</span>
+                                <span class="p">),</span>
+                                <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.includeContent[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+                            <span class="p">}</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                        <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="p">(</span>
+                            <span class="s2">&quot;The content to include&quot;</span>
+                            <span class="sa">f</span><span class="s2">&quot; &#39;</span><span class="si">{</span><span class="n">pprint</span><span class="o">.</span><span class="n">pformat</span><span class="p">(</span><span class="n">content</span><span class="p">)</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+                            <span class="s2">&quot; must be of type string or array&quot;</span>
+                        <span class="p">),</span>
+                        <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.includeContent[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="n">fpath</span><span class="p">,</span>
+                    <span class="p">}</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">content</span><span class="p">:</span>
+                    <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                        <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;The content to include must not be empty&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.includeContent[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="n">fpath</span><span class="p">,</span>
+                    <span class="p">}</span>
+                <span class="k">elif</span> <span class="n">content</span> <span class="ow">in</span> <span class="n">checked_content</span><span class="p">:</span>
+                    <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                        <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Duplicated content to include &#39;</span><span class="si">{</span><span class="n">content</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.includeContent[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="n">fpath</span><span class="p">,</span>
+                    <span class="p">}</span>
+
+                <span class="n">fcontent</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">cached_local_file</span><span class="p">(</span><span class="n">fpath</span><span class="p">,</span> <span class="n">serializer</span><span class="o">=</span><span class="s2">&quot;_plain&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">content</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">fcontent</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">fixer_query</span><span class="p">:</span>
+                        <span class="n">fixable</span> <span class="o">=</span> <span class="kc">True</span>
+                        <span class="n">fixed</span> <span class="o">=</span> <span class="kc">False</span>
+                        <span class="k">if</span> <span class="n">context</span><span class="o">.</span><span class="n">fix</span><span class="p">:</span>
+                            <span class="k">try</span><span class="p">:</span>
+                                <span class="n">compiled_fixer_query</span> <span class="o">=</span> <span class="p">(</span>
+                                    <span class="n">compile_JMESPath_expression_or_error</span><span class="p">(</span>
+                                        <span class="n">fixer_query</span><span class="p">,</span>
+                                    <span class="p">)</span>
+                                <span class="p">)</span>
+                            <span class="k">except</span> <span class="n">JMESPathError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                                <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                                    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">exc</span><span class="o">.</span><span class="n">message</span><span class="p">,</span>
+                                    <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.includeContent[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+                                <span class="p">}</span>
+
+                            <span class="n">instance</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">cached_local_file</span><span class="p">(</span>
+                                <span class="n">fpath</span><span class="p">,</span>
+                                <span class="n">serializer</span><span class="o">=</span><span class="s2">&quot;text&quot;</span><span class="p">,</span>
+                            <span class="p">)</span>
+
+                            <span class="k">try</span><span class="p">:</span>
+                                <span class="n">changed</span> <span class="o">=</span> <span class="n">fix_tree_serialized_file_by_jmespath</span><span class="p">(</span>
+                                    <span class="n">compiled_fixer_query</span><span class="p">,</span>
+                                    <span class="n">instance</span><span class="p">,</span>
+                                    <span class="n">fpath</span><span class="p">,</span>
+                                <span class="p">)</span>
+                            <span class="k">except</span> <span class="n">JMESPathError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                                <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                                    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">exc</span><span class="o">.</span><span class="n">message</span><span class="p">,</span>
+                                    <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.includeContent[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+                                <span class="p">}</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="n">fixed</span> <span class="o">=</span> <span class="kc">True</span>
+                                <span class="k">if</span> <span class="ow">not</span> <span class="n">changed</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+                                    <span class="k">continue</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">fixed</span> <span class="o">=</span> <span class="kc">False</span>
+                        <span class="n">fixable</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="k">yield</span> <span class="n">Error</span><span class="p">,</span> <span class="p">{</span>
+                        <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;Content &#39;</span><span class="si">{</span><span class="n">content</span><span class="si">}</span><span class="s2">&#39; expected to be&quot;</span>
+                            <span class="s2">&quot; included not found&quot;</span>
+                        <span class="p">),</span>
+                        <span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="n">fpath</span><span class="p">,</span>
+                        <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.includeContent[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;fixed&quot;</span><span class="p">:</span> <span class="n">fixed</span><span class="p">,</span>
+                        <span class="s2">&quot;fixable&quot;</span><span class="p">:</span> <span class="n">fixable</span><span class="p">,</span>
+                    <span class="p">}</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">checked_content</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">content</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="InclusionPlugin.excludeContent"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.inclusion.html#project_config.plugins.inclusion.InclusionPlugin.excludeContent">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">excludeContent</span><span class="p">(</span>
+        <span class="n">value</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">rule</span><span class="p">:</span> <span class="n">Rule</span><span class="p">,</span>  <span class="c1"># noqa: U100</span>
+        <span class="n">context</span><span class="p">:</span> <span class="n">ActionsContext</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Results</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
             <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
                 <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;The contents to exclude must be of type array&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="s2">&quot;.excludeContent&quot;</span><span class="p">,</span>
             <span class="p">}</span>
-            <span class="k">return</span>
         <span class="k">elif</span> <span class="ow">not</span> <span class="n">value</span><span class="p">:</span>
             <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
                 <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;The contents to exclude must not be empty&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="s2">&quot;.excludeContent&quot;</span><span class="p">,</span>
             <span class="p">}</span>
-            <span class="k">return</span>
 
-        <span class="k">for</span> <span class="n">f</span><span class="p">,</span> <span class="p">(</span><span class="n">fpath</span><span class="p">,</span> <span class="n">fcontent</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tree</span><span class="o">.</span><span class="n">files</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">fcontent</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">f</span><span class="p">,</span> <span class="n">fpath</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">files</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">fstat</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">fpath</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
                 <span class="k">continue</span>
-            <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fcontent</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+
+            <span class="k">if</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_ISDIR</span><span class="p">(</span><span class="n">fstat</span><span class="o">.</span><span class="n">st_mode</span><span class="p">):</span>
                 <span class="k">yield</span> <span class="p">(</span>
                     <span class="n">InterruptingError</span><span class="p">,</span>
                     <span class="n">_directories_not_accepted_as_inputs_error</span><span class="p">(</span>
@@ -417,7 +687,6 @@
                         <span class="sa">f</span><span class="s2">&quot;.files[</span><span class="si">{</span><span class="n">f</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
                     <span class="p">),</span>
                 <span class="p">)</span>
-                <span class="k">continue</span>
 
             <span class="c1"># Normalize newlines</span>
             <span class="n">checked_content</span> <span class="o">=</span> <span class="p">[]</span>
@@ -442,7 +711,6 @@
                                 <span class="p">),</span>
                                 <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.excludeContent[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
                             <span class="p">}</span>
-                            <span class="k">return</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
                         <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="p">(</span>
@@ -453,7 +721,6 @@
                         <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.excludeContent[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
                         <span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="n">fpath</span><span class="p">,</span>
                     <span class="p">}</span>
-                    <span class="k">return</span>
 
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">content</span><span class="p">:</span>
                     <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
@@ -461,15 +728,14 @@
                         <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.excludeContent[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
                         <span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="n">fpath</span><span class="p">,</span>
                     <span class="p">}</span>
-                    <span class="k">return</span>
                 <span class="k">elif</span> <span class="n">content</span> <span class="ow">in</span> <span class="n">checked_content</span><span class="p">:</span>
                     <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
                         <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Duplicated content to exclude &#39;</span><span class="si">{</span><span class="n">content</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">,</span>
                         <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.excludeContent[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
                         <span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="n">fpath</span><span class="p">,</span>
                     <span class="p">}</span>
-                    <span class="k">return</span>
 
+                <span class="n">fcontent</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">cached_local_file</span><span class="p">(</span><span class="n">fpath</span><span class="p">,</span> <span class="n">serializer</span><span class="o">=</span><span class="s2">&quot;_plain&quot;</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">content</span> <span class="ow">in</span> <span class="n">fcontent</span><span class="p">:</span>
                     <span class="k">if</span> <span class="n">fixer_query</span><span class="p">:</span>
                         <span class="n">fixable</span> <span class="o">=</span> <span class="kc">True</span>
@@ -486,26 +752,26 @@
                                     <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">exc</span><span class="o">.</span><span class="n">message</span><span class="p">,</span>
                                     <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.excludeContent[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
                                 <span class="p">}</span>
-                                <span class="k">return</span>
 
-                            <span class="n">_</span><span class="p">,</span> <span class="n">instance</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">serialize_file</span><span class="p">(</span><span class="n">fpath</span><span class="p">)</span>
+                            <span class="n">instance</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">cached_local_file</span><span class="p">(</span>
+                                <span class="n">fpath</span><span class="p">,</span>
+                                <span class="n">serializer</span><span class="o">=</span><span class="s2">&quot;text&quot;</span><span class="p">,</span>
+                            <span class="p">)</span>
 
                             <span class="k">try</span><span class="p">:</span>
-                                <span class="n">diff</span> <span class="o">=</span> <span class="n">fix_tree_serialized_file_by_jmespath</span><span class="p">(</span>
+                                <span class="n">changed</span> <span class="o">=</span> <span class="n">fix_tree_serialized_file_by_jmespath</span><span class="p">(</span>
                                     <span class="n">compiled_fixer_query</span><span class="p">,</span>
                                     <span class="n">instance</span><span class="p">,</span>
                                     <span class="n">fpath</span><span class="p">,</span>
-                                    <span class="n">tree</span><span class="p">,</span>
                                 <span class="p">)</span>
                             <span class="k">except</span> <span class="n">JMESPathError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
                                 <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
                                     <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">exc</span><span class="o">.</span><span class="n">message</span><span class="p">,</span>
                                     <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.excludeContent[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
                                 <span class="p">}</span>
-                                <span class="k">return</span>
                             <span class="k">else</span><span class="p">:</span>
                                 <span class="n">fixed</span> <span class="o">=</span> <span class="kc">True</span>
-                                <span class="k">if</span> <span class="ow">not</span> <span class="n">diff</span><span class="p">:</span>
+                                <span class="k">if</span> <span class="ow">not</span> <span class="n">changed</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
                                     <span class="k">continue</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="n">fixed</span> <span class="o">=</span> <span class="kc">False</span>

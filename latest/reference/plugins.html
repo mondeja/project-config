@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Plugins &mdash; project-config 0.7.9 documentation</title>
+  <title>Plugins &mdash; project-config 0.8.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -35,7 +35,7 @@
             <a href="../index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.7
+                0.8
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -61,6 +61,8 @@
 <li class="toctree-l2"><a class="reference internal" href="#inclusion">inclusion</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#includelines">includeLines</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#ifincludelines">ifIncludeLines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#includecontent">includeContent</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#excludelines">excludeLines</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#excludecontent">excludeContent</a></li>
 </ul>
 </li>
@@ -132,10 +134,10 @@ special <code class="docutils literal notranslate"><span class="pre">files</span
 <p>Files content inclusion management.</p>
 <section id="includelines">
 <h3>includeLines<a class="headerlink" href="#includelines" title="Permalink to this headline"></a></h3>
-<p>Check that the files include all lines passed as argument.</p>
-<p>If the files don’t include all lines specified as argument,
-it will raise a checking error. Newlines are ignored, so they
-should not be specified.</p>
+<p>Check that the files include expected lines.</p>
+<p>Accept an array of strings as the lines to exclude or
+an array of arrays with the content to exclude and the fixer query
+as two strings.</p>
 <p class="rubric">Examples</p>
 <div class="sphinx-tabs docutils container">
 <div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">Automatic inclusion</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">Manual edition</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><p>Appends lines not already present in the file to the end.</p>
@@ -182,7 +184,7 @@ to edit manually the files using JMESPath queries.</p>
 <p>Conditional to exclude rule only if some files include a set of lines.</p>
 <p>If one file don’t include all lines passed as parameter,
 the rule will be ignored.</p>
-<p>Accepts an object mapping files to lines that must be included in order
+<p>Accept an object mapping files to lines that must be included in order
 to execute the rule.</p>
 <p class="rubric">Example</p>
 <p>If the license defined in the <cite>LICENSE</cite> file is BSD-3, <code class="docutils literal notranslate"><span class="pre">project.license</span></code>
@@ -204,9 +206,61 @@ must correspont:</p>
 <p><span class="versionmodified added">New in version 0.1.0.</span></p>
 </div>
 </section>
+<section id="includecontent">
+<h3>includeContent<a class="headerlink" href="#includecontent" title="Permalink to this headline"></a></h3>
+<p>Check that the files include certain contents.</p>
+<p>Accept an array of strings as the contents to include or
+an array of arrays with the content to include and the fixer query
+as two strings.</p>
+<p>The specified partial contents can match multiple lines
+and line ending characters. It just raises errors if the passed
+contents are substrings of each file content.</p>
+<p class="rubric">Example</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">    </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;setup.py&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">    </span><span class="nx">includeContent</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">      </span><span class="s1">&#39;Installation using setup.py is no longer supported.&#39;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="p">]</span><span class="w"></span>
+<span class="w">  </span><span class="p">]</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.8.0.</span></p>
+</div>
+</section>
+<section id="excludelines">
+<h3>excludeLines<a class="headerlink" href="#excludelines" title="Permalink to this headline"></a></h3>
+<p>Check that the files do not include certain lines.</p>
+<p>Accept an array of strings as the lines to exclude or
+an array of arrays with the line to exclude and the fixer query
+as two strings.</p>
+<p class="rubric">Example</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">    </span><span class="nx">hint</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Keep the .vscode folder&#39;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;.gitignore&#39;</span><span class="p">],</span><span class="w"></span>
+<span class="w">    </span><span class="nx">excludeLines</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">      </span><span class="s1">&#39;.vscode&#39;</span><span class="w"></span>
+<span class="w">      </span><span class="s1">&#39;.vscode/&#39;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="s1">&#39;/.vscode&#39;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="s1">&#39;/.vscode/&#39;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="p">]</span><span class="w"></span>
+<span class="w">  </span><span class="p">]</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.8.0.</span></p>
+</div>
+</section>
 <section id="excludecontent">
 <h3>excludeContent<a class="headerlink" href="#excludecontent" title="Permalink to this headline"></a></h3>
 <p>Check that the files do not include certain content.</p>
+<p>Accept an array of strings as the contents to exclude or
+an array of arrays with the content to exclude and the fixer query
+as two strings.</p>
 <p>The specified partial contents can match multiple lines
 and line ending characters. It just raises errors if the passed
 contents are substrings of each file content.</p>
@@ -243,7 +297,7 @@ contents are substrings of each file content.</p>
 <p><span class="versionmodified added">New in version 0.3.0.</span></p>
 </div>
 <div class="versionchanged">
-<p><span class="versionmodified changed">Changed in version 0.7.0: </span>Accepts an array <code class="docutils literal notranslate"><span class="pre">['content-to-exclude',</span> <span class="pre">fixer-query]</span></code> for each item
+<p><span class="versionmodified changed">Changed in version 0.7.0: </span>Accept an array <code class="docutils literal notranslate"><span class="pre">['content-to-exclude',</span> <span class="pre">'fixer-query']</span></code> for each item
 in the array to perform editions in the file if the content is found.</p>
 </div>
 </section>
@@ -254,7 +308,7 @@ in the array to perform editions in the file if the content is found.</p>
 <section id="iffilesexist">
 <h3>ifFilesExist<a class="headerlink" href="#iffilesexist" title="Permalink to this headline"></a></h3>
 <p>Check if a set of files and/or directories exists.</p>
-<p>Accepts an array of paths. If a path ends with <code class="docutils literal notranslate"><span class="pre">/</span></code> character it is
+<p>Accept an array of paths. If a path ends with <code class="docutils literal notranslate"><span class="pre">/</span></code> character it is
 considered a directory.</p>
 <p class="rubric">Examples</p>
 <div class="sphinx-tabs docutils container">
@@ -450,8 +504,9 @@ current working directory or other that could be either passed in
 <dl class="py function">
 <dt class="sig sig-object py" id="op">
 <span class="sig-name descname"><span class="pre">op</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">source:</span> <span class="pre">any,</span> <span class="pre">operation:</span> <span class="pre">str,</span> <span class="pre">target:</span> <span class="pre">any[,</span> <span class="pre">operation:</span> <span class="pre">str,</span> <span class="pre">target:</span> <span class="pre">any]...</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">any</span></span></span><a class="headerlink" href="#op" title="Permalink to this definition"></a></dt>
-<dd><p>Apply the operator <code class="docutils literal notranslate"><span class="pre">operation</span></code> between the two values <code class="docutils literal notranslate"><span class="pre">source</span></code> and <code class="docutils literal notranslate"><span class="pre">target</span></code>
-using the operators for two values defined in the module <a class="reference internal" href="#op" title="op"><code class="xref py py-mod docutils literal notranslate"><span class="pre">op</span></code></a>.</p>
+<dd><p>Apply the operator <code class="docutils literal notranslate"><span class="pre">operation</span></code> between the values <code class="docutils literal notranslate"><span class="pre">source</span></code> and <code class="docutils literal notranslate"><span class="pre">target</span></code>
+using the operators defined in the Python standard library module <a class="reference internal" href="#op" title="op"><code class="xref py py-mod docutils literal notranslate"><span class="pre">op</span></code></a>
+for two or more values.</p>
 <p>The next operators are available:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">&lt;</span></code>: <a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.lt" title="(in Python v3.11)"><code class="xref py py-func docutils literal notranslate"><span class="pre">operator.lt()</span></code></a></p></li>
@@ -530,7 +585,7 @@ with the built-in JMESPath function <code class="docutils literal notranslate"><
 </div>
 <p>You can pass multiple operators and values after the <code class="docutils literal notranslate"><span class="pre">target</span></code> argument
 chaining the operation with multiple operators. For example:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>op(`5`, &#39;+&#39;, `3`, &#39;-&#39;, `4`)
+<div class="highlight-jmespath notranslate"><div class="highlight"><pre><span></span><span class="nf">op</span><span class="p">(</span><span class="l">`</span><span class="m">5</span><span class="l">`</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;+&#39;</span><span class="p">,</span><span class="w"> </span><span class="l">`</span><span class="m">3</span><span class="l">`</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;-&#39;</span><span class="p">,</span><span class="w"> </span><span class="l">`</span><span class="m">4</span><span class="l">`</span><span class="p">)</span><span class="w"></span>
 </pre></div>
 </div>
 <div class="versionadded">
@@ -864,6 +919,78 @@ If the iterable is an object, the value is converted before using <a class="refe
 </div>
 </dd></dl>
 
+<p class="rubric">File system functions</p>
+<p>The next functions are useful for file system operations.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="isfile">
+<span class="sig-name descname"><span class="pre">isfile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#isfile" title="Permalink to this definition"></a></dt>
+<dd><p>Return <code class="docutils literal notranslate"><span class="pre">true</span></code> if the given <code class="docutils literal notranslate"><span class="pre">path</span></code> is a file,  <code class="docutils literal notranslate"><span class="pre">false</span></code> otherwise.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.8.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="isdir">
+<span class="sig-name descname"><span class="pre">isdir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#isdir" title="Permalink to this definition"></a></dt>
+<dd><p>Return <code class="docutils literal notranslate"><span class="pre">true</span></code> if the given <code class="docutils literal notranslate"><span class="pre">path</span></code> is a directory,
+<code class="docutils literal notranslate"><span class="pre">false</span></code> otherwise.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.8.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="exists">
+<span class="sig-name descname"><span class="pre">exists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#exists" title="Permalink to this definition"></a></dt>
+<dd><p>Return <code class="docutils literal notranslate"><span class="pre">true</span></code> if the given <code class="docutils literal notranslate"><span class="pre">path</span></code> exists, <code class="docutils literal notranslate"><span class="pre">false</span></code> otherwise.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.8.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="listdir">
+<span class="sig-name descname"><span class="pre">listdir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">null</span></span></span><a class="headerlink" href="#listdir" title="Permalink to this definition"></a></dt>
+<dd><p>Return a list of the files and directories in the given <code class="docutils literal notranslate"><span class="pre">path</span></code>.
+If the <code class="docutils literal notranslate"><span class="pre">path</span></code> does not exist, return <code class="docutils literal notranslate"><span class="pre">null</span></code>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.8.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mkdir">
+<span class="sig-name descname"><span class="pre">mkdir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#mkdir" title="Permalink to this definition"></a></dt>
+<dd><p>Create a directory in the given <code class="docutils literal notranslate"><span class="pre">path</span></code>. Return <code class="docutils literal notranslate"><span class="pre">true</span></code> if the
+directory has been created, <code class="docutils literal notranslate"><span class="pre">false</span></code> if it already exists.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.8.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rmdir">
+<span class="sig-name descname"><span class="pre">rmdir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#rmdir" title="Permalink to this definition"></a></dt>
+<dd><p>Remove the directory in the given <code class="docutils literal notranslate"><span class="pre">path</span></code>. Return <code class="docutils literal notranslate"><span class="pre">true</span></code> if the
+directory has been removed, <code class="docutils literal notranslate"><span class="pre">false</span></code> if it does not exist.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.8.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="glob">
+<span class="sig-name descname"><span class="pre">glob</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pattern:</span> <span class="pre">str</span></span></em><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">recursive:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">false</span></span></em><span class="optional">]</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#glob" title="Permalink to this definition"></a></dt>
+<dd><p>Return a list of the files and directories in the given <code class="docutils literal notranslate"><span class="pre">path</span></code> using
+the <a class="reference internal" href="#glob" title="glob"><code class="xref py py-mod docutils literal notranslate"><span class="pre">glob</span></code></a> module. If recursive is true, the pattern <code class="docutils literal notranslate"><span class="pre">**</span></code>
+will match any files and zero or more directories, subdirectories and
+symbolic links to directories.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.8.0.</span></p>
+</div>
+</dd></dl>
+
 <p class="rubric">Updater functions</p>
 <p>The next functions take an value as the first argument, make some update
 on this <code class="docutils literal notranslate"><span class="pre">base</span></code> object and return it updated. Useful for fix queries when
@@ -897,7 +1024,7 @@ you need to return fixed contents for files.</p>
 <p>The argument of <code class="docutils literal notranslate"><span class="pre">strategy</span></code> controls how the objects are merged. It can accept
 strings with <a class="reference external" href="https://deepmerge.readthedocs.io/en/latest/strategies.html#builtin-strategies">deepmerge strategy names</a>:</p>
 <p class="rubric">Example</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>deepmerge(@, `{&quot;foo&quot;: &quot;bar&quot;}`, &#39;always_merger&#39;)
+<div class="highlight-jmespath notranslate"><div class="highlight"><pre><span></span><span class="nf">deepmerge</span><span class="p">(</span><span class="vg">@</span><span class="p">,</span><span class="w"> </span><span class="l">`</span><span class="p">{&quot;</span><span class="nv">foo</span><span class="p">&quot;:</span><span class="w"> </span><span class="p">&quot;</span><span class="nv">bar</span><span class="p">&quot;}</span><span class="l">`</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;always_merger&#39;</span><span class="p">)</span><span class="w"></span>
 </pre></div>
 </div>
 <p>Or an array with 3 values, the same that takes the class <a class="reference external" href="https://deepmerge.readthedocs.io/en/latest/api.html#deepmerge.merger.Merger" title="(in deepmerge v0.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">deepmerge.merger.Merger</span></code></a>
@@ -908,11 +1035,11 @@ as arguments:</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">type_conflict_strategies</span></code></p></li>
 </ul>
 <p class="rubric">Example</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>deepmerge(
-   @,
-   `{&quot;foo&quot;: [&quot;bar&quot;]}`,
-   `[[[&quot;list&quot;, &quot;append&quot;], [&quot;dict&quot;: &quot;merge&quot;]], [&quot;override&quot;], [&quot;override&quot;]]`
-)
+<div class="highlight-jmespath notranslate"><div class="highlight"><pre><span></span><span class="nf">deepmerge</span><span class="p">(</span><span class="w"></span>
+<span class="w">   </span><span class="vg">@</span><span class="p">,</span><span class="w"></span>
+<span class="w">   </span><span class="l">`</span><span class="p">{&quot;</span><span class="nv">foo</span><span class="p">&quot;:</span><span class="w"> </span><span class="p">[&quot;</span><span class="nv">bar</span><span class="p">&quot;]}</span><span class="l">`</span><span class="p">,</span><span class="w"></span>
+<span class="w">   </span><span class="l">`</span><span class="p">[[[&quot;</span><span class="nv">list</span><span class="p">&quot;,</span><span class="w"> </span><span class="p">&quot;</span><span class="nv">append</span><span class="p">&quot;],</span><span class="w"> </span><span class="p">[&quot;</span><span class="nv">dict</span><span class="p">&quot;:</span><span class="w"> </span><span class="p">&quot;</span><span class="nv">merge</span><span class="p">&quot;]],</span><span class="w"> </span><span class="p">[&quot;</span><span class="nv">override</span><span class="p">&quot;],</span><span class="w"> </span><span class="p">[&quot;</span><span class="nv">override</span><span class="p">&quot;]]</span><span class="l">`</span><span class="w"></span>
+<span class="p">)</span><span class="w"></span>
 </pre></div>
 </div>
 <div class="versionadded">
@@ -1068,7 +1195,7 @@ are always optional.</p>
 node tree instance to update the content parsing the other queries arguments
 and the expected value.</p>
 <p>The query will be a syntax like (example merging objects):</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>deepmerge(@, `{ &quot;foo&quot;: &quot;bar&quot; }`)
+<div class="highlight-jmespath notranslate"><div class="highlight"><pre><span></span><span class="nf">deepmerge</span><span class="p">(</span><span class="vg">@</span><span class="p">,</span><span class="w"> </span><span class="l">`</span><span class="p">{</span><span class="w"> </span><span class="p">&quot;</span><span class="nv">foo</span><span class="p">&quot;:</span><span class="w"> </span><span class="p">&quot;</span><span class="nv">bar</span><span class="p">&quot;</span><span class="w"> </span><span class="p">}</span><span class="l">`</span><span class="p">)</span><span class="w"></span>
 </pre></div>
 </div>
 <p>Where <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> is the previous content of the file.</p>
@@ -1148,7 +1275,7 @@ tuples passed as value. If a result don’t match, report an error.</p>
 <section id="crossjmespathsmatch">
 <h3>crossJMESPathsMatch<a class="headerlink" href="#crossjmespathsmatch" title="Permalink to this headline"></a></h3>
 <p>JMESPaths matching between multiple files.</p>
-<p>Accepts an array of arrays. Each one of these arrays must have the syntax:</p>
+<p>Accept an array of arrays. Each one of these arrays must have the syntax:</p>
 <div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="w"></span>
 <span class="w">  </span><span class="s2">&quot;filesJMESPathExpression&quot;</span><span class="p">,</span><span class="w">  </span><span class="c1">// expression to query each file in `files` property of the rule</span><span class="w"></span>
 <span class="w">  </span><span class="p">[</span><span class="s2">&quot;otherFile.ext&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;JMESPathExpression&quot;</span><span class="p">]...,</span><span class="w">  </span><span class="c1">// optionally other files</span><span class="w"></span>

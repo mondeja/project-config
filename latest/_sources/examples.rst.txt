@@ -143,12 +143,10 @@ If `.gitignore` includes the line ``__pycache__/`` a `pyproject.toml` file must 
 
 
 
-Conditionals files existence
-============================
+Intercommunication between rules
+================================
 
-Follows the next rules: 
-   * If the directory `src/` exists, the file `pyproject.toml` must exists too.
-   * If the file `pyproject.toml` exists, a Python file must be present in the root directory.
+Using :py:func:`getenv` and :py:func:`setenv` functions to pass arbitrary data between rules.
 
 .. tabs::
 
@@ -159,12 +157,42 @@ Follows the next rules:
          {
            rules: [
              {
-               files: ["pyproject.toml"],
-               ifFilesExist: ["src/"],
+               // Setting environment variables
+               //
+               // If `cache` field is of type string, set an environment
+               // variable `PROJECT_CONFIG_TEST` with the value
+               files: [".project-config.toml"],
+               JMESPathsMatch: [
+                 [
+                   "op(op(type(cache), '!=', 'string'), '|', op(type(setenv('PROJECT_CONFIG_TEST', cache)), '==', 'object'))",
+                   true,
+                 ],
+               ],
              },
              {
-               files: ["*.py"],
-               ifFilesExist: ["pyproject.toml"],
+               // Getting environment variables
+               //
+               // If the previous environment variable is setted, change `cache`
+               // to `never`.
+               files: [".project-config.toml"],
+               ifJMESPathsMatch: {
+                 ".project-config.toml": [
+                   ["type(getenv('PROJECT_CONFIG_TEST'))", "string"],
+                 ],
+               },
+               JMESPathsMatch: [["cache", "never"]],
+             },
+             {
+               // Deleting environment variables
+               //
+               // If the previous environment variable is setted, delete it.
+               files: [".project-config.toml"],
+               ifJMESPathsMatch: {
+                 ".project-config.toml": [
+                   ["type(getenv('PROJECT_CONFIG_TEST'))", "string"],
+                 ],
+               },
+               JMESPathsMatch: [["type(setenv('PROJECT_CONFIG_TEST', null))", "object"]],
              },
            ],
          }
@@ -174,24 +202,7 @@ Follows the next rules:
       .. code-block:: toml
 
          style = "style.json5"
-
-   .. tab:: pyproject.toml
-
-      .. code-block:: toml
-
-
-
-   .. tab:: file.py
-
-      .. code-block:: python
-
-
-
-   .. tab:: src/
-
-      .. code-block:: text
-
-
+         cache = "never"
 
 Compare values between files
 ============================
@@ -603,69 +614,6 @@ Set a pre-commit hook for ``editorconfig-checker`` inside `.pre-commit-config.ya
       .. code-block:: toml
 
          style = "style.json5"
-
-Intercommunication between rules
-================================
-
-Using :py:func:`getenv` and :py:func:`setenv` functions to pass arbitrary data between rules.
-
-.. tabs::
-
-   .. tab:: style.json5
-
-      .. code-block:: js
-
-         {
-           rules: [
-             {
-               // Setting environment variables
-               //
-               // If `cache` field is of type string, set an environment
-               // variable `PREVIOUS_PROJECT_CONFIG_CACHE` with the value
-               files: [".project-config.toml"],
-               JMESPathsMatch: [
-                 [
-                   "op(op(type(cache), '!=', 'string'), '|', op(type(setenv('PREVIOUS_PROJECT_CONFIG_CACHE', cache)), '==', 'object'))",
-                   true,
-                 ],
-               ],
-             },
-             {
-               // Getting environment variables
-               //
-               // If the previous environment variable is setted, change `cache`
-               // to `never`.
-               files: [".project-config.toml"],
-               ifJMESPathsMatch: {
-                 ".project-config.toml": [
-                   ["type(getenv('PREVIOUS_PROJECT_CONFIG_CACHE'))", "string"],
-                 ],
-               },
-               JMESPathsMatch: [["cache", "never"]],
-             },
-             {
-               // Deleting environment variables
-               //
-               // If the previous environment variable is setted, delete it.
-               files: [".project-config.toml"],
-               ifJMESPathsMatch: {
-                 ".project-config.toml": [
-                   ["type(getenv('PREVIOUS_PROJECT_CONFIG_CACHE'))", "string"],
-                 ],
-               },
-               JMESPathsMatch: [
-                 ["type(setenv('PREVIOUS_PROJECT_CONFIG_CACHE', null))", "object"],
-               ],
-             },
-           ],
-         }
-
-   .. tab:: .project-config.toml
-
-      .. code-block:: toml
-
-         style = "style.json5"
-         cache = "never"
 
 .. raw:: html
 

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.fetchers &mdash; project-config 0.7.9 documentation</title>
+  <title>project_config.fetchers &mdash; project-config 0.8.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -32,7 +32,7 @@
             <a href="../../index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.7
+                0.8
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -101,24 +101,19 @@
 
 <span class="kn">import</span> <span class="nn">importlib</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">typing</span> <span class="k">as</span> <span class="nn">t</span>
 <span class="kn">import</span> <span class="nn">urllib.parse</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
 
-<span class="kn">from</span> <span class="nn">project_config.compat</span> <span class="kn">import</span> <span class="n">TypeAlias</span>
 <span class="kn">from</span> <span class="nn">project_config.exceptions</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">ProjectConfigException</span><span class="p">,</span>
     <span class="n">ProjectConfigNotImplementedError</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">project_config.serializers</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">SerializerError</span><span class="p">,</span>
-    <span class="n">SerializerResult</span><span class="p">,</span>
     <span class="n">guess_preferred_serializer</span><span class="p">,</span>
     <span class="n">serialize_for_url</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">project_config.utils.http</span> <span class="kn">import</span> <span class="n">ProjectConfigTimeoutError</span>
-
-
-<span class="n">FetchResult</span><span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="n">SerializerResult</span>
 
 
 <div class="viewcode-block" id="FetchError"><a class="viewcode-back" href="../../dev/reference/project_config.fetchers.html#project_config.fetchers.FetchError">[docs]</a><span class="k">class</span> <span class="nc">FetchError</span><span class="p">(</span><span class="n">ProjectConfigException</span><span class="p">):</span>
@@ -161,7 +156,41 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="fetch"><a class="viewcode-back" href="../../dev/reference/project_config.fetchers.html#project_config.fetchers.fetch">[docs]</a><span class="k">def</span> <span class="nf">fetch</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FetchResult</span><span class="p">:</span>
+<div class="viewcode-block" id="uri_is_pointing_to_local_file"><a class="viewcode-back" href="../../dev/reference/project_config.fetchers.html#project_config.fetchers.uri_is_pointing_to_local_file">[docs]</a><span class="k">def</span> <span class="nf">uri_is_pointing_to_local_file</span><span class="p">(</span><span class="n">uri</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Return True if an URI is pointing to a local file.&quot;&quot;&quot;</span>
+    <span class="n">url_parts</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">urlsplit</span><span class="p">(</span><span class="n">uri</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">_get_scheme_from_urlparts</span><span class="p">(</span><span class="n">url_parts</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;file&quot;</span></div>
+
+
+<div class="viewcode-block" id="urlsplit_with_scheme"><a class="viewcode-back" href="../../dev/reference/project_config.fetchers.html#project_config.fetchers.urlsplit_with_scheme">[docs]</a><span class="k">def</span> <span class="nf">urlsplit_with_scheme</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">SplitResult</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;Return a tuple with the URL parts and the scheme.&quot;&quot;&quot;</span>
+    <span class="n">url_parts</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">urlsplit</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="n">scheme</span> <span class="o">=</span> <span class="n">_get_scheme_from_urlparts</span><span class="p">(</span><span class="n">url_parts</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">url_parts</span><span class="p">,</span> <span class="n">scheme</span></div>
+
+
+<div class="viewcode-block" id="download_file_from_urlsplit_scheme"><a class="viewcode-back" href="../../dev/reference/project_config.fetchers.html#project_config.fetchers.download_file_from_urlsplit_scheme">[docs]</a><span class="k">def</span> <span class="nf">download_file_from_urlsplit_scheme</span><span class="p">(</span>
+    <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">url_parts</span><span class="p">:</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">SplitResult</span><span class="p">,</span>
+    <span class="n">scheme</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Download a file from a URL knowing its scheme.&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">module</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;project_config.fetchers.</span><span class="si">{</span><span class="n">scheme</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">SchemeProtocolNotImplementedError</span><span class="p">(</span><span class="n">scheme</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># TODO: ModuleType with protocol here?</span>
+        <span class="k">return</span> <span class="n">module</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">url_parts</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+    <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">FetchError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">&#39; file not found&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">ProjectConfigTimeoutError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">FetchError</span><span class="p">(</span><span class="n">exc</span><span class="o">.</span><span class="n">message</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="fetch"><a class="viewcode-back" href="../../dev/reference/project_config.fetchers.html#project_config.fetchers.fetch">[docs]</a><span class="k">def</span> <span class="nf">fetch</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Fetch a result given an URI.</span>
 
 <span class="sd">    Args:</span>
@@ -171,25 +200,25 @@
 
     <span class="n">url_parts</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">urlsplit</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
     <span class="n">scheme</span> <span class="o">=</span> <span class="n">_get_scheme_from_urlparts</span><span class="p">(</span><span class="n">url_parts</span><span class="p">)</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">module</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;project_config.fetchers.</span><span class="si">{</span><span class="n">scheme</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">SchemeProtocolNotImplementedError</span><span class="p">(</span><span class="n">scheme</span><span class="p">)</span>
+
+    <span class="n">string</span> <span class="o">=</span> <span class="n">download_file_from_urlsplit_scheme</span><span class="p">(</span>
+        <span class="n">url</span><span class="p">,</span>
+        <span class="n">url_parts</span><span class="p">,</span>
+        <span class="n">scheme</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">)</span>
 
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">string</span> <span class="o">=</span> <span class="n">module</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">url_parts</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-    <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">FetchError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">&#39; file not found&quot;</span><span class="p">)</span>
-    <span class="k">except</span> <span class="n">ProjectConfigTimeoutError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">FetchError</span><span class="p">(</span><span class="n">exc</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
-
-    <span class="k">try</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">serialize_for_url</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">string</span><span class="p">,</span> <span class="n">prefer_serializer</span><span class="o">=</span><span class="n">serializer_name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">serialize_for_url</span><span class="p">(</span>
+            <span class="n">url</span><span class="p">,</span>
+            <span class="n">string</span><span class="p">,</span>
+            <span class="n">prefer_serializer</span><span class="o">=</span><span class="n">serializer_name</span><span class="p">,</span>
+        <span class="p">)</span>
     <span class="k">except</span> <span class="n">SerializerError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">FetchError</span><span class="p">(</span><span class="n">exc</span><span class="o">.</span><span class="n">message</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="resolve_url"><a class="viewcode-back" href="../../dev/reference/project_config.fetchers.html#project_config.fetchers.resolve_url">[docs]</a><span class="k">def</span> <span class="nf">resolve_url</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<div class="viewcode-block" id="resolve_url"><a class="viewcode-back" href="../../dev/reference/project_config.fetchers.html#project_config.fetchers.resolve_url">[docs]</a><span class="k">def</span> <span class="nf">resolve_url</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Resolve an URL from a custom URI to their real counterpart.</span>
 
 <span class="sd">    Args:</span>
@@ -271,7 +300,9 @@
             <span class="n">action</span><span class="o">=</span><span class="s2">&quot;Resolving&quot;</span><span class="p">,</span>
         <span class="p">)</span>
 
-    <span class="c1"># other protocols like https uses absolute URLs</span>
+    <span class="c1"># other protocols like https are supposed to use absolute URLs</span>
+    <span class="c1">#</span>
+    <span class="c1"># TODO: Implement (or test) relative URLs for other protocols</span>
     <span class="k">return</span> <span class="n">url</span></div>
 </pre></div>
 

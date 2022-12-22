@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.reporters.toml &mdash; project-config 0.7.9 documentation</title>
+  <title>project_config.reporters.toml &mdash; project-config 0.8.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
@@ -32,7 +32,7 @@
             <a href="../../../index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.7
+                0.8
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -101,21 +101,26 @@
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">import</span> <span class="nn">typing</span> <span class="k">as</span> <span class="nn">t</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Any</span>
 
 <span class="kn">import</span> <span class="nn">tomli_w</span>
 
 <span class="kn">from</span> <span class="nn">project_config.reporters.base</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">BaseColorReporter</span><span class="p">,</span>
     <span class="n">BaseNoopFormattedReporter</span><span class="p">,</span>
-    <span class="n">FilesErrors</span><span class="p">,</span>
-    <span class="n">FormatterDefinitionType</span><span class="p">,</span>
 <span class="p">)</span>
 
 
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">project_config.reporters.base</span> <span class="kn">import</span> <span class="p">(</span>
+        <span class="n">FilesErrors</span><span class="p">,</span>
+        <span class="n">FormatterDefinitionType</span><span class="p">,</span>
+    <span class="p">)</span>
+
+
 <div class="viewcode-block" id="_replace_nulls_by_repr_strings_in_dict"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.toml.html#project_config.reporters.toml._replace_nulls_by_repr_strings_in_dict">[docs]</a><span class="k">def</span> <span class="nf">_replace_nulls_by_repr_strings_in_dict</span><span class="p">(</span>
-    <span class="n">data</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">],</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">]:</span>
+    <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Iterates through a dictionary and replaces nulls by empty strings.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">{</span>
@@ -131,7 +136,7 @@
 
 <div class="viewcode-block" id="_normalize_indentation_to_2_spaces"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.toml.html#project_config.reporters.toml._normalize_indentation_to_2_spaces">[docs]</a><span class="k">def</span> <span class="nf">_normalize_indentation_to_2_spaces</span><span class="p">(</span><span class="n">string</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Normalizes indentation of the beginning of lines to 2 spaces.&quot;&quot;&quot;</span>
-    <span class="n">new_lines</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">new_lines</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 
     <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">string</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span>
         <span class="c1"># count number of spaces at the beginning of the line</span>
@@ -139,7 +144,9 @@
         <span class="k">if</span> <span class="n">spaces_at_start</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
             <span class="n">new_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">new_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="s2">&quot; &quot;</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="n">spaces_at_start</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span><span class="si">}{</span><span class="n">line</span><span class="o">.</span><span class="n">lstrip</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">new_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="s2">&quot; &quot;</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="n">spaces_at_start</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span><span class="si">}{</span><span class="n">line</span><span class="o">.</span><span class="n">lstrip</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+            <span class="p">)</span>
 
     <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">new_lines</span><span class="p">)</span></div>
 
@@ -206,7 +213,7 @@
 <div class="viewcode-block" id="TomlReporter.generate_data_report"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.toml.html#project_config.reporters.toml.TomlReporter.generate_data_report">[docs]</a>    <span class="k">def</span> <span class="nf">generate_data_report</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">data_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>  <span class="c1"># noqa: U100</span>
-        <span class="n">data</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">],</span>
+        <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Generate a data report in black/white TOML format.&quot;&quot;&quot;</span>
         <span class="n">report</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
@@ -241,7 +248,7 @@
 <div class="viewcode-block" id="TomlColorReporter.generate_data_report"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.toml.html#project_config.reporters.toml.TomlColorReporter.generate_data_report">[docs]</a>    <span class="k">def</span> <span class="nf">generate_data_report</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">data_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">data</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">],</span>
+        <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Generate data report in TOML format with colors.&quot;&quot;&quot;</span>
         <span class="n">report</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>

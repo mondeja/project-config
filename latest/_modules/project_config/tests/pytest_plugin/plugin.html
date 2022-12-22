@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.tests.pytest_plugin.plugin &mdash; project-config 0.7.9 documentation</title>
+  <title>project_config.tests.pytest_plugin.plugin &mdash; project-config 0.8.0 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
@@ -32,7 +32,7 @@
             <a href="../../../../index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.7
+                0.8
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
@@ -107,24 +107,25 @@
 <span class="kn">import</span> <span class="nn">pathlib</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">types</span>
-<span class="kn">import</span> <span class="nn">typing</span> <span class="k">as</span> <span class="nn">t</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Any</span>
 
 <span class="kn">import</span> <span class="nn">pytest</span>
 
+<span class="kn">from</span> <span class="nn">project_config.constants</span> <span class="kn">import</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="n">ResultValue</span>
 <span class="kn">from</span> <span class="nn">project_config.tests.pytest_plugin.helpers</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">FilesType</span><span class="p">,</span>
-    <span class="n">RootdirType</span><span class="p">,</span>
     <span class="n">assert_expected_files</span><span class="p">,</span>
     <span class="n">create_files</span><span class="p">,</span>
-    <span class="n">create_tree</span><span class="p">,</span>
     <span class="n">get_reporter_class_from_module</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">project_config.types</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">ActionsContext</span><span class="p">,</span>
-    <span class="n">ErrorDict</span><span class="p">,</span>
-    <span class="n">Rule</span><span class="p">,</span>
-    <span class="n">StrictResultType</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">project_config.types</span> <span class="kn">import</span> <span class="n">ActionsContext</span>
+
+
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">project_config.tests.pytest_plugin.helpers</span> <span class="kn">import</span> <span class="p">(</span>
+        <span class="n">FilesType</span><span class="p">,</span>
+        <span class="n">RootdirType</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="kn">from</span> <span class="nn">project_config.types</span> <span class="kn">import</span> <span class="n">ErrorDict</span><span class="p">,</span> <span class="n">Rule</span><span class="p">,</span> <span class="n">StrictResultType</span>
 
 
 <div class="viewcode-block" id="project_config_plugin_action_asserter"><a class="viewcode-back" href="../../../../dev/reference/project_config.tests.pytest_plugin.plugin.html#project_config.tests.pytest_plugin.project_config_plugin_action_asserter">[docs]</a><span class="k">def</span> <span class="nf">project_config_plugin_action_asserter</span><span class="p">(</span>
@@ -132,14 +133,14 @@
     <span class="n">plugin_class</span><span class="p">:</span> <span class="nb">type</span><span class="p">,</span>
     <span class="n">plugin_method_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">files</span><span class="p">:</span> <span class="n">FilesType</span><span class="p">,</span>
-    <span class="n">value</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">,</span>
+    <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="n">rule</span><span class="p">:</span> <span class="n">Rule</span><span class="p">,</span>
-    <span class="n">expected_results</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">StrictResultType</span><span class="p">],</span>
-    <span class="n">additional_files</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">FilesType</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">expected_results</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">StrictResultType</span><span class="p">],</span>
+    <span class="n">additional_files</span><span class="p">:</span> <span class="n">FilesType</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">assert_case_method_name</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">deprecated</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">fix</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="n">expected_files</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">FilesType</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">expected_files</span><span class="p">:</span> <span class="n">FilesType</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Convenient function to test a plugin action.</span>
 
@@ -154,18 +155,19 @@
 <span class="sd">            If the value is ``False``, the file will not be created.</span>
 <span class="sd">            If the value is ``None``, the file will be created as a directory.</span>
 <span class="sd">        value (typing.Any): Value passed to the action.</span>
-<span class="sd">        expected_results (list): List of expected results.</span>
-<span class="sd">        additional_files (dict): Dictionary of additional files to create.</span>
-<span class="sd">            These will not be defined inside the ``files`` property of the rule.</span>
-<span class="sd">            Follows the same format as ``files``.</span>
-<span class="sd">        assert_case_method_name (bool): If ``True``, the method name will</span>
-<span class="sd">            be checked to match against camelCase or PascalCase style.</span>
-<span class="sd">        deprecated (bool): If ``True``, the action must raise a deprecation</span>
-<span class="sd">            warning.</span>
-<span class="sd">        fix (bool): If ``True``, the action will be called with the ``fix``</span>
-<span class="sd">            mode active. Use ``expected_files`` to check the content of the</span>
-<span class="sd">            files after the fix is applyed.</span>
-<span class="sd">        expected_files (dict): Dictionary of expected files.</span>
+<span class="sd">        expected_results (list): Expected results.</span>
+<span class="sd">        additional_files (dict, optional): Dictionary of additional files to</span>
+<span class="sd">            create. These will not be defined inside the ``files`` property of</span>
+<span class="sd">            the rule. Follows the same format as ``files``.</span>
+<span class="sd">        assert_case_method_name (bool, optional): If ``True`` (default), the</span>
+<span class="sd">            method name will be checked to match against camelCase or</span>
+<span class="sd">            PascalCase style.</span>
+<span class="sd">        deprecated (bool, optional): If ``True``, the action must raise a</span>
+<span class="sd">            deprecation warning. Default value is ``False``.</span>
+<span class="sd">        fix (bool, optional): If ``True``, the action will be called with</span>
+<span class="sd">            the ``fix`` mode active. Use ``expected_files`` to check the content</span>
+<span class="sd">            of the files after the fix is applyed.</span>
+<span class="sd">        expected_files (dict, optional): Dictionary of expected files.</span>
 
 <span class="sd">    .. rubric:: Example</span>
 
@@ -219,7 +221,9 @@
 <span class="sd">               rule,</span>
 <span class="sd">               expected_results,</span>
 <span class="sd">           )</span>
-<span class="sd">    &quot;&quot;&quot;</span>  <span class="c1"># noqa: D417 -&gt; this seems not needed, error in flake8-docstrings?</span>
+<span class="sd">    &quot;&quot;&quot;</span>  <span class="c1"># noqa: D417  (TODO: bug in flake8-docstrings?)</span>
+    <span class="n">create_files</span><span class="p">(</span><span class="n">files</span><span class="p">,</span> <span class="n">rootdir</span><span class="p">)</span>
+
     <span class="k">if</span> <span class="n">additional_files</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">create_files</span><span class="p">(</span><span class="n">additional_files</span><span class="p">,</span> <span class="n">rootdir</span><span class="p">)</span>
 
@@ -230,19 +234,23 @@
 
     <span class="n">plugin_method</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">plugin_class</span><span class="p">,</span> <span class="n">plugin_method_name</span><span class="p">)</span>
 
-    <span class="n">deprecated_ctx</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">deprecated_ctx</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="p">(</span>
         <span class="n">contextlib</span><span class="o">.</span><span class="n">nullcontext</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">deprecated</span> <span class="k">else</span> <span class="n">pytest</span><span class="o">.</span><span class="n">deprecated_call</span>
     <span class="p">)</span>
     <span class="k">with</span> <span class="n">deprecated_ctx</span><span class="p">():</span>
         <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">rootdir</span><span class="p">)</span>
-        <span class="n">results</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
-            <span class="n">plugin_method</span><span class="p">(</span>
-                <span class="n">value</span><span class="p">,</span>
-                <span class="n">create_tree</span><span class="p">(</span><span class="n">files</span><span class="p">,</span> <span class="n">rootdir</span><span class="p">,</span> <span class="n">cache_files</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
-                <span class="n">rule</span><span class="p">,</span>
-                <span class="n">ActionsContext</span><span class="p">(</span><span class="n">fix</span><span class="o">=</span><span class="n">fix</span><span class="p">),</span>
-            <span class="p">),</span>
-        <span class="p">)</span>
+
+        <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">result_type</span><span class="p">,</span> <span class="n">result_value</span> <span class="ow">in</span> <span class="n">plugin_method</span><span class="p">(</span>
+            <span class="n">value</span><span class="p">,</span>
+            <span class="n">rule</span><span class="p">,</span>
+            <span class="n">ActionsContext</span><span class="p">(</span><span class="n">fix</span><span class="o">=</span><span class="n">fix</span><span class="p">,</span> <span class="n">files</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">files</span><span class="p">)),</span>
+        <span class="p">):</span>
+            <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">result_type</span><span class="p">,</span> <span class="n">result_value</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">result_type</span> <span class="ow">is</span> <span class="n">InterruptingError</span> <span class="ow">or</span> <span class="p">(</span>
+                <span class="n">result_type</span> <span class="ow">is</span> <span class="n">ResultValue</span> <span class="ow">and</span> <span class="n">result_value</span> <span class="ow">is</span> <span class="kc">False</span>
+            <span class="p">):</span>
+                <span class="k">break</span>
 
     <span class="k">assert</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
         <span class="sa">r</span><span class="s2">&quot;\w&quot;</span><span class="p">,</span>
@@ -281,10 +289,10 @@
         <span class="n">assert_expected_files</span><span class="p">(</span><span class="n">expected_files</span><span class="p">,</span> <span class="n">rootdir</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="assert_project_config_plugin_action"><a class="viewcode-back" href="../../../../dev/reference/project_config.tests.pytest_plugin.plugin.html#project_config.tests.pytest_plugin.assert_project_config_plugin_action">[docs]</a><span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>  <span class="c1"># type: ignore</span>
+<div class="viewcode-block" id="assert_project_config_plugin_action"><a class="viewcode-back" href="../../../../dev/reference/project_config.tests.pytest_plugin.plugin.html#project_config.tests.pytest_plugin.assert_project_config_plugin_action">[docs]</a><span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
 <span class="k">def</span> <span class="nf">assert_project_config_plugin_action</span><span class="p">(</span>
     <span class="n">tmp_path</span><span class="p">:</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Pytest fixture to assert a plugin action.</span>
 
 <span class="sd">    Returns a function that can be used to assert a plugin action.</span>
@@ -297,9 +305,9 @@
     <span class="n">monkeypatch</span><span class="p">:</span> <span class="n">pytest</span><span class="o">.</span><span class="n">MonkeyPatch</span><span class="p">,</span>
     <span class="n">rootdir</span><span class="p">:</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">,</span>
     <span class="n">reporter_module</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">ModuleType</span><span class="p">,</span>
-    <span class="n">errors</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">ErrorDict</span><span class="p">],</span>
+    <span class="n">errors</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ErrorDict</span><span class="p">],</span>
     <span class="n">expected_result</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="n">fmt</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">fmt</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Asserts an error report from a reporter module.</span>
 
@@ -309,7 +317,7 @@
 <span class="sd">        rootdir (Path): Path to root directory. This is not needed to define</span>
 <span class="sd">            in the fixture as is inserted before the execution.</span>
 <span class="sd">        reporters_module (types.ModuleType): Module containing the reporters.</span>
-<span class="sd">        errors (list): List of errors.</span>
+<span class="sd">        errors (list): Errors.</span>
 <span class="sd">        expected_result (str): Expected reported result.</span>
 
 <span class="sd">    .. rubric:: Example</span>
@@ -391,11 +399,11 @@
     <span class="k">assert</span> <span class="n">color_reporter</span><span class="o">.</span><span class="n">generate_errors_report</span><span class="p">()</span> <span class="o">==</span> <span class="n">expected_result</span></div>
 
 
-<div class="viewcode-block" id="assert_errors_report"><a class="viewcode-back" href="../../../../dev/reference/project_config.tests.pytest_plugin.plugin.html#project_config.tests.pytest_plugin.assert_errors_report">[docs]</a><span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>  <span class="c1"># type: ignore</span>
+<div class="viewcode-block" id="assert_errors_report"><a class="viewcode-back" href="../../../../dev/reference/project_config.tests.pytest_plugin.plugin.html#project_config.tests.pytest_plugin.assert_errors_report">[docs]</a><span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
 <span class="k">def</span> <span class="nf">assert_errors_report</span><span class="p">(</span>
     <span class="n">monkeypatch</span><span class="p">:</span> <span class="n">pytest</span><span class="o">.</span><span class="n">MonkeyPatch</span><span class="p">,</span>
     <span class="n">tmp_path</span><span class="p">:</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Pytest fixture to assert errors reports.</span>
 
 <span class="sd">    Returns a function that can be used to assert an errors report</span>
@@ -414,9 +422,9 @@
     <span class="n">rootdir</span><span class="p">:</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">,</span>
     <span class="n">reporter_module</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">ModuleType</span><span class="p">,</span>
     <span class="n">data_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="n">data</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">,</span>
+    <span class="n">data</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="n">expected_result</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="n">fmt</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">fmt</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Asserts a data report from a reporter module.</span>
 
@@ -506,11 +514,11 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="assert_data_report"><a class="viewcode-back" href="../../../../dev/reference/project_config.tests.pytest_plugin.plugin.html#project_config.tests.pytest_plugin.assert_data_report">[docs]</a><span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>  <span class="c1"># type: ignore</span>
+<div class="viewcode-block" id="assert_data_report"><a class="viewcode-back" href="../../../../dev/reference/project_config.tests.pytest_plugin.plugin.html#project_config.tests.pytest_plugin.assert_data_report">[docs]</a><span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
 <span class="k">def</span> <span class="nf">assert_data_report</span><span class="p">(</span>
     <span class="n">monkeypatch</span><span class="p">:</span> <span class="n">pytest</span><span class="o">.</span><span class="n">MonkeyPatch</span><span class="p">,</span>
     <span class="n">tmp_path</span><span class="p">:</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Pytest fixture to assert data reports.</span>
 
 <span class="sd">    Returns a function that can be used to assert a data report</span>

@@ -21,11 +21,11 @@ Files content inclusion management.
 includeLines
 ============
 
-Check that the files include all lines passed as argument.
+Check that the files include expected lines.
 
-If the files don't include all lines specified as argument,
-it will raise a checking error. Newlines are ignored, so they
-should not be specified.
+Accept an array of strings as the lines to exclude or
+an array of arrays with the content to exclude and the fixer query
+as two strings.
 
 .. rubric:: Examples
 
@@ -85,7 +85,7 @@ Conditional to exclude rule only if some files include a set of lines.
 If one file don't include all lines passed as parameter,
 the rule will be ignored.
 
-Accepts an object mapping files to lines that must be included in order
+Accept an object mapping files to lines that must be included in order
 to execute the rule.
 
 .. rubric:: Example
@@ -109,10 +109,70 @@ must correspont:
 
 .. versionadded:: 0.1.0
 
+includeContent
+==============
+
+Check that the files include certain contents.
+
+Accept an array of strings as the contents to include or
+an array of arrays with the content to include and the fixer query
+as two strings.
+
+The specified partial contents can match multiple lines
+and line ending characters. It just raises errors if the passed
+contents are substrings of each file content.
+
+.. rubric:: Example
+
+.. code-block:: js
+
+   {
+     rules: [
+       files: ["setup.py"],
+       includeContent: [
+         'Installation using setup.py is no longer supported.',
+       ]
+     ]
+   }
+
+.. versionadded:: 0.8.0
+
+excludeLines
+============
+
+Check that the files do not include certain lines.
+
+Accept an array of strings as the lines to exclude or
+an array of arrays with the line to exclude and the fixer query
+as two strings.
+
+.. rubric:: Example
+
+.. code-block:: js
+
+   {
+     rules: [
+       hint: 'Keep the .vscode folder',
+       files: ['.gitignore'],
+       excludeLines: [
+         '.vscode'
+         '.vscode/',
+         '/.vscode',
+         '/.vscode/',
+       ]
+     ]
+   }
+
+.. versionadded:: 0.8.0
+
 excludeContent
 ==============
 
 Check that the files do not include certain content.
+
+Accept an array of strings as the contents to exclude or
+an array of arrays with the content to exclude and the fixer query
+as two strings.
 
 The specified partial contents can match multiple lines
 and line ending characters. It just raises errors if the passed
@@ -131,7 +191,7 @@ contents are substrings of each file content.
 
 .. versionchanged:: 0.7.0
 
-   Accepts an array ``['content-to-exclude', fixer-query]`` for each item
+   Accept an array ``['content-to-exclude', 'fixer-query']`` for each item
    in the array to perform editions in the file if the content is found.
 
 *********
@@ -145,7 +205,7 @@ ifFilesExist
 
 Check if a set of files and/or directories exists.
 
-Accepts an array of paths. If a path ends with ``/`` character it is
+Accept an array of paths. If a path ends with ``/`` character it is
 considered a directory.
 
 .. rubric:: Examples
@@ -327,8 +387,9 @@ always takes the regex to apply as the first parameter following the Python's
 
 .. function:: op(source: any, operation: str, target: any[, operation: str, target: any]...) -> any
 
-   Apply the operator ``operation`` between the two values ``source`` and ``target``
-   using the operators for two values defined in the module :py:mod:`op`.
+   Apply the operator ``operation`` between the values ``source`` and ``target``
+   using the operators defined in the Python standard library module :py:mod:`op`
+   for two or more values.
 
    The next operators are available:
 
@@ -413,7 +474,7 @@ always takes the regex to apply as the first parameter following the Python's
    You can pass multiple operators and values after the ``target`` argument
    chaining the operation with multiple operators. For example:
 
-   .. code-block:: text
+   .. code-block:: jmespath
 
       op(`5`, '+', `3`, '-', `4`)
 
@@ -649,6 +710,59 @@ always takes the regex to apply as the first parameter following the Python's
 
    .. versionadded:: 0.5.0
 
+.. rubric:: File system functions
+
+The next functions are useful for file system operations.
+
+.. function:: isfile(path: str) -> bool
+
+   Return ``true`` if the given ``path`` is a file,  ``false`` otherwise.
+
+   .. versionadded:: 0.8.0
+
+.. function:: isdir(path: str) -> bool
+
+   Return ``true`` if the given ``path`` is a directory,
+   ``false`` otherwise.
+
+   .. versionadded:: 0.8.0
+
+.. function:: exists(path: str) -> bool
+
+   Return ``true`` if the given ``path`` exists, ``false`` otherwise.
+
+   .. versionadded:: 0.8.0
+
+.. function:: listdir(path: str) -> list[str] | null
+
+   Return a list of the files and directories in the given ``path``.
+   If the ``path`` does not exist, return ``null``.
+
+   .. versionadded:: 0.8.0
+
+.. function:: mkdir(path: str) -> bool
+
+   Create a directory in the given ``path``. Return ``true`` if the
+   directory has been created, ``false`` if it already exists.
+
+   .. versionadded:: 0.8.0
+
+.. function:: rmdir(path: str) -> bool
+
+   Remove the directory in the given ``path``. Return ``true`` if the
+   directory has been removed, ``false`` if it does not exist.
+
+   .. versionadded:: 0.8.0
+
+.. function:: glob(pattern: str[, recursive: bool = false]) -> list[str]
+
+   Return a list of the files and directories in the given ``path`` using
+   the :py:mod:`glob` module. If recursive is true, the pattern ``**``
+   will match any files and zero or more directories, subdirectories and
+   symbolic links to directories.
+
+   .. versionadded:: 0.8.0
+
 .. rubric:: Updater functions
 
 The next functions take an value as the first argument, make some update
@@ -683,7 +797,7 @@ you need to return fixed contents for files.
 
    .. rubric:: Example
 
-   .. code-block:: text
+   .. code-block:: jmespath
 
       deepmerge(@, `{"foo": "bar"}`, 'always_merger')
 
@@ -696,7 +810,7 @@ you need to return fixed contents for files.
 
    .. rubric:: Example
 
-   .. code-block:: text
+   .. code-block:: jmespath
 
       deepmerge(
          @,
@@ -828,7 +942,7 @@ and the expected value.
 
 The query will be a syntax like (example merging objects):
 
-.. code-block:: text
+.. code-block:: jmespath
 
    deepmerge(@, `{ "foo": "bar" }`)
 
@@ -930,7 +1044,7 @@ crossJMESPathsMatch
 
 JMESPaths matching between multiple files.
 
-Accepts an array of arrays. Each one of these arrays must have the syntax:
+Accept an array of arrays. Each one of these arrays must have the syntax:
 
 .. code-block:: js
 

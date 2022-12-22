@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.tests.pytest_plugin.helpers &mdash; project-config 0.7.9 documentation</title>
+  <title>project_config.tests.pytest_plugin.helpers &mdash; project-config 0.8.0 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
@@ -32,7 +32,7 @@
             <a href="../../../../index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.7
+                0.8
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
@@ -102,20 +102,19 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">pathlib</span>
 <span class="kn">import</span> <span class="nn">types</span>
-<span class="kn">import</span> <span class="nn">typing</span> <span class="k">as</span> <span class="nn">t</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">cast</span>
 
 <span class="kn">import</span> <span class="nn">pytest</span>
 
-<span class="kn">from</span> <span class="nn">project_config.compat</span> <span class="kn">import</span> <span class="n">TypeAlias</span>
-<span class="kn">from</span> <span class="nn">project_config.tree</span> <span class="kn">import</span> <span class="n">Tree</span>
+<span class="kn">from</span> <span class="nn">project_config</span> <span class="kn">import</span> <span class="n">tree</span>
 
 
-<span class="n">FileType</span><span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]]</span>
-<span class="n">FilesType</span><span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span>
-    <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">FileType</span><span class="p">]],</span>
-    <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">FileType</span><span class="p">],</span>
-<span class="p">]</span>
-<span class="n">RootdirType</span><span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">]</span>
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">project_config.compat</span> <span class="kn">import</span> <span class="n">TypeAlias</span>
+
+    <span class="n">FileType</span><span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">bool</span> <span class="o">|</span> <span class="kc">None</span>
+    <span class="n">FilesType</span><span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">FileType</span><span class="p">]</span>
+    <span class="n">RootdirType</span><span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span>
 
 
 <div class="viewcode-block" id="create_files"><a class="viewcode-back" href="../../../../dev/reference/project_config.tests.pytest_plugin.helpers.html#project_config.tests.pytest_plugin.helpers.create_files">[docs]</a><span class="k">def</span> <span class="nf">create_files</span><span class="p">(</span>  <span class="c1"># noqa: D103</span>
@@ -135,7 +134,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># same name as an existent directory, means that `files` has been</span>
             <span class="c1"># passed as a list of tuples</span>
-            <span class="n">content</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">content</span><span class="p">)</span>
+            <span class="n">content</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">content</span><span class="p">)</span>
             <span class="c1"># ensure parent path directory exists</span>
             <span class="n">parent_fpath</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">full_path</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">ext</span><span class="p">:</span>
@@ -150,7 +149,7 @@
                 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">full_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
                     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
-                <span class="c1"># globs raising here in Windows</span>
+                <span class="c1"># globs raising here on Windows</span>
                 <span class="k">continue</span></div>
 
 
@@ -158,15 +157,18 @@
     <span class="n">files</span><span class="p">:</span> <span class="n">FilesType</span><span class="p">,</span>
     <span class="n">rootdir</span><span class="p">:</span> <span class="n">RootdirType</span><span class="p">,</span>
     <span class="n">cache_files</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tree</span><span class="p">:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">create_files</span><span class="p">(</span><span class="n">files</span><span class="p">,</span> <span class="n">rootdir</span><span class="p">)</span>
-    <span class="n">tree</span> <span class="o">=</span> <span class="n">Tree</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">rootdir</span><span class="p">))</span>
     <span class="k">if</span> <span class="n">cache_files</span><span class="p">:</span>
         <span class="n">_files</span> <span class="o">=</span> <span class="p">(</span>
             <span class="nb">list</span><span class="p">(</span><span class="n">files</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">files</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="k">else</span> <span class="p">[</span><span class="n">f</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">files</span><span class="p">]</span>
         <span class="p">)</span>
-        <span class="n">tree</span><span class="o">.</span><span class="n">cache_files</span><span class="p">(</span><span class="n">_files</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">tree</span></div>
+        <span class="k">for</span> <span class="n">fpath</span> <span class="ow">in</span> <span class="n">_files</span><span class="p">:</span>
+            <span class="n">tree</span><span class="o">.</span><span class="n">cache_file</span><span class="p">(</span>
+                <span class="n">fpath</span><span class="p">,</span>
+                <span class="n">forbid_serializers</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;py&quot;</span><span class="p">,),</span>
+                <span class="n">ignore_serialization_errors</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="assert_expected_files"><a class="viewcode-back" href="../../../../dev/reference/project_config.tests.pytest_plugin.helpers.html#project_config.tests.pytest_plugin.helpers.assert_expected_files">[docs]</a><span class="k">def</span> <span class="nf">assert_expected_files</span><span class="p">(</span>  <span class="c1"># noqa: D103</span>

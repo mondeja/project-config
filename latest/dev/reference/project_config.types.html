@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.types module &mdash; project-config 0.7.9 documentation</title>
+  <title>project_config.types module &mdash; project-config 0.8.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -33,7 +33,7 @@
             <a href="../../index.html" class="icon icon-home"> project-config
           </a>
               <div class="version">
-                0.7
+                0.8
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -77,7 +77,6 @@
 <li class="toctree-l4"><a class="reference internal" href="project_config.compat.html">project_config.compat module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="project_config.constants.html">project_config.constants module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="project_config.exceptions.html">project_config.exceptions module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="project_config.project.html">project_config.project module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="project_config.tree.html">project_config.tree module</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">project_config.types module</a></li>
 </ul>
@@ -119,90 +118,17 @@
 <p>Types.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="project_config.types.ActionsContext">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">project_config.types.</span></span><span class="sig-name descname"><span class="pre">ActionsContext</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/project_config/types.html#ActionsContext"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.types.ActionsContext" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NamedTuple" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">NamedTuple</span></code></a></p>
-<p>Context of global data passed to rule verbs.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="project_config.types.ActionsContext._asdict">
-<span class="sig-name descname"><span class="pre">_asdict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#project_config.types.ActionsContext._asdict" title="Permalink to this definition"></a></dt>
-<dd><p>Return a new dict which maps field names to their values.</p>
-</dd></dl>
-
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">project_config.types.</span></span><span class="sig-name descname"><span class="pre">ActionsContext</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fix:</span> <span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">files:</span> <span class="pre">list[str]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/project_config/types.html#ActionsContext"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.types.ActionsContext" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>State of project config when executing rule verbs.</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="project_config.types.ActionsContext._field_defaults">
-<span class="sig-name descname"><span class="pre">_field_defaults</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#project_config.types.ActionsContext._field_defaults" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="project_config.types.ActionsContext.files">
+<span class="sig-name descname"><span class="pre">files</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#project_config.types.ActionsContext.files" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="project_config.types.ActionsContext._fields">
-<span class="sig-name descname"><span class="pre">_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('fix',)</span></em><a class="headerlink" href="#project_config.types.ActionsContext._fields" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="project_config.types.ActionsContext._make">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_make</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterable</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#project_config.types.ActionsContext._make" title="Permalink to this definition"></a></dt>
-<dd><p>Make a new ActionsContext object from a sequence or iterable</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="project_config.types.ActionsContext._replace">
-<span class="sig-name descname"><span class="pre">_replace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#project_config.types.ActionsContext._replace" title="Permalink to this definition"></a></dt>
-<dd><p>Return a new ActionsContext object replacing specified fields with new values</p>
-</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="project_config.types.ActionsContext.fix">
 <span class="sig-name descname"><span class="pre">fix</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></em><a class="headerlink" href="#project_config.types.ActionsContext.fix" title="Permalink to this definition"></a></dt>
-<dd><p>Alias for field number 0</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="project_config.types.ErrorDict">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">project_config.types.</span></span><span class="sig-name descname"><span class="pre">ErrorDict</span></span><a class="reference internal" href="../../_modules/project_config/types.html#ErrorDict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.types.ErrorDict" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.TypedDict" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">TypedDict</span></code></a></p>
-<p>Error data type.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="project_config.types.ErrorDict.definition">
-<span class="sig-name descname"><span class="pre">definition</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="headerlink" href="#project_config.types.ErrorDict.definition" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="project_config.types.ErrorDict.file">
-<span class="sig-name descname"><span class="pre">file</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">typing_extensions.NotRequired</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#project_config.types.ErrorDict.file" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="project_config.types.ErrorDict.fixable">
-<span class="sig-name descname"><span class="pre">fixable</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">typing_extensions.NotRequired</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#project_config.types.ErrorDict.fixable" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="project_config.types.ErrorDict.fixed">
-<span class="sig-name descname"><span class="pre">fixed</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">typing_extensions.NotRequired</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#project_config.types.ErrorDict.fixed" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="project_config.types.ErrorDict.hint">
-<span class="sig-name descname"><span class="pre">hint</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">typing_extensions.NotRequired</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#project_config.types.ErrorDict.hint" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="project_config.types.ErrorDict.message">
-<span class="sig-name descname"><span class="pre">message</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="headerlink" href="#project_config.types.ErrorDict.message" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="project_config.types.Rule">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">project_config.types.</span></span><span class="sig-name descname"><span class="pre">Rule</span></span><a class="reference internal" href="../../_modules/project_config/types.html#Rule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.types.Rule" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.TypedDict" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">TypedDict</span></code></a></p>
-<p>Style rule.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="project_config.types.Rule.files">
-<span class="sig-name descname"><span class="pre">files</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#project_config.types.Rule.files" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
