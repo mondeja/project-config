@@ -14,7 +14,7 @@ from typing import TYPE_CHECKING, Any
 
 import pytest
 
-from project_config.constants import InterruptingError
+from project_config.constants import InterruptingError, ResultValue
 from project_config.tests.pytest_plugin.helpers import (
     assert_expected_files,
     create_files,
@@ -150,7 +150,9 @@ def project_config_plugin_action_asserter(
             ActionsContext(fix=fix, files=list(files)),
         ):
             results.append((result_type, result_value))
-            if result_type is InterruptingError:
+            if (result_type is InterruptingError) or (
+                result_type is ResultValue and result_value is False
+            ):
                 break
 
     assert re.match(

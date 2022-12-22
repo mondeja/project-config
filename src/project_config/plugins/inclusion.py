@@ -75,7 +75,6 @@ class InclusionPlugin:
                         ),
                         "definition": f".includeLines[{i}]",
                     }
-                    return
 
                 line, fixer_query = line
 
@@ -276,7 +275,6 @@ class InclusionPlugin:
 
                 if clean_line not in fcontent_lines:
                     yield ResultValue, False
-                    return
                 else:
                     checked_lines.append(clean_line)
 
@@ -312,7 +310,6 @@ class InclusionPlugin:
                         ),
                         "definition": f".excludeLines[{i}]",
                     }
-                    return
 
                 line, fixer_query = line
 
