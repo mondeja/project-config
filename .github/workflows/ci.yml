@@ -21,8 +21,18 @@ jobs:
           python-version: "3.10"
       - name: Install dependencies
         run: pip install -U hatch
+      - name: Get project-config cache directory
+        id: project-config-cache
+        run: |
+          echo "directory=$(hatch project-config show cache)" >> $GITHUB_OUTPUT
+      - name: Cache project-config
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.project-config-cache.outputs.directory }}
+          key: ${{ steps.project-config-cache.outputs.directory }}
       - name: Lint
         run: hatch run style:lint
+
   test:
     name: Test
     runs-on: ${{ matrix.platform }}
