@@ -2,21 +2,20 @@
   rules: [
     {
       files: [".gitignore"], // Enforce the existence of a '.gitignore' file
-      hint: "Enforced the line '__pycache__/' to be present in .gitignore file",
+      hint: "The line '__pycache__/' must be present in .gitignore file",
       includeLines: ["__pycache__/"],
     },
     {
       files: [".gitignore"],
-      hint: "As a directory 'tests/' has been found, enforced the line '.pytest_cache/' to be present in the '.gitignore' file",
+      hint: "As a directory 'tests/' has been found, the line '.pytest_cache/' must be present in the '.gitignore' file",
       ifFilesExist: ["tests/"],
       includeLines: [".pytest_cache/"],
     },
     {
       files: [".gitignore"],
-      hint: "Removed the line '.pytest_cache' from the '.gitignore' file as it is implicitly naming a directory",
-      JMESPathsMatch: [
-        ["contains(@, '.pytest_cache')", false, "[?@ != '.pytest_cache']"],
-      ],
+      hint: "As a directory 'tests/' has been found, the line '.pytest_cache' must not be present as it is implicitly naming a directory",
+      ifFilesExist: ["tests/"],
+      excludeLines: [".pytest_cache"],
     },
     {
       files: [".gitignore"],
