@@ -42,8 +42,7 @@ Github Actions
            run: pip install project-config
          - name: Get project-config cache directory
            id: project-config-cache
-           run: |
-            echo "directory=$(project-config show cache)" >> $GITHUB_OUTPUT
+           run: echo "directory=$(project-config show cache)" >> $GITHUB_OUTPUT
          - name: Cache project-config
            uses: actions/cache@v3
            with:
