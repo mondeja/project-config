@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/mondeja/project-config
-    rev: v0.7.9
+    rev: v0.8.0
     hooks:
       - id: project-config
   - repo: meta
@@ -44,7 +44,7 @@ repos:
     hooks:
       - id: black
   - repo: https://github.com/PyCQA/isort
-    rev: 5.11.2
+    rev: 5.11.4
     hooks:
       - id: isort
         name: isort-src
@@ -95,7 +95,7 @@ repos:
           - prettier-plugin-toml
         minimum_pre_commit_version: 2.9.0
   - repo: https://github.com/DavidAnson/markdownlint-cli2
-    rev: v0.5.1
+    rev: v0.6.0
     hooks:
       - id: markdownlint-cli2
   - repo: https://github.com/pre-commit/mirrors-mypy
@@ -110,19 +110,19 @@ repos:
           - types-appdirs
           - pytest
   - repo: https://github.com/Lucas-C/pre-commit-hooks
-    rev: v1.3.1
+    rev: v1.4.1
     hooks:
       - id: remove-crlf
         files: \.bat$
         name: "*.bat end of lines"
   - repo: https://github.com/editorconfig-checker/editorconfig-checker.python
-    rev: 2.6.2
+    rev: 2.7.0
     hooks:
       - id: editorconfig-checker
         name: editorconfig-checker
         alias: ec
   - repo: https://github.com/adrienverge/yamllint
-    rev: v1.28.0
+    rev: v1.29.0
     hooks:
       - id: yamllint
         args:
