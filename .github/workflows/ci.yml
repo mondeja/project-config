@@ -24,7 +24,7 @@ jobs:
       - name: Get project-config cache directory
         id: project-config-cache
         run: |
-          echo "directory=$(hatch project-config show cache)" >> $GITHUB_OUTPUT
+          echo "directory=$(hatch run project-config show cache)" >> $GITHUB_OUTPUT
       - name: Cache project-config
         uses: actions/cache@v3
         with:
