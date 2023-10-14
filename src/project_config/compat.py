@@ -3,28 +3,8 @@
 from __future__ import annotations
 
 import functools
-import shlex
 import sys
-from typing import TYPE_CHECKING
-
-
-if sys.version_info < (3, 8):
-    if TYPE_CHECKING:
-        from typing_extensions import Literal, Protocol, TypedDict
-
-    def shlex_join(cmd_list: list[str]) -> str:  # noqa: D103
-        return " ".join(shlex.quote(x) for x in cmd_list)
-
-    # For some reason pickle is failing on Python3.7 saying that the
-    # protocol 4 is not supported.
-    pickle_HIGHEST_PROTOCOL = 3
-else:
-    import pickle
-    from typing import Literal, Protocol, TypedDict
-
-    shlex_join = shlex.join
-
-    pickle_HIGHEST_PROTOCOL = pickle.HIGHEST_PROTOCOL
+from typing import TYPE_CHECKING, Literal, Protocol, TypedDict
 
 
 if sys.version_info < (3, 9):
@@ -74,8 +54,6 @@ __all__ = (
     "cached_function",
     "tomllib_package_name",
     "importlib_metadata",
-    "shlex_join",
     "removeprefix",
     "removesuffix",
-    "pickle_HIGHEST_PROTOCOL",
 )

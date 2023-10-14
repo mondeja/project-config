@@ -26,10 +26,10 @@ class ReporterAction(argparse.Action):
 
     def __call__(  # noqa: D102
         self,
-        parser: argparse.ArgumentParser,  # noqa: U100
+        _parser: argparse.ArgumentParser,
         namespace: argparse.Namespace,
         value: str | Sequence[Any] | None,
-        option_string: str | None = None,  # noqa: U100
+        _option_string: str | None = None,
     ) -> None:
         reporter: dict[str, Any] = {}
         if isinstance(value, str):
@@ -41,7 +41,7 @@ class ReporterAction(argparse.Action):
             try:
                 reporter_name, reporter_kwargs = parse_reporter_id(value)
             except Exception:
-                raise UnparseableReporterError(value)
+                raise UnparseableReporterError(value) from None
             reporter_id = reporter_name
             if reporter_kwargs["fmt"]:
                 reporter_id += f':{reporter_kwargs["fmt"]}'
@@ -53,7 +53,7 @@ class ReporterAction(argparse.Action):
 
 
 def _controlled_error(
-    show_traceback: bool,
+    show_traceback: bool,  # noqa: FBT001
     exc: Exception,
     message: str,
 ) -> int:

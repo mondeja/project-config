@@ -1,8 +1,7 @@
 import pytest
-from testing_helpers import mark_end2end
-
 from project_config import Error, InterruptingError
 from project_config.plugins.jmespath import JMESPathPlugin
+from testing_helpers import mark_end2end
 
 
 @pytest.mark.parametrize(

@@ -8,7 +8,7 @@ import sys
 from project_config.cache import Cache
 
 
-def clean(args: argparse.Namespace) -> None:  # noqa: U100
+def clean(_args: argparse.Namespace) -> None:
     """Cache cleaning command."""
     Cache.clean()
     sys.stdout.write("Cache removed successfully!\n")

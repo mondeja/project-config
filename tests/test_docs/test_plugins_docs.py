@@ -1,10 +1,9 @@
 import os
 
 from jmespath.functions import Functions as project_config_functions
-from testing_helpers import rootdir
-
 from project_config.plugins import Plugins
 from project_config.utils.jmespath import jmespath_options
+from testing_helpers import rootdir
 
 
 PLUGINS_REFERENCE_FILEPATH = os.path.join(
@@ -71,9 +70,7 @@ def test_plugin_actions_documented():
             }
             line_index += 3
             continue
-        elif (
-            line.startswith("=") and line.count("=") > 3 and line.endswith("=")
-        ):
+        if line.startswith("=") and line.count("=") > 3 and line.endswith("="):
             action_name = reference_lines[line_index - 1]
             current_plugin["actions"][action_name] = {
                 "has_examples": False,
@@ -120,10 +117,10 @@ def test_jmespath_custom_functions_documented():
             _inside_jmespath = True
             line_index += 2
             continue
-        elif _inside_jmespath:
+        if _inside_jmespath:
             if line.startswith("****"):
                 break
-            elif line.startswith(".. function::"):
+            if line.startswith(".. function::"):
                 function_name = line.split(" ")[2].split("(")[0]
                 documented_function_names.append(function_name)
         line_index += 1

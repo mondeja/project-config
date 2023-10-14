@@ -33,11 +33,11 @@ Github Actions
        name: Lint
        runs-on: ubuntu-latest
        steps:
-         - uses: actions/checkout@v3
+         - uses: actions/checkout@v4
          - name: Set up Python
            uses: actions/setup-python@v4
            with:
-             python-version: "3.10"
+             python-version: "3.11"
          - name: Install dependencies
            run: pip install project-config
          - name: Get project-config cache directory

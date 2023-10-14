@@ -1,6 +1,5 @@
-from testing_helpers import mark_unix_only
-
 from project_config.__main__ import run
+from testing_helpers import mark_unix_only
 
 
 @mark_unix_only

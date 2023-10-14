@@ -1,6 +1,6 @@
 class InvalidNoStaticMethodsPlugin:
-    def invalidFoo(self, *args, **kwargs):  # noqa: U100
+    def invalidFoo(self, *args, **kwargs):
         pass
 
-    def ifInvalidFoo(self, *args, **kwargs):  # noqa: U100
+    def ifInvalidFoo(self, *args, **kwargs):
         pass

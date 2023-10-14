@@ -101,6 +101,7 @@ def fetch(url_parts: urllib.parse.SplitResult, **kwargs: Any) -> Any:
 
     Args:
         url_parts (urllib.parse.SplitResult): The URL parts of the URI.
+        **kwargs (Any): The keyword arguments to pass to the ``GET`` function.
 
     Returns:
         str: The fetched resource content.
@@ -111,7 +112,7 @@ def fetch(url_parts: urllib.parse.SplitResult, **kwargs: Any) -> Any:
 def get_latest_release_tags(
     repo_owner: str,
     repo_name: str,
-    only_semver: bool = False,
+    only_semver: bool = False,  # noqa: FBT001, FBT002
 ) -> list[str]:
     """Get the latest release tag of a Github repository.
 

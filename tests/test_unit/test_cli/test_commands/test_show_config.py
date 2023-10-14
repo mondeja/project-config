@@ -8,5 +8,5 @@ def test_show_config(capsys, chdir, tmp_path):
     with chdir(tmp_path):
         assert run(["show", "config", "--nocolor"]) == 0
     out, err = capsys.readouterr()
-    assert "style: foo.bar\ncache: never\n" == out
+    assert out == "style: foo.bar\ncache: never\n"
     assert err == ""

@@ -1,5 +1,4 @@
 import pytest
-
 from project_config.compat import importlib_metadata
 from project_config.reporters import (
     PROJECT_CONFIG_REPORTERS_ENTRYPOINTS_GROUP,

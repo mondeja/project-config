@@ -40,7 +40,7 @@ class JMESPathPlugin:
     @staticmethod
     def JMESPathsMatch(
         value: list[list[Any]],
-        rule: Rule,  # noqa: U100
+        _rule: Rule,
         context: ActionsContext,
     ) -> Results:
         if not isinstance(value, list):
@@ -75,16 +75,15 @@ class JMESPathPlugin:
                     ),
                     "definition": f".JMESPathsMatch[{i}][0]",
                 }
-            if len(jmespath_match_tuple) == 2:
+            if len(jmespath_match_tuple) == 2:  # noqa: PLR2004
                 jmespath_match_tuple.append(None)
-            else:
-                if not isinstance(jmespath_match_tuple[2], str):
-                    yield InterruptingError, {
-                        "message": (
-                            "The JMES path fixer query must be of type string"
-                        ),
-                        "definition": f".JMESPathsMatch[{i}][2]",
-                    }
+            elif not isinstance(jmespath_match_tuple[2], str):
+                yield InterruptingError, {
+                    "message": (
+                        "The JMES path fixer query must be of type string"
+                    ),
+                    "definition": f".JMESPathsMatch[{i}][2]",
+                }
 
         files = copy.copy(context.files)
         for f, fpath in enumerate(files):
@@ -138,9 +137,11 @@ class JMESPathPlugin:
 
                 if expression_result != expected_value:
                     if not fixer_query:
-                        fixer_query = smart_fixer_by_expected_value(
-                            compiled_expression,
-                            expected_value,
+                        fixer_query = (  # noqa: PLW2901
+                            smart_fixer_by_expected_value(
+                                compiled_expression,
+                                expected_value,
+                            )
                         )
                     if context.fix and fixer_query:
                         try:
@@ -188,14 +189,13 @@ class JMESPathPlugin:
     @staticmethod
     def ifJMESPathsMatch(
         value: dict[str, list[list[str]]],
-        rule: Rule,  # noqa: U100
-        context: ActionsContext,  # noqa: U100
+        _rule: Rule,
+        _context: ActionsContext,
     ) -> Results:
         if not isinstance(value, dict):
             yield InterruptingError, {
                 "message": (
-                    "The files - JMES path match tuples must be"
-                    " of type object"
+                    "The files - JMES path match tuples must be of type object"
                 ),
                 "definition": ".ifJMESPathsMatch",
             }
@@ -227,7 +227,7 @@ class JMESPathPlugin:
                         ),
                         "definition": f".ifJMESPathsMatch[{fpath}][{i}]",
                     }
-                if len(jmespath_match_tuple) != 2:
+                if len(jmespath_match_tuple) != 2:  # noqa: PLR2004
                     yield InterruptingError, {
                         "message": (
                             "The JMES path match tuple must be of length 2"
@@ -310,8 +310,8 @@ class JMESPathPlugin:
     @staticmethod
     def crossJMESPathsMatch(
         value: list[list[Any]],
-        rule: Rule,  # noqa: U100
-        context: ActionsContext,  # noqa: U100
+        _rule: Rule,
+        context: ActionsContext,
     ) -> Results:
         if not isinstance(value, list):
             yield InterruptingError, {
@@ -345,7 +345,7 @@ class JMESPathPlugin:
                         "message": "The pipe must be of type array",
                         "definition": f".crossJMESPathsMatch[{i}]",
                     }
-                elif len(pipe) < 3:
+                elif len(pipe) < 3:  # noqa: PLR2004
                     yield InterruptingError, {
                         "message": "The pipe must be, at least, of length 3",
                         "definition": f".crossJMESPathsMatch[{i}]",
@@ -447,7 +447,7 @@ class JMESPathPlugin:
                                 f".crossJMESPathsMatch[{i}][{pipe_index}]"
                             ),
                         }
-                    elif len(other_data) != 2:
+                    elif len(other_data) != 2:  # noqa: PLR2004
                         yield InterruptingError, {
                             "message": (
                                 "The file path and expression tuple must be of"

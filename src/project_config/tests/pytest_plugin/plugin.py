@@ -31,7 +31,7 @@ if TYPE_CHECKING:
     from project_config.types import ErrorDict, Rule, StrictResultType
 
 
-def project_config_plugin_action_asserter(
+def project_config_plugin_action_asserter(  # noqa: PLR0913
     rootdir: RootdirType,
     plugin_class: type,
     plugin_method_name: str,
@@ -40,9 +40,9 @@ def project_config_plugin_action_asserter(
     rule: Rule,
     expected_results: list[StrictResultType],
     additional_files: FilesType | None = None,
-    assert_case_method_name: bool = True,
-    deprecated: bool = False,
-    fix: bool = False,
+    assert_case_method_name: bool = True,  # noqa: FBT001, FBT002
+    deprecated: bool = False,  # noqa: FBT001, FBT002
+    fix: bool = False,  # noqa: FBT001, FBT002
     expected_files: FilesType | None = None,
 ) -> None:
     """Convenient function to test a plugin action.
@@ -58,6 +58,7 @@ def project_config_plugin_action_asserter(
             If the value is ``False``, the file will not be created.
             If the value is ``None``, the file will be created as a directory.
         value (typing.Any): Value passed to the action.
+        rule (dict): Rule definition.
         expected_results (list): Expected results.
         additional_files (dict, optional): Dictionary of additional files to
             create. These will not be defined inside the ``files`` property of
@@ -204,7 +205,7 @@ def assert_project_config_plugin_action(
     return functools.partial(project_config_plugin_action_asserter, tmp_path)
 
 
-def project_config_errors_report_asserter(
+def project_config_errors_report_asserter(  # noqa: PLR0913
     monkeypatch: pytest.MonkeyPatch,
     rootdir: pathlib.Path,
     reporter_module: types.ModuleType,
@@ -219,9 +220,10 @@ def project_config_errors_report_asserter(
             needed to define in the fixture as is inserted before the execution.
         rootdir (Path): Path to root directory. This is not needed to define
             in the fixture as is inserted before the execution.
-        reporters_module (types.ModuleType): Module containing the reporters.
+        reporter_module (types.ModuleType): Module containing the reporters.
         errors (list): Errors.
         expected_result (str): Expected reported result.
+        fmt (str, optional): Format to use. Default value is ``None``.
 
     .. rubric:: Example
 
@@ -320,7 +322,7 @@ def assert_errors_report(
     )
 
 
-def project_config_data_report_asserter(
+def project_config_data_report_asserter(  # noqa: PLR0913
     monkeypatch: pytest.MonkeyPatch,
     rootdir: pathlib.Path,
     reporter_module: types.ModuleType,
@@ -337,10 +339,11 @@ def project_config_data_report_asserter(
             execution.
         rootdir (Path): Path to root directory. This is not needed to define
             in the fixture as is inserted before the execution.
-        reporters_module (types.ModuleType): Module containing the reporters.
+        reporter_module (types.ModuleType): Module containing the reporters.
         data_key (str): Data key.
         data (any): Data content to report.
         expected_result (str): Expected reported result.
+        fmt (str, optional): Format to use. Default value is ``None``.
 
     .. rubric:: Example
 

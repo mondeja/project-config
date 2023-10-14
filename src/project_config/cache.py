@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import importlib.util
 import os
+import pickle
 import re
 import shutil
 import sys
@@ -11,7 +12,7 @@ from typing import Any, Iterator
 
 import appdirs
 
-from project_config.compat import importlib_metadata, pickle_HIGHEST_PROTOCOL
+from project_config.compat import importlib_metadata
 
 
 # ---
@@ -74,11 +75,11 @@ class Cache:
 
     _cache = DiskCache(
         directory=CACHE_DIR,
-        disk_pickle_protocol=pickle_HIGHEST_PROTOCOL,
+        disk_pickle_protocol=pickle.HIGHEST_PROTOCOL,
     )
     _expiration_time: float | int | None = 30
 
-    def __init__(self) -> None:  # pragma: no cover
+    def __init__(self) -> None:  # noqa: D107 pragma: no cover
         raise NotImplementedError("Cache is a not instanceable interface.")
 
     @staticmethod

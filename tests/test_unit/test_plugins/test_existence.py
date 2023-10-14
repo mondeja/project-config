@@ -1,5 +1,4 @@
 import pytest
-
 from project_config import InterruptingError, ResultValue
 from project_config.plugins.existence import ExistencePlugin
 
@@ -34,8 +33,7 @@ from project_config.plugins.existence import ExistencePlugin
                     InterruptingError,
                     {
                         "message": (
-                            "The files to check for existence"
-                            " must not be empty"
+                            "The files to check for existence must not be empty"
                         ),
                         "definition": ".ifFilesExist",
                     },

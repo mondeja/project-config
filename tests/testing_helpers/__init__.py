@@ -34,7 +34,7 @@ mark_linux_only = pytest.mark.skipif(
 
 def build_testing_server():
     # do not show Flask server banner
-    flask.cli.show_server_banner = lambda *args: None  # noqa: U100
+    flask.cli.show_server_banner = lambda *_args: None
 
     # create server
     test_server = flask.Flask("project-config_tests")
@@ -46,7 +46,7 @@ def build_testing_server():
         return response
 
     @test_server.route("/download/<content>/<filename>", methods=["GET"])
-    def download_file(filename, content):  # noqa: U100
+    def download_file(_filename, content):
         response = response = flask.make_response(content, 200)
         response.mimetype = "text/plain"
         return response

@@ -125,7 +125,6 @@ exclude_patterns = ["_examples", "_build", "Thumbs.db", ".DS_Store"]
 # --- Examples page creation ---
 
 if SPHINX_IS_RUNNING:
-
     import pygments.lexers
 
     # Some Pygments lexers are not available yet, so we use fallbacks
@@ -141,7 +140,7 @@ if SPHINX_IS_RUNNING:
         if not extension.endswith("/"):
             if extension in PYGMENTS_LEXERS_FALLBACKS:
                 return PYGMENTS_LEXERS_FALLBACKS[extension]
-            elif extension:
+            if extension:
                 return extension
         return "text"
 
@@ -155,19 +154,17 @@ if SPHINX_IS_RUNNING:
                 if line == "..":
                     _inside_metadata = True
                 else:
-                    if result["body"]:
-                        line = f" {line}\n"
-                    result["body"] += line
+                    new_content = f" {line}\n" if result["body"] else line
+                    result["body"] += new_content
+            elif line.startswith("   "):
+                if line.lower().startswith("   name:"):
+                    result["name"] = line.split(":", maxsplit=1)[-1].strip()
+                elif line.lower().startswith("   bodyfiles:"):
+                    result["bodyfiles"] = json.loads(
+                        line.split(":", maxsplit=1)[-1].strip(),
+                    )
             else:
-                if line.startswith("   "):
-                    if line.lower().startswith("   name:"):
-                        result["name"] = line.split(":", maxsplit=1)[-1].strip()
-                    elif line.lower().startswith("   bodyfiles:"):
-                        result["bodyfiles"] = json.loads(
-                            line.split(":", maxsplit=1)[-1].strip(),
-                        )
-                else:
-                    _inside_metadata = False
+                _inside_metadata = False
 
         if not result["body"].endswith("\n"):
             result["body"] += "\n"
@@ -183,7 +180,7 @@ if SPHINX_IS_RUNNING:
             else:
                 if os.path.isdir(filepath):
                     content = ""
-                    filename = f'{filename.rstrip("/")}/'
+                    filename = f'{filename.rstrip("/")}/'  # noqa: PLW2901
                 else:
                     with open(filepath, encoding="utf-8") as f:
                         content = f.read()
@@ -334,10 +331,8 @@ Examples
     examples_to_include = [11]
     for example_num in examples_to_include:
         if not any(
-            [
-                fname.lstrip("0").startswith(str(example_num))
-                for fname in os.listdir(examples_dir)
-            ],
+            fname.lstrip("0").startswith(str(example_num))
+            for fname in os.listdir(examples_dir)
         ):
             raise Exception(
                 "Non existing example files to include in the documentation",

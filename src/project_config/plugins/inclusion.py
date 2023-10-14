@@ -46,7 +46,7 @@ class InclusionPlugin:
     @staticmethod
     def includeLines(
         value: list[str],
-        rule: Rule,  # noqa: U100
+        _rule: Rule,
         context: ActionsContext,
     ) -> Results:
         if not isinstance(value, list):
@@ -66,7 +66,7 @@ class InclusionPlugin:
 
             if isinstance(line, list):
                 # Fixer query expression
-                if len(line) != 2:
+                if len(line) != 2:  # noqa: PLR2004
                     yield InterruptingError, {
                         "message": (
                             "The '[expected-line, fixer_query]' array"
@@ -76,7 +76,7 @@ class InclusionPlugin:
                         "definition": f".includeLines[{i}]",
                     }
 
-                line, fixer_query = line
+                line, fixer_query = line  # noqa: PLW2901
 
                 if not isinstance(line, str) or not isinstance(
                     fixer_query,
@@ -187,8 +187,8 @@ class InclusionPlugin:
     @staticmethod
     def ifIncludeLines(
         value: dict[str, list[str]],
-        rule: Rule,  # noqa: U100
-        context: ActionsContext,  # noqa: U100
+        _rule: Rule,
+        _context: ActionsContext,
     ) -> Results:
         if not isinstance(value, dict):
             yield InterruptingError, {
@@ -227,8 +227,8 @@ class InclusionPlugin:
             except FileNotFoundError:
                 yield InterruptingError, {
                     "message": (
-                        "File specified in conditional 'ifIncludeLines'"
-                        " not found"
+                        "File specified in conditional"
+                        " 'ifIncludeLines' not found"
                     ),
                     "file": fpath,
                     "definition": f".ifIncludeLines[{fpath}]",
@@ -281,7 +281,7 @@ class InclusionPlugin:
     @staticmethod
     def excludeLines(
         value: list[str],
-        rule: Rule,  # noqa: U100
+        _rule: Rule,
         context: ActionsContext,
     ) -> Results:
         if not isinstance(value, list):
@@ -301,7 +301,7 @@ class InclusionPlugin:
 
             if isinstance(line, list):
                 # Fixer query expression
-                if len(line) != 2:
+                if len(line) != 2:  # noqa: PLR2004
                     yield InterruptingError, {
                         "message": (
                             "The '[expected-line, fixer_query]' array"
@@ -311,7 +311,7 @@ class InclusionPlugin:
                         "definition": f".excludeLines[{i}]",
                     }
 
-                line, fixer_query = line
+                line, fixer_query = line  # noqa: PLW2901
 
                 if not isinstance(line, str) or not isinstance(
                     fixer_query,
@@ -424,7 +424,7 @@ class InclusionPlugin:
     @staticmethod
     def includeContent(
         value: list[str],
-        rule: Rule,  # noqa: U100
+        _rule: Rule,
         context: ActionsContext,
     ) -> Results:
         if not isinstance(value, list):
@@ -459,9 +459,9 @@ class InclusionPlugin:
             checked_content = []
             for i, content in enumerate(value):
                 fixer_query = ""
-                if isinstance(content, str) or isinstance(content, list):
+                if isinstance(content, (list, str)):
                     if isinstance(content, list):
-                        content, fixer_query = content
+                        content, fixer_query = content  # noqa: PLW2901
 
                         if not isinstance(content, str) or not isinstance(
                             fixer_query,
@@ -559,7 +559,7 @@ class InclusionPlugin:
     @staticmethod
     def excludeContent(
         value: list[str],
-        rule: Rule,  # noqa: U100
+        _rule: Rule,
         context: ActionsContext,
     ) -> Results:
         if not isinstance(value, list):
@@ -594,9 +594,9 @@ class InclusionPlugin:
             checked_content = []
             for i, content in enumerate(value):
                 fixer_query = ""
-                if isinstance(content, str) or isinstance(content, list):
+                if isinstance(content, (list, str)):
                     if isinstance(content, list):
-                        content, fixer_query = content
+                        content, fixer_query = content  # noqa: PLW2901
 
                         if not isinstance(content, str) or not isinstance(
                             fixer_query,

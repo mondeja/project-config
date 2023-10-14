@@ -1,5 +1,4 @@
 import pytest
-
 from project_config import Error, InterruptingError, ResultValue
 from project_config.plugins.inclusion import InclusionPlugin
 
@@ -46,8 +45,8 @@ from project_config.plugins.inclusion import InclusionPlugin
                     InterruptingError,
                     {
                         "message": (
-                            "The expected line '5' must be of type"
-                            " string or array"
+                            "The expected line '5' must be"
+                            " of type string or array"
                         ),
                         "definition": ".includeLines[1]",
                     },
@@ -454,8 +453,8 @@ def test_ifIncludeLines(
                     InterruptingError,
                     {
                         "message": (
-                            "The expected line '5' must be of type"
-                            " string or array"
+                            "The expected line '5' must be"
+                            " of type string or array"
                         ),
                         "definition": ".excludeLines[1]",
                     },

@@ -1,5 +1,4 @@
 import pytest
-
 from project_config import Error, InterruptingError, ResultValue
 from project_config.plugins.jmespath import JMESPathPlugin
 
@@ -34,8 +33,8 @@ from project_config.plugins.jmespath import JMESPathPlugin
                     InterruptingError,
                     {
                         "message": (
-                            "The files - JMES path match tuples must not"
-                            " be empty"
+                            "The files - JMES path match"
+                            " tuples must not be empty"
                         ),
                         "definition": ".ifJMESPathsMatch",
                     },

@@ -1,5 +1,4 @@
 import pytest
-
 from project_config.__main__ import run
 
 
@@ -53,8 +52,11 @@ def test_read_config_local_styles(
     starting with ``./`` or not.
     """
     project_config_config_file = tmp_path / config_filename
+    group_line = (
+        "[tool.project-config]" if config_filename == "pyproject.toml" else ""
+    )
     project_config_config_file.write_text(
-        f"""{'[tool.project-config]' if config_filename == 'pyproject.toml' else ''}
+        f"""{group_line}
         style = ["{filename}"]
         """,
     )

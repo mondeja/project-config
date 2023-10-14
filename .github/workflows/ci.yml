@@ -14,11 +14,11 @@ jobs:
     name: Lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.10"
+          python-version: "3.11"
       - name: Install dependencies
         run: pip install -U hatch
       - name: Get project-config cache directory
@@ -40,9 +40,6 @@ jobs:
       matrix:
         include:
           - platform: ubuntu-latest
-            python-version: 3.7
-            py: py37
-          - platform: ubuntu-latest
             python-version: 3.8
             py: py38
           - platform: ubuntu-latest
@@ -54,36 +51,45 @@ jobs:
           - platform: ubuntu-latest
             python-version: "3.11"
             py: py311
+          - platform: ubuntu-latest
+            python-version: "3.12"
+            py: py312
           - platform: macos-latest
-            python-version: 3.7
-            py: py37
+            python-version: 3.8
+            py: py38
           - platform: macos-latest
             python-version: "3.11"
             py: py311
+          - platform: macos-latest
+            python-version: "3.12"
+            py: py312
           - platform: windows-latest
-            python-version: 3.7
-            py: py37
+            python-version: 3.8
+            py: py38
           - platform: windows-latest
             python-version: "3.11"
             py: py311
+          - platform: windows-latest
+            python-version: "3.12"
+            py: py312
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up Python v${{ matrix.python-version }}
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Use NodeJS v16
+      - name: Install NodeJS
         if: runner.os == 'Linux'
         uses: actions/setup-node@v3
         with:
-          node-version: 16.x
+          node-version: 18.x
       - name: Install dependencies
         run: pip install -U hatch
       - name: Run tests
         run: hatch run +py=${{ matrix.py }} tests:all
       - name: Convert coverage to XML
         run: |
-          pip install coverage
+          pip install coverage covdefaults
           coverage xml
       - name: Upload coverage
         uses: codecov/codecov-action@v3
@@ -92,11 +98,11 @@ jobs:
     name: Test documentation build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.10"
+          python-version: "3.11"
       - name: Install dependencies
         run: pip install -U hatch
       - name: Build documentation
@@ -116,7 +122,7 @@ jobs:
     name: Build package
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-python@v4
         name: Install Python
         with:
@@ -152,7 +158,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Use NodeJS v16
         uses: actions/setup-node@v3
         with:
@@ -168,7 +174,7 @@ jobs:
     needs: build-dist
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Get tag metadata
         id: tag
         run: |

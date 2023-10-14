@@ -16,16 +16,15 @@ class ExistencePlugin:
     @staticmethod
     def ifFilesExist(
         value: list[str],
-        rule: Rule,  # noqa: U100
-        context: ActionsContext,  # noqa: U100
+        _rule: Rule,
+        _context: ActionsContext,
     ) -> Results:
         if not isinstance(value, list):
             yield (
                 InterruptingError,
                 {
                     "message": (
-                        "The files to check for existence"
-                        " must be of type array"
+                        "The files to check for existence must be of type array"
                     ),
                     "definition": ".ifFilesExist",
                 },

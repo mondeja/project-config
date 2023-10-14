@@ -1,9 +1,8 @@
 import os
 import re
 
-from testing_helpers import mark_end2end, rootdir
-
 from project_config.fetchers.github import get_latest_release_tags
+from testing_helpers import mark_end2end, rootdir
 
 
 @mark_end2end

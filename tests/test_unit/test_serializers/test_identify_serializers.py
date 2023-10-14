@@ -1,5 +1,4 @@
 import pytest
-
 from project_config.serializers import (
     _identify_serializer,
     guess_preferred_serializer,

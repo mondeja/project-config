@@ -1,5 +1,4 @@
 import pytest
-
 from project_config.fetchers import (
     SchemeProtocolNotImplementedError,
     fetch,

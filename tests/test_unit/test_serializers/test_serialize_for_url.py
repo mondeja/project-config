@@ -1,7 +1,6 @@
 import re
 
 import pytest
-
 from project_config.serializers import (
     SerializerError,
     guess_preferred_serializer,

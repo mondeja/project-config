@@ -59,7 +59,7 @@ def create_files(  # noqa: D103
 def create_tree(  # noqa: D103
     files: FilesType,
     rootdir: RootdirType,
-    cache_files: bool = False,
+    cache_files: bool = False,  # noqa: FBT001, FBT002
 ) -> None:
     create_files(files, rootdir)
     if cache_files:
@@ -106,7 +106,7 @@ def assert_expected_files(  # noqa: D103
 
 def get_reporter_class_from_module(  # noqa: D103
     reporter_module: types.ModuleType,
-    color: bool,
+    color: bool,  # noqa: FBT001
 ) -> type:
     for object_name in dir(reporter_module):
         if object_name.startswith(("_", "Base")):

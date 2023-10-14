@@ -36,15 +36,20 @@ class ConditionalsFalseResult(InterruptCheck):
 
 
 class ProjectConfigChecker:
-    """Project configuration checker.
+    """Project configuration checker."""
 
-    Args:
-        config (:py:class:`project_config.config.Config`):
-            Configuration to use.
-        fix_mode (bool): Whether to fix the errors or not.
-    """
+    def __init__(
+        self,
+        config: Config,
+        fix_mode: bool = False,  # noqa: FBT001, FBT002
+    ):
+        """Initialize the checker.
 
-    def __init__(self, config: Config, fix_mode: bool = False):
+        Args:
+            config (:py:class:`project_config.config.Config`):
+                Configuration to use.
+            fix_mode (bool): Whether to fix the errors or not.
+        """
         self.config = config
         self.reporter = reporter_from_config(config)
         self.config.load_style()
@@ -107,8 +112,6 @@ class ProjectConfigChecker:
         if isinstance(files, list):
             # i used for file index in the rule
             files = {fn: i for i, fn in enumerate(files)}
-        else:
-            files = files
 
         for fpath, reason_or_index in files.items():
             normalized_fpath = os.path.join(
@@ -181,8 +184,7 @@ class ProjectConfigChecker:
                 elif breakage_type == ResultValue:
                     if breakage_value is False:
                         raise ConditionalsFalseResult()
-                    else:  # pragma: no cover
-                        break
+                    break
                 else:
                     raise NotImplementedError(
                         f"Breakage type '{breakage_type}' is not implemented"
@@ -191,7 +193,7 @@ class ProjectConfigChecker:
         if conditional_failed:
             raise InterruptCheck()
 
-    def _run_check(self) -> None:
+    def _run_check(self) -> None:  # noqa: PLR0912
         for r, rule in enumerate(self.config.dict_["style"]["rules"]):
             hint = rule.pop("hint", None)
             files = rule.pop("files", [])
@@ -212,7 +214,7 @@ class ProjectConfigChecker:
                                 "definition": f"rules[{r}].{action}",
                             },
                         )
-                        raise InterruptCheck()
+                        raise InterruptCheck() from exc
                     conditionals_functions.append((action, action_function))
                 else:
                     verbs.append(action)
@@ -258,9 +260,9 @@ class ProjectConfigChecker:
                             "definition": f"rules[{r}].{verb}",
                         },
                     )
-                    raise InterruptCheck()
+                    raise InterruptCheck() from exc
                     # TODO: show 'INTERRUPTED' in report?
-                for (breakage_type, breakage_value) in action_function(
+                for breakage_type, breakage_value in action_function(
                     rule[verb],  # type: ignore
                     rule,
                     self.actions_context,
@@ -272,9 +274,7 @@ class ProjectConfigChecker:
                         # TODO: Currently the cast to ErrorDict is not available
                         # at runtime without installing typing_extensions,
                         # so we need to ignore the type here.
-                        breakage_value[
-                            "definition"
-                        ] = f"rules[{r}]" + (  # type: ignore
+                        breakage_value["definition"] = f"rules[{r}]" + (  # type: ignore
                             breakage_value["definition"]  # type: ignore
                         )
 
@@ -287,9 +287,7 @@ class ProjectConfigChecker:
                         self.reporter.report_error(breakage_value)
 
                     elif breakage_type == InterruptingError:
-                        breakage_value[
-                            "definition"
-                        ] = f"rules[{r}]" + (  # type: ignore
+                        breakage_value["definition"] = f"rules[{r}]" + (  # type: ignore
                             breakage_value["definition"]  # type: ignore
                         )
                         self.reporter.report_error(breakage_value)
@@ -311,7 +309,7 @@ class ProjectConfigChecker:
             self.reporter.raise_errors()
 
 
-def check(args: argparse.Namespace) -> None:  # noqa: U100
+def check(args: argparse.Namespace) -> None:
     """Checks that the styles configured for a project match.
 
     Raises errors if reported.
