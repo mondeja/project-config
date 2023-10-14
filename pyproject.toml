@@ -5,7 +5,7 @@ description = "Reproducible configuration across projects."
 authors = [{ name = "Álvaro Mondéjar Rubio", email = "mondejar1994@gmail.com" }]
 license = "BSD-3-Clause"
 readme = "README.md"
-requires-python = ">=3.7,<3.12"
+requires-python = ">=3.8,<3.13"
 classifiers = [
   "Development Status :: 4 - Beta",
   "Operating System :: OS Independent",
@@ -14,11 +14,11 @@ classifiers = [
   "Topic :: Software Development :: Libraries :: Python Modules",
   "Topic :: Software Development :: Quality Assurance",
   "Environment :: Console",
-  "Programming Language :: Python :: 3.7",
   "Programming Language :: Python :: 3.8",
   "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
 ]
 keywords = [
   "reproducible",
@@ -72,11 +72,11 @@ existence = "project_config.plugins.existence:ExistencePlugin"
 project-config-tester = "project_config.tests.pytest_plugin.plugin"
 
 [tool.hatch.envs.default]
-python = "3.10"
+python = "3.11"
 dependencies = ["mondeja-bump"]
 
 [tool.hatch.envs.style]
-python = "3.10"
+python = "3.11"
 detached = true
 dependencies = ["pre-commit"]
 
@@ -107,7 +107,7 @@ cov = [
 ]
 
 [[tool.hatch.envs.tests.matrix]]
-python = ["py37", "py38", "py39", "py310", "py311"]
+python = ["py38", "py39", "py310", "py311", "py312"]
 
 [tool.hatch.envs.docs]
 python = "3.10"
@@ -166,16 +166,16 @@ source = ["src"]
 plugins = ["covdefaults"]
 
 [tool.mypy]
-python_version = "3.10"
+python_version = "3.11"
 strict = true
 
 [tool.black]
 line-length = 80
-target-version = ["py37"]
+target-version = ["py38"]
 
 [tool.ruff]
 line-length = 80
-target-version = "py37"
+target-version = "py38"
 select = [
   "W",
   "B",

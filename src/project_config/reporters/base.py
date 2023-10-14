@@ -247,7 +247,7 @@ def colored_color_exists(color: str) -> bool:
     """
     try:
         colored.fg(color)
-    except (KeyError, colored.exceptions.InvalidColor):
+    except Exception:
         return False
     else:
         return True

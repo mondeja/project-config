@@ -13,7 +13,6 @@ shlex_join = shlex.join
 
 pickle_HIGHEST_PROTOCOL = pickle.HIGHEST_PROTOCOL
 
-
 if sys.version_info < (3, 9):
     cached_function = functools.lru_cache(maxsize=None)
 

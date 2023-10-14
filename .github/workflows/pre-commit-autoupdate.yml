@@ -13,11 +13,11 @@ jobs:
   autoupdate:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.10"
+          python-version: "3.11"
       - name: Install pre-commit
         run: pip install pre-commit
       - name: Run pre-commit autoupdate
