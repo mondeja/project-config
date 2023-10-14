@@ -16,7 +16,7 @@ so the first thing is to add the entrypoint to the group:
 
       .. code-block:: toml
 
-         [tool.poetry."entry-points"."project_config.reporters"]
+         [project."entry-points"."project_config.plugins"]
          my_reporter = "package.subpackage.my_reporter_module"
 
    .. tab:: poetry
