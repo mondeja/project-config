@@ -249,7 +249,7 @@ extra-standard-library = [
 ]
 "setup.py" = ["D205", "INP001", "I002"]
 "docs/conf.py" = ["INP001", "I002"]
-"examples/**" = ["INP001"]
+"examples/**" = ["INP001", "I002"]
 "src/project_config/plugins/**" = ["D101", "D102", "PLR0912", "PLR0915"]
 
 [build-system]
