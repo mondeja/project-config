@@ -1,5 +1,4 @@
 import pytest
-
 from project_config import Error, InterruptingError
 from project_config.plugins.jmespath import JMESPathPlugin
 
@@ -17,8 +16,7 @@ from project_config.plugins.jmespath import JMESPathPlugin
                     {
                         "definition": ".JMESPathsMatch",
                         "message": (
-                            "The JMES path match tuples must be of"
-                            " type array"
+                            "The JMES path match tuples must be of type array"
                         ),
                     },
                 ),

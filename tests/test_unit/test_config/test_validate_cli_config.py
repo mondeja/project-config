@@ -1,5 +1,4 @@
 import pytest
-
 from project_config.config import _validate_cli_config, validate_cli_config
 from project_config.config.exceptions import ProjectConfigInvalidConfigSchema
 
@@ -74,9 +73,10 @@ def test_validate_cli_config_errors(config, expected_result):
 
 
 def test_validate_cli_config_exception(tmp_path):
-    expected_error_message = f"""The configuration at {str(tmp_path)} is invalid:
-  - cli.rootdir -> must not be empty"""
-
+    expected_error_message = (
+        f"The configuration at {str(tmp_path)} is invalid:\n"
+        "  - cli.rootdir -> must not be empty"
+    )
     with pytest.raises(ProjectConfigInvalidConfigSchema) as exc:
         validate_cli_config(str(tmp_path), {"rootdir": ""})
     assert exc.value.message == expected_error_message

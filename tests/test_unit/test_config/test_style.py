@@ -1,5 +1,4 @@
 import pytest
-
 from project_config.config import Config
 from project_config.config.style import ProjectConfigInvalidStyle
 from project_config.plugins import Plugins
@@ -425,7 +424,6 @@ def test_load_style(
     create_files(files, tmp_path)
 
     with chdir(tmp_path):
-
         if isinstance(expected_result, list):
             expected_result = [
                 message.replace("{rootdir}", str(tmp_path))

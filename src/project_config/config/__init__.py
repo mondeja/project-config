@@ -68,6 +68,7 @@ def read_config(
     """Read the configuration from a file.
 
     Args:
+        rootdir (str): Project root directory.
         custom_fpath (str): Custom configuration file path
             or ``None`` if the configuration must be read from
             one of the default configuration file paths.
@@ -108,7 +109,7 @@ def read_config(
     raise ConfigurationFilesNotFound()
 
 
-def validate_config_style(config: Any) -> list[str]:
+def validate_config_style(config: Any) -> list[str]:  # noqa: PLR0912
     """Validate the ``style`` field of a configuration object.
 
     Args:
@@ -159,13 +160,13 @@ def _cache_string_to_seconds(cache_string: str) -> int:
 
     if "minute" in cache_string:
         return cache_number * 60
-    elif "hour" in cache_string:
+    if "hour" in cache_string:
         return cache_number * 60 * 60
-    elif "day" in cache_string:
+    if "day" in cache_string:
         return cache_number * 60 * 60 * 24
-    elif "second" in cache_string:
+    if "second" in cache_string:
         return cache_number
-    elif "week" in cache_string:
+    if "week" in cache_string:
         return cache_number * 60 * 60 * 24 * 7
     raise ValueError(cache_string)
 
@@ -226,9 +227,8 @@ def _validate_cli_config(config: dict[str, Any]) -> list[str]:
                 "cli.reporter -> must be one of the available reporters",
             )
 
-    if "color" in config:
-        if not isinstance(config["color"], bool):
-            errors.append("cli.color -> must be of type boolean")
+    if "color" in config and not isinstance(config["color"], bool):
+        errors.append("cli.color -> must be of type boolean")
 
     if "colors" in config:
         if not isinstance(config["colors"], dict):
@@ -258,6 +258,7 @@ def validate_cli_config(
     """Validates the CLI configuration.
 
     Args:
+        config_path (str): Configuration file path.
         config (dict): Raw CLI configuration.
 
     Returns:
@@ -275,21 +276,23 @@ class FileConfig:
     Stores the data of the project-config configuration defined in
     the file '.project-config.toml' or equivalent. The configuration
     of the file is stored in the ``dict_`` attribute.
-
-    Args:
-        rootdir (str): Project root directory.
-        path (str): Path to the file from which the configuration
-            will be loaded.
-        store_raw_config (bool): If ``True``, the raw configuration
-            of the file will be stored in the ``raw_`` attribute.
     """
 
     def __init__(
         self,
         rootdir: str,
         path: str | None,
-        store_raw_config: bool = False,
+        store_raw_config: bool = False,  # noqa: FBT001, FBT002
     ) -> None:
+        """File configuration wrapper initializer.
+
+        Args:
+            rootdir (str): Project root directory.
+            path (str): Path to the file from which the configuration
+                will be loaded.
+            store_raw_config (bool): If ``True``, the raw configuration
+                of the file will be stored in the ``raw_`` attribute.
+        """
         self.path, config = read_config(rootdir, path)
 
         if store_raw_config:
@@ -380,10 +383,9 @@ class Config(FileConfig):
             raise ProjectConfigInvalidConfig(
                 f"Root directory '{rootdir}' must be an existing directory",
             )
-        else:
-            # set rootdir as an internal environment variable to be
-            # used by plugins
-            os.environ["PROJECT_CONFIG_ROOTDIR"] = self.dict_["cli"]["rootdir"]
+        # set rootdir as an internal environment variable to be
+        # used by plugins
+        os.environ["PROJECT_CONFIG_ROOTDIR"] = self.dict_["cli"]["rootdir"]
 
         self.dict_["cli"]["only_hints"] = (
             self.dict_["cli"].get("only_hints") is True
@@ -502,7 +504,9 @@ def initialize_config(config_fpath: str) -> str:
 """,
             )
 
-    def build_config_string(pyproject_toml: bool = False) -> str:
+    def build_config_string(
+        pyproject_toml: bool = False,  # noqa: FBT001, FBT002
+    ) -> str:
         result = ""
         if pyproject_toml:
             result += "[tool.project-config]\n"
@@ -511,10 +515,7 @@ def initialize_config(config_fpath: str) -> str:
     def add_config_string_to_file(string: str) -> None:
         with open(config_fpath, encoding="ascii") as f:
             config_lines = f.read().splitlines()
-        if config_lines:
-            add_separator = config_lines[-1] != ""
-        else:
-            add_separator = False
+        add_separator = config_lines[-1] != "" if config_lines else False
 
         with open(config_fpath, "a", encoding="ascii") as f:
             if add_separator:

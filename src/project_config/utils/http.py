@@ -19,7 +19,7 @@ class ProjectConfigTimeoutError(ProjectConfigHTTPError):
     """Timeout error."""
 
 
-def _GET(
+def _GET_impl(
     url: str,
     timeout: float | None = None,
     sleep: float = 1.0,
@@ -50,19 +50,25 @@ def _GET(
     )
 
 
-def GET(url: str, use_cache: bool = True, **kwargs: Any) -> Any:
+def GET(
+    url: str,
+    use_cache: bool = True,  # noqa: FBT001, FBT002
+    **kwargs: Any,
+) -> Any:
     """Perform an HTTP/s GET request and return the result.
 
     Args:
         url (str): URL to which the request will be targeted.
         use_cache (bool): Specify if the cache must be used
             requesting the resource.
+        **kwargs: Keyword arguments ``timeout`` and ``sleep``
+            passed to the internal wrapper GET function.
     """
     if use_cache:
         result = Cache.get(url)  # this could return Any
         if result is None:
-            result = _GET(url, **kwargs)
+            result = _GET_impl(url, **kwargs)
             Cache.set(url, result)
     else:
-        result = _GET(url, **kwargs)
+        result = _GET_impl(url, **kwargs)
     return result

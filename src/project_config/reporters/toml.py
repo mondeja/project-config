@@ -29,9 +29,9 @@ def _replace_nulls_by_repr_strings_in_dict(
             key: _replace_nulls_by_repr_strings_in_dict(value)
             for key, value in data.items()
         }
-    elif isinstance(data, list):
+    if isinstance(data, list):
         return [_replace_nulls_by_repr_strings_in_dict(value) for value in data]
-    elif data is None:
+    if data is None:
         return "!!null"
     return data
 
@@ -43,7 +43,7 @@ def _normalize_indentation_to_2_spaces(string: str) -> str:
     for line in string.splitlines():
         # count number of spaces at the beginning of the line
         spaces_at_start = len(line) - len(line.lstrip())
-        if spaces_at_start < 3:
+        if spaces_at_start < 3:  # noqa: PLR2004
             new_lines.append(line)
         else:
             new_lines.append(
@@ -53,7 +53,7 @@ def _normalize_indentation_to_2_spaces(string: str) -> str:
     return "\n".join(new_lines)
 
 
-def _common_generate_errors_report(
+def _common_generate_errors_report(  # noqa: PLR0913
     files_errors: FilesErrors,
     format_metachar: FormatterDefinitionType,
     format_file: FormatterDefinitionType,
@@ -114,7 +114,7 @@ class TomlReporter(BaseNoopFormattedReporter):
 
     def generate_data_report(
         self,
-        data_key: str,  # noqa: U100
+        data_key: str,  # noqa: ARG002
         data: dict[str, Any],
     ) -> str:
         """Generate a data report in black/white TOML format."""
@@ -147,7 +147,7 @@ class TomlColorReporter(BaseColorReporter):
             self.format_fixed,
         )
 
-    def generate_data_report(
+    def generate_data_report(  # noqa: PLR0912, PLR0915
         self,
         data_key: str,
         data: dict[str, Any],
@@ -232,19 +232,17 @@ class TomlColorReporter(BaseColorReporter):
                             else self.format_config_value
                         )
                         report += f"{formatter(line)}\n"
+                    elif context == "files":
+                        # files: not
+                        #
+                        file, reason = line.split("=", maxsplit=1)
+                        report += (
+                            f"{self.format_file(file.strip())}"
+                            f" {self.format_metachar('=')}"
+                            f" {self.format_config_value(reason.strip())}\n"
+                        )
                     else:
-                        if context == "files":
-                            # files: not
-                            #
-                            # file = reason
-                            file, reason = line.split("=", maxsplit=1)
-                            report += (
-                                f"{self.format_file(file.strip())}"
-                                f" {self.format_metachar('=')}"
-                                f" {self.format_config_value(reason.strip())}\n"
-                            )
-                        else:
-                            report += f"{self.format_config_value(line)}\n"
+                        report += f"{self.format_config_value(line)}\n"
                 elif context == "files":
                     indent = len(line) - len(line.lstrip())
                     report += (

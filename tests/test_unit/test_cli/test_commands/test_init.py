@@ -1,5 +1,4 @@
 import pytest
-
 from project_config.__main__ import run
 
 
@@ -111,8 +110,8 @@ def test_toml_file_already_exists_but_section_not_found(
 
         out, err = capsys.readouterr()
         assert out == (
-            "Configuration initialized at pyproject.toml"
-            "[tool.project-config]\n"
+            "Configuration initialized at"
+            " pyproject.toml[tool.project-config]\n"
         )
         assert err == ""
 
@@ -204,8 +203,7 @@ def test_pyproject_toml_ini_is_fixable(tmp_path, chdir, capsys):
         msg = f"{out}\n---\n{err}"
         assert err == "", msg
         assert out == (
-            "Configuration initialized at pyproject.toml"
-            "[tool.project-config]\n"
+            "Configuration initialized at pyproject.toml[tool.project-config]\n"
         ), msg
 
         expected_pyproject_toml_content = (

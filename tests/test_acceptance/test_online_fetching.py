@@ -1,6 +1,5 @@
-from testing_helpers import mark_end2end
-
 from project_config.__main__ import run
+from testing_helpers import mark_end2end
 
 
 @mark_end2end

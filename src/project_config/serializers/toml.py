@@ -18,35 +18,33 @@ def loads(string: str) -> dict[str, Any]:
     """
 
     def iterate_key_values(obj: Any) -> Any:
-        _partial_result: dict[str, Any] | list[Any]
+        partial_result: dict[str, Any] | list[Any]
 
         if isinstance(obj, dict):
-            _partial_result = {}
-            for key, value in obj.items():
-                key = str(key)
+            partial_result = {}
+            for k, value in obj.items():
+                key = str(k)
                 if isinstance(value, dict):
-                    value = dict(value)
-                    _partial_result[key] = iterate_key_values(value)
+                    partial_result[key] = iterate_key_values(dict(value))
+                elif isinstance(value, list):
+                    partial_result[key] = iterate_key_values(value)
+                elif isinstance(value, str):
+                    partial_result[key] = str(value)
                 else:
-                    if isinstance(value, list):
-                        value = iterate_key_values(value)
-                    elif isinstance(value, str):
-                        value = str(value)
-                    _partial_result[key] = value
+                    partial_result[key] = value
 
         elif isinstance(obj, list):
-            _partial_result = []
+            partial_result = []
             for item in obj:
                 if isinstance(item, dict):
-                    item = dict(item)
-                    _partial_result.append(iterate_key_values(item))
+                    partial_result.append(iterate_key_values(dict(item)))
+                elif isinstance(item, list):
+                    partial_result.append(iterate_key_values(item))
+                elif isinstance(item, str):
+                    partial_result.append(str(item))
                 else:
-                    if isinstance(item, list):
-                        item = iterate_key_values(item)
-                    elif isinstance(item, str):
-                        item = str(item)
-                    _partial_result.append(item)
+                    partial_result.append(item)
 
-        return _partial_result
+        return partial_result
 
     return iterate_key_values(dict(tomlkit.loads(string)))  # type: ignore

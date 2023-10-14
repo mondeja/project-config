@@ -11,30 +11,18 @@ Development install
    cd project-config
    pip install hatch
 
-Testing
-=======
+Run tests
+=========
 
 .. code-block:: sh
 
    hatch run tests:unit
-   # or `hatch run tests:all`
+   # hatch run tests:all
+   # hatch run tests:cov
 
-Show coverage report
---------------------
 
-.. code-block:: sh
-
-   hatch run tests:cov
-
-End to end tests
-----------------
-
-.. code-block:: sh
-
-   hatch run tests:all
-
-Linting
-=======
+Linting and formatting
+======================
 
 .. code-block:: sh
 
@@ -47,7 +35,7 @@ Build documentation
 .. code-block:: sh
 
    hatch run docs:build
-   # or `hatch run docs:serve`
+   # hatch run docs:serve
 
 Release
 =======

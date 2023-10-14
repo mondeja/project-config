@@ -1,7 +1,6 @@
 import re
 
 import pytest
-
 from project_config.fetchers import FetchError, fetch
 
 
@@ -188,6 +187,8 @@ def test_fetch_not_existing_file(
     url,
     expected_error_message,
 ):
-    with chdir(tmp_path):
-        with pytest.raises(FetchError, match=expected_error_message):
-            fetch(url)
+    with chdir(tmp_path), pytest.raises(
+        FetchError,
+        match=expected_error_message,
+    ):
+        fetch(url)

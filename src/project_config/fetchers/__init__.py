@@ -26,7 +26,7 @@ class FetchError(ProjectConfigException):
 class SchemeProtocolNotImplementedError(ProjectConfigNotImplementedError):
     """A URI schema has not been implemented."""
 
-    def __init__(self, scheme: str, action: str = "Fetching"):
+    def __init__(self, scheme: str, action: str = "Fetching"):  # noqa: D107
         super().__init__(
             f"{action} from scheme protocol '{scheme}:' is not implemented.",
         )
@@ -82,15 +82,15 @@ def download_file_from_urlsplit_scheme(
     try:
         module = importlib.import_module(f"project_config.fetchers.{scheme}")
     except ImportError:
-        raise SchemeProtocolNotImplementedError(scheme)
+        raise SchemeProtocolNotImplementedError(scheme) from None
 
     try:
         # TODO: ModuleType with protocol here?
         return module.fetch(url_parts, **kwargs)  # type: ignore
     except FileNotFoundError:
-        raise FetchError(f"'{url}' file not found")
+        raise FetchError(f"'{url}' file not found") from None
     except ProjectConfigTimeoutError as exc:
-        raise FetchError(exc.message)
+        raise FetchError(exc.message) from exc
 
 
 def fetch(url: str, **kwargs: Any) -> Any:
@@ -98,6 +98,7 @@ def fetch(url: str, **kwargs: Any) -> Any:
 
     Args:
         url (str): The URL of the resource to fetch.
+        **kwargs: Extra arguments to pass to the fetcher.
     """
     url, serializer_name = guess_preferred_serializer(url)
 
@@ -118,7 +119,7 @@ def fetch(url: str, **kwargs: Any) -> Any:
             prefer_serializer=serializer_name,
         )
     except SerializerError as exc:
-        raise FetchError(exc.message)
+        raise FetchError(exc.message) from exc
 
 
 def resolve_url(url: str) -> tuple[str, str]:
@@ -135,12 +136,15 @@ def resolve_url(url: str) -> tuple[str, str]:
     try:
         module = importlib.import_module(f"project_config.fetchers.{scheme}")
     except ImportError:  # pragma: no cover
-        raise SchemeProtocolNotImplementedError(scheme, action="Resolving")
+        raise SchemeProtocolNotImplementedError(
+            scheme,
+            action="Resolving",
+        ) from None
     return (
         getattr(
             module,
             "resolve_url",
-            lambda url_parts_: url,  # noqa: U100
+            lambda _url_parts: url,
         )(url_parts),
         scheme,
     )
@@ -153,6 +157,7 @@ def resolve_maybe_relative_url(url: str, parent_url: str, rootdir: str) -> str:
         url (str): URL or relative URI to the target resource.
         parent_url (str): Absolute URI of the origin resource, which
             acts as the requester.
+        rootdir (str): Root directory of the project.
 
     Returns:
         str: Absolute URI for the children resource.
@@ -185,7 +190,7 @@ def resolve_maybe_relative_url(url: str, parent_url: str, rootdir: str) -> str:
 
             return os.path.relpath(resolved_url, rootdir)
 
-        elif parent_url_scheme in ("gh", "github"):
+        if parent_url_scheme in ("gh", "github"):
             project, parent_path = parent_url_parts.path.lstrip("/").split(
                 "/",
                 maxsplit=1,

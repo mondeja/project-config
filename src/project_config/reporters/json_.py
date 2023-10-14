@@ -22,7 +22,7 @@ class JsonReporter(BaseReporter):
 
     def generate_data_report(
         self,
-        data_key: str,  # noqa: U100
+        _data_key: str,
         data: dict[str, Any],
     ) -> str:
         """Generate a data report in black/white JSON format."""
@@ -37,7 +37,7 @@ class JsonReporter(BaseReporter):
 class JsonColorReporter(BaseColorReporter):
     """Color reporter in JSON format."""
 
-    def generate_errors_report(self) -> str:
+    def generate_errors_report(self) -> str:  # noqa: PLR0912
         """Generate an errors report in JSON format with colors."""
         message_key = self.format_key('"message"')
         definition_key = self.format_key('"definition"')
@@ -114,7 +114,7 @@ class JsonColorReporter(BaseColorReporter):
 
         return f"{report}{newline0}{self.format_metachar('}')}"
 
-    def generate_data_report(
+    def generate_data_report(  # noqa: PLR0912, PLR0915
         self,
         data_key: str,
         data: dict[str, Any],
@@ -187,7 +187,6 @@ class JsonColorReporter(BaseColorReporter):
                                 )
                         report += f'{newline6}{self.format_metachar("}")}'
                     else:
-                        # {file: reason}
                         report += f'{self.format_metachar("{")}{newline12}'
                         for f, (file, reason) in enumerate(
                             files["not"].items(),

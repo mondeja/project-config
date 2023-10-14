@@ -2,14 +2,13 @@ import os
 import re
 
 import pytest
-from testing_helpers import FakePlugin, rootdir
-
 from project_config.compat import importlib_metadata
 from project_config.plugins import (
     PROJECT_CONFIG_PLUGINS_ENTRYPOINTS_GROUP,
     InvalidPluginFunction,
     Plugins,
 )
+from testing_helpers import FakePlugin, rootdir
 
 
 PLUGINS_PACKAGE_DIR = os.path.join(rootdir, "src", "project_config", "plugins")

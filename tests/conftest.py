@@ -6,7 +6,6 @@ import time
 
 import pytest
 from contextlib_chdir import chdir as chdir_ctx
-
 from project_config.__main__ import parse_args
 from project_config.tests.pytest_plugin.helpers import (
     create_files as _create_files,
@@ -75,7 +74,7 @@ def minimal_valid_config():
     return min_valid_config
 
 
-def _assert_minimal_valid_style(value):  # noqa: U100
+def _assert_minimal_valid_style(_value):
     pass
 
 

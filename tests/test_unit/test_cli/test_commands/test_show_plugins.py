@@ -5,7 +5,6 @@ from project_config.plugins import Plugins
 
 
 def test_show_plugins(tmp_path, chdir, capsys):
-
     with chdir(tmp_path):
         project_config_file = tmp_path / ".project-config.toml"
         project_config_file.write_text('style = "style.json"')

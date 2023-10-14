@@ -78,7 +78,7 @@ class Cache:
     )
     _expiration_time: float | int | None = 30
 
-    def __init__(self) -> None:  # pragma: no cover
+    def __init__(self) -> None:  # noqa: D107 pragma: no cover
         raise NotImplementedError("Cache is a not instanceable interface.")
 
     @staticmethod

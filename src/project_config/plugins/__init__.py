@@ -43,7 +43,10 @@ class Plugins:
     demanding from rules.
     """
 
-    def __init__(self, prepare_all: bool = False) -> None:
+    def __init__(  # noqa: D107
+        self,
+        prepare_all: bool = False,  # noqa: FBT001, FBT002
+    ) -> None:
         # map from plugin names to loaded classes
         self.loaded_plugins: dict[str, type] = {}
 

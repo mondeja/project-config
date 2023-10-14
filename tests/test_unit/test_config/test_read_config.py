@@ -1,5 +1,4 @@
 import pytest
-
 from project_config.config import read_config
 from project_config.config.exceptions import (
     ConfigurationFilesNotFound,

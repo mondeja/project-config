@@ -1,7 +1,6 @@
 import os
 
 import pytest
-
 from project_config.reporters.base import (
     BaseColorReporter,
     InvalidColors,
@@ -47,7 +46,7 @@ def test_BaseColorReporter_init_fails():
         exc.value.message
         == f"""Invalid colors or subjects in 'colors' configuration for reporters:
   {additional_message}- Invalid subject 'invalid_formatter_subject' to colorize
-"""
+"""  # noqa: E501
     )
 
     with pytest.raises(TypeError) as exc:
@@ -62,7 +61,7 @@ def test_BaseColorReporter_init_ok(tmp_path):
         str(tmp_path),
         colors={
             "config value": "red",
-            "config key": "#FFF",
+            "config key": "white",
         },
     )
-    assert reporter.colors == {"config_value": "red", "config_key": "#FFF"}
+    assert reporter.colors == {"config_value": "red", "config_key": "white"}

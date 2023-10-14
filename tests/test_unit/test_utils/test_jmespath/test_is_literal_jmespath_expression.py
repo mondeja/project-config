@@ -1,5 +1,4 @@
 import pytest
-
 from project_config.utils.jmespath import is_literal_jmespath_expression
 
 

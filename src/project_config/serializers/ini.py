@@ -30,7 +30,7 @@ def dumps(obj: Any) -> str:
     """Converts a JSON object to an INI file string.
 
     Args:
-        object (dict): JSON object to convert.
+        obj (dict): JSON object to convert.
 
     Returns:
         str: Conversion result.

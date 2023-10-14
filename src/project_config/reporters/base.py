@@ -26,10 +26,10 @@ if TYPE_CHECKING:
 class InvalidColors(ProjectConfigException):
     """Invalid not supported colors in colored formatter."""
 
-    def __init__(self, errors: list[str]):
+    def __init__(self, errors: list[str]):  # noqa: D107
         message = (
-            "Invalid colors or subjects in 'colors' configuration"
-            " for reporters:\n"
+            "Invalid colors or subjects in 'colors'"
+            " configuration for reporters:\n"
         )
         for error in errors:
             message += f"  - {error}\n"
@@ -49,11 +49,11 @@ class BaseReporter(abc.ABC):
 
     exception_class = ProjectConfigCheckFailed
 
-    def __init__(
+    def __init__(  # noqa: D107
         self,
         rootdir: str,
         fmt: str | None = None,
-        only_hints: bool = False,
+        only_hints: bool = False,  # noqa: FBT001, FBT002
     ):
         self.rootdir = rootdir
         self.errors: FilesErrors = {}
@@ -72,8 +72,8 @@ class BaseReporter(abc.ABC):
 
     def generate_data_report(
         self,
-        data_key: str,  # noqa: U100
-        data: dict[str, Any],  # noqa: U100
+        _data_key: str,
+        _data: dict[str, Any],
     ) -> str:
         """Generate data report for configuration or styles.
 
@@ -180,7 +180,9 @@ class BaseFormattedReporter(BaseReporter, abc.ABC):
         raise NotImplementedError
 
 
-self_format_noop: Callable[[type, str], str] = lambda self, v: v
+def self_format_noop(_self: type, v: str) -> str:
+    """Formatter that returns the value without formatting."""
+    return v
 
 
 class BaseNoopFormattedReporter(BaseFormattedReporter):
@@ -245,7 +247,7 @@ def colored_color_exists(color: str) -> bool:
     """
     try:
         colored.fg(color)
-    except KeyError:  # pragma: no cover (tested, but not supported on CI)
+    except (KeyError, colored.exceptions.InvalidColor):
         return False
     else:
         return True
@@ -254,7 +256,7 @@ def colored_color_exists(color: str) -> bool:
 class BaseColorReporter(BaseFormattedReporter):
     """Base reporter with colorized output."""
 
-    def __init__(
+    def __init__(  # noqa: D107
         self,
         *args: Any,
         colors: dict[str, str] | None = None,

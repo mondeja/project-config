@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import contextlib
 import re
 from typing import TYPE_CHECKING, Any, cast
 
@@ -31,10 +32,8 @@ def loads(
         dict: Global namespace of the Python script as an object.
     """
     exec(compile(string, "utf-8", "exec"), namespace)  # noqa: DUO105,DUO110
-    try:
+    with contextlib.suppress(KeyError):
         del namespace["__builtins__"]  # we don't care about builtins
-    except KeyError:  # pragma: no cover
-        pass
     return namespace
 
 
@@ -44,10 +43,10 @@ def _pyobject_to_string(value: Any) -> str:
         return f'"{escaped_value}"'
     if isinstance(value, bool):
         return "True" if value else "False"
-    elif isinstance(value, type):
+    if isinstance(value, type):
         value = value.__name__
     elif isinstance(value, dict):
-        if len(str(value)) > 60:
+        if len(str(value)) > 60:  # noqa: PLR2004
             newline = "\n    "
             delimiter = "\n"
         else:
@@ -67,7 +66,7 @@ def _pyobject_to_string(value: Any) -> str:
         result += delimiter + "}"
         return result
     elif isinstance(value, list):
-        if len(str(value)) > 60:
+        if len(str(value)) > 60:  # noqa: PLR2004
             newline = "\n    "
             delimiter = "\n"
         else:

@@ -32,8 +32,8 @@ if TYPE_CHECKING:
 
         def __call__(  # noqa: D102
             self,
-            value: Any,  # noqa: U100
-            **kwargs: Any,  # noqa: U100
+            _value: Any,
+            **_kwargs: Any,
         ) -> Any:
             ...
 
@@ -80,13 +80,6 @@ serializers: dict[
                 # Comparison of v1.1 vs v1.2 at:
                 # https://perlpunk.github.io/yaml-test-schema/schemas.html
                 #
-                # "module": "yaml",
-                # "function": "load",
-                # "function_kwargs": {
-                #    "Loader": {
-                #        "module": "yaml",
-                #        "object": "CSafeLoader",
-                #        "object_fallback": "SafeLoader",
                 #    },
                 # },
                 #
@@ -144,7 +137,7 @@ def _identify_serializer(filename: str) -> str:
     return tag if tag is not None else "text"
 
 
-def _get_serializer_function(
+def _get_serializer_function(  # noqa: PLR0912
     url: str,
     prefer_serializer: str | None = None,
     loader_function_name: str = "loads",
@@ -188,10 +181,8 @@ def _get_serializer_function(
                             " not supported"
                         ),
                     ),
-                )
-    serializer = serializer[  # type: ignore
-        0 if loader_function_name == "loads" else 1
-    ]
+                ) from None
+    serializer = serializer[0 if loader_function_name == "loads" else 1]  # type: ignore
     # prepare serializer function
     serializer_definition, module = None, None
     for i, serializer_def in enumerate(serializer):
@@ -249,9 +240,7 @@ def _get_serializer_function(
 
     if "function_kwargs_from_url_path" in serializer_definition:  # type: ignore
         function_kwargs.update(
-            serializer_definition[  # type: ignore
-                "function_kwargs_from_url_path"
-            ](
+            serializer_definition["function_kwargs_from_url_path"](  # type: ignore
                 os.path.basename(url_parts.path),
             ),
         )
@@ -320,6 +309,7 @@ def serialize_for_url(
         url (str): URI of the file, used to detect the type of the file,
             either using the extension or through `identify`_.
         string (str): File content to serialize.
+        prefer_serializer (str): Preferred serializer.
 
     Returns:
         dict: Result of the object serialization.
@@ -349,14 +339,13 @@ def serialize_for_url(
                     url,
                     f" {exc.args[0]}",  # type: ignore
                 ),
-            )
-        elif package_name == "ruamel":
-            # Example: ruamel.yaml.scanner.ScannerError
+            ) from None
+        if package_name == "ruamel":
             raise SerializerError(
                 _file_can_not_be_serialized_as_object_error(
                     url,
                     f"\n{str(exc)}",
                 ),
-            )
+            ) from None
         raise  # pragma: no cover
     return result

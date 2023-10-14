@@ -40,7 +40,7 @@ def _common_generate_rows(
     return rows
 
 
-def _common_generate_errors_report(
+def _common_generate_errors_report(  # noqa: PLR0913
     errors: FilesErrors,
     fmt: str,
     format_key: FormatterDefinitionType,

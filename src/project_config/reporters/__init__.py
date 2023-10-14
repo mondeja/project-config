@@ -22,7 +22,7 @@ PROJECT_CONFIG_REPORTERS_ENTRYPOINTS_GROUP = "project_config.reporters"
 class UnparseableReporterError(ProjectConfigException):
     """Reporter can't be parsed."""
 
-    def __init__(self, reporter_id: str) -> None:
+    def __init__(self, reporter_id: str) -> None:  # noqa: D107
         super().__init__(
             f"Reporter '{reporter_id}' can't be parsed. "
             "See 'project-config --help' for more information.",
@@ -32,7 +32,7 @@ class UnparseableReporterError(ProjectConfigException):
 class InvalidThirdPartyReporterName(ProjectConfigException):
     """A third party reporter can't be loaded by his identifier."""
 
-    def __init__(self, reporter_id: str) -> None:
+    def __init__(self, reporter_id: str) -> None:  # noqa: D107
         super().__init__(
             f"Reporter '{reporter_id}' not found. See all"
             " available running 'project-config show reporters'",
@@ -107,7 +107,7 @@ def get_reporter(
     reporter_kwargs: dict[str, Any],
     color: bool | None,
     rootdir: str,
-    only_hints: bool = False,
+    only_hints: bool = False,  # noqa: FBT001, FBT002
 ) -> Any:
     """Reporters factory.
 
@@ -176,7 +176,7 @@ class ThirdPartyReporters:
             cls.instance = super().__new__(cls)
         return cls.instance
 
-    def __init__(self) -> None:
+    def __init__(self) -> None:  # noqa: D107
         self.reporters_loaders: dict[
             str,
             Callable[[], types.ModuleType],
@@ -208,7 +208,7 @@ class ThirdPartyReporters:
                 reporter_impl = self.reporters_loaders[reporter_name]
             except KeyError:
                 # A third party reporter was not found
-                raise InvalidThirdPartyReporterName(reporter_name)
+                raise InvalidThirdPartyReporterName(reporter_name) from None
             else:
                 self.loaded_reporters[reporter_name] = reporter_impl()
         return self.loaded_reporters[reporter_name]

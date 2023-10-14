@@ -16,14 +16,14 @@ VALID_CONFIG_FILES = (
 class ProjectConfigInvalidConfig(ProjectConfigException):
     """Invalid configuration of project-config found."""
 
-    def __init__(self, message: str) -> None:
+    def __init__(self, message: str) -> None:  # noqa: D107
         super().__init__(message)
 
 
 class ProjectConfigInvalidConfigSchema(ProjectConfigInvalidConfig):
     """The configuration of project-config is invalid."""
 
-    def __init__(
+    def __init__(  # noqa: D107
         self,
         config_path: str,
         error_messages: list[str],
@@ -37,7 +37,7 @@ class ProjectConfigInvalidConfigSchema(ProjectConfigInvalidConfig):
 class ConfigurationFilesNotFound(ProjectConfigInvalidConfig):
     """The expected configuration files have not been found."""
 
-    def __init__(self) -> None:
+    def __init__(self) -> None:  # noqa: D107
         super().__init__(
             "None of the expected configuration files have been found:"
             f" {', '.join(VALID_CONFIG_FILES)}",
@@ -47,7 +47,7 @@ class ConfigurationFilesNotFound(ProjectConfigInvalidConfig):
 class CustomConfigFileNotFound(ProjectConfigInvalidConfig):
     """A custom configuration file has not been found."""
 
-    def __init__(self, fpath: str) -> None:
+    def __init__(self, fpath: str) -> None:  # noqa: D107
         super().__init__(
             f"Custom configuration file '{fpath}' not found",
         )
@@ -56,7 +56,7 @@ class CustomConfigFileNotFound(ProjectConfigInvalidConfig):
 class PyprojectTomlFoundButHasNoConfig(ProjectConfigInvalidConfig):
     """A `pyproject.toml` file has been found but has no configuration."""
 
-    def __init__(self) -> None:
+    def __init__(self) -> None:  # noqa: D107
         super().__init__(
             "- pyproject.toml file has been found but has not a"
             " [tool.project-config] section\n"
@@ -67,7 +67,7 @@ class PyprojectTomlFoundButHasNoConfig(ProjectConfigInvalidConfig):
 class ProjectConfigAlreadyInitialized(ProjectConfigException):
     """The project-config has already been initialized."""
 
-    def __init__(self, config_path: str) -> None:
+    def __init__(self, config_path: str) -> None:  # noqa: D107
         super().__init__(
             "The configuration for project-config has already been"
             f" initialized at {os.path.relpath(config_path, os.getcwd())}",

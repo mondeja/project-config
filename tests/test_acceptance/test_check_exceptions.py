@@ -1,7 +1,6 @@
 import json
 
 import pytest
-
 from project_config.commands.check import check
 from project_config.compat import importlib_metadata
 from project_config.exceptions import ProjectConfigCheckFailed

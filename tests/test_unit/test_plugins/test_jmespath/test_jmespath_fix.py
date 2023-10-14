@@ -1,19 +1,19 @@
 import json
 
 import pytest
-
 from project_config import Error
 from project_config.constants import InterruptingError
 from project_config.plugins.jmespath import JMESPathPlugin
 
 
-JSON_2_INDENTED = lambda string: (  # noqa: E731
-    json.dumps(
-        json.loads(string),
-        indent=2,
+def JSON_2_INDENTED(string):
+    return (  # noqa: E731
+        json.dumps(
+            json.loads(string),
+            indent=2,
+        )
+        + "\n"
     )
-    + "\n"
-)
 
 
 @pytest.mark.parametrize(
@@ -464,8 +464,10 @@ JSON_2_INDENTED = lambda string: (  # noqa: E731
             ],
             {
                 ".editor.json": JSON_2_INDENTED(
-                    '{"": {"boolean_value": true},'
-                    ' "*": {"string_value": "lf"}}',
+                    (
+                        '{"": {"boolean_value": true},'
+                        ' "*": {"string_value": "lf"}}'
+                    ),
                 ),
             },
             id="fixer-query-subexpression-smart",

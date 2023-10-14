@@ -18,7 +18,10 @@ from collections.abc import Callable
 from typing import TYPE_CHECKING, Any
 
 import deepmerge
-from jmespath import Options as JMESPathOptions, compile as jmespath_compile
+from jmespath import (
+    Options as JMESPathOptions,
+    compile as jmespath_compile,
+)
 from jmespath.exceptions import (
     JMESPathError as OriginalJMESPathError,
     ParseError as JMESPathParserError,
@@ -27,7 +30,10 @@ from jmespath.functions import (
     Functions as JMESPathFunctions,
     signature as jmespath_func_signature,
 )
-from jmespath.parser import ParsedResult as JMESPathParsedResult, Parser
+from jmespath.parser import (
+    ParsedResult as JMESPathParsedResult,
+    Parser,
+)
 
 from project_config import tree
 from project_config.cache import Cache
@@ -36,7 +42,7 @@ from project_config.exceptions import ProjectConfigException
 
 
 if TYPE_CHECKING:
-    from project_config.compat import Literal
+    pass
 
 
 class JMESPathError(ProjectConfigException):
@@ -133,7 +139,7 @@ def _create_simple_transform_function_for_string(
 ) -> Callable[[type, str], str]:
     func = getattr(str, func_name)
     return jmespath_func_signature({"types": ["string"]})(
-        lambda self, value: func(value),
+        lambda _self, value: func(value),
     )
 
 
@@ -142,7 +148,7 @@ def _create_is_function_for_string(
 ) -> Callable[[type, str], bool]:
     func = getattr(str, f"is{func_suffix}")
     return jmespath_func_signature({"types": ["string"]})(
-        lambda self, value: func(value),
+        lambda _self, value: func(value),
     )
 
 
@@ -152,7 +158,10 @@ def _create_find_function_for_string_or_array(
     getattr(str, f"{func_prefix}find")
 
     def _wrapper(
-        self: type, value: list[Any] | str, sub: Any, *args: Any
+        _self: type,
+        value: list[Any] | str,
+        sub: Any,
+        *args: Any,
     ) -> int:
         if isinstance(value, list):
             try:
@@ -173,7 +182,7 @@ def _create_just_function_for_string(
     return jmespath_func_signature(
         {"types": ["string"]},
         {"types": ["number"], "variadic": True},
-    )(lambda self, value, width, *args: func(value, width, *args))
+    )(lambda _self, value, width, *args: func(value, width, *args))
 
 
 def _create_partition_function_for_string(
@@ -183,7 +192,7 @@ def _create_partition_function_for_string(
     return jmespath_func_signature(
         {"types": ["string"]},
         {"types": ["string"]},
-    )(lambda self, value, sep: list(func(value, sep)))
+    )(lambda _self, value, sep: list(func(value, sep)))
 
 
 def _create_split_function_for_string(
@@ -192,7 +201,7 @@ def _create_split_function_for_string(
     func = getattr(str, f"{func_prefix}split")
     return jmespath_func_signature(
         {"types": ["string"], "variadic": True},
-    )(lambda self, value, *args: func(value, *args))
+    )(lambda _self, value, *args: func(value, *args))
 
 
 def _create_strip_function_for_string(
@@ -201,7 +210,7 @@ def _create_strip_function_for_string(
     func = getattr(str, f"{func_prefix}strip")
     return jmespath_func_signature(
         {"types": ["string"], "variadic": True},
-    )(lambda self, value, *args: func(value, *args))
+    )(lambda _self, value, *args: func(value, *args))
 
 
 def _create_removeaffix_function_for_string(
@@ -211,7 +220,7 @@ def _create_removeaffix_function_for_string(
     return jmespath_func_signature(
         {"types": ["string"]},
         {"types": ["string"]},
-    )(lambda self, value, affix: func(value, affix))
+    )(lambda _self, value, affix: func(value, affix))
 
 
 def _to_items(value: Any) -> list[Any]:
@@ -229,7 +238,10 @@ class JMESPathProjectConfigFunctions(JMESPathFunctions):
         {"types": ["string", "array-string"], "variadic": True},
     )
     def _func_starts_with(
-        self, search: str, suffix: str | tuple[str], *args: Any
+        self,
+        search: str,
+        suffix: str | tuple[str],
+        *args: Any,
     ) -> bool:
         if isinstance(suffix, list):
             suffix = tuple(suffix)
@@ -240,7 +252,10 @@ class JMESPathProjectConfigFunctions(JMESPathFunctions):
         {"types": ["string", "array-string"], "variadic": True},
     )
     def _func_ends_with(
-        self, search: str, suffix: str | tuple[str], *args: Any
+        self,
+        search: str,
+        suffix: str | tuple[str],
+        *args: Any,
     ) -> bool:
         if isinstance(suffix, list):
             suffix = tuple(suffix)
@@ -276,7 +291,10 @@ class JMESPathProjectConfigFunctions(JMESPathFunctions):
         {"types": ["string"], "variadic": True},
     )
     def _func_regex_search(
-        self, regex: str, value: str, *args: Any
+        _self,
+        regex: str,
+        value: str,
+        *args: Any,
     ) -> list[str]:
         match = re.search(regex, value, *args)
         if not match:
@@ -289,9 +307,13 @@ class JMESPathProjectConfigFunctions(JMESPathFunctions):
         {"types": ["string"], "variadic": True},
     )
     def _func_regex_sub(
-        self, regex: str, repl: str, value: str, *args: Any
+        _self,
+        regex: str,
+        repl: str,
+        value: str,
+        *args: Any,
     ) -> str:
-        return re.sub(regex, repl, value, *args)
+        return re.sub(regex, repl, value, *args)  # noqa: B034
 
     @jmespath_func_signature({"types": ["string"]})
     def _func_regex_escape(self, regex: str) -> str:
@@ -314,7 +336,7 @@ class JMESPathProjectConfigFunctions(JMESPathFunctions):
                         f"Invalid operator '{op_or_value}' passed to op()"
                         f" function at index {i}, expected one of:"
                         f" {', '.join(list(OPERATORS_FUNCTIONS))}",
-                    )
+                    ) from None
                 else:
                     current_op = (func, op_or_value)
             else:
@@ -443,22 +465,22 @@ class JMESPathProjectConfigFunctions(JMESPathFunctions):
                     f"Invalid strategy '{strategies}' passed to deepmerge()"
                     " function, expected one of:"
                     f" {', '.join(list(BUILTIN_DEEPMERGE_STRATEGIES))}",
-                )
+                ) from None
         else:
             type_strategies = []
             for key, value in strategies[0]:  # type: ignore
-                key = {"array": "list", "object": "dict"}.get(
+                key_type = {"array": "list", "object": "dict"}.get(
                     key,  # type: ignore
                     key,  # type: ignore
                 )
-                if key not in BUILTIN_TYPES:
+                if key_type not in BUILTIN_TYPES:
                     raise OriginalJMESPathError(
                         f"Invalid type passed to deepmerge() function in"
                         " strategies array, expected one of:"
                         f" {', '.join(BUILTIN_TYPES)}",
-                    )
+                    ) from None
                 type_strategies.append(
-                    (getattr(builtins, key), value),  # type: ignore
+                    (getattr(builtins, key_type), value),  # type: ignore
                 )
 
             # TODO: cache merge objects by strategies used
@@ -615,7 +637,10 @@ class JMESPathProjectConfigFunctions(JMESPathFunctions):
         {"types": ["string"], "variadic": True},
     )
     def _func_gh_tags(
-        self, repo_owner: str, repo_name: str, *args: Any
+        self,
+        repo_owner: str,
+        repo_name: str,
+        *args: Any,
     ) -> list[str]:
         from project_config.fetchers.github import get_latest_release_tags
 
@@ -632,14 +657,14 @@ class JMESPathProjectConfigFunctions(JMESPathFunctions):
                 f"_func_{func_name}": (
                     _create_simple_transform_function_for_string(func_name)
                 )
-                for func_name in {
+                for func_name in (
                     "capitalize",
                     "casefold",
                     "lower",
                     "swapcase",
                     "title",
                     "upper",
-                }
+                )
             },
             **{
                 f"_func_{func_prefix}find": (
@@ -647,13 +672,13 @@ class JMESPathProjectConfigFunctions(JMESPathFunctions):
                         func_prefix,
                     )
                 )
-                for func_prefix in {"", "r"}
+                for func_prefix in ("", "r")
             },
             **{
                 f"_func_is{func_suffix}": _create_is_function_for_string(
                     func_suffix,
                 )
-                for func_suffix in {
+                for func_suffix in (
                     "alnum",
                     "alpha",
                     "ascii",
@@ -666,37 +691,37 @@ class JMESPathProjectConfigFunctions(JMESPathFunctions):
                     "space",
                     "title",
                     "upper",
-                }
+                )
             },
             **{
                 f"_func_{func_prefix}just": _create_just_function_for_string(
                     func_prefix,
                 )
-                for func_prefix in {"l", "r"}
+                for func_prefix in ("l", "r")
             },
             **{
                 f"_func_{func_prefix}split": _create_split_function_for_string(
                     func_prefix,
                 )
-                for func_prefix in {"", "r"}
+                for func_prefix in ("", "r")
             },
             **{
                 f"_func_{func_prefix}strip": _create_strip_function_for_string(
                     func_prefix,
                 )
-                for func_prefix in {"", "l", "r"}
+                for func_prefix in ("", "l", "r")
             },
             **{
                 f"_func_{func_prefix}partition": (
                     _create_partition_function_for_string(func_prefix)
                 )
-                for func_prefix in {"", "r"}
+                for func_prefix in ("", "r")
             },
             **{
                 f"_func_remove{func_suffix}": (
                     _create_removeaffix_function_for_string(func_suffix)
                 )
-                for func_suffix in {"suffix", "prefix"}
+                for func_suffix in ("suffix", "prefix")
             },
         ),
     )
@@ -750,7 +775,7 @@ def compile_JMESPath_expression_or_error(
         raise JMESPathError(
             f"Invalid JMESPath expression {pprint.pformat(expression)}."
             f" Raised JMESPath {error_type}: {str(exc)}",
-        )
+        ) from None
 
 
 def compile_JMESPath_or_expected_value_error(
@@ -782,7 +807,7 @@ def compile_JMESPath_or_expected_value_error(
             f"Invalid JMESPath expression {pprint.pformat(expression)}."
             f" Expected to return {pprint.pformat(expected_value)}, raised"
             f" JMESPath {error_type}: {str(exc)}",
-        )
+        ) from None
 
 
 def compile_JMESPath_or_expected_value_from_other_file_error(
@@ -821,7 +846,7 @@ def compile_JMESPath_or_expected_value_from_other_file_error(
             f" {pprint.pformat(expected_value_expression)} to the file"
             f" {pprint.pformat(expected_value_file)}, raised"
             f" JMESPath {error_type}: {str(exc)}",
-        )
+        ) from None
 
 
 def evaluate_JMESPath(
@@ -887,7 +912,7 @@ def evaluate_JMESPath(
             raise JMESPathError(
                 f"Invalid JMESPath {formatted_expression}."
                 f" Raised JMESPath {error_type}: {str(exc)}",
-            )
+            ) from None
         Cache.set(
             f"jm://E?{compiled_expression.expression}:{str(instance)}",
             result,
@@ -930,7 +955,7 @@ def evaluate_JMESPath_or_expected_value_error(
             f"Invalid JMESPath {formatted_expression}."
             f" Expected to return {pprint.pformat(expected_value)}, raised"
             f" JMESPath {error_type}: {str(exc)}",
-        )
+        ) from None
 
 
 def fix_tree_serialized_file_by_jmespath(
@@ -962,7 +987,7 @@ def fix_tree_serialized_file_by_jmespath(
 
 REVERSE_JMESPATH_TYPE_PYOBJECT: dict[
     str | None,
-    dict[Any, Any] | list[Any] | Literal[0, "", None],
+    dict[Any, Any] | list[Any] | str | int | None,
 ] = {
     "string": "",
     "number": 0,
@@ -977,7 +1002,7 @@ def _build_reverse_jmes_type_object(jmespath_type: str) -> Any:
     return REVERSE_JMESPATH_TYPE_PYOBJECT[jmespath_type]
 
 
-def smart_fixer_by_expected_value(
+def smart_fixer_by_expected_value(  # noqa: PLR0911, PLR0912, PLR0915
     compiled_expression: JMESPathParsedResult,
     expected_value: Any,
 ) -> str:
@@ -1014,7 +1039,7 @@ def smart_fixer_by_expected_value(
     if ast["type"] == "field":
         key = ast["value"]
         return f"set(@, '{key}' `{json.dumps(expected_value)}`)"
-    elif ast["type"] == "subexpression":
+    if ast["type"] == "subexpression":
         temporal_object = {}
         _obj = {}
         for i, child in enumerate(reversed(ast["children"])):
@@ -1052,7 +1077,6 @@ def smart_fixer_by_expected_value(
                 merge_strategy: Any,
                 deep: list[Any],
             ) -> tuple[list[Any], Any, Any]:
-
                 for iexp, fexp in enumerate(reversed(expressions)):
                     _last_field_type_iexp = (
                         len([e["type"] == "field" for e in expressions[iexp:]])
@@ -1107,11 +1131,7 @@ def smart_fixer_by_expected_value(
             for child in ast["children"]:
                 if child["type"] == "subexpression":
                     expressions = list(child.get("children", []))
-                    (
-                        _,
-                        temporal_object,
-                        merge_strategy,
-                    ) = _iterate_expressions(
+                    (_, temporal_object, merge_strategy) = _iterate_expressions(
                         expressions,
                         temporal_object,
                         merge_strategy,
@@ -1120,7 +1140,7 @@ def smart_fixer_by_expected_value(
     elif (
         ast["type"] == "function_expression"
         and ast["value"] == "contains"
-        and len(ast["children"]) == 2
+        and len(ast["children"]) == 2  # noqa: PLR2004
         and ast["children"][0]["type"] == "function_expression"
         and ast["children"][0]["value"] == "keys"
         and ast["children"][0].get("children")

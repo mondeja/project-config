@@ -1,7 +1,6 @@
 import os
 
 import pytest
-
 from project_config.serializers.python import dumps, loads
 
 

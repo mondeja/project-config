@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import contextlib
 import os
 from collections.abc import Iterator
 from typing import TYPE_CHECKING, Any
@@ -35,13 +36,14 @@ if TYPE_CHECKING:
 
 
 class Style:
-    """Wrapper for style loader, blender and checker.
-
-    Args:
-        config (dict): Configuration for the project.
-    """
+    """Wrapper for style loader, blender and checker."""
 
     def __init__(self, config: Any) -> None:
+        """Style object initializer.
+
+        Args:
+            config (dict): Configuration for the project.
+        """
         self.plugins = Plugins()
         self.config = config
 
@@ -53,16 +55,12 @@ class Style:
             and not os.path.isfile(config.dict_["style"])
         ) or (
             isinstance(config.dict_["style"], list)
-            and not all(
-                [os.path.isfile(url) for url in config.dict_["style"]],
-            )
+            and not all(os.path.isfile(url) for url in config.dict_["style"])
         ):
-            try:
-                _prefetch_urls(config)
-            except Exception:
+            with contextlib.suppress(Exception):
                 # if an exception is raised, will be raised again
                 # in the synchronous style loader
-                pass
+                _prefetch_urls(config)
 
         style = cls(config)
 
@@ -84,7 +82,7 @@ class Style:
 
         return style
 
-    def _load_styles_from_config(self) -> StyleLoaderIterator:
+    def _load_styles_from_config(self) -> StyleLoaderIterator:  # noqa: PLR0912
         """Load styles yielding error messages if found.
 
         Error messages are of type string and style is of type dict.
@@ -209,7 +207,7 @@ class Style:
         style: StyleType,
         new_rules: list[Rule],
         new_plugins: list[str],
-        prepend: bool = False,
+        prepend: bool = False,  # noqa: FBT001, FBT002
     ) -> None:
         style["plugins"] = style.pop("plugins", [])
         style["rules"] = style.pop("rules", [])
@@ -220,12 +218,11 @@ class Style:
             style["rules"].extend(new_rules)
             style["plugins"] = list(set(style["plugins"] + new_plugins))
 
-    def _validate_style_preparing_new_plugins(
+    def _validate_style_preparing_new_plugins(  # noqa: PLR0912, PLR0915
         self,
         style_url: str,
         style: Any,
     ) -> Iterator[str]:
-
         # validate extends urls
         if "extends" in style:
             if not isinstance(style["extends"], list):
@@ -296,96 +293,89 @@ class Style:
                         f"{style_url}: .rules[{r}].files -> at least"
                         " one file is required"
                     )
-                else:
-                    if isinstance(rule["files"], dict):
-                        # requiring absence of files with
-                        # `files: {not: {<file>: reason}}`
-                        if (
-                            len(rule["files"]) != 1
-                            or "not" not in rule["files"].keys()
-                        ):
-                            yield (
-                                f"{style_url}: .rules[{r}].files"
-                                " -> when files is an object, must"
-                                " have one 'not' key"
-                            )
-                        elif not isinstance(
+                elif isinstance(rule["files"], dict):
+                    # requiring absence of files with
+                    # `files: {not: {<file>: reason}}`
+                    if len(rule["files"]) != 1 or "not" not in rule["files"]:
+                        yield (
+                            f"{style_url}: .rules[{r}].files"
+                            " -> when files is an object, must"
+                            " have one 'not' key"
+                        )
+                    elif not isinstance(
+                        rule["files"]["not"],
+                        (dict, list),
+                    ):
+                        yield (
+                            f"{style_url}: .rules[{r}].files.not"
+                            " -> must be of type array or object"
+                        )
+                    elif not rule["files"]["not"]:
+                        yield (
+                            f"{style_url}: .rules[{r}].files.not"
+                            " -> must not be empty"
+                        )
+                    elif isinstance(rule["files"]["not"], dict):
+                        # when 'not' is an object, is a mapping
+                        # from files to absence reasons
+                        for fpath, reason in rule["files"]["not"].items():
+                            if reason and not isinstance(reason, str):
+                                yield (
+                                    f"{style_url}: .rules[{r}].files"
+                                    f".not.{fpath} -> must be of type"
+                                    " string"
+                                )
+                            if not isinstance(fpath, str):
+                                yield (
+                                    f"{style_url}: .rules[{r}].files"
+                                    f".not[{fpath}] -> file path must"
+                                    " be of type string"
+                                )
+                            elif not fpath:
+                                yield (
+                                    f"{style_url}: .rules[{r}].files"
+                                    f".not[''] -> file path must"
+                                    " not be empty"
+                                )
+                    else:
+                        for f, fpath in enumerate(
                             rule["files"]["not"],
-                            (dict, list),
                         ):
+                            if not isinstance(fpath, str):
+                                yield (
+                                    f"{style_url}: .rules[{r}].files"
+                                    f".not[{f}] -> must be of type"
+                                    " string"
+                                )
+                            elif not fpath:
+                                yield (
+                                    f"{style_url}: .rules[{r}].files"
+                                    f".not[{f}] -> must not be empty"
+                                )
+
+                    # when requiring absence of files,
+                    # no other action can be used
+                    if len(rule) != 1 and not (
+                        len(rule) == 2 and "hint" in rule  # noqa: PLR2004
+                    ):
+                        yield (
+                            f"{style_url}: .rules[{r}] -> when"
+                            " requiring absence of files with"
+                            " '.files.not', no other actions can"
+                            " be used in the same rule"
+                        )
+                else:
+                    for f, file in enumerate(rule["files"]):
+                        if not isinstance(file, str):
                             yield (
-                                f"{style_url}: .rules[{r}].files.not"
-                                " -> must be of type array or object"
+                                f"{style_url}: .rules[{r}].files[{f}]"
+                                " -> must be of type string"
                             )
-                        elif not rule["files"]["not"]:
+                        elif not file:
                             yield (
-                                f"{style_url}: .rules[{r}].files.not"
+                                f"{style_url}: .rules[{r}].files[{f}]"
                                 " -> must not be empty"
                             )
-                        else:
-                            if isinstance(rule["files"]["not"], dict):
-                                # when 'not' is an object, is a mapping
-                                # from files to absence reasons
-                                for fpath, reason in rule["files"][
-                                    "not"
-                                ].items():
-                                    if reason and not isinstance(reason, str):
-                                        yield (
-                                            f"{style_url}: .rules[{r}].files"
-                                            f".not.{fpath} -> must be of type"
-                                            " string"
-                                        )
-                                    if not isinstance(fpath, str):
-                                        yield (
-                                            f"{style_url}: .rules[{r}].files"
-                                            f".not[{fpath}] -> file path must"
-                                            " be of type string"
-                                        )
-                                    elif not fpath:
-                                        yield (
-                                            f"{style_url}: .rules[{r}].files"
-                                            f".not[''] -> file path must"
-                                            " not be empty"
-                                        )
-                            else:
-                                for f, fpath in enumerate(
-                                    rule["files"]["not"],
-                                ):
-                                    if not isinstance(fpath, str):
-                                        yield (
-                                            f"{style_url}: .rules[{r}].files"
-                                            f".not[{f}] -> must be of type"
-                                            " string"
-                                        )
-                                    elif not fpath:
-                                        yield (
-                                            f"{style_url}: .rules[{r}].files"
-                                            f".not[{f}] -> must not be empty"
-                                        )
-
-                        # when requiring absence of files,
-                        # no other action can be used
-                        if len(rule) != 1 and not (
-                            len(rule) == 2 and "hint" in rule
-                        ):
-                            yield (
-                                f"{style_url}: .rules[{r}] -> when"
-                                " requiring absence of files with"
-                                " '.files.not', no other actions can"
-                                " be used in the same rule"
-                            )
-                    else:
-                        for f, file in enumerate(rule["files"]):
-                            if not isinstance(file, str):
-                                yield (
-                                    f"{style_url}: .rules[{r}].files[{f}]"
-                                    " -> must be of type string"
-                                )
-                            elif not file:
-                                yield (
-                                    f"{style_url}: .rules[{r}].files[{f}]"
-                                    " -> must not be empty"
-                                )
 
                 # Validate rules properties consistency against plugins
                 for action in rule:

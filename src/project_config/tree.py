@@ -62,11 +62,11 @@ def _split_fpath_parts(
     return (fname, preferred_serializer, uri_parts, scheme)
 
 
-def cache_file(
+def cache_file(  # noqa: PLR0912, PLR0915
     fpath: str,
     serializers: list[str] | None = None,
     forbid_serializers: Iterable[str] | None = None,
-    ignore_serialization_errors: bool = False,
+    ignore_serialization_errors: bool = False,  # noqa: FBT001, FBT002
 ) -> None:
     """Cache the file content and its serialized version.
 
@@ -212,6 +212,7 @@ def cached_local_file(
 
     Args:
         fpath (str): The file path.
+        serializer (str, optional): The serializer to use reading the file.
 
     Returns:
         str: The cached file content.

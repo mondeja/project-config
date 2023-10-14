@@ -40,7 +40,7 @@ class BaseDefaultReporter(BaseFormattedReporter):
                 report += "\n"
         return report.rstrip("\n")
 
-    def generate_data_report(
+    def generate_data_report(  # noqa: PLR0912
         self,
         data_key: str,
         data: dict[str, Any],

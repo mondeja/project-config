@@ -1,12 +1,11 @@
 import urllib.parse
 
 import pytest
-from testing_helpers import mark_end2end
-
 from project_config.fetchers.github import (
     _get_default_branch_from_repo_branches_html,
     fetch,
 )
+from testing_helpers import mark_end2end
 
 
 @mark_end2end

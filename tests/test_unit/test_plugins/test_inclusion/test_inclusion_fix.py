@@ -1,5 +1,4 @@
 import pytest
-
 from project_config import Error, InterruptingError
 from project_config.plugins.inclusion import InclusionPlugin
 
@@ -173,8 +172,8 @@ def test_includeLines_fix(
                         "fixable": True,
                         "fixed": True,
                         "message": (
-                            "Content 'foobarbaz' expected to be"
-                            " included not found"
+                            "Content 'foobarbaz' expected to"
+                            " be included not found"
                         ),
                     },
                 ),

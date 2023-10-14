@@ -1,8 +1,8 @@
 class InvalidBreakageTypeYielderPlugin:
     @staticmethod
-    def invalidFoo(*args, **kwargs):  # noqa: U100
+    def invalidFoo(*args, **kwargs):
         yield ("foo", {})
 
     @staticmethod
-    def ifInvalidFoo(*args, **kwargs):  # noqa: U100
+    def ifInvalidFoo(*args, **kwargs):
         yield ("foo", {})

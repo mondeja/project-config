@@ -20,7 +20,7 @@ class YamlReporter(BaseReporter):
 
     def generate_data_report(
         self,
-        data_key: str,  # noqa: U100
+        data_key: str,  # noqa: ARG002
         data: dict[str, Any],
     ) -> str:
         """Generate a data report in black/white JSON format."""
@@ -94,7 +94,6 @@ class YamlColorReporter(BaseColorReporter):
                     f" {self.format_config_value(line[4:].strip())}"
                 )
             else:
-                # key: value
                 key, value = line.split(":", maxsplit=1)
                 report += (
                     f"{self.format_config_key(key)}"
@@ -106,7 +105,7 @@ class YamlColorReporter(BaseColorReporter):
 
     _transform_plugins_data = _transform_config_data
 
-    def _transform_style_data(self, value: str) -> str:
+    def _transform_style_data(self, value: str) -> str:  # noqa: PLR0912
         report = ""
 
         section, subsection = None, None
@@ -121,9 +120,8 @@ class YamlColorReporter(BaseColorReporter):
             if line.startswith("plugins:"):
                 if line.endswith("[]"):
                     continue
-                else:
-                    report += format_section("plugins")
-                    section = "plugins"
+                report += format_section("plugins")
+                section = "plugins"
             elif line.startswith("rules:"):
                 report += format_section("rules")
                 section = "rules"
