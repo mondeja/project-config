@@ -1,4 +1,5 @@
 import os
+import sys
 
 import pytest
 from project_config.reporters.base import (
@@ -51,9 +52,16 @@ def test_BaseColorReporter_init_fails():
 
     with pytest.raises(TypeError) as exc:
         BaseColorReporter()
-    assert str(exc.value).startswith(
-        "Can't instantiate abstract class BaseColorReporter with abstract",
-    )
+
+    if sys.version_info > 3.11:
+        assert str(exc.value).startswith(
+            "Can't instantiate abstract class BaseColorReporter without"
+            " an implementation for abstract method 'generate_errors_report'",
+        )
+    else:
+        assert str(exc.value).startswith(
+            "Can't instantiate abstract class BaseColorReporter with abstract",
+        )
 
 
 def test_BaseColorReporter_init_ok(tmp_path):
