@@ -59,9 +59,9 @@ def test_BaseColorReporter_init_fails():
             " an implementation for abstract method 'generate_errors_report'"
         ) in str(exc.value)
     else:
-        assert str(exc.value).startswith(
-            "Can't instantiate abstract class BaseColorReporter with abstract",
-        )
+        assert (
+            "Can't instantiate abstract class BaseColorReporter with abstract"
+        ) in str(exc.value)
 
 
 def test_BaseColorReporter_init_ok(tmp_path):
