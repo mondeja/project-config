@@ -3,15 +3,9 @@
 from __future__ import annotations
 
 import functools
-import pickle
-import shlex
 import sys
 from typing import TYPE_CHECKING, Literal, Protocol, TypedDict
 
-
-shlex_join = shlex.join
-
-pickle_HIGHEST_PROTOCOL = pickle.HIGHEST_PROTOCOL
 
 if sys.version_info < (3, 9):
     cached_function = functools.lru_cache(maxsize=None)
@@ -60,8 +54,6 @@ __all__ = (
     "cached_function",
     "tomllib_package_name",
     "importlib_metadata",
-    "shlex_join",
     "removeprefix",
     "removesuffix",
-    "pickle_HIGHEST_PROTOCOL",
 )

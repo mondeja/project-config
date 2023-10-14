@@ -37,7 +37,7 @@ from jmespath.parser import (
 
 from project_config import tree
 from project_config.cache import Cache
-from project_config.compat import removeprefix, removesuffix, shlex_join
+from project_config.compat import removeprefix, removesuffix
 from project_config.exceptions import ProjectConfigException
 
 
@@ -361,7 +361,7 @@ class JMESPathProjectConfigFunctions(JMESPathFunctions):
 
     @jmespath_func_signature({"types": ["array-string"]})
     def _func_shlex_join(self, cmd_list: list[str]) -> str:
-        return shlex_join(cmd_list)
+        return shlex.join(cmd_list)
 
     @jmespath_func_signature({"types": ["string"]})
     def _func_shlex_split(self, cmd_str: str) -> list[str]:
