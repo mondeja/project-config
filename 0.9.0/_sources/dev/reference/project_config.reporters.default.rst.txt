@@ -1,0 +1,8 @@
+project\_config.reporters.default module
+========================================
+
+.. automodule:: project_config.reporters.default
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:

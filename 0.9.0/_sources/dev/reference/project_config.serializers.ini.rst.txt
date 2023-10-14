@@ -1,0 +1,8 @@
+project\_config.serializers.ini module
+======================================
+
+.. automodule:: project_config.serializers.ini
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
