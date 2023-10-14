@@ -24,7 +24,8 @@ def test_ci_reference_github_actions_python_version():
 
     with open(CI_REFERENCE_FILEPATH, encoding="utf-8") as f:
         assert f'python-version: "{expected_python_version}"' in f.read(), (
-            "The python version in the CI reference file does not"
+            "The python version in the CI reference file"
+            f" ({os.path.relpath(CI_REFERENCE_FILEPATH, rootdir)}) does not"
             " match the python version in pyproject.toml"
             f" ({expected_python_version})."
             " Please update the CI reference file."
