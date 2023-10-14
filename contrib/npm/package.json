@@ -1,6 +1,6 @@
 {
   "name": "python-project-config",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "description": "Reproducible configuration across projects.",
   "author": {
     "name": "Álvaro Mondéjar Rubio",
