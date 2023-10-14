@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Styling &mdash; project-config 0.8.0 documentation</title>
+  <title>Styling &mdash; project-config 0.9.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -32,14 +32,18 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> project-config
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            project-config
           </a>
               <div class="version">
-                0.8
+                0.9
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -71,6 +75,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="plugins.html">Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ci.html">Using on CI</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">In depth</span></p>
 <ul>
@@ -99,7 +104,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a></li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
       <li class="breadcrumb-item active">Styling</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/reference/styling.rst.txt" rel="nofollow"> View page source</a>
@@ -139,27 +144,27 @@ The existence of these files and directories is mandatory for execute the rest
 of actions of the rule.</p>
 <p class="rubric">Examples</p>
 <div class="sphinx-tabs docutils container">
-<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">Existence of files</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">Absence of files</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
-<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w">    </span><span class="c1">// Files and directories are created in `fix` mode</span><span class="w"></span>
-<span class="w">    </span><span class="p">{</span><span class="w"></span>
-<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
-<span class="w">        </span><span class="s2">&quot;src/&quot;</span><span class="p">,</span><span class="w">             </span><span class="c1">// Enforce existence of directory</span><span class="w"></span>
-<span class="w">        </span><span class="s2">&quot;pyproject.toml&quot;</span><span class="p">,</span><span class="w">   </span><span class="c1">// Enforce existence of file</span><span class="w"></span>
-<span class="w">      </span><span class="p">]</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="w">  </span><span class="p">]</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">Existence of files</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">Absence of files</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w">    </span><span class="c1">// Files and directories are created in `fix` mode</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;src/&quot;</span><span class="p">,</span><span class="w">             </span><span class="c1">// Enforce existence of directory</span>
+<span class="w">        </span><span class="s2">&quot;pyproject.toml&quot;</span><span class="p">,</span><span class="w">   </span><span class="c1">// Enforce existence of file</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
 </pre></div>
 </div>
-</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
-<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
-<span class="w">    </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">      </span><span class="nx">not</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="s2">&quot;setup.cfg&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Migrate the configuration to pyproject.toml&quot;</span><span class="w"></span>
-<span class="w">      </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="w">  </span><span class="p">],</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">not</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="s2">&quot;setup.cfg&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Migrate the configuration to pyproject.toml&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 </div></div>
@@ -192,15 +197,15 @@ so you must always use <code class="docutils literal notranslate"><span class="p
 the error message when a checking error occurred using the <code class="docutils literal notranslate"><span class="pre">check</span></code> command.
 It is specially useful for complex rules which show abstract error messages.</p>
 <p class="rubric">Example</p>
-<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
-<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
-<span class="w">    </span><span class="p">{</span><span class="w"></span>
-<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.project-config.toml&quot;</span><span class="p">],</span><span class="w"></span>
-<span class="w">      </span><span class="nx">hint</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;The name of the root directory must match the regex &#39;[a-z0-9-]+$&#39;&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">      </span><span class="nx">JMESPathsMatch</span><span class="o">:</span><span class="w"> </span><span class="p">[[</span><span class="s2">&quot;regex_match(&#39;[a-z0-9-]+$&#39;, rootdir_name())&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">]]</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="w">  </span><span class="p">]</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.project-config.toml&quot;</span><span class="p">],</span>
+<span class="w">      </span><span class="nx">hint</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;The name of the root directory must match the regex &#39;[a-z0-9-]+$&#39;&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">JMESPathsMatch</span><span class="o">:</span><span class="w"> </span><span class="p">[[</span><span class="s2">&quot;regex_match(&#39;[a-z0-9-]+$&#39;, rootdir_name())&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">]]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 </section>
@@ -217,10 +222,10 @@ to their fetchers locations. So giving a style located at
 using <code class="docutils literal notranslate"><span class="pre">extends:</span> <span class="pre">[&quot;../other/file.json5&quot;]</span></code> inside the style
 <code class="docutils literal notranslate"><span class="pre">gh://author/project/path/to/file.json5</span></code>.</p>
 <p class="rubric">Example</p>
-<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
-<span class="w">  </span><span class="k">extends</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;../../base/style.json5&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;gh://author/project/path/to/style.json5&quot;</span><span class="p">],</span><span class="w"></span>
-<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[{</span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.project-config.toml&quot;</span><span class="p">]}]</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="k">extends</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;../../base/style.json5&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;gh://author/project/path/to/style.json5&quot;</span><span class="p">],</span>
+<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[{</span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.project-config.toml&quot;</span><span class="p">]}]</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 </section>
@@ -229,15 +234,15 @@ using <code class="docutils literal notranslate"><span class="pre">extends:</spa
 <p>Additional third party plugin names on which the rules of the style depend.
 Built-in plugins don’t need to be defined here, as are loaded by default.</p>
 <p class="rubric">Example</p>
-<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
-<span class="w">  </span><span class="nx">plugins</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;foobar&quot;</span><span class="p">],</span><span class="w"></span>
-<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
-<span class="w">    </span><span class="p">{</span><span class="w"></span>
-<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.project-config.toml&quot;</span><span class="p">],</span><span class="w"></span>
-<span class="w">      </span><span class="nx">verbFromFooBarPlugin</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;foo&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;bar&quot;</span><span class="p">],</span><span class="w"></span>
-<span class="w">    </span><span class="p">},</span><span class="w"></span>
-<span class="w">  </span><span class="p">],</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nx">plugins</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;foobar&quot;</span><span class="p">],</span>
+<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.project-config.toml&quot;</span><span class="p">],</span>
+<span class="w">      </span><span class="nx">verbFromFooBarPlugin</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;foo&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;bar&quot;</span><span class="p">],</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <div class="admonition seealso">

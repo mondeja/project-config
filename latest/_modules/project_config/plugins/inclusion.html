@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.plugins.inclusion &mdash; project-config 0.8.0 documentation</title>
+  <title>project_config.plugins.inclusion &mdash; project-config 0.9.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
@@ -29,14 +29,18 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> project-config
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            project-config
           </a>
               <div class="version">
-                0.8
+                0.9
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -55,6 +59,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../reference/config.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../reference/styling.html">Styling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../reference/plugins.html">Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference/ci.html">Using on CI</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">In depth</span></p>
 <ul>
@@ -83,7 +88,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
           <li class="breadcrumb-item"><a href="../plugins.html">project_config.plugins</a></li>
       <li class="breadcrumb-item active">project_config.plugins.inclusion</li>
@@ -144,7 +149,7 @@
 <div class="viewcode-block" id="InclusionPlugin.includeLines"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.inclusion.html#project_config.plugins.inclusion.InclusionPlugin.includeLines">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">includeLines</span><span class="p">(</span>
         <span class="n">value</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
-        <span class="n">rule</span><span class="p">:</span> <span class="n">Rule</span><span class="p">,</span>  <span class="c1"># noqa: U100</span>
+        <span class="n">_rule</span><span class="p">:</span> <span class="n">Rule</span><span class="p">,</span>
         <span class="n">context</span><span class="p">:</span> <span class="n">ActionsContext</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Results</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
@@ -164,7 +169,7 @@
 
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
                 <span class="c1"># Fixer query expression</span>
-                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>  <span class="c1"># noqa: PLR2004</span>
                     <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
                         <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="p">(</span>
                             <span class="s2">&quot;The &#39;[expected-line, fixer_query]&#39; array&quot;</span>
@@ -174,7 +179,7 @@
                         <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.includeLines[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
                     <span class="p">}</span>
 
-                <span class="n">line</span><span class="p">,</span> <span class="n">fixer_query</span> <span class="o">=</span> <span class="n">line</span>
+                <span class="n">line</span><span class="p">,</span> <span class="n">fixer_query</span> <span class="o">=</span> <span class="n">line</span>  <span class="c1"># noqa: PLW2901</span>
 
                 <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span>
                     <span class="n">fixer_query</span><span class="p">,</span>
@@ -183,7 +188,7 @@
                     <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
                         <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="p">(</span>
                             <span class="s2">&quot;The &#39;[expected-line, fixer_query]&#39; array items&quot;</span>
-                            <span class="sa">f</span><span class="s2">&quot; &#39;</span><span class="si">{</span><span class="n">pprint</span><span class="o">.</span><span class="n">pformat</span><span class="p">([</span><span class="n">line</span><span class="p">,</span> <span class="n">fixer_query</span><span class="p">])</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+                            <span class="sa">f</span><span class="s2">&quot; &#39;</span><span class="si">{</span><span class="n">pprint</span><span class="o">.</span><span class="n">pformat</span><span class="p">([</span><span class="n">line</span><span class="p">,</span><span class="w"> </span><span class="n">fixer_query</span><span class="p">])</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
                             <span class="s2">&quot; must be of type string&quot;</span>
                         <span class="p">),</span>
                         <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.includeLines[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
@@ -285,8 +290,8 @@
 <div class="viewcode-block" id="InclusionPlugin.ifIncludeLines"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.inclusion.html#project_config.plugins.inclusion.InclusionPlugin.ifIncludeLines">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">ifIncludeLines</span><span class="p">(</span>
         <span class="n">value</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-        <span class="n">rule</span><span class="p">:</span> <span class="n">Rule</span><span class="p">,</span>  <span class="c1"># noqa: U100</span>
-        <span class="n">context</span><span class="p">:</span> <span class="n">ActionsContext</span><span class="p">,</span>  <span class="c1"># noqa: U100</span>
+        <span class="n">_rule</span><span class="p">:</span> <span class="n">Rule</span><span class="p">,</span>
+        <span class="n">_context</span><span class="p">:</span> <span class="n">ActionsContext</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Results</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
             <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
@@ -325,8 +330,8 @@
             <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
                 <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
                     <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="p">(</span>
-                        <span class="s2">&quot;File specified in conditional &#39;ifIncludeLines&#39;&quot;</span>
-                        <span class="s2">&quot; not found&quot;</span>
+                        <span class="s2">&quot;File specified in conditional&quot;</span>
+                        <span class="s2">&quot; &#39;ifIncludeLines&#39; not found&quot;</span>
                     <span class="p">),</span>
                     <span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="n">fpath</span><span class="p">,</span>
                     <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.ifIncludeLines[</span><span class="si">{</span><span class="n">fpath</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
@@ -379,7 +384,7 @@
 <div class="viewcode-block" id="InclusionPlugin.excludeLines"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.inclusion.html#project_config.plugins.inclusion.InclusionPlugin.excludeLines">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">excludeLines</span><span class="p">(</span>
         <span class="n">value</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
-        <span class="n">rule</span><span class="p">:</span> <span class="n">Rule</span><span class="p">,</span>  <span class="c1"># noqa: U100</span>
+        <span class="n">_rule</span><span class="p">:</span> <span class="n">Rule</span><span class="p">,</span>
         <span class="n">context</span><span class="p">:</span> <span class="n">ActionsContext</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Results</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
@@ -399,7 +404,7 @@
 
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
                 <span class="c1"># Fixer query expression</span>
-                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>  <span class="c1"># noqa: PLR2004</span>
                     <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
                         <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="p">(</span>
                             <span class="s2">&quot;The &#39;[expected-line, fixer_query]&#39; array&quot;</span>
@@ -409,7 +414,7 @@
                         <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.excludeLines[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
                     <span class="p">}</span>
 
-                <span class="n">line</span><span class="p">,</span> <span class="n">fixer_query</span> <span class="o">=</span> <span class="n">line</span>
+                <span class="n">line</span><span class="p">,</span> <span class="n">fixer_query</span> <span class="o">=</span> <span class="n">line</span>  <span class="c1"># noqa: PLW2901</span>
 
                 <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span>
                     <span class="n">fixer_query</span><span class="p">,</span>
@@ -418,7 +423,7 @@
                     <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
                         <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="p">(</span>
                             <span class="s2">&quot;The &#39;[expected-line, fixer_query]&#39; array items&quot;</span>
-                            <span class="sa">f</span><span class="s2">&quot; &#39;</span><span class="si">{</span><span class="n">pprint</span><span class="o">.</span><span class="n">pformat</span><span class="p">([</span><span class="n">line</span><span class="p">,</span> <span class="n">fixer_query</span><span class="p">])</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+                            <span class="sa">f</span><span class="s2">&quot; &#39;</span><span class="si">{</span><span class="n">pprint</span><span class="o">.</span><span class="n">pformat</span><span class="p">([</span><span class="n">line</span><span class="p">,</span><span class="w"> </span><span class="n">fixer_query</span><span class="p">])</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
                             <span class="s2">&quot; must be of type string&quot;</span>
                         <span class="p">),</span>
                         <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.excludeLines[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
@@ -522,7 +527,7 @@
 <div class="viewcode-block" id="InclusionPlugin.includeContent"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.inclusion.html#project_config.plugins.inclusion.InclusionPlugin.includeContent">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">includeContent</span><span class="p">(</span>
         <span class="n">value</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
-        <span class="n">rule</span><span class="p">:</span> <span class="n">Rule</span><span class="p">,</span>  <span class="c1"># noqa: U100</span>
+        <span class="n">_rule</span><span class="p">:</span> <span class="n">Rule</span><span class="p">,</span>
         <span class="n">context</span><span class="p">:</span> <span class="n">ActionsContext</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Results</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
@@ -557,9 +562,9 @@
             <span class="n">checked_content</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">content</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
                 <span class="n">fixer_query</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">str</span><span class="p">)):</span>
                     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-                        <span class="n">content</span><span class="p">,</span> <span class="n">fixer_query</span> <span class="o">=</span> <span class="n">content</span>
+                        <span class="n">content</span><span class="p">,</span> <span class="n">fixer_query</span> <span class="o">=</span> <span class="n">content</span>  <span class="c1"># noqa: PLW2901</span>
 
                         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span>
                             <span class="n">fixer_query</span><span class="p">,</span>
@@ -657,7 +662,7 @@
 <div class="viewcode-block" id="InclusionPlugin.excludeContent"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.inclusion.html#project_config.plugins.inclusion.InclusionPlugin.excludeContent">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">excludeContent</span><span class="p">(</span>
         <span class="n">value</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
-        <span class="n">rule</span><span class="p">:</span> <span class="n">Rule</span><span class="p">,</span>  <span class="c1"># noqa: U100</span>
+        <span class="n">_rule</span><span class="p">:</span> <span class="n">Rule</span><span class="p">,</span>
         <span class="n">context</span><span class="p">:</span> <span class="n">ActionsContext</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Results</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
@@ -692,9 +697,9 @@
             <span class="n">checked_content</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">content</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
                 <span class="n">fixer_query</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">str</span><span class="p">)):</span>
                     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-                        <span class="n">content</span><span class="p">,</span> <span class="n">fixer_query</span> <span class="o">=</span> <span class="n">content</span>
+                        <span class="n">content</span><span class="p">,</span> <span class="n">fixer_query</span> <span class="o">=</span> <span class="n">content</span>  <span class="c1"># noqa: PLW2901</span>
 
                         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span>
                             <span class="n">fixer_query</span><span class="p">,</span>

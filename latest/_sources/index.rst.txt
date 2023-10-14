@@ -22,6 +22,7 @@ multiple projects.
    reference/config
    reference/styling
    reference/plugins
+   reference/ci
 
 .. toctree::
    :maxdepth: 3

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.serializers.json_ &mdash; project-config 0.8.0 documentation</title>
+  <title>project_config.serializers.json_ &mdash; project-config 0.9.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
@@ -29,14 +29,18 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> project-config
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            project-config
           </a>
               <div class="version">
-                0.8
+                0.9
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -55,6 +59,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../reference/config.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../reference/styling.html">Styling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../reference/plugins.html">Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference/ci.html">Using on CI</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">In depth</span></p>
 <ul>
@@ -83,7 +88,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
           <li class="breadcrumb-item"><a href="../serializers.html">project_config.serializers</a></li>
       <li class="breadcrumb-item active">project_config.serializers.json_</li>
@@ -105,7 +110,7 @@
 
 
 <div class="viewcode-block" id="dumps"><a class="viewcode-back" href="../../../dev/reference/project_config.serializers.json_.html#project_config.serializers.json_.dumps">[docs]</a><span class="k">def</span> <span class="nf">dumps</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>  <span class="c1"># noqa: D103</span>
-    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span></div>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span><span class="w"> </span><span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span></div>
 
 
 <span class="n">loads</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span>

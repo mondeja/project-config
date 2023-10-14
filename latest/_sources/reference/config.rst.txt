@@ -94,6 +94,13 @@ Also accept the next string to not use the cache at all.
    ``--nocache`` or setting the ``PROJECT_CONFIG_USE_CACHE`` environment
    variable to ``"false"``.
 
+.. seealso::
+
+   You can use the command ``project-config show cache`` to output
+   the location of project-config's cache directory.
+
+   :doc:`./cli`
+
 ``cli`` (`object`)
 ==================
 

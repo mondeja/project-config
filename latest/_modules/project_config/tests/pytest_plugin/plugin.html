@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.tests.pytest_plugin.plugin &mdash; project-config 0.8.0 documentation</title>
+  <title>project_config.tests.pytest_plugin.plugin &mdash; project-config 0.9.0 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
@@ -29,14 +29,18 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../../index.html" class="icon icon-home"> project-config
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            project-config
           </a>
               <div class="version">
-                0.8
+                0.9
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -55,6 +59,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../reference/config.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../reference/styling.html">Styling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../reference/plugins.html">Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../reference/ci.html">Using on CI</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">In depth</span></p>
 <ul>
@@ -83,7 +88,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
       <li class="breadcrumb-item active">project_config.tests.pytest_plugin.plugin</li>
       <li class="wy-breadcrumbs-aside">
@@ -128,7 +133,7 @@
     <span class="kn">from</span> <span class="nn">project_config.types</span> <span class="kn">import</span> <span class="n">ErrorDict</span><span class="p">,</span> <span class="n">Rule</span><span class="p">,</span> <span class="n">StrictResultType</span>
 
 
-<div class="viewcode-block" id="project_config_plugin_action_asserter"><a class="viewcode-back" href="../../../../dev/reference/project_config.tests.pytest_plugin.plugin.html#project_config.tests.pytest_plugin.project_config_plugin_action_asserter">[docs]</a><span class="k">def</span> <span class="nf">project_config_plugin_action_asserter</span><span class="p">(</span>
+<div class="viewcode-block" id="project_config_plugin_action_asserter"><a class="viewcode-back" href="../../../../dev/reference/project_config.tests.pytest_plugin.plugin.html#project_config.tests.pytest_plugin.project_config_plugin_action_asserter">[docs]</a><span class="k">def</span> <span class="nf">project_config_plugin_action_asserter</span><span class="p">(</span>  <span class="c1"># noqa: PLR0913</span>
     <span class="n">rootdir</span><span class="p">:</span> <span class="n">RootdirType</span><span class="p">,</span>
     <span class="n">plugin_class</span><span class="p">:</span> <span class="nb">type</span><span class="p">,</span>
     <span class="n">plugin_method_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -137,12 +142,12 @@
     <span class="n">rule</span><span class="p">:</span> <span class="n">Rule</span><span class="p">,</span>
     <span class="n">expected_results</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">StrictResultType</span><span class="p">],</span>
     <span class="n">additional_files</span><span class="p">:</span> <span class="n">FilesType</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">assert_case_method_name</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="n">deprecated</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="n">fix</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">assert_case_method_name</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>  <span class="c1"># noqa: FBT001, FBT002</span>
+    <span class="n">deprecated</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>  <span class="c1"># noqa: FBT001, FBT002</span>
+    <span class="n">fix</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>  <span class="c1"># noqa: FBT001, FBT002</span>
     <span class="n">expected_files</span><span class="p">:</span> <span class="n">FilesType</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Convenient function to test a plugin action.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convenient function to test a plugin action.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        rootdir (Path): Path to root directory. This is not needed to define</span>
@@ -155,6 +160,7 @@
 <span class="sd">            If the value is ``False``, the file will not be created.</span>
 <span class="sd">            If the value is ``None``, the file will be created as a directory.</span>
 <span class="sd">        value (typing.Any): Value passed to the action.</span>
+<span class="sd">        rule (dict): Rule definition.</span>
 <span class="sd">        expected_results (list): Expected results.</span>
 <span class="sd">        additional_files (dict, optional): Dictionary of additional files to</span>
 <span class="sd">            create. These will not be defined inside the ``files`` property of</span>
@@ -293,7 +299,7 @@
 <span class="k">def</span> <span class="nf">assert_project_config_plugin_action</span><span class="p">(</span>
     <span class="n">tmp_path</span><span class="p">:</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Pytest fixture to assert a plugin action.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Pytest fixture to assert a plugin action.</span>
 
 <span class="sd">    Returns a function that can be used to assert a plugin action.</span>
 <span class="sd">    See :py:func:`project_config.tests.pytest_plugin.plugin.project_config_plugin_action_asserter`.</span>
@@ -301,7 +307,7 @@
     <span class="k">return</span> <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">project_config_plugin_action_asserter</span><span class="p">,</span> <span class="n">tmp_path</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="project_config_errors_report_asserter"><a class="viewcode-back" href="../../../../dev/reference/project_config.tests.pytest_plugin.plugin.html#project_config.tests.pytest_plugin.project_config_errors_report_asserter">[docs]</a><span class="k">def</span> <span class="nf">project_config_errors_report_asserter</span><span class="p">(</span>
+<div class="viewcode-block" id="project_config_errors_report_asserter"><a class="viewcode-back" href="../../../../dev/reference/project_config.tests.pytest_plugin.plugin.html#project_config.tests.pytest_plugin.project_config_errors_report_asserter">[docs]</a><span class="k">def</span> <span class="nf">project_config_errors_report_asserter</span><span class="p">(</span>  <span class="c1"># noqa: PLR0913</span>
     <span class="n">monkeypatch</span><span class="p">:</span> <span class="n">pytest</span><span class="o">.</span><span class="n">MonkeyPatch</span><span class="p">,</span>
     <span class="n">rootdir</span><span class="p">:</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">,</span>
     <span class="n">reporter_module</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">ModuleType</span><span class="p">,</span>
@@ -309,16 +315,17 @@
     <span class="n">expected_result</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">fmt</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Asserts an error report from a reporter module.</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Asserts an error report from a reporter module.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        monkeypatch (pytest.MonkeyPatch): Monkeypatch fixture. This is not</span>
 <span class="sd">            needed to define in the fixture as is inserted before the execution.</span>
 <span class="sd">        rootdir (Path): Path to root directory. This is not needed to define</span>
 <span class="sd">            in the fixture as is inserted before the execution.</span>
-<span class="sd">        reporters_module (types.ModuleType): Module containing the reporters.</span>
+<span class="sd">        reporter_module (types.ModuleType): Module containing the reporters.</span>
 <span class="sd">        errors (list): Errors.</span>
 <span class="sd">        expected_result (str): Expected reported result.</span>
+<span class="sd">        fmt (str, optional): Format to use. Default value is ``None``.</span>
 
 <span class="sd">    .. rubric:: Example</span>
 
@@ -404,7 +411,7 @@
     <span class="n">monkeypatch</span><span class="p">:</span> <span class="n">pytest</span><span class="o">.</span><span class="n">MonkeyPatch</span><span class="p">,</span>
     <span class="n">tmp_path</span><span class="p">:</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Pytest fixture to assert errors reports.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Pytest fixture to assert errors reports.</span>
 
 <span class="sd">    Returns a function that can be used to assert an errors report</span>
 <span class="sd">    from a reporters module.</span>
@@ -417,7 +424,7 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="project_config_data_report_asserter"><a class="viewcode-back" href="../../../../dev/reference/project_config.tests.pytest_plugin.plugin.html#project_config.tests.pytest_plugin.project_config_data_report_asserter">[docs]</a><span class="k">def</span> <span class="nf">project_config_data_report_asserter</span><span class="p">(</span>
+<div class="viewcode-block" id="project_config_data_report_asserter"><a class="viewcode-back" href="../../../../dev/reference/project_config.tests.pytest_plugin.plugin.html#project_config.tests.pytest_plugin.project_config_data_report_asserter">[docs]</a><span class="k">def</span> <span class="nf">project_config_data_report_asserter</span><span class="p">(</span>  <span class="c1"># noqa: PLR0913</span>
     <span class="n">monkeypatch</span><span class="p">:</span> <span class="n">pytest</span><span class="o">.</span><span class="n">MonkeyPatch</span><span class="p">,</span>
     <span class="n">rootdir</span><span class="p">:</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">,</span>
     <span class="n">reporter_module</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">ModuleType</span><span class="p">,</span>
@@ -426,7 +433,7 @@
     <span class="n">expected_result</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">fmt</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Asserts a data report from a reporter module.</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Asserts a data report from a reporter module.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        monkeypatch (pytest.MonkeyPatch): Monkeypatch fixture. This is not</span>
@@ -434,10 +441,11 @@
 <span class="sd">            execution.</span>
 <span class="sd">        rootdir (Path): Path to root directory. This is not needed to define</span>
 <span class="sd">            in the fixture as is inserted before the execution.</span>
-<span class="sd">        reporters_module (types.ModuleType): Module containing the reporters.</span>
+<span class="sd">        reporter_module (types.ModuleType): Module containing the reporters.</span>
 <span class="sd">        data_key (str): Data key.</span>
 <span class="sd">        data (any): Data content to report.</span>
 <span class="sd">        expected_result (str): Expected reported result.</span>
+<span class="sd">        fmt (str, optional): Format to use. Default value is ``None``.</span>
 
 <span class="sd">    .. rubric:: Example</span>
 
@@ -519,7 +527,7 @@
     <span class="n">monkeypatch</span><span class="p">:</span> <span class="n">pytest</span><span class="o">.</span><span class="n">MonkeyPatch</span><span class="p">,</span>
     <span class="n">tmp_path</span><span class="p">:</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Pytest fixture to assert data reports.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Pytest fixture to assert data reports.</span>
 
 <span class="sd">    Returns a function that can be used to assert a data report</span>
 <span class="sd">    from a reporters module.</span>

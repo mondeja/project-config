@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.utils.jmespath &mdash; project-config 0.8.0 documentation</title>
+  <title>project_config.utils.jmespath &mdash; project-config 0.9.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
@@ -29,14 +29,18 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> project-config
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            project-config
           </a>
               <div class="version">
-                0.8
+                0.9
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -55,6 +59,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../reference/config.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../reference/styling.html">Styling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../reference/plugins.html">Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference/ci.html">Using on CI</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">In depth</span></p>
 <ul>
@@ -83,7 +88,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
       <li class="breadcrumb-item active">project_config.utils.jmespath</li>
       <li class="wy-breadcrumbs-aside">
@@ -115,7 +120,10 @@
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Any</span>
 
 <span class="kn">import</span> <span class="nn">deepmerge</span>
-<span class="kn">from</span> <span class="nn">jmespath</span> <span class="kn">import</span> <span class="n">Options</span> <span class="k">as</span> <span class="n">JMESPathOptions</span><span class="p">,</span> <span class="nb">compile</span> <span class="k">as</span> <span class="n">jmespath_compile</span>
+<span class="kn">from</span> <span class="nn">jmespath</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Options</span> <span class="k">as</span> <span class="n">JMESPathOptions</span><span class="p">,</span>
+    <span class="nb">compile</span> <span class="k">as</span> <span class="n">jmespath_compile</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">jmespath.exceptions</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">JMESPathError</span> <span class="k">as</span> <span class="n">OriginalJMESPathError</span><span class="p">,</span>
     <span class="n">ParseError</span> <span class="k">as</span> <span class="n">JMESPathParserError</span><span class="p">,</span>
@@ -124,20 +132,23 @@
     <span class="n">Functions</span> <span class="k">as</span> <span class="n">JMESPathFunctions</span><span class="p">,</span>
     <span class="n">signature</span> <span class="k">as</span> <span class="n">jmespath_func_signature</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">jmespath.parser</span> <span class="kn">import</span> <span class="n">ParsedResult</span> <span class="k">as</span> <span class="n">JMESPathParsedResult</span><span class="p">,</span> <span class="n">Parser</span>
+<span class="kn">from</span> <span class="nn">jmespath.parser</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ParsedResult</span> <span class="k">as</span> <span class="n">JMESPathParsedResult</span><span class="p">,</span>
+    <span class="n">Parser</span><span class="p">,</span>
+<span class="p">)</span>
 
 <span class="kn">from</span> <span class="nn">project_config</span> <span class="kn">import</span> <span class="n">tree</span>
 <span class="kn">from</span> <span class="nn">project_config.cache</span> <span class="kn">import</span> <span class="n">Cache</span>
-<span class="kn">from</span> <span class="nn">project_config.compat</span> <span class="kn">import</span> <span class="n">removeprefix</span><span class="p">,</span> <span class="n">removesuffix</span><span class="p">,</span> <span class="n">shlex_join</span>
+<span class="kn">from</span> <span class="nn">project_config.compat</span> <span class="kn">import</span> <span class="n">removeprefix</span><span class="p">,</span> <span class="n">removesuffix</span>
 <span class="kn">from</span> <span class="nn">project_config.exceptions</span> <span class="kn">import</span> <span class="n">ProjectConfigException</span>
 
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">project_config.compat</span> <span class="kn">import</span> <span class="n">Literal</span>
+    <span class="k">pass</span>
 
 
 <div class="viewcode-block" id="JMESPathError"><a class="viewcode-back" href="../../../dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathError">[docs]</a><span class="k">class</span> <span class="nc">JMESPathError</span><span class="p">(</span><span class="n">ProjectConfigException</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Class to wrap all JMESPath errors of the plugin.&quot;&quot;&quot;</span></div>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class to wrap all JMESPath errors of the plugin.&quot;&quot;&quot;</span></div>
 
 
 <span class="n">BUILTIN_TYPES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;str&quot;</span><span class="p">,</span> <span class="s2">&quot;bool&quot;</span><span class="p">,</span> <span class="s2">&quot;int&quot;</span><span class="p">,</span> <span class="s2">&quot;float&quot;</span><span class="p">,</span> <span class="s2">&quot;list&quot;</span><span class="p">,</span> <span class="s2">&quot;dict&quot;</span><span class="p">,</span> <span class="s2">&quot;set&quot;</span><span class="p">]</span>
@@ -230,7 +241,7 @@
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">type</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">]:</span>
     <span class="n">func</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">func_name</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">jmespath_func_signature</span><span class="p">({</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">]})(</span>
-        <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">func</span><span class="p">(</span><span class="n">value</span><span class="p">),</span>
+        <span class="k">lambda</span> <span class="n">_self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">func</span><span class="p">(</span><span class="n">value</span><span class="p">),</span>
     <span class="p">)</span></div>
 
 
@@ -239,7 +250,7 @@
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">type</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]:</span>
     <span class="n">func</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;is</span><span class="si">{</span><span class="n">func_suffix</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">jmespath_func_signature</span><span class="p">({</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">]})(</span>
-        <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">func</span><span class="p">(</span><span class="n">value</span><span class="p">),</span>
+        <span class="k">lambda</span> <span class="n">_self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">func</span><span class="p">(</span><span class="n">value</span><span class="p">),</span>
     <span class="p">)</span></div>
 
 
@@ -249,7 +260,10 @@
     <span class="nb">getattr</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">func_prefix</span><span class="si">}</span><span class="s2">find&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_wrapper</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="nb">type</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span> <span class="n">sub</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span>
+        <span class="n">_self</span><span class="p">:</span> <span class="nb">type</span><span class="p">,</span>
+        <span class="n">value</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">sub</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
             <span class="k">try</span><span class="p">:</span>
@@ -270,7 +284,7 @@
     <span class="k">return</span> <span class="n">jmespath_func_signature</span><span class="p">(</span>
         <span class="p">{</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">]},</span>
         <span class="p">{</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;number&quot;</span><span class="p">],</span> <span class="s2">&quot;variadic&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
-    <span class="p">)(</span><span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">func</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">))</span></div>
+    <span class="p">)(</span><span class="k">lambda</span> <span class="n">_self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">func</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="_create_partition_function_for_string"><a class="viewcode-back" href="../../../dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath._create_partition_function_for_string">[docs]</a><span class="k">def</span> <span class="nf">_create_partition_function_for_string</span><span class="p">(</span>
@@ -280,7 +294,7 @@
     <span class="k">return</span> <span class="n">jmespath_func_signature</span><span class="p">(</span>
         <span class="p">{</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">]},</span>
         <span class="p">{</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">]},</span>
-    <span class="p">)(</span><span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">sep</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">func</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">sep</span><span class="p">)))</span></div>
+    <span class="p">)(</span><span class="k">lambda</span> <span class="n">_self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">sep</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">func</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">sep</span><span class="p">)))</span></div>
 
 
 <div class="viewcode-block" id="_create_split_function_for_string"><a class="viewcode-back" href="../../../dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath._create_split_function_for_string">[docs]</a><span class="k">def</span> <span class="nf">_create_split_function_for_string</span><span class="p">(</span>
@@ -289,7 +303,7 @@
     <span class="n">func</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">func_prefix</span><span class="si">}</span><span class="s2">split&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">jmespath_func_signature</span><span class="p">(</span>
         <span class="p">{</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">],</span> <span class="s2">&quot;variadic&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
-    <span class="p">)(</span><span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">func</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">))</span></div>
+    <span class="p">)(</span><span class="k">lambda</span> <span class="n">_self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">func</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="_create_strip_function_for_string"><a class="viewcode-back" href="../../../dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath._create_strip_function_for_string">[docs]</a><span class="k">def</span> <span class="nf">_create_strip_function_for_string</span><span class="p">(</span>
@@ -298,7 +312,7 @@
     <span class="n">func</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">func_prefix</span><span class="si">}</span><span class="s2">strip&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">jmespath_func_signature</span><span class="p">(</span>
         <span class="p">{</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">],</span> <span class="s2">&quot;variadic&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
-    <span class="p">)(</span><span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">func</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">))</span></div>
+    <span class="p">)(</span><span class="k">lambda</span> <span class="n">_self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">func</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="_create_removeaffix_function_for_string"><a class="viewcode-back" href="../../../dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath._create_removeaffix_function_for_string">[docs]</a><span class="k">def</span> <span class="nf">_create_removeaffix_function_for_string</span><span class="p">(</span>
@@ -308,7 +322,7 @@
     <span class="k">return</span> <span class="n">jmespath_func_signature</span><span class="p">(</span>
         <span class="p">{</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">]},</span>
         <span class="p">{</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">]},</span>
-    <span class="p">)(</span><span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">affix</span><span class="p">:</span> <span class="n">func</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">affix</span><span class="p">))</span></div>
+    <span class="p">)(</span><span class="k">lambda</span> <span class="n">_self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">affix</span><span class="p">:</span> <span class="n">func</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">affix</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="_to_items"><a class="viewcode-back" href="../../../dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath._to_items">[docs]</a><span class="k">def</span> <span class="nf">_to_items</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
@@ -316,7 +330,7 @@
 
 
 <div class="viewcode-block" id="JMESPathProjectConfigFunctions"><a class="viewcode-back" href="../../../dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions">[docs]</a><span class="k">class</span> <span class="nc">JMESPathProjectConfigFunctions</span><span class="p">(</span><span class="n">JMESPathFunctions</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;JMESPath class to include custom functions.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;JMESPath class to include custom functions.&quot;&quot;&quot;</span>
 
     <span class="c1"># Functions that expands the functionality of the standard JMESPath</span>
     <span class="c1"># functions:</span>
@@ -326,7 +340,10 @@
         <span class="p">{</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;array-string&quot;</span><span class="p">],</span> <span class="s2">&quot;variadic&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
     <span class="p">)</span>
     <span class="k">def</span> <span class="nf">_func_starts_with</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">search</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">suffix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">search</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">suffix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">suffix</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
             <span class="n">suffix</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">suffix</span><span class="p">)</span>
@@ -337,7 +354,10 @@
         <span class="p">{</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;array-string&quot;</span><span class="p">],</span> <span class="s2">&quot;variadic&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
     <span class="p">)</span>
     <span class="k">def</span> <span class="nf">_func_ends_with</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">search</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">suffix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">search</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">suffix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">suffix</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
             <span class="n">suffix</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">suffix</span><span class="p">)</span>
@@ -373,7 +393,10 @@
         <span class="p">{</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">],</span> <span class="s2">&quot;variadic&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
     <span class="p">)</span>
     <span class="k">def</span> <span class="nf">_func_regex_search</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">regex</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span>
+        <span class="n">_self</span><span class="p">,</span>
+        <span class="n">regex</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
         <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">regex</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">match</span><span class="p">:</span>
@@ -386,9 +409,13 @@
         <span class="p">{</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">],</span> <span class="s2">&quot;variadic&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
     <span class="p">)</span>
     <span class="k">def</span> <span class="nf">_func_regex_sub</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">regex</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">repl</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span>
+        <span class="n">_self</span><span class="p">,</span>
+        <span class="n">regex</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">repl</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">regex</span><span class="p">,</span> <span class="n">repl</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">regex</span><span class="p">,</span> <span class="n">repl</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>  <span class="c1"># noqa: B034</span></div>
 
 <div class="viewcode-block" id="JMESPathProjectConfigFunctions._func_regex_escape"><a class="viewcode-back" href="../../../dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_regex_escape">[docs]</a>    <span class="nd">@jmespath_func_signature</span><span class="p">({</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">]})</span>
     <span class="k">def</span> <span class="nf">_func_regex_escape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">regex</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -411,7 +438,7 @@
                         <span class="sa">f</span><span class="s2">&quot;Invalid operator &#39;</span><span class="si">{</span><span class="n">op_or_value</span><span class="si">}</span><span class="s2">&#39; passed to op()&quot;</span>
                         <span class="sa">f</span><span class="s2">&quot; function at index </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">, expected one of:&quot;</span>
                         <span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">OPERATORS_FUNCTIONS</span><span class="p">))</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-                    <span class="p">)</span>
+                    <span class="p">)</span> <span class="kn">from</span> <span class="kc">None</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">current_op</span> <span class="o">=</span> <span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">op_or_value</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
@@ -436,7 +463,7 @@
 
 <div class="viewcode-block" id="JMESPathProjectConfigFunctions._func_shlex_join"><a class="viewcode-back" href="../../../dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_shlex_join">[docs]</a>    <span class="nd">@jmespath_func_signature</span><span class="p">({</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;array-string&quot;</span><span class="p">]})</span>
     <span class="k">def</span> <span class="nf">_func_shlex_join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmd_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">shlex_join</span><span class="p">(</span><span class="n">cmd_list</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">shlex</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cmd_list</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="JMESPathProjectConfigFunctions._func_shlex_split"><a class="viewcode-back" href="../../../dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_shlex_split">[docs]</a>    <span class="nd">@jmespath_func_signature</span><span class="p">({</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">]})</span>
     <span class="k">def</span> <span class="nf">_func_shlex_split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmd_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
@@ -540,22 +567,22 @@
                     <span class="sa">f</span><span class="s2">&quot;Invalid strategy &#39;</span><span class="si">{</span><span class="n">strategies</span><span class="si">}</span><span class="s2">&#39; passed to deepmerge()&quot;</span>
                     <span class="s2">&quot; function, expected one of:&quot;</span>
                     <span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">BUILTIN_DEEPMERGE_STRATEGIES</span><span class="p">))</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-                <span class="p">)</span>
+                <span class="p">)</span> <span class="kn">from</span> <span class="kc">None</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">type_strategies</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">strategies</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>  <span class="c1"># type: ignore</span>
-                <span class="n">key</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;array&quot;</span><span class="p">:</span> <span class="s2">&quot;list&quot;</span><span class="p">,</span> <span class="s2">&quot;object&quot;</span><span class="p">:</span> <span class="s2">&quot;dict&quot;</span><span class="p">}</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="n">key_type</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;array&quot;</span><span class="p">:</span> <span class="s2">&quot;list&quot;</span><span class="p">,</span> <span class="s2">&quot;object&quot;</span><span class="p">:</span> <span class="s2">&quot;dict&quot;</span><span class="p">}</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
                     <span class="n">key</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
                     <span class="n">key</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
                 <span class="p">)</span>
-                <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">BUILTIN_TYPES</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">key_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">BUILTIN_TYPES</span><span class="p">:</span>
                     <span class="k">raise</span> <span class="n">OriginalJMESPathError</span><span class="p">(</span>
                         <span class="sa">f</span><span class="s2">&quot;Invalid type passed to deepmerge() function in&quot;</span>
                         <span class="s2">&quot; strategies array, expected one of:&quot;</span>
                         <span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">BUILTIN_TYPES</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-                    <span class="p">)</span>
+                    <span class="p">)</span> <span class="kn">from</span> <span class="kc">None</span>
                 <span class="n">type_strategies</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                    <span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">builtins</span><span class="p">,</span> <span class="n">key</span><span class="p">),</span> <span class="n">value</span><span class="p">),</span>  <span class="c1"># type: ignore</span>
+                    <span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">builtins</span><span class="p">,</span> <span class="n">key_type</span><span class="p">),</span> <span class="n">value</span><span class="p">),</span>  <span class="c1"># type: ignore</span>
                 <span class="p">)</span>
 
             <span class="c1"># TODO: cache merge objects by strategies used</span>
@@ -712,7 +739,10 @@
         <span class="p">{</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">],</span> <span class="s2">&quot;variadic&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
     <span class="p">)</span>
     <span class="k">def</span> <span class="nf">_func_gh_tags</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">repo_owner</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">repo_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">repo_owner</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">repo_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
         <span class="kn">from</span> <span class="nn">project_config.fetchers.github</span> <span class="kn">import</span> <span class="n">get_latest_release_tags</span>
 
@@ -729,14 +759,14 @@
                 <span class="sa">f</span><span class="s2">&quot;_func_</span><span class="si">{</span><span class="n">func_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="p">(</span>
                     <span class="n">_create_simple_transform_function_for_string</span><span class="p">(</span><span class="n">func_name</span><span class="p">)</span>
                 <span class="p">)</span>
-                <span class="k">for</span> <span class="n">func_name</span> <span class="ow">in</span> <span class="p">{</span>
+                <span class="k">for</span> <span class="n">func_name</span> <span class="ow">in</span> <span class="p">(</span>
                     <span class="s2">&quot;capitalize&quot;</span><span class="p">,</span>
                     <span class="s2">&quot;casefold&quot;</span><span class="p">,</span>
                     <span class="s2">&quot;lower&quot;</span><span class="p">,</span>
                     <span class="s2">&quot;swapcase&quot;</span><span class="p">,</span>
                     <span class="s2">&quot;title&quot;</span><span class="p">,</span>
                     <span class="s2">&quot;upper&quot;</span><span class="p">,</span>
-                <span class="p">}</span>
+                <span class="p">)</span>
             <span class="p">},</span>
             <span class="o">**</span><span class="p">{</span>
                 <span class="sa">f</span><span class="s2">&quot;_func_</span><span class="si">{</span><span class="n">func_prefix</span><span class="si">}</span><span class="s2">find&quot;</span><span class="p">:</span> <span class="p">(</span>
@@ -744,13 +774,13 @@
                         <span class="n">func_prefix</span><span class="p">,</span>
                     <span class="p">)</span>
                 <span class="p">)</span>
-                <span class="k">for</span> <span class="n">func_prefix</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">}</span>
+                <span class="k">for</span> <span class="n">func_prefix</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
             <span class="p">},</span>
             <span class="o">**</span><span class="p">{</span>
                 <span class="sa">f</span><span class="s2">&quot;_func_is</span><span class="si">{</span><span class="n">func_suffix</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="n">_create_is_function_for_string</span><span class="p">(</span>
                     <span class="n">func_suffix</span><span class="p">,</span>
                 <span class="p">)</span>
-                <span class="k">for</span> <span class="n">func_suffix</span> <span class="ow">in</span> <span class="p">{</span>
+                <span class="k">for</span> <span class="n">func_suffix</span> <span class="ow">in</span> <span class="p">(</span>
                     <span class="s2">&quot;alnum&quot;</span><span class="p">,</span>
                     <span class="s2">&quot;alpha&quot;</span><span class="p">,</span>
                     <span class="s2">&quot;ascii&quot;</span><span class="p">,</span>
@@ -763,37 +793,37 @@
                     <span class="s2">&quot;space&quot;</span><span class="p">,</span>
                     <span class="s2">&quot;title&quot;</span><span class="p">,</span>
                     <span class="s2">&quot;upper&quot;</span><span class="p">,</span>
-                <span class="p">}</span>
+                <span class="p">)</span>
             <span class="p">},</span>
             <span class="o">**</span><span class="p">{</span>
                 <span class="sa">f</span><span class="s2">&quot;_func_</span><span class="si">{</span><span class="n">func_prefix</span><span class="si">}</span><span class="s2">just&quot;</span><span class="p">:</span> <span class="n">_create_just_function_for_string</span><span class="p">(</span>
                     <span class="n">func_prefix</span><span class="p">,</span>
                 <span class="p">)</span>
-                <span class="k">for</span> <span class="n">func_prefix</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;l&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">}</span>
+                <span class="k">for</span> <span class="n">func_prefix</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;l&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
             <span class="p">},</span>
             <span class="o">**</span><span class="p">{</span>
                 <span class="sa">f</span><span class="s2">&quot;_func_</span><span class="si">{</span><span class="n">func_prefix</span><span class="si">}</span><span class="s2">split&quot;</span><span class="p">:</span> <span class="n">_create_split_function_for_string</span><span class="p">(</span>
                     <span class="n">func_prefix</span><span class="p">,</span>
                 <span class="p">)</span>
-                <span class="k">for</span> <span class="n">func_prefix</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">}</span>
+                <span class="k">for</span> <span class="n">func_prefix</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
             <span class="p">},</span>
             <span class="o">**</span><span class="p">{</span>
                 <span class="sa">f</span><span class="s2">&quot;_func_</span><span class="si">{</span><span class="n">func_prefix</span><span class="si">}</span><span class="s2">strip&quot;</span><span class="p">:</span> <span class="n">_create_strip_function_for_string</span><span class="p">(</span>
                     <span class="n">func_prefix</span><span class="p">,</span>
                 <span class="p">)</span>
-                <span class="k">for</span> <span class="n">func_prefix</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;l&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">}</span>
+                <span class="k">for</span> <span class="n">func_prefix</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;l&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
             <span class="p">},</span>
             <span class="o">**</span><span class="p">{</span>
                 <span class="sa">f</span><span class="s2">&quot;_func_</span><span class="si">{</span><span class="n">func_prefix</span><span class="si">}</span><span class="s2">partition&quot;</span><span class="p">:</span> <span class="p">(</span>
                     <span class="n">_create_partition_function_for_string</span><span class="p">(</span><span class="n">func_prefix</span><span class="p">)</span>
                 <span class="p">)</span>
-                <span class="k">for</span> <span class="n">func_prefix</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">}</span>
+                <span class="k">for</span> <span class="n">func_prefix</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
             <span class="p">},</span>
             <span class="o">**</span><span class="p">{</span>
                 <span class="sa">f</span><span class="s2">&quot;_func_remove</span><span class="si">{</span><span class="n">func_suffix</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="p">(</span>
                     <span class="n">_create_removeaffix_function_for_string</span><span class="p">(</span><span class="n">func_suffix</span><span class="p">)</span>
                 <span class="p">)</span>
-                <span class="k">for</span> <span class="n">func_suffix</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;suffix&quot;</span><span class="p">,</span> <span class="s2">&quot;prefix&quot;</span><span class="p">}</span>
+                <span class="k">for</span> <span class="n">func_suffix</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;suffix&quot;</span><span class="p">,</span> <span class="s2">&quot;prefix&quot;</span><span class="p">)</span>
             <span class="p">},</span>
         <span class="p">),</span>
     <span class="p">)</span></div>
@@ -807,7 +837,7 @@
 
 
 <div class="viewcode-block" id="compile_JMESPath_expression"><a class="viewcode-back" href="../../../dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.compile_JMESPath_expression">[docs]</a><span class="k">def</span> <span class="nf">compile_JMESPath_expression</span><span class="p">(</span><span class="n">expression</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JMESPathParsedResult</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Compile a JMESPath expression.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compile a JMESPath expression.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        expression (str): JMESPath expression to compile.</span>
@@ -825,7 +855,7 @@
 <div class="viewcode-block" id="compile_JMESPath_expression_or_error"><a class="viewcode-back" href="../../../dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.compile_JMESPath_expression_or_error">[docs]</a><span class="k">def</span> <span class="nf">compile_JMESPath_expression_or_error</span><span class="p">(</span>
     <span class="n">expression</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JMESPathParsedResult</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Compile a JMESPath expression or raise a ``JMESPathError``.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compile a JMESPath expression or raise a ``JMESPathError``.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        expression (str): JMESPath expression to compile.</span>
@@ -847,14 +877,14 @@
         <span class="k">raise</span> <span class="n">JMESPathError</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;Invalid JMESPath expression </span><span class="si">{</span><span class="n">pprint</span><span class="o">.</span><span class="n">pformat</span><span class="p">(</span><span class="n">expression</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span>
             <span class="sa">f</span><span class="s2">&quot; Raised JMESPath </span><span class="si">{</span><span class="n">error_type</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-        <span class="p">)</span></div>
+        <span class="p">)</span> <span class="kn">from</span> <span class="kc">None</span></div>
 
 
 <div class="viewcode-block" id="compile_JMESPath_or_expected_value_error"><a class="viewcode-back" href="../../../dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.compile_JMESPath_or_expected_value_error">[docs]</a><span class="k">def</span> <span class="nf">compile_JMESPath_or_expected_value_error</span><span class="p">(</span>
     <span class="n">expression</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">expected_value</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JMESPathParsedResult</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Compile a JMESPath expression or raise a ``JMESPathError``.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compile a JMESPath expression or raise a ``JMESPathError``.</span>
 
 <span class="sd">    You can pass a expected value that was being expected in the error message.</span>
 
@@ -879,7 +909,7 @@
             <span class="sa">f</span><span class="s2">&quot;Invalid JMESPath expression </span><span class="si">{</span><span class="n">pprint</span><span class="o">.</span><span class="n">pformat</span><span class="p">(</span><span class="n">expression</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span>
             <span class="sa">f</span><span class="s2">&quot; Expected to return </span><span class="si">{</span><span class="n">pprint</span><span class="o">.</span><span class="n">pformat</span><span class="p">(</span><span class="n">expected_value</span><span class="p">)</span><span class="si">}</span><span class="s2">, raised&quot;</span>
             <span class="sa">f</span><span class="s2">&quot; JMESPath </span><span class="si">{</span><span class="n">error_type</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-        <span class="p">)</span></div>
+        <span class="p">)</span> <span class="kn">from</span> <span class="kc">None</span></div>
 
 
 <div class="viewcode-block" id="compile_JMESPath_or_expected_value_from_other_file_error"><a class="viewcode-back" href="../../../dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.compile_JMESPath_or_expected_value_from_other_file_error">[docs]</a><span class="k">def</span> <span class="nf">compile_JMESPath_or_expected_value_from_other_file_error</span><span class="p">(</span>
@@ -887,7 +917,7 @@
     <span class="n">expected_value_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">expected_value_expression</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JMESPathParsedResult</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Compile a JMESPath expression or raise a ``JMESPathError``.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compile a JMESPath expression or raise a ``JMESPathError``.</span>
 
 <span class="sd">    Show that the expression was being expected to match the value</span>
 <span class="sd">    applying the expression to another file than the actual.</span>
@@ -918,14 +948,14 @@
             <span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="n">pprint</span><span class="o">.</span><span class="n">pformat</span><span class="p">(</span><span class="n">expected_value_expression</span><span class="p">)</span><span class="si">}</span><span class="s2"> to the file&quot;</span>
             <span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="n">pprint</span><span class="o">.</span><span class="n">pformat</span><span class="p">(</span><span class="n">expected_value_file</span><span class="p">)</span><span class="si">}</span><span class="s2">, raised&quot;</span>
             <span class="sa">f</span><span class="s2">&quot; JMESPath </span><span class="si">{</span><span class="n">error_type</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-        <span class="p">)</span></div>
+        <span class="p">)</span> <span class="kn">from</span> <span class="kc">None</span></div>
 
 
 <div class="viewcode-block" id="evaluate_JMESPath"><a class="viewcode-back" href="../../../dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.evaluate_JMESPath">[docs]</a><span class="k">def</span> <span class="nf">evaluate_JMESPath</span><span class="p">(</span>
     <span class="n">compiled_expression</span><span class="p">:</span> <span class="n">JMESPathParsedResult</span><span class="p">,</span>
     <span class="n">instance</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Evaluate a JMESPath expression against a instance.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Evaluate a JMESPath expression against a instance.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        compiled_expression (:py:class:`jmespath.parser.ParsedResult`): JMESPath</span>
@@ -984,7 +1014,7 @@
             <span class="k">raise</span> <span class="n">JMESPathError</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;Invalid JMESPath </span><span class="si">{</span><span class="n">formatted_expression</span><span class="si">}</span><span class="s2">.&quot;</span>
                 <span class="sa">f</span><span class="s2">&quot; Raised JMESPath </span><span class="si">{</span><span class="n">error_type</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-            <span class="p">)</span>
+            <span class="p">)</span> <span class="kn">from</span> <span class="kc">None</span>
         <span class="n">Cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;jm://E?</span><span class="si">{</span><span class="n">compiled_expression</span><span class="o">.</span><span class="n">expression</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
             <span class="n">result</span><span class="p">,</span>
@@ -997,7 +1027,7 @@
     <span class="n">expected_value</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="n">instance</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Evaluate a JMESPath expression against a instance or raise a ``JMESPathError``.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Evaluate a JMESPath expression against a instance or raise a ``JMESPathError``.</span>
 
 <span class="sd">    You can pass a expected value that was being expected in the</span>
 <span class="sd">    error message.</span>
@@ -1027,7 +1057,7 @@
             <span class="sa">f</span><span class="s2">&quot;Invalid JMESPath </span><span class="si">{</span><span class="n">formatted_expression</span><span class="si">}</span><span class="s2">.&quot;</span>
             <span class="sa">f</span><span class="s2">&quot; Expected to return </span><span class="si">{</span><span class="n">pprint</span><span class="o">.</span><span class="n">pformat</span><span class="p">(</span><span class="n">expected_value</span><span class="p">)</span><span class="si">}</span><span class="s2">, raised&quot;</span>
             <span class="sa">f</span><span class="s2">&quot; JMESPath </span><span class="si">{</span><span class="n">error_type</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-        <span class="p">)</span></div>
+        <span class="p">)</span> <span class="kn">from</span> <span class="kc">None</span></div>
 
 
 <div class="viewcode-block" id="fix_tree_serialized_file_by_jmespath"><a class="viewcode-back" href="../../../dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.fix_tree_serialized_file_by_jmespath">[docs]</a><span class="k">def</span> <span class="nf">fix_tree_serialized_file_by_jmespath</span><span class="p">(</span>
@@ -1035,7 +1065,7 @@
     <span class="n">instance</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="n">fpath</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Fix a file by aplying a JMESPath expression to an instance.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fix a file by aplying a JMESPath expression to an instance.</span>
 
 <span class="sd">    This function is used to fix a file by applying a JMESPath expression.</span>
 <span class="sd">    The result of the expression will be the serialized version of the</span>
@@ -1059,7 +1089,7 @@
 
 <span class="n">REVERSE_JMESPATH_TYPE_PYOBJECT</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span>
     <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="nb">dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="n">Literal</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>
+    <span class="nb">dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;string&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
     <span class="s2">&quot;number&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
@@ -1074,11 +1104,11 @@
     <span class="k">return</span> <span class="n">REVERSE_JMESPATH_TYPE_PYOBJECT</span><span class="p">[</span><span class="n">jmespath_type</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="smart_fixer_by_expected_value"><a class="viewcode-back" href="../../../dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.smart_fixer_by_expected_value">[docs]</a><span class="k">def</span> <span class="nf">smart_fixer_by_expected_value</span><span class="p">(</span>
+<div class="viewcode-block" id="smart_fixer_by_expected_value"><a class="viewcode-back" href="../../../dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.smart_fixer_by_expected_value">[docs]</a><span class="k">def</span> <span class="nf">smart_fixer_by_expected_value</span><span class="p">(</span>  <span class="c1"># noqa: PLR0911, PLR0912, PLR0915</span>
     <span class="n">compiled_expression</span><span class="p">:</span> <span class="n">JMESPathParsedResult</span><span class="p">,</span>
     <span class="n">expected_value</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Smart JMESPath fixer queries creator.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Smart JMESPath fixer queries creator.</span>
 
 <span class="sd">    Build a smart JMESPath query fixer by altering a expression to</span>
 <span class="sd">    match a expected value given the syntax of an expression.</span>
@@ -1111,7 +1141,7 @@
     <span class="k">if</span> <span class="n">ast</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;field&quot;</span><span class="p">:</span>
         <span class="n">key</span> <span class="o">=</span> <span class="n">ast</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;set(@, &#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&#39; `</span><span class="si">{</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">expected_value</span><span class="p">)</span><span class="si">}</span><span class="s2">`)&quot;</span>
-    <span class="k">elif</span> <span class="n">ast</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;subexpression&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">ast</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;subexpression&quot;</span><span class="p">:</span>
         <span class="n">temporal_object</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">_obj</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">child</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">ast</span><span class="p">[</span><span class="s2">&quot;children&quot;</span><span class="p">])):</span>
@@ -1139,7 +1169,7 @@
             <span class="ow">and</span> <span class="n">ast</span><span class="p">[</span><span class="s2">&quot;children&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;current&quot;</span>
         <span class="p">):</span>
             <span class="n">temporal_object</span> <span class="o">=</span> <span class="n">_build_reverse_jmes_type_object</span><span class="p">(</span><span class="n">expected_value</span><span class="p">)</span>
-            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;`</span><span class="si">{</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">temporal_object</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span><span class="si">}</span><span class="s2">`&quot;</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;`</span><span class="si">{</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">temporal_object</span><span class="p">,</span><span class="w"> </span><span class="n">indent</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span><span class="si">}</span><span class="s2">`&quot;</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">deep</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -1149,7 +1179,6 @@
                 <span class="n">merge_strategy</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
                 <span class="n">deep</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
             <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-
                 <span class="k">for</span> <span class="n">iexp</span><span class="p">,</span> <span class="n">fexp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">expressions</span><span class="p">)):</span>
                     <span class="n">_last_field_type_iexp</span> <span class="o">=</span> <span class="p">(</span>
                         <span class="nb">len</span><span class="p">([</span><span class="n">e</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;field&quot;</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">expressions</span><span class="p">[</span><span class="n">iexp</span><span class="p">:]])</span>
@@ -1204,11 +1233,7 @@
             <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">ast</span><span class="p">[</span><span class="s2">&quot;children&quot;</span><span class="p">]:</span>
                 <span class="k">if</span> <span class="n">child</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;subexpression&quot;</span><span class="p">:</span>
                     <span class="n">expressions</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;children&quot;</span><span class="p">,</span> <span class="p">[]))</span>
-                    <span class="p">(</span>
-                        <span class="n">_</span><span class="p">,</span>
-                        <span class="n">temporal_object</span><span class="p">,</span>
-                        <span class="n">merge_strategy</span><span class="p">,</span>
-                    <span class="p">)</span> <span class="o">=</span> <span class="n">_iterate_expressions</span><span class="p">(</span>
+                    <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">temporal_object</span><span class="p">,</span> <span class="n">merge_strategy</span><span class="p">)</span> <span class="o">=</span> <span class="n">_iterate_expressions</span><span class="p">(</span>
                         <span class="n">expressions</span><span class="p">,</span>
                         <span class="n">temporal_object</span><span class="p">,</span>
                         <span class="n">merge_strategy</span><span class="p">,</span>
@@ -1217,7 +1242,7 @@
     <span class="k">elif</span> <span class="p">(</span>
         <span class="n">ast</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;function_expression&quot;</span>
         <span class="ow">and</span> <span class="n">ast</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;contains&quot;</span>
-        <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">ast</span><span class="p">[</span><span class="s2">&quot;children&quot;</span><span class="p">])</span> <span class="o">==</span> <span class="mi">2</span>
+        <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">ast</span><span class="p">[</span><span class="s2">&quot;children&quot;</span><span class="p">])</span> <span class="o">==</span> <span class="mi">2</span>  <span class="c1"># noqa: PLR2004</span>
         <span class="ow">and</span> <span class="n">ast</span><span class="p">[</span><span class="s2">&quot;children&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;function_expression&quot;</span>
         <span class="ow">and</span> <span class="n">ast</span><span class="p">[</span><span class="s2">&quot;children&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;value&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;keys&quot;</span>
         <span class="ow">and</span> <span class="n">ast</span><span class="p">[</span><span class="s2">&quot;children&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;children&quot;</span><span class="p">)</span>
@@ -1237,11 +1262,11 @@
         <span class="n">merge_strategy_formatted</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">merge_strategy</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">merge_strategy_formatted</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;`</span><span class="si">{</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">merge_strategy</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span><span class="si">}</span><span class="s2">`&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;`</span><span class="si">{</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">merge_strategy</span><span class="p">,</span><span class="w"> </span><span class="n">indent</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span><span class="si">}</span><span class="s2">`&quot;</span>
         <span class="p">)</span>
     <span class="n">fixer_expression</span> <span class="o">+=</span> <span class="p">(</span>
         <span class="sa">f</span><span class="s2">&quot;deepmerge(@,&quot;</span>
-        <span class="sa">f</span><span class="s2">&quot; `</span><span class="si">{</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">temporal_object</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span><span class="si">}</span><span class="s2">`,&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot; `</span><span class="si">{</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">temporal_object</span><span class="p">,</span><span class="w"> </span><span class="n">indent</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span><span class="si">}</span><span class="s2">`,&quot;</span>
         <span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="n">merge_strategy_formatted</span><span class="si">}</span><span class="s2">)&quot;</span>
     <span class="p">)</span>
 
@@ -1249,7 +1274,7 @@
 
 
 <div class="viewcode-block" id="is_literal_jmespath_expression"><a class="viewcode-back" href="../../../dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.is_literal_jmespath_expression">[docs]</a><span class="k">def</span> <span class="nf">is_literal_jmespath_expression</span><span class="p">(</span><span class="n">expression</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Check if a JMESPath expression is a literal expression.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if a JMESPath expression is a literal expression.&quot;&quot;&quot;</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">Parser</span><span class="p">()</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">ast</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">expression</span><span class="p">)</span><span class="o">.</span><span class="n">parsed</span>

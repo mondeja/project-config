@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.plugins package &mdash; project-config 0.8.0 documentation</title>
+  <title>project_config.plugins package &mdash; project-config 0.9.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -31,14 +31,18 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../index.html" class="icon icon-home"> project-config
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            project-config
           </a>
               <div class="version">
-                0.8
+                0.9
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -57,6 +61,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../reference/config.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../reference/styling.html">Styling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../reference/plugins.html">Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/ci.html">Using on CI</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">In depth</span></p>
 <ul>
@@ -102,7 +107,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="modules.html">Reference</a></li>
           <li class="breadcrumb-item"><a href="project_config.html">project_config package</a></li>
       <li class="breadcrumb-item active">project_config.plugins package</li>
@@ -122,15 +127,15 @@
 properties of styles.</p>
 <dl class="py exception">
 <dt class="sig sig-object py" id="project_config.plugins.InvalidPluginFunction">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">project_config.plugins.</span></span><span class="sig-name descname"><span class="pre">InvalidPluginFunction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/project_config/plugins.html#InvalidPluginFunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.plugins.InvalidPluginFunction" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">project_config.plugins.</span></span><span class="sig-name descname"><span class="pre">InvalidPluginFunction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/project_config/plugins.html#InvalidPluginFunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.plugins.InvalidPluginFunction" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="project_config.exceptions.html#project_config.exceptions.ProjectConfigException" title="project_config.exceptions.ProjectConfigException"><code class="xref py py-class docutils literal notranslate"><span class="pre">project_config.exceptions.ProjectConfigException</span></code></a></p>
 <p>Exception raised when a method of a plugin class is not valid.</p>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="project_config.plugins.Plugins">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">project_config.plugins.</span></span><span class="sig-name descname"><span class="pre">Plugins</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prepare_all</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/project_config/plugins.html#Plugins"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.plugins.Plugins" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">project_config.plugins.</span></span><span class="sig-name descname"><span class="pre">Plugins</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prepare_all</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/project_config/plugins.html#Plugins"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.plugins.Plugins" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Plugins wrapper.</p>
 <p>Performs all the logic concerning to plugins.</p>
 <p>Plugins modules are loaded on demand, only when an action
@@ -138,78 +143,78 @@ specified by a rule requires it, and cached for later
 demanding from rules.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="project_config.plugins.Plugins._add_plugin_to_cache">
-<span class="sig-name descname"><span class="pre">_add_plugin_to_cache</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plugin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">importlib.metadata.EntryPoint</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../_modules/project_config/plugins.html#Plugins._add_plugin_to_cache"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.plugins.Plugins._add_plugin_to_cache" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_add_plugin_to_cache</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plugin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">importlib.metadata.EntryPoint</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../_modules/project_config/plugins.html#Plugins._add_plugin_to_cache"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.plugins.Plugins._add_plugin_to_cache" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="project_config.plugins.Plugins._extract_actions_from_plugin_module">
-<span class="sig-name descname"><span class="pre">_extract_actions_from_plugin_module</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_dotpath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterator" title="(in Python v3.11)"><span class="pre">collections.abc.Iterator</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/project_config/plugins.html#Plugins._extract_actions_from_plugin_module"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.plugins.Plugins._extract_actions_from_plugin_module" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_extract_actions_from_plugin_module</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_dotpath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterator" title="(in Python v3.12)"><span class="pre">collections.abc.Iterator</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/project_config/plugins.html#Plugins._extract_actions_from_plugin_module"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.plugins.Plugins._extract_actions_from_plugin_module" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="project_config.plugins.Plugins._prepare_all_plugins_cache">
-<span class="sig-name descname"><span class="pre">_prepare_all_plugins_cache</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../_modules/project_config/plugins.html#Plugins._prepare_all_plugins_cache"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.plugins.Plugins._prepare_all_plugins_cache" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_prepare_all_plugins_cache</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../_modules/project_config/plugins.html#Plugins._prepare_all_plugins_cache"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.plugins.Plugins._prepare_all_plugins_cache" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="project_config.plugins.Plugins._prepare_default_plugins_cache">
-<span class="sig-name descname"><span class="pre">_prepare_default_plugins_cache</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../_modules/project_config/plugins.html#Plugins._prepare_default_plugins_cache"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.plugins.Plugins._prepare_default_plugins_cache" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_prepare_default_plugins_cache</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../_modules/project_config/plugins.html#Plugins._prepare_default_plugins_cache"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.plugins.Plugins._prepare_default_plugins_cache" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="project_config.plugins.Plugins.get_function_for_action">
-<span class="sig-name descname"><span class="pre">get_function_for_action</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">PluginMethod</span></span></span><a class="reference internal" href="../../_modules/project_config/plugins.html#Plugins.get_function_for_action"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.plugins.Plugins.get_function_for_action" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_function_for_action</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">PluginMethod</span></span></span><a class="reference internal" href="../../_modules/project_config/plugins.html#Plugins.get_function_for_action"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.plugins.Plugins.get_function_for_action" title="Permalink to this definition"></a></dt>
 <dd><p>Get the function that performs an action given her name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>action</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Action name whose function will be returned.</p>
+<dd class="field-odd"><p><strong>action</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – Action name whose function will be returned.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Function that process the action.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.11)">type</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.12)">type</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="project_config.plugins.Plugins.is_valid_action">
-<span class="sig-name descname"><span class="pre">is_valid_action</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="../../_modules/project_config/plugins.html#Plugins.is_valid_action"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.plugins.Plugins.is_valid_action" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">is_valid_action</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="../../_modules/project_config/plugins.html#Plugins.is_valid_action"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.plugins.Plugins.is_valid_action" title="Permalink to this definition"></a></dt>
 <dd><p>Return if an action exists in available plugins.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>action</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Action to check for their existence.</p>
+<dd class="field-odd"><p><strong>action</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – Action to check for their existence.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> if the action exists, <code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)">bool</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="project_config.plugins.Plugins.plugin_action_names">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">plugin_action_names</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#project_config.plugins.Plugins.plugin_action_names" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">plugin_action_names</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#project_config.plugins.Plugins.plugin_action_names" title="Permalink to this definition"></a></dt>
 <dd><p>Mapping of plugin names to their actions.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="project_config.plugins.Plugins.plugin_names">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">plugin_names</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#project_config.plugins.Plugins.plugin_names" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">plugin_names</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#project_config.plugins.Plugins.plugin_names" title="Permalink to this definition"></a></dt>
 <dd><p>Available plugin names.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="project_config.plugins.Plugins.prepare_3rd_party_plugin">
-<span class="sig-name descname"><span class="pre">prepare_3rd_party_plugin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plugin_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../_modules/project_config/plugins.html#Plugins.prepare_3rd_party_plugin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.plugins.Plugins.prepare_3rd_party_plugin" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">prepare_3rd_party_plugin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plugin_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../_modules/project_config/plugins.html#Plugins.prepare_3rd_party_plugin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.plugins.Plugins.prepare_3rd_party_plugin" title="Permalink to this definition"></a></dt>
 <dd><p>Prepare cache for third party plugins.</p>
 <p>After that a plugin has been prepared can be load on demand.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>plugin_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Name of the entry point of the plugin.</p>
+<dd class="field-odd"><p><strong>plugin_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – Name of the entry point of the plugin.</p>
 </dd>
 </dl>
 </dd></dl>

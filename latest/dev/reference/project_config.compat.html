@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.compat module &mdash; project-config 0.8.0 documentation</title>
+  <title>project_config.compat module &mdash; project-config 0.9.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -31,14 +31,18 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../index.html" class="icon icon-home"> project-config
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            project-config
           </a>
               <div class="version">
-                0.8
+                0.9
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -57,6 +61,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../reference/config.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../reference/styling.html">Styling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../reference/plugins.html">Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/ci.html">Using on CI</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">In depth</span></p>
 <ul>
@@ -101,7 +106,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="modules.html">Reference</a></li>
           <li class="breadcrumb-item"><a href="project_config.html">project_config package</a></li>
       <li class="breadcrumb-item active">project_config.compat module</li>
@@ -120,7 +125,7 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="project_config.compat.Protocol">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">project_config.compat.</span></span><span class="sig-name descname"><span class="pre">Protocol</span></span><a class="reference internal" href="../../_modules/typing.html#Protocol"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.compat.Protocol" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Generic" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Generic</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Generic" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Generic</span></code></a></p>
 <p>Base class for protocol classes.</p>
 <p>Protocol classes are defined as:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Proto</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
@@ -230,12 +235,6 @@ Otherwise, return a copy of the original string.</p>
 <p>If the string ends with the suffix string and that suffix is not empty,
 return string[:-len(suffix)]. Otherwise, return a copy of the original
 string.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="project_config.compat.shlex_join">
-<span class="sig-prename descclassname"><span class="pre">project_config.compat.</span></span><span class="sig-name descname"><span class="pre">shlex_join</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">split_command</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#project_config.compat.shlex_join" title="Permalink to this definition"></a></dt>
-<dd><p>Return a shell-escaped string from <em>split_command</em>.</p>
 </dd></dl>
 
 </section>

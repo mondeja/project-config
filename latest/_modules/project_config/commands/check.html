@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.commands.check &mdash; project-config 0.8.0 documentation</title>
+  <title>project_config.commands.check &mdash; project-config 0.9.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
@@ -29,14 +29,18 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> project-config
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            project-config
           </a>
               <div class="version">
-                0.8
+                0.9
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -55,6 +59,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../reference/config.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../reference/styling.html">Styling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../reference/plugins.html">Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference/ci.html">Using on CI</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">In depth</span></p>
 <ul>
@@ -83,7 +88,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
       <li class="breadcrumb-item active">project_config.commands.check</li>
       <li class="wy-breadcrumbs-aside">
@@ -122,26 +127,31 @@
 
 
 <div class="viewcode-block" id="InterruptCheck"><a class="viewcode-back" href="../../../dev/reference/project_config.commands.check.html#project_config.commands.check.InterruptCheck">[docs]</a><span class="k">class</span> <span class="nc">InterruptCheck</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;An action has reported an invalid context for a rule.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;An action has reported an invalid context for a rule.</span>
 
 <span class="sd">    This exceptions prevents to continue executing subsecuents rules.</span>
 <span class="sd">    &quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="ConditionalsFalseResult"><a class="viewcode-back" href="../../../dev/reference/project_config.commands.check.html#project_config.commands.check.ConditionalsFalseResult">[docs]</a><span class="k">class</span> <span class="nc">ConditionalsFalseResult</span><span class="p">(</span><span class="n">InterruptCheck</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;A conditional must skip a rule.&quot;&quot;&quot;</span></div>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A conditional must skip a rule.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="ProjectConfigChecker"><a class="viewcode-back" href="../../../dev/reference/project_config.commands.check.html#project_config.commands.check.ProjectConfigChecker">[docs]</a><span class="k">class</span> <span class="nc">ProjectConfigChecker</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Project configuration checker.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Project configuration checker.&quot;&quot;&quot;</span>
 
-<span class="sd">    Args:</span>
-<span class="sd">        config (:py:class:`project_config.config.Config`):</span>
-<span class="sd">            Configuration to use.</span>
-<span class="sd">        fix_mode (bool): Whether to fix the errors or not.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">config</span><span class="p">:</span> <span class="n">Config</span><span class="p">,</span>
+        <span class="n">fix_mode</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>  <span class="c1"># noqa: FBT001, FBT002</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the checker.</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Config</span><span class="p">,</span> <span class="n">fix_mode</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="sd">        Args:</span>
+<span class="sd">            config (:py:class:`project_config.config.Config`):</span>
+<span class="sd">                Configuration to use.</span>
+<span class="sd">            fix_mode (bool): Whether to fix the errors or not.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reporter</span> <span class="o">=</span> <span class="n">reporter_from_config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">load_style</span><span class="p">()</span>
@@ -204,8 +214,6 @@
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">files</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
             <span class="c1"># i used for file index in the rule</span>
             <span class="n">files</span> <span class="o">=</span> <span class="p">{</span><span class="n">fn</span><span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">fn</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">files</span><span class="p">)}</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">files</span> <span class="o">=</span> <span class="n">files</span>
 
         <span class="k">for</span> <span class="n">fpath</span><span class="p">,</span> <span class="n">reason_or_index</span> <span class="ow">in</span> <span class="n">files</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">normalized_fpath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
@@ -232,7 +240,7 @@
                     <span class="c1"># discarded</span>
 
                 <span class="n">message</span> <span class="o">=</span> <span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;Expected absent </span><span class="si">{</span><span class="s1">&#39;directory&#39;</span> <span class="k">if</span> <span class="n">isdir</span> <span class="k">else</span> <span class="s1">&#39;file&#39;</span><span class="si">}</span><span class="s2"> exists&quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;Expected absent </span><span class="si">{</span><span class="s1">&#39;directory&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">isdir</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;file&#39;</span><span class="si">}</span><span class="s2"> exists&quot;</span>
                 <span class="p">)</span>
                 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">reason_or_index</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
                     <span class="n">message</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;. </span><span class="si">{</span><span class="n">reason_or_index</span><span class="si">}</span><span class="s2">&quot;</span>
@@ -278,8 +286,7 @@
                 <span class="k">elif</span> <span class="n">breakage_type</span> <span class="o">==</span> <span class="n">ResultValue</span><span class="p">:</span>
                     <span class="k">if</span> <span class="n">breakage_value</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
                         <span class="k">raise</span> <span class="n">ConditionalsFalseResult</span><span class="p">()</span>
-                    <span class="k">else</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
-                        <span class="k">break</span>
+                    <span class="k">break</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
                         <span class="sa">f</span><span class="s2">&quot;Breakage type &#39;</span><span class="si">{</span><span class="n">breakage_type</span><span class="si">}</span><span class="s2">&#39; is not implemented&quot;</span>
@@ -288,7 +295,7 @@
         <span class="k">if</span> <span class="n">conditional_failed</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">InterruptCheck</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="ProjectConfigChecker._run_check"><a class="viewcode-back" href="../../../dev/reference/project_config.commands.check.html#project_config.commands.check.ProjectConfigChecker._run_check">[docs]</a>    <span class="k">def</span> <span class="nf">_run_check</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="ProjectConfigChecker._run_check"><a class="viewcode-back" href="../../../dev/reference/project_config.commands.check.html#project_config.commands.check.ProjectConfigChecker._run_check">[docs]</a>    <span class="k">def</span> <span class="nf">_run_check</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: PLR0912</span>
         <span class="k">for</span> <span class="n">r</span><span class="p">,</span> <span class="n">rule</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">dict_</span><span class="p">[</span><span class="s2">&quot;style&quot;</span><span class="p">][</span><span class="s2">&quot;rules&quot;</span><span class="p">]):</span>
             <span class="n">hint</span> <span class="o">=</span> <span class="n">rule</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;hint&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
             <span class="n">files</span> <span class="o">=</span> <span class="n">rule</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;files&quot;</span><span class="p">,</span> <span class="p">[])</span>
@@ -309,7 +316,7 @@
                                 <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;rules[</span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s2">].</span><span class="si">{</span><span class="n">action</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
                             <span class="p">},</span>
                         <span class="p">)</span>
-                        <span class="k">raise</span> <span class="n">InterruptCheck</span><span class="p">()</span>
+                        <span class="k">raise</span> <span class="n">InterruptCheck</span><span class="p">()</span> <span class="kn">from</span> <span class="nn">exc</span>
                     <span class="n">conditionals_functions</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">action</span><span class="p">,</span> <span class="n">action_function</span><span class="p">))</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">verbs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
@@ -355,9 +362,9 @@
                             <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;rules[</span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s2">].</span><span class="si">{</span><span class="n">verb</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
                         <span class="p">},</span>
                     <span class="p">)</span>
-                    <span class="k">raise</span> <span class="n">InterruptCheck</span><span class="p">()</span>
+                    <span class="k">raise</span> <span class="n">InterruptCheck</span><span class="p">()</span> <span class="kn">from</span> <span class="nn">exc</span>
                     <span class="c1"># TODO: show &#39;INTERRUPTED&#39; in report?</span>
-                <span class="k">for</span> <span class="p">(</span><span class="n">breakage_type</span><span class="p">,</span> <span class="n">breakage_value</span><span class="p">)</span> <span class="ow">in</span> <span class="n">action_function</span><span class="p">(</span>
+                <span class="k">for</span> <span class="n">breakage_type</span><span class="p">,</span> <span class="n">breakage_value</span> <span class="ow">in</span> <span class="n">action_function</span><span class="p">(</span>
                     <span class="n">rule</span><span class="p">[</span><span class="n">verb</span><span class="p">],</span>  <span class="c1"># type: ignore</span>
                     <span class="n">rule</span><span class="p">,</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">actions_context</span><span class="p">,</span>
@@ -369,9 +376,7 @@
                         <span class="c1"># TODO: Currently the cast to ErrorDict is not available</span>
                         <span class="c1"># at runtime without installing typing_extensions,</span>
                         <span class="c1"># so we need to ignore the type here.</span>
-                        <span class="n">breakage_value</span><span class="p">[</span>
-                            <span class="s2">&quot;definition&quot;</span>
-                        <span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;rules[</span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s2">]&quot;</span> <span class="o">+</span> <span class="p">(</span>  <span class="c1"># type: ignore</span>
+                        <span class="n">breakage_value</span><span class="p">[</span><span class="s2">&quot;definition&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;rules[</span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s2">]&quot;</span> <span class="o">+</span> <span class="p">(</span>  <span class="c1"># type: ignore</span>
                             <span class="n">breakage_value</span><span class="p">[</span><span class="s2">&quot;definition&quot;</span><span class="p">]</span>  <span class="c1"># type: ignore</span>
                         <span class="p">)</span>
 
@@ -384,9 +389,7 @@
                         <span class="bp">self</span><span class="o">.</span><span class="n">reporter</span><span class="o">.</span><span class="n">report_error</span><span class="p">(</span><span class="n">breakage_value</span><span class="p">)</span>
 
                     <span class="k">elif</span> <span class="n">breakage_type</span> <span class="o">==</span> <span class="n">InterruptingError</span><span class="p">:</span>
-                        <span class="n">breakage_value</span><span class="p">[</span>
-                            <span class="s2">&quot;definition&quot;</span>
-                        <span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;rules[</span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s2">]&quot;</span> <span class="o">+</span> <span class="p">(</span>  <span class="c1"># type: ignore</span>
+                        <span class="n">breakage_value</span><span class="p">[</span><span class="s2">&quot;definition&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;rules[</span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s2">]&quot;</span> <span class="o">+</span> <span class="p">(</span>  <span class="c1"># type: ignore</span>
                             <span class="n">breakage_value</span><span class="p">[</span><span class="s2">&quot;definition&quot;</span><span class="p">]</span>  <span class="c1"># type: ignore</span>
                         <span class="p">)</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">reporter</span><span class="o">.</span><span class="n">report_error</span><span class="p">(</span><span class="n">breakage_value</span><span class="p">)</span>
@@ -399,7 +402,7 @@
                         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="ProjectConfigChecker.run"><a class="viewcode-back" href="../../../dev/reference/project_config.commands.check.html#project_config.commands.check.ProjectConfigChecker.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Run the checker.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Run the checker.&quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_run_check</span><span class="p">()</span>
         <span class="k">except</span> <span class="n">InterruptCheck</span><span class="p">:</span>
@@ -408,8 +411,8 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">reporter</span><span class="o">.</span><span class="n">raise_errors</span><span class="p">()</span></div></div>
 
 
-<div class="viewcode-block" id="check"><a class="viewcode-back" href="../../../dev/reference/project_config.commands.check.html#project_config.commands.check.check">[docs]</a><span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: U100</span>
-    <span class="sd">&quot;&quot;&quot;Checks that the styles configured for a project match.</span>
+<div class="viewcode-block" id="check"><a class="viewcode-back" href="../../../dev/reference/project_config.commands.check.html#project_config.commands.check.check">[docs]</a><span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Checks that the styles configured for a project match.</span>
 
 <span class="sd">    Raises errors if reported.</span>
 <span class="sd">    &quot;&quot;&quot;</span>

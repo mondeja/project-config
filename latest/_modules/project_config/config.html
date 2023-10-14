@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.config &mdash; project-config 0.8.0 documentation</title>
+  <title>project_config.config &mdash; project-config 0.9.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -29,14 +29,18 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../index.html" class="icon icon-home"> project-config
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            project-config
           </a>
               <div class="version">
-                0.8
+                0.9
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -55,6 +59,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../reference/config.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../reference/styling.html">Styling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../reference/plugins.html">Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/ci.html">Using on CI</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">In depth</span></p>
 <ul>
@@ -83,7 +88,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
       <li class="breadcrumb-item active">project_config.config</li>
       <li class="wy-breadcrumbs-aside">
@@ -146,7 +151,7 @@
 
 
 <div class="viewcode-block" id="read_config_from_pyproject_toml"><a class="viewcode-back" href="../../dev/reference/project_config.config.html#project_config.config.read_config_from_pyproject_toml">[docs]</a><span class="k">def</span> <span class="nf">read_config_from_pyproject_toml</span><span class="p">(</span><span class="n">fpath</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Read the configuration from the `pyproject.toml` file.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Read the configuration from the `pyproject.toml` file.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        object: ``None`` if not found, configuration data otherwise.</span>
@@ -162,9 +167,10 @@
     <span class="n">rootdir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">custom_fpath</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;Read the configuration from a file.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Read the configuration from a file.</span>
 
 <span class="sd">    Args:</span>
+<span class="sd">        rootdir (str): Project root directory.</span>
 <span class="sd">        custom_fpath (str): Custom configuration file path</span>
 <span class="sd">            or ``None`` if the configuration must be read from</span>
 <span class="sd">            one of the default configuration file paths.</span>
@@ -205,8 +211,8 @@
     <span class="k">raise</span> <span class="n">ConfigurationFilesNotFound</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="validate_config_style"><a class="viewcode-back" href="../../dev/reference/project_config.config.html#project_config.config.validate_config_style">[docs]</a><span class="k">def</span> <span class="nf">validate_config_style</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;Validate the ``style`` field of a configuration object.</span>
+<div class="viewcode-block" id="validate_config_style"><a class="viewcode-back" href="../../dev/reference/project_config.config.html#project_config.config.validate_config_style">[docs]</a><span class="k">def</span> <span class="nf">validate_config_style</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>  <span class="c1"># noqa: PLR0912</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate the ``style`` field of a configuration object.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        config (object): Configuration data to validate.</span>
@@ -256,19 +262,19 @@
 
     <span class="k">if</span> <span class="s2">&quot;minute&quot;</span> <span class="ow">in</span> <span class="n">cache_string</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">cache_number</span> <span class="o">*</span> <span class="mi">60</span>
-    <span class="k">elif</span> <span class="s2">&quot;hour&quot;</span> <span class="ow">in</span> <span class="n">cache_string</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">&quot;hour&quot;</span> <span class="ow">in</span> <span class="n">cache_string</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">cache_number</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span>
-    <span class="k">elif</span> <span class="s2">&quot;day&quot;</span> <span class="ow">in</span> <span class="n">cache_string</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">&quot;day&quot;</span> <span class="ow">in</span> <span class="n">cache_string</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">cache_number</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">24</span>
-    <span class="k">elif</span> <span class="s2">&quot;second&quot;</span> <span class="ow">in</span> <span class="n">cache_string</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">&quot;second&quot;</span> <span class="ow">in</span> <span class="n">cache_string</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">cache_number</span>
-    <span class="k">elif</span> <span class="s2">&quot;week&quot;</span> <span class="ow">in</span> <span class="n">cache_string</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">&quot;week&quot;</span> <span class="ow">in</span> <span class="n">cache_string</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">cache_number</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">7</span>
     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">cache_string</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="validate_config_cache"><a class="viewcode-back" href="../../dev/reference/project_config.config.html#project_config.config.validate_config_cache">[docs]</a><span class="k">def</span> <span class="nf">validate_config_cache</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;Validate the ``cache`` field of a configuration object.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate the ``cache`` field of a configuration object.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        config (object): Configuration data to validate.</span>
@@ -293,7 +299,7 @@
 
 
 <div class="viewcode-block" id="validate_config"><a class="viewcode-back" href="../../dev/reference/project_config.config.html#project_config.config.validate_config">[docs]</a><span class="k">def</span> <span class="nf">validate_config</span><span class="p">(</span><span class="n">config_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Validate a configuration.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate a configuration.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        config_path (str): Configuration file path.</span>
@@ -323,9 +329,8 @@
                 <span class="s2">&quot;cli.reporter -&gt; must be one of the available reporters&quot;</span><span class="p">,</span>
             <span class="p">)</span>
 
-    <span class="k">if</span> <span class="s2">&quot;color&quot;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;color&quot;</span><span class="p">],</span> <span class="nb">bool</span><span class="p">):</span>
-            <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;cli.color -&gt; must be of type boolean&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;color&quot;</span> <span class="ow">in</span> <span class="n">config</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;color&quot;</span><span class="p">],</span> <span class="nb">bool</span><span class="p">):</span>
+        <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;cli.color -&gt; must be of type boolean&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="s2">&quot;colors&quot;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;colors&quot;</span><span class="p">],</span> <span class="nb">dict</span><span class="p">):</span>
@@ -352,9 +357,10 @@
     <span class="n">config_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;Validates the CLI configuration.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validates the CLI configuration.</span>
 
 <span class="sd">    Args:</span>
+<span class="sd">        config_path (str): Configuration file path.</span>
 <span class="sd">        config (dict): Raw CLI configuration.</span>
 
 <span class="sd">    Returns:</span>
@@ -367,26 +373,28 @@
 
 
 <div class="viewcode-block" id="FileConfig"><a class="viewcode-back" href="../../dev/reference/project_config.config.html#project_config.config.FileConfig">[docs]</a><span class="k">class</span> <span class="nc">FileConfig</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;File configuration wrapper.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;File configuration wrapper.</span>
 
 <span class="sd">    Stores the data of the project-config configuration defined in</span>
 <span class="sd">    the file &#39;.project-config.toml&#39; or equivalent. The configuration</span>
 <span class="sd">    of the file is stored in the ``dict_`` attribute.</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        rootdir (str): Project root directory.</span>
-<span class="sd">        path (str): Path to the file from which the configuration</span>
-<span class="sd">            will be loaded.</span>
-<span class="sd">        store_raw_config (bool): If ``True``, the raw configuration</span>
-<span class="sd">            of the file will be stored in the ``raw_`` attribute.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">rootdir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">store_raw_config</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">store_raw_config</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>  <span class="c1"># noqa: FBT001, FBT002</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;File configuration wrapper initializer.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            rootdir (str): Project root directory.</span>
+<span class="sd">            path (str): Path to the file from which the configuration</span>
+<span class="sd">                will be loaded.</span>
+<span class="sd">            store_raw_config (bool): If ``True``, the raw configuration</span>
+<span class="sd">                of the file will be stored in the ``raw_`` attribute.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">config</span> <span class="o">=</span> <span class="n">read_config</span><span class="p">(</span><span class="n">rootdir</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">store_raw_config</span><span class="p">:</span>
@@ -416,14 +424,14 @@
 
 
 <div class="viewcode-block" id="Config"><a class="viewcode-back" href="../../dev/reference/project_config.config.html#project_config.config.Config">[docs]</a><span class="k">class</span> <span class="nc">Config</span><span class="p">(</span><span class="n">FileConfig</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Main configuration wrapper.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Main configuration wrapper.</span>
 
 <span class="sd">    This class is the main configuration wrapper. It is used to</span>
 <span class="sd">    load a configuration object from CLI arguments.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Guess the final configuration merging file with CLI arguments.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Guess the final configuration merging file with CLI arguments.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">rootdir</span> <span class="ow">or</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="n">args</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="c1"># Disable cache from CLI</span>
@@ -477,10 +485,9 @@
             <span class="k">raise</span> <span class="n">ProjectConfigInvalidConfig</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;Root directory &#39;</span><span class="si">{</span><span class="n">rootdir</span><span class="si">}</span><span class="s2">&#39; must be an existing directory&quot;</span><span class="p">,</span>
             <span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># set rootdir as an internal environment variable to be</span>
-            <span class="c1"># used by plugins</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;PROJECT_CONFIG_ROOTDIR&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dict_</span><span class="p">[</span><span class="s2">&quot;cli&quot;</span><span class="p">][</span><span class="s2">&quot;rootdir&quot;</span><span class="p">]</span>
+        <span class="c1"># set rootdir as an internal environment variable to be</span>
+        <span class="c1"># used by plugins</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;PROJECT_CONFIG_ROOTDIR&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dict_</span><span class="p">[</span><span class="s2">&quot;cli&quot;</span><span class="p">][</span><span class="s2">&quot;rootdir&quot;</span><span class="p">]</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">dict_</span><span class="p">[</span><span class="s2">&quot;cli&quot;</span><span class="p">][</span><span class="s2">&quot;only_hints&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">dict_</span><span class="p">[</span><span class="s2">&quot;cli&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;only_hints&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">True</span>
@@ -489,7 +496,7 @@
 
 
 <div class="viewcode-block" id="reporter_from_config"><a class="viewcode-back" href="../../dev/reference/project_config.config.html#project_config.config.reporter_from_config">[docs]</a><span class="k">def</span> <span class="nf">reporter_from_config</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">Config</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Instanciate a reporter from a configuration object.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Instanciate a reporter from a configuration object.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        config (Config): Configuration object.</span>
@@ -508,7 +515,7 @@
 
 
 <div class="viewcode-block" id="initialize_config"><a class="viewcode-back" href="../../dev/reference/project_config.config.html#project_config.config.initialize_config">[docs]</a><span class="k">def</span> <span class="nf">initialize_config</span><span class="p">(</span><span class="n">config_fpath</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Initialize the configuration.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize the configuration.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        config_fpath (str): Path to the file in which the configuration will</span>
@@ -534,7 +541,7 @@
         <span class="n">config_prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;@&quot;</span><span class="p">,</span>
         <span class="n">prefix_jmespaths</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Create the default style file if it does not exist.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create the default style file if it does not exist.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">config_prefix</span> <span class="o">==</span> <span class="s2">&quot;@&quot;</span><span class="p">:</span>
 
             <span class="k">def</span> <span class="nf">key_matcher</span><span class="p">(</span><span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -560,7 +567,7 @@
 
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">style_fpath</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
-                <span class="sd">&#39;&#39;&#39;{</span>
+<span class="w">                </span><span class="sd">&#39;&#39;&#39;{</span>
 <span class="sd">  rules: [</span>
 <span class="sd">    {</span>
 <span class="sd">      files: [&quot;&#39;&#39;&#39;</span>
@@ -599,7 +606,9 @@
 <span class="s2">&quot;&quot;&quot;</span><span class="p">,</span>
             <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">build_config_string</span><span class="p">(</span><span class="n">pyproject_toml</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">build_config_string</span><span class="p">(</span>
+        <span class="n">pyproject_toml</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>  <span class="c1"># noqa: FBT001, FBT002</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="k">if</span> <span class="n">pyproject_toml</span><span class="p">:</span>
             <span class="n">result</span> <span class="o">+=</span> <span class="s2">&quot;[tool.project-config]</span><span class="se">\n</span><span class="s2">&quot;</span>
@@ -608,10 +617,7 @@
     <span class="k">def</span> <span class="nf">add_config_string_to_file</span><span class="p">(</span><span class="n">string</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">config_fpath</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">config_lines</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">config_lines</span><span class="p">:</span>
-            <span class="n">add_separator</span> <span class="o">=</span> <span class="n">config_lines</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">add_separator</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">add_separator</span> <span class="o">=</span> <span class="n">config_lines</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="k">if</span> <span class="n">config_lines</span> <span class="k">else</span> <span class="kc">False</span>
 
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">config_fpath</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">add_separator</span><span class="p">:</span>

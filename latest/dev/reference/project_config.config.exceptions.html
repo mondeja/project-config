@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.config.exceptions module &mdash; project-config 0.8.0 documentation</title>
+  <title>project_config.config.exceptions module &mdash; project-config 0.9.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -31,14 +31,18 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../index.html" class="icon icon-home"> project-config
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            project-config
           </a>
               <div class="version">
-                0.8
+                0.9
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -57,6 +61,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../reference/config.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../reference/styling.html">Styling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../reference/plugins.html">Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/ci.html">Using on CI</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">In depth</span></p>
 <ul>
@@ -102,7 +107,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="modules.html">Reference</a></li>
           <li class="breadcrumb-item"><a href="project_config.html">project_config package</a></li>
           <li class="breadcrumb-item"><a href="project_config.config.html">project_config.config package</a></li>
@@ -128,28 +133,28 @@
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="project_config.config.exceptions.CustomConfigFileNotFound">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">project_config.config.exceptions.</span></span><span class="sig-name descname"><span class="pre">CustomConfigFileNotFound</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fpath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/project_config/config/exceptions.html#CustomConfigFileNotFound"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.config.exceptions.CustomConfigFileNotFound" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">project_config.config.exceptions.</span></span><span class="sig-name descname"><span class="pre">CustomConfigFileNotFound</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fpath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/project_config/config/exceptions.html#CustomConfigFileNotFound"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.config.exceptions.CustomConfigFileNotFound" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#project_config.config.exceptions.ProjectConfigInvalidConfig" title="project_config.config.exceptions.ProjectConfigInvalidConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">project_config.config.exceptions.ProjectConfigInvalidConfig</span></code></a></p>
 <p>A custom configuration file has not been found.</p>
 </dd></dl>
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="project_config.config.exceptions.ProjectConfigAlreadyInitialized">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">project_config.config.exceptions.</span></span><span class="sig-name descname"><span class="pre">ProjectConfigAlreadyInitialized</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/project_config/config/exceptions.html#ProjectConfigAlreadyInitialized"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.config.exceptions.ProjectConfigAlreadyInitialized" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">project_config.config.exceptions.</span></span><span class="sig-name descname"><span class="pre">ProjectConfigAlreadyInitialized</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/project_config/config/exceptions.html#ProjectConfigAlreadyInitialized"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.config.exceptions.ProjectConfigAlreadyInitialized" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="project_config.exceptions.html#project_config.exceptions.ProjectConfigException" title="project_config.exceptions.ProjectConfigException"><code class="xref py py-class docutils literal notranslate"><span class="pre">project_config.exceptions.ProjectConfigException</span></code></a></p>
 <p>The project-config has already been initialized.</p>
 </dd></dl>
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="project_config.config.exceptions.ProjectConfigInvalidConfig">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">project_config.config.exceptions.</span></span><span class="sig-name descname"><span class="pre">ProjectConfigInvalidConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/project_config/config/exceptions.html#ProjectConfigInvalidConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.config.exceptions.ProjectConfigInvalidConfig" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">project_config.config.exceptions.</span></span><span class="sig-name descname"><span class="pre">ProjectConfigInvalidConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/project_config/config/exceptions.html#ProjectConfigInvalidConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.config.exceptions.ProjectConfigInvalidConfig" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="project_config.exceptions.html#project_config.exceptions.ProjectConfigException" title="project_config.exceptions.ProjectConfigException"><code class="xref py py-class docutils literal notranslate"><span class="pre">project_config.exceptions.ProjectConfigException</span></code></a></p>
 <p>Invalid configuration of project-config found.</p>
 </dd></dl>
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="project_config.config.exceptions.ProjectConfigInvalidConfigSchema">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">project_config.config.exceptions.</span></span><span class="sig-name descname"><span class="pre">ProjectConfigInvalidConfigSchema</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_messages</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/project_config/config/exceptions.html#ProjectConfigInvalidConfigSchema"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.config.exceptions.ProjectConfigInvalidConfigSchema" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">project_config.config.exceptions.</span></span><span class="sig-name descname"><span class="pre">ProjectConfigInvalidConfigSchema</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_messages</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/project_config/config/exceptions.html#ProjectConfigInvalidConfigSchema"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.config.exceptions.ProjectConfigInvalidConfigSchema" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#project_config.config.exceptions.ProjectConfigInvalidConfig" title="project_config.config.exceptions.ProjectConfigInvalidConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">project_config.config.exceptions.ProjectConfigInvalidConfig</span></code></a></p>
 <p>The configuration of project-config is invalid.</p>
 </dd></dl>

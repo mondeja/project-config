@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.reporters.default &mdash; project-config 0.8.0 documentation</title>
+  <title>project_config.reporters.default &mdash; project-config 0.9.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
@@ -29,14 +29,18 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> project-config
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            project-config
           </a>
               <div class="version">
-                0.8
+                0.9
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -55,6 +59,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../reference/config.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../reference/styling.html">Styling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../reference/plugins.html">Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference/ci.html">Using on CI</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">In depth</span></p>
 <ul>
@@ -83,7 +88,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
           <li class="breadcrumb-item"><a href="../reporters.html">project_config.reporters</a></li>
       <li class="breadcrumb-item active">project_config.reporters.default</li>
@@ -111,10 +116,10 @@
 
 
 <div class="viewcode-block" id="BaseDefaultReporter"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.default.html#project_config.reporters.default.BaseDefaultReporter">[docs]</a><span class="k">class</span> <span class="nc">BaseDefaultReporter</span><span class="p">(</span><span class="n">BaseFormattedReporter</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Base reporter for default reporters.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base reporter for default reporters.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="BaseDefaultReporter.generate_errors_report"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.default.html#project_config.reporters.default.BaseDefaultReporter.generate_errors_report">[docs]</a>    <span class="k">def</span> <span class="nf">generate_errors_report</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Generate errors report in custom project-config format.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate errors report in custom project-config format.&quot;&quot;&quot;</span>
         <span class="n">report</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="k">for</span> <span class="n">file</span><span class="p">,</span> <span class="n">errors</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">report</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_file</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
@@ -138,12 +143,12 @@
                 <span class="n">report</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="k">return</span> <span class="n">report</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="BaseDefaultReporter.generate_data_report"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.default.html#project_config.reporters.default.BaseDefaultReporter.generate_data_report">[docs]</a>    <span class="k">def</span> <span class="nf">generate_data_report</span><span class="p">(</span>
+<div class="viewcode-block" id="BaseDefaultReporter.generate_data_report"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.default.html#project_config.reporters.default.BaseDefaultReporter.generate_data_report">[docs]</a>    <span class="k">def</span> <span class="nf">generate_data_report</span><span class="p">(</span>  <span class="c1"># noqa: PLR0912</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">data_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Generate data report in custom project-config format.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate data report in custom project-config format.&quot;&quot;&quot;</span>
         <span class="n">report</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">data_key</span> <span class="o">==</span> <span class="s2">&quot;style&quot;</span><span class="p">:</span>
@@ -221,11 +226,11 @@
 
 
 <div class="viewcode-block" id="DefaultReporter"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.default.html#project_config.reporters.default.DefaultReporter">[docs]</a><span class="k">class</span> <span class="nc">DefaultReporter</span><span class="p">(</span><span class="n">BaseNoopFormattedReporter</span><span class="p">,</span> <span class="n">BaseDefaultReporter</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Default black/white reporter.&quot;&quot;&quot;</span></div>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Default black/white reporter.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="DefaultColorReporter"><a class="viewcode-back" href="../../../dev/reference/project_config.reporters.default.html#project_config.reporters.default.DefaultColorReporter">[docs]</a><span class="k">class</span> <span class="nc">DefaultColorReporter</span><span class="p">(</span><span class="n">BaseColorReporter</span><span class="p">,</span> <span class="n">BaseDefaultReporter</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Default color reporter.&quot;&quot;&quot;</span></div>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Default color reporter.&quot;&quot;&quot;</span></div>
 </pre></div>
 
            </div>

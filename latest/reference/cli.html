@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project-config CLI &mdash; project-config 0.8.0 documentation</title>
+  <title>project-config CLI &mdash; project-config 0.9.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -31,14 +31,18 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> project-config
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            project-config
           </a>
               <div class="version">
-                0.8
+                0.9
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -61,6 +65,7 @@
 <li class="toctree-l1"><a class="reference internal" href="config.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="styling.html">Styling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="plugins.html">Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ci.html">Using on CI</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">In depth</span></p>
 <ul>
@@ -89,7 +94,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a></li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
       <li class="breadcrumb-item active">project-config CLI</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/reference/cli.rst.txt" rel="nofollow"> View page source</a>
@@ -185,7 +190,7 @@ the report in the command line use always the
 <h2>Examples of usage<a class="headerlink" href="#examples-of-usage" title="Permalink to this headline"></a></h2>
 <p>Check the styles of the current project reporting in TOML format without
 color and making all requests to remote sources:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>project-config check -r toml --no-color --no-cache
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>project-config<span class="w"> </span>check<span class="w"> </span>-r<span class="w"> </span>toml<span class="w"> </span>--no-color<span class="w"> </span>--no-cache
 </pre></div>
 </div>
 <p>The installation of <strong>project-config</strong> from Python sources comes with
@@ -194,53 +199,53 @@ that can be used to apply JMESPath queries to JSON reports produced by
 <strong>project-config</strong>.</p>
 <p>For example, to show the number of incorrect files detected by the
 <code class="docutils literal notranslate"><span class="pre">check</span></code> command (Unix only):</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>project-config check -r json --no-color <span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span> <span class="p">|</span> jp.py <span class="s1">&#39;length(keys(@))&#39;</span>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>project-config<span class="w"> </span>check<span class="w"> </span>-r<span class="w"> </span>json<span class="w"> </span>--no-color<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jp.py<span class="w"> </span><span class="s1">&#39;length(keys(@))&#39;</span>
 </pre></div>
 </div>
 <p>Show the number of rules defined in your styles after collecting all:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>project-config show style -r json --no-color <span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span> <span class="p">|</span> jp.py <span class="s1">&#39;length(rules)&#39;</span>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>project-config<span class="w"> </span>show<span class="w"> </span>style<span class="w"> </span>-r<span class="w"> </span>json<span class="w"> </span>--no-color<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jp.py<span class="w"> </span><span class="s1">&#39;length(rules)&#39;</span>
 </pre></div>
 </div>
 <p>Show the number of actions currently available:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>project-config show plugins -r json --no-color <span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span> <span class="p">|</span> jp.py <span class="s1">&#39;length(*[])&#39;</span>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>project-config<span class="w"> </span>show<span class="w"> </span>plugins<span class="w"> </span>-r<span class="w"> </span>json<span class="w"> </span>--no-color<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jp.py<span class="w"> </span><span class="s1">&#39;length(*[])&#39;</span>
 </pre></div>
 </div>
 <p>Show your styles after collecting all in YAML format:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>project-config show style -r yaml
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>project-config<span class="w"> </span>show<span class="w"> </span>style<span class="w"> </span>-r<span class="w"> </span>yaml
 </pre></div>
 </div>
 <p>Fix the styles for the current project:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>project-config fix
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>project-config<span class="w"> </span>fix
 </pre></div>
 </div>
 <p>Print the content of a file converted to JSON:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>project-config -r json:pretty show file .project-config.yml
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>project-config<span class="w"> </span>-r<span class="w"> </span>json:pretty<span class="w"> </span>show<span class="w"> </span>file<span class="w"> </span>.project-config.yml
 </pre></div>
 </div>
 <p>You can also pass a URL to the <code class="docutils literal notranslate"><span class="pre">show</span> <span class="pre">file</span></code> command and indent the
 JSON with 4 spaces using the <code class="docutils literal notranslate"><span class="pre">json:pretty4</span></code> reporter:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>src/project_config/__main__.py -r json:pretty4 <span class="se">\</span>
-  show file gh://mondeja/project-config/pyproject.toml
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>src/project_config/__main__.py<span class="w"> </span>-r<span class="w"> </span>json:pretty4<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>show<span class="w"> </span>file<span class="w"> </span>gh://mondeja/project-config/pyproject.toml
 </pre></div>
 </div>
 <p>Print the result of a JMESPath query works against a file
 (accept paths or URLs):</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>project-config show file .pre-commit-config.yaml <span class="se">\</span>
-  <span class="p">|</span> jp.py <span class="s2">&quot;repos[?repo==&#39;https://github.com/mondeja/project-config&#39;]&quot;</span>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>project-config<span class="w"> </span>show<span class="w"> </span>file<span class="w"> </span>.pre-commit-config.yaml<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="p">|</span><span class="w"> </span>jp.py<span class="w"> </span><span class="s2">&quot;repos[?repo==&#39;https://github.com/mondeja/project-config&#39;]&quot;</span>
 </pre></div>
 </div>
 <p>Initialize a minimal configuration:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>project-config init
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>project-config<span class="w"> </span>init
 </pre></div>
 </div>
 <p>Initialize a minimal configuration storing the configuration inside a
 <cite>pyproject.toml</cite> file:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>project-config init --config pyproject.toml
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>project-config<span class="w"> </span>init<span class="w"> </span>--config<span class="w"> </span>pyproject.toml
 </pre></div>
 </div>
 <p>Initialize a minimal configuration storing the configuration in
 a custom file located in a relative project root directory:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>project-config init --config styles-configuration.toml --rootdir my/subdir
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>project-config<span class="w"> </span>init<span class="w"> </span>--config<span class="w"> </span>styles-configuration.toml<span class="w"> </span>--rootdir<span class="w"> </span>my/subdir
 </pre></div>
 </div>
 </section>

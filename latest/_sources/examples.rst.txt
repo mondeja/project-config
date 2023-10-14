@@ -229,18 +229,18 @@ The version defined in ``__version__`` inside a Python script must match the met
 
          __version__ = "1.0.0"
 
+   .. tab:: .project-config.toml
+
+      .. code-block:: toml
+
+         style = "style.toml"
+
    .. tab:: pyproject.toml
 
       .. code-block:: toml
 
          [project]
          version = "1.0.0"
-
-   .. tab:: .project-config.toml
-
-      .. code-block:: toml
-
-         style = "style.toml"
 
 JMESPath against online sources
 ===============================
@@ -261,7 +261,7 @@ Check that the ``license`` field of *package.json* file is defined with a valid 
                  [
                    "license",
                    [
-                     "gh://spdx/license-list-data@v3.19/json/licenses.json",
+                     "gh://spdx/license-list-data@v3.22/json/licenses.json",
                      "licenses[?isOsiApproved] | [?!isDeprecatedLicenseId].licenseId",
                    ],
                    "contains([1], [0])",
@@ -341,6 +341,12 @@ Check that the section ``[foo]`` of a TOML file is placed before the section ``[
            ],
          }
 
+   .. tab:: .project-config.toml
+
+      .. code-block:: toml
+
+         style = "style.json5"
+
    .. tab:: pyproject.toml
 
       .. code-block:: toml
@@ -350,12 +356,6 @@ Check that the section ``[foo]`` of a TOML file is placed before the section ``[
 
          [bar]
          name = "bar"
-
-   .. tab:: .project-config.toml
-
-      .. code-block:: toml
-
-         style = "style.json5"
 
 Editing a .gitignore file
 =========================
@@ -372,21 +372,20 @@ Enforce the existence of certain lines in a `.gitignore` file.
            rules: [
              {
                files: [".gitignore"], // Enforce the existence of a '.gitignore' file
-               hint: "Enforced the line '__pycache__/' to be present in .gitignore file",
+               hint: "The line '__pycache__/' must be present in .gitignore file",
                includeLines: ["__pycache__/"],
              },
              {
                files: [".gitignore"],
-               hint: "As a directory 'tests/' has been found, enforced the line '.pytest_cache/' to be present in the '.gitignore' file",
+               hint: "As a directory 'tests/' has been found, the line '.pytest_cache/' must be present in the '.gitignore' file",
                ifFilesExist: ["tests/"],
                includeLines: [".pytest_cache/"],
              },
              {
                files: [".gitignore"],
-               hint: "Removed the line '.pytest_cache' from the '.gitignore' file as it is implicitly naming a directory",
-               JMESPathsMatch: [
-                 ["contains(@, '.pytest_cache')", false, "[?@ != '.pytest_cache']"],
-               ],
+               hint: "As a directory 'tests/' has been found, the line '.pytest_cache' must not be present as it is implicitly naming a directory",
+               ifFilesExist: ["tests/"],
+               excludeLines: [".pytest_cache"],
              },
              {
                files: [".gitignore"],

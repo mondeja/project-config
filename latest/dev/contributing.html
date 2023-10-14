@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Contributing &mdash; project-config 0.8.0 documentation</title>
+  <title>Contributing &mdash; project-config 0.9.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -31,14 +31,18 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> project-config
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            project-config
           </a>
               <div class="version">
-                0.8
+                0.9
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -57,6 +61,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../reference/config.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reference/styling.html">Styling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reference/plugins.html">Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/ci.html">Using on CI</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">In depth</span></p>
 <ul>
@@ -70,12 +75,8 @@
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Contributing</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#development-install">Development install</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#testing">Testing</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#show-coverage-report">Show coverage report</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#end-to-end-tests">End to end tests</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#linting">Linting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#run-tests">Run tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#linting-and-formatting">Linting and formatting</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#build-documentation">Build documentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#release">Release</a></li>
 </ul>
@@ -96,7 +97,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a></li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
       <li class="breadcrumb-item active">Contributing</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/dev/contributing.rst.txt" rel="nofollow"> View page source</a>
@@ -111,53 +112,42 @@
 <h1>Contributing<a class="headerlink" href="#contributing" title="Permalink to this headline"></a></h1>
 <section id="development-install">
 <h2>Development install<a class="headerlink" href="#development-install" title="Permalink to this headline"></a></h2>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/mondeja/project-config
-<span class="nb">cd</span> project-config
-pip install hatch
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/mondeja/project-config
+<span class="nb">cd</span><span class="w"> </span>project-config
+pip<span class="w"> </span>install<span class="w"> </span>hatch
 </pre></div>
 </div>
 </section>
-<section id="testing">
-<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this headline"></a></h2>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>hatch run tests:unit
-<span class="c1"># or `hatch run tests:all`</span>
-</pre></div>
-</div>
-<section id="show-coverage-report">
-<h3>Show coverage report<a class="headerlink" href="#show-coverage-report" title="Permalink to this headline"></a></h3>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>hatch run tests:cov
+<section id="run-tests">
+<h2>Run tests<a class="headerlink" href="#run-tests" title="Permalink to this headline"></a></h2>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>hatch<span class="w"> </span>run<span class="w"> </span>tests:unit
+<span class="c1"># hatch run tests:all</span>
+<span class="c1"># hatch run tests:cov</span>
 </pre></div>
 </div>
 </section>
-<section id="end-to-end-tests">
-<h3>End to end tests<a class="headerlink" href="#end-to-end-tests" title="Permalink to this headline"></a></h3>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>hatch run tests:all
-</pre></div>
-</div>
-</section>
-</section>
-<section id="linting">
-<h2>Linting<a class="headerlink" href="#linting" title="Permalink to this headline"></a></h2>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>hatch run style:lint
+<section id="linting-and-formatting">
+<h2>Linting and formatting<a class="headerlink" href="#linting-and-formatting" title="Permalink to this headline"></a></h2>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>hatch<span class="w"> </span>run<span class="w"> </span>style:lint
 </pre></div>
 </div>
 </section>
 <section id="build-documentation">
 <h2>Build documentation<a class="headerlink" href="#build-documentation" title="Permalink to this headline"></a></h2>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>hatch run docs:build
-<span class="c1"># or `hatch run docs:serve`</span>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>hatch<span class="w"> </span>run<span class="w"> </span>docs:build
+<span class="c1"># hatch run docs:serve</span>
 </pre></div>
 </div>
 </section>
 <section id="release">
 <h2>Release<a class="headerlink" href="#release" title="Permalink to this headline"></a></h2>
 <p>You must have administrator permissions on the repository.</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nv">version</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>hatch run bump &lt;major/minor/patch&gt;<span class="k">)</span><span class="s2">&quot;</span>
-git add .
-git commit -m <span class="s2">&quot;Bump version&quot;</span>
-git push origin master
-git tag -a <span class="s2">&quot;v</span><span class="nv">$version</span><span class="s2">&quot;</span>
-git push origin <span class="s2">&quot;v</span><span class="nv">$version</span><span class="s2">&quot;</span>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nv">version</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>hatch<span class="w"> </span>run<span class="w"> </span>bump<span class="w"> </span>&lt;major/minor/patch&gt;<span class="k">)</span><span class="s2">&quot;</span>
+git<span class="w"> </span>add<span class="w"> </span>.
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Bump version&quot;</span>
+git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>master
+git<span class="w"> </span>tag<span class="w"> </span>-a<span class="w"> </span><span class="s2">&quot;v</span><span class="nv">$version</span><span class="s2">&quot;</span>
+git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span><span class="s2">&quot;v</span><span class="nv">$version</span><span class="s2">&quot;</span>
 </pre></div>
 </div>
 </section>
