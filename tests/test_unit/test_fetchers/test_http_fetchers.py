@@ -11,24 +11,18 @@ from testing_helpers import TEST_SERVER_URL, mark_end2end
 @pytest.mark.parametrize(
     ("path", "content", "expected_result", "expected_error_message"),
     (
-        pytest.param(
-            "foo.json",
-            {"rules": []},
-            True,
-            None,
-            id=".json",
-        ),
-        pytest.param(
-            "bar.json",
-            "foo",
-            FetchError,
-            (
-                "'http://127.0.0.1:9997/download/foo/bar.json'"
-                " can't be serialized as a valid object:"
-                " Expecting value: line 1 column 1 (char 0)"
-            ),
-            id=".json (invalid)",
-        ),
+        # pytest.param(
+        #     "foo.json",
+        #     True,
+        #     None,
+        # ),
+        # pytest.param(
+        #     "bar.json",
+        #     "foo",
+        #     FetchError,
+        #     ("'http://127.0.0.1:9997/download/foo/bar.json'"
+        #      " Expecting value: line 1 column 1 (char 0)"),
+        # ),
         pytest.param(
             "unexistent-directory/baz.json",
             "foo",

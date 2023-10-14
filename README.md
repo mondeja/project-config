@@ -1,12 +1,11 @@
 # project-config
 
 [![PyPI][pypi-version-badge-link]][pypi-link]
-[![NPM version][npm-version-image]][npm-link]
 [![License][license-image]][license-link]
+[![Python versions][pv-image]][pypi-link]
 
 [![Tests][tests-image]][tests-link]
 [![Coverage][coverage-image]][coverage-link]
-[![Downloads][pypi-downloads-image]][pypi-downloads-link]
 
 > Note for developers: This project is under heavy development.
 > The testing and reporter APIs may change without warning before the
@@ -32,9 +31,6 @@ Lint the data files of your projects in a flexible way using JMESPaths.
 [license-link]: https://github.com/mondeja/project-config/blob/master/LICENSE
 [tests-image]: https://img.shields.io/github/actions/workflow/status/mondeja/project-config/ci.yml?logo=github&label=tests&branch=master
 [tests-link]: https://github.com/mondeja/project-config/actions?query=workflow%3ACI
-[pypi-downloads-image]: https://img.shields.io/pypi/dm/project-config?logo=pypi&logoColor=white
-[pypi-downloads-link]: https://pypistats.org/packages/project-config
 [coverage-image]: https://img.shields.io/codecov/c/github/mondeja/project-config?logo=codecov&logoColor=white
 [coverage-link]: https://app.codecov.io/gh/mondeja/project-config
-[npm-link]: https://www.npmjs.com/package/python-project-config
-[npm-version-image]: https://img.shields.io/npm/v/python-project-config?logo=npm
+[pv-image]: https://img.shields.io/pypi/pyversions/project-config?logo=python&logoColor=white
