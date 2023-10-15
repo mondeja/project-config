@@ -14,31 +14,13 @@ from project_config import (
     tree,
 )
 from project_config.fetchers.github import get_latest_release_tags
+from project_config.serializers.contrib.pre_commit import (
+    sort_pre_commit_config,
+)
 
 
 if TYPE_CHECKING:
     from project_config import Results, Rule
-
-REPO_KEYS_ORDER = [
-    "repo",
-    "rev",
-    "hooks",
-]
-HOOK_KEYS_ORDER = [
-    "id",
-    "name",
-    "entry",
-    "language_version",
-    "files",
-    "exclude",
-    "types",
-    "stages",
-    "always_run",
-    "pass_filenames",
-    "additional_dependencies",
-    "args",
-    "exclude_types",
-]
 
 
 class PreCommitPlugin:
@@ -320,32 +302,7 @@ class PreCommitPlugin:
                     }
 
             if context.fix:
-                sorted_repos = []
-
-                for unsorted_repo in instance["repos"]:
-                    sorted_repo = dict(
-                        sorted(
-                            unsorted_repo.items(),
-                            key=lambda x: (
-                                REPO_KEYS_ORDER.index(x[0])
-                                if x[0] in REPO_KEYS_ORDER
-                                else 999
-                            ),
-                        ),
-                    )
-                    sorted_hooks = []
-                    for unsorted_hook in unsorted_repo["hooks"]:
-                        sorted_hook = dict(
-                            sorted(
-                                unsorted_hook.items(),
-                                key=lambda x: HOOK_KEYS_ORDER.index(x[0])
-                                if x[0] in HOOK_KEYS_ORDER
-                                else 999,
-                            ),
-                        )
-                        sorted_hooks.append(sorted_hook)
-                    sorted_repo["hooks"] = sorted_hooks
-                    sorted_repos.append(sorted_repo)
-                instance["repos"] = sorted_repos
-
-                tree.edit_local_file(fpath, instance)
+                tree.edit_local_file(
+                    fpath,
+                    sort_pre_commit_config(instance),
+                )
