@@ -242,6 +242,37 @@ from project_config.plugins.contrib.pre_commit import PreCommitPlugin
             id="invalid-instance-type",
         ),
         pytest.param(
+            {
+                ".pre-commit-config.yaml": (
+                    "repos:"
+                    " [{"
+                    " 'repo': 'https://github.com/mondeja/project-config',"
+                    " 'rev': 'master',"
+                    " 'hooks': [{'id': 'project-config-fix'}]"
+                    "}]"
+                ),
+            },
+            ["https://github.com/mondeja/project-config", "project-config"],
+            None,
+            [
+                (
+                    Error,
+                    {
+                        "message": (
+                            "The hook 'project-config' of the repo"
+                            " 'https://github.com/mondeja/project-config'"
+                            " must be set"
+                        ),
+                        "definition": ".preCommitHookExists[1][0]",
+                        "file": ".pre-commit-config.yaml",
+                        "fixable": True,
+                        "fixed": False,
+                    },
+                ),
+            ],
+            id="set-simple",
+        ),
+        pytest.param(
             {".pre-commit-config.yaml": "{}"},
             ["https://github.com/mondeja/project-config", "project-config"],
             None,

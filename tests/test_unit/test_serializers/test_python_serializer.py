@@ -38,7 +38,7 @@ from project_config.serializers.python import dumps, loads
         ),
     ),
 )
-def test_python_serializer(string, kwargs, expected_result, maybe_raises):
+def test_python_loads(string, kwargs, expected_result, maybe_raises):
     with maybe_raises(expected_result):
         assert loads(string, **kwargs) == expected_result
 
@@ -109,5 +109,5 @@ foo = {
         ),
     ),
 )
-def test_python_deserializer(obj, expected_result):
+def test_python_dumps(obj, expected_result):
     assert dumps(obj) == expected_result
