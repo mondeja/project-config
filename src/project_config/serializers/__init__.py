@@ -129,7 +129,7 @@ EMPTY_CONTENT_BY_SERIALIZER = {
 
 SERIALIZER_FROM_EXT_FILENAME = {
     ".yaml": {
-        "pre-commit-config.yaml": (
+        ".pre-commit-config.yaml": (
             [{"module": "project_config.serializers.yaml"}],
             [{"module": "project_config.serializers.contrib.pre_commit"}],
         ),
