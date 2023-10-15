@@ -8,6 +8,7 @@ import functools
 import inspect
 import os
 import pathlib
+import pprint
 import re
 import types
 from typing import TYPE_CHECKING, Any
@@ -180,7 +181,10 @@ def project_config_plugin_action_asserter(  # noqa: PLR0913
         staticmethod,
     ), f"Plugin method '{plugin_method_name}' must be a static method"
 
-    assert len(results) == len(expected_results)
+    assert len(results) == len(expected_results), (
+        f"Results: {pprint.pformat(results)}\n"
+        f"Expected results: {pprint.pformat(expected_results)}"
+    )
 
     for (
         (result_type, result_value),

@@ -1,5 +1,5 @@
 import pytest
-from project_config import InterruptingError
+from project_config import Error, InterruptingError
 from project_config.plugins.contrib.pre_commit import PreCommitPlugin
 
 
@@ -133,25 +133,6 @@ from project_config.plugins.contrib.pre_commit import PreCommitPlugin
             id="invalid-empty-second-subvalue",
         ),
         pytest.param(
-            {".pre-commit-config.yaml": "foo"},
-            ["foobar", "barbaz"],
-            None,
-            [
-                (
-                    InterruptingError,
-                    {
-                        "message": (
-                            "The pre-commit configuration"
-                            " must be of type object"
-                        ),
-                        "definition": ".preCommitHookExists",
-                        "file": ".pre-commit-config.yaml",
-                    },
-                ),
-            ],
-            id="invalid-instance-type",
-        ),
-        pytest.param(
             {".pre-commit-config.yaml": ""},
             ["foobar", [2]],
             None,
@@ -240,6 +221,166 @@ from project_config.plugins.contrib.pre_commit import PreCommitPlugin
                 ),
             ],
             id="invalid-empty-id-second-subsubvalue",
+        ),
+        pytest.param(
+            {".pre-commit-config.yaml": "foo"},
+            ["foobar", "barbaz"],
+            None,
+            [
+                (
+                    InterruptingError,
+                    {
+                        "message": (
+                            "The pre-commit configuration"
+                            " must be of type object"
+                        ),
+                        "definition": ".preCommitHookExists",
+                        "file": ".pre-commit-config.yaml",
+                    },
+                ),
+            ],
+            id="invalid-instance-type",
+        ),
+        pytest.param(
+            {".pre-commit-config.yaml": "{}"},
+            ["https://github.com/mondeja/project-config", "project-config"],
+            None,
+            [
+                (
+                    Error,
+                    {
+                        "message": "The key 'repos' must be set",
+                        "definition": ".preCommitHookExists",
+                        "file": ".pre-commit-config.yaml",
+                        "fixable": True,
+                        "fixed": False,
+                    },
+                ),
+                (
+                    Error,
+                    {
+                        "message": (
+                            "The repo 'https://github.com/mondeja/project-config'"
+                            " must be set"
+                        ),
+                        "definition": ".preCommitHookExists[0]",
+                        "file": ".pre-commit-config.yaml",
+                        "fixable": True,
+                        "fixed": False,
+                    },
+                ),
+                (
+                    Error,
+                    {
+                        "message": (
+                            "The key 'rev' of the repo"
+                            " 'https://github.com/mondeja/project-config'"
+                            " must be set"
+                        ),
+                        "definition": ".preCommitHookExists[0]",
+                        "file": ".pre-commit-config.yaml",
+                        "fixable": True,
+                        "fixed": False,
+                    },
+                ),
+                (
+                    Error,
+                    {
+                        "message": (
+                            "The key 'hooks' of the repo"
+                            " 'https://github.com/mondeja/project-config'"
+                            " must be set"
+                        ),
+                        "definition": ".preCommitHookExists[1]",
+                        "file": ".pre-commit-config.yaml",
+                        "fixable": True,
+                        "fixed": False,
+                    },
+                ),
+                (
+                    Error,
+                    {
+                        "message": (
+                            "The hook 'project-config' of the repo"
+                            " 'https://github.com/mondeja/project-config'"
+                            " must be set"
+                        ),
+                        "definition": ".preCommitHookExists[1][0]",
+                        "file": ".pre-commit-config.yaml",
+                        "fixable": True,
+                        "fixed": False,
+                    },
+                ),
+            ],
+            id="set-full",
+        ),
+        pytest.param(
+            {
+                ".pre-commit-config.yaml": (
+                    "repos:\n"
+                    "  - repo: https://github.com/mondeja/project-config\n"
+                    "    hooks:\n"
+                    "      - id: project-config\n"
+                    "        alias: project-config-check\n"
+                    "      - id: project-config-fix\n"
+                    "        alias: project-config-fix\n"
+                ),
+            },
+            [
+                "https://github.com/mondeja/project-config",
+                [
+                    {"id": "project-config", "alias": "pc"},
+                    {"id": "project-config-fix", "alias": "pcf"},
+                ],
+            ],
+            None,
+            [
+                (
+                    Error,
+                    {
+                        "definition": ".preCommitHookExists[0]",
+                        "file": ".pre-commit-config.yaml",
+                        "fixable": True,
+                        "fixed": False,
+                        "message": (
+                            "The key 'rev' of the repo "
+                            "'https://github.com/mondeja/project-config'"
+                            " must be set"
+                        ),
+                    },
+                ),
+                (
+                    Error,
+                    {
+                        "definition": ".preCommitHookExists[1][0].alias",
+                        "file": ".pre-commit-config.yaml",
+                        "fixable": True,
+                        "fixed": False,
+                        "message": (
+                            "The configuration 'alias' defined by the hook"
+                            " 'project-config' of the repo"
+                            " 'https://github.com/mondeja/project-config'"
+                            " must be 'pc' but is 'project-config-check'"
+                        ),
+                    },
+                ),
+                (
+                    Error,
+                    {
+                        "definition": ".preCommitHookExists[1][1].alias",
+                        "file": ".pre-commit-config.yaml",
+                        "fixable": True,
+                        "fixed": False,
+                        "message": (
+                            "The configuration 'alias' defined by the hook"
+                            " 'project-config-fix' of the repo"
+                            " 'https://github.com/mondeja/project-config'"
+                            " must be 'pcf' but is 'project-config-fix'"
+                        ),
+                    },
+                ),
+            ],
+            id="edit-hooks",
         ),
     ),
 )

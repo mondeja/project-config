@@ -20,38 +20,29 @@ class ExistencePlugin:
         _context: ActionsContext,
     ) -> Results:
         if not isinstance(value, list):
-            yield (
-                InterruptingError,
-                {
-                    "message": (
-                        "The files to check for existence must be of type array"
-                    ),
-                    "definition": ".ifFilesExist",
-                },
-            )
+            yield InterruptingError, {
+                "message": (
+                    "The files to check for existence must be of type array"
+                ),
+                "definition": ".ifFilesExist",
+            }
         elif not value:
-            yield (
-                InterruptingError,
-                {
-                    "message": (
-                        "The files to check for existence must not be empty"
-                    ),
-                    "definition": ".ifFilesExist",
-                },
-            )
+            yield InterruptingError, {
+                "message": (
+                    "The files to check for existence must not be empty"
+                ),
+                "definition": ".ifFilesExist",
+            }
 
         for f, fpath in enumerate(value):
             if not isinstance(fpath, str):
-                yield (
-                    InterruptingError,
-                    {
-                        "message": (
-                            "The file to check for existence"
-                            " must be of type string"
-                        ),
-                        "definition": f".ifFilesExist[{f}]",
-                    },
-                )
+                yield InterruptingError, {
+                    "message": (
+                        "The file to check for existence"
+                        " must be of type string"
+                    ),
+                    "definition": f".ifFilesExist[{f}]",
+                }
             if fpath.endswith("/"):
                 if not os.path.isdir(fpath):
                     yield ResultValue, False
