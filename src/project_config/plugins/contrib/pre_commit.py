@@ -142,9 +142,9 @@ class PreCommitPlugin:
         for f, fpath in enumerate(files):
             try:
                 fstat = os.stat(fpath)
-            except FileNotFoundError:
+            except FileNotFoundError:  # pragma: no cover
                 continue
-            if stat.S_ISDIR(fstat.st_mode):
+            if stat.S_ISDIR(fstat.st_mode):  # pragma: no cover
                 yield InterruptingError, {
                     "message": (
                         "The pre-commit configuration"

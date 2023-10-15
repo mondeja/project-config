@@ -273,6 +273,51 @@ from project_config.plugins.contrib.pre_commit import PreCommitPlugin
             id="set-simple",
         ),
         pytest.param(
+            {
+                ".pre-commit-config.yaml": (
+                    "repos:"
+                    " [{"
+                    " 'repo': 'https://github.com/mondeja/project-config',"
+                    " 'rev': 'master',"
+                    " 'hooks': []"
+                    "}]"
+                ),
+            },
+            ["https://github.com/mondeja/project-config", "project-config"],
+            None,
+            [
+                (
+                    Error,
+                    {
+                        "message": (
+                            "The key 'hooks' of the repo"
+                            " 'https://github.com/mondeja/project-config'"
+                            " must not be empty"
+                        ),
+                        "definition": ".preCommitHookExists[1]",
+                        "file": ".pre-commit-config.yaml",
+                        "fixable": True,
+                        "fixed": False,
+                    },
+                ),
+                (
+                    Error,
+                    {
+                        "message": (
+                            "The hook 'project-config' of the repo"
+                            " 'https://github.com/mondeja/project-config'"
+                            " must be set"
+                        ),
+                        "definition": ".preCommitHookExists[1][0]",
+                        "file": ".pre-commit-config.yaml",
+                        "fixable": True,
+                        "fixed": False,
+                    },
+                ),
+            ],
+            id="set-simple-empty-hooks",
+        ),
+        pytest.param(
             {".pre-commit-config.yaml": "{}"},
             ["https://github.com/mondeja/project-config", "project-config"],
             None,
