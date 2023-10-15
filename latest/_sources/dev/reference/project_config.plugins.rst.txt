@@ -7,6 +7,14 @@ project\_config.plugins package
    :show-inheritance:
    :private-members:
 
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   project_config.plugins.contrib
+
 Submodules
 ----------
 

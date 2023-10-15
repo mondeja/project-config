@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Index &mdash; project-config 0.9.0 documentation</title>
+  <title>Index &mdash; project-config 0.9.1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -706,13 +706,15 @@
 </li>
       <li><a href="dev/reference/project_config.serializers.html#project_config.serializers.deserialize_for_url">deserialize_for_url() (in module project_config.serializers)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="dev/reference/project_config.fetchers.html#project_config.fetchers.download_file_from_urlsplit_scheme">download_file_from_urlsplit_scheme() (in module project_config.fetchers)</a>
 </li>
-      <li><a href="dev/reference/project_config.serializers.editorconfig.html#project_config.serializers.editorconfig.dumps">dumps() (in module project_config.serializers.editorconfig)</a>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="dev/reference/project_config.serializers.contrib.pre_commit.html#project_config.serializers.contrib.pre_commit.dumps">dumps() (in module project_config.serializers.contrib.pre_commit)</a>
 
       <ul>
+        <li><a href="dev/reference/project_config.serializers.editorconfig.html#project_config.serializers.editorconfig.dumps">(in module project_config.serializers.editorconfig)</a>
+</li>
         <li><a href="dev/reference/project_config.serializers.ini.html#project_config.serializers.ini.dumps">(in module project_config.serializers.ini)</a>
 </li>
         <li><a href="dev/reference/project_config.serializers.json_.html#project_config.serializers.json_.dumps">(in module project_config.serializers.json_)</a>
@@ -990,6 +992,8 @@
 </li>
       </ul></li>
       <li><a href="dev/reference/project_config.serializers.html#project_config.serializers.guess_preferred_serializer">guess_preferred_serializer() (in module project_config.serializers)</a>
+</li>
+      <li><a href="dev/reference/project_config.serializers.html#project_config.serializers.guess_serializer_for_path">guess_serializer_for_path() (in module project_config.serializers)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -1287,6 +1291,10 @@
 </li>
         <li><a href="dev/reference/project_config.plugins.html#module-project_config.plugins">project_config.plugins</a>
 </li>
+        <li><a href="dev/reference/project_config.plugins.contrib.html#module-project_config.plugins.contrib">project_config.plugins.contrib</a>
+</li>
+        <li><a href="dev/reference/project_config.plugins.contrib.pre_commit.html#module-project_config.plugins.contrib.pre_commit">project_config.plugins.contrib.pre_commit</a>
+</li>
         <li><a href="dev/reference/project_config.plugins.existence.html#module-project_config.plugins.existence">project_config.plugins.existence</a>
 </li>
         <li><a href="dev/reference/project_config.plugins.inclusion.html#module-project_config.plugins.inclusion">project_config.plugins.inclusion</a>
@@ -1308,6 +1316,10 @@
         <li><a href="dev/reference/project_config.reporters.yaml.html#module-project_config.reporters.yaml">project_config.reporters.yaml</a>
 </li>
         <li><a href="dev/reference/project_config.serializers.html#module-project_config.serializers">project_config.serializers</a>
+</li>
+        <li><a href="dev/reference/project_config.serializers.contrib.html#module-project_config.serializers.contrib">project_config.serializers.contrib</a>
+</li>
+        <li><a href="dev/reference/project_config.serializers.contrib.pre_commit.html#module-project_config.serializers.contrib.pre_commit">project_config.serializers.contrib.pre_commit</a>
 </li>
         <li><a href="dev/reference/project_config.serializers.editorconfig.html#module-project_config.serializers.editorconfig">project_config.serializers.editorconfig</a>
 </li>
@@ -1392,6 +1404,10 @@
       <li><a href="dev/reference/project_config.plugins.html#project_config.plugins.Plugins.plugin_names">plugin_names (project_config.plugins.Plugins property)</a>
 </li>
       <li><a href="dev/reference/project_config.plugins.html#project_config.plugins.Plugins">Plugins (class in project_config.plugins)</a>
+</li>
+      <li><a href="dev/reference/project_config.plugins.contrib.pre_commit.html#project_config.plugins.contrib.pre_commit.PreCommitPlugin.preCommitHookExists">preCommitHookExists() (project_config.plugins.contrib.pre_commit.PreCommitPlugin static method)</a>
+</li>
+      <li><a href="dev/reference/project_config.plugins.contrib.pre_commit.html#project_config.plugins.contrib.pre_commit.PreCommitPlugin">PreCommitPlugin (class in project_config.plugins.contrib.pre_commit)</a>
 </li>
       <li><a href="dev/reference/project_config.plugins.html#project_config.plugins.Plugins.prepare_3rd_party_plugin">prepare_3rd_party_plugin() (project_config.plugins.Plugins method)</a>
 </li>
@@ -1536,6 +1552,20 @@
 </li>
       </ul></li>
       <li>
+    project_config.plugins.contrib
+
+      <ul>
+        <li><a href="dev/reference/project_config.plugins.contrib.html#module-project_config.plugins.contrib">module</a>
+</li>
+      </ul></li>
+      <li>
+    project_config.plugins.contrib.pre_commit
+
+      <ul>
+        <li><a href="dev/reference/project_config.plugins.contrib.pre_commit.html#module-project_config.plugins.contrib.pre_commit">module</a>
+</li>
+      </ul></li>
+      <li>
     project_config.plugins.existence
 
       <ul>
@@ -1612,6 +1642,20 @@
 
       <ul>
         <li><a href="dev/reference/project_config.serializers.html#module-project_config.serializers">module</a>
+</li>
+      </ul></li>
+      <li>
+    project_config.serializers.contrib
+
+      <ul>
+        <li><a href="dev/reference/project_config.serializers.contrib.html#module-project_config.serializers.contrib">module</a>
+</li>
+      </ul></li>
+      <li>
+    project_config.serializers.contrib.pre_commit
+
+      <ul>
+        <li><a href="dev/reference/project_config.serializers.contrib.pre_commit.html#module-project_config.serializers.contrib.pre_commit">module</a>
 </li>
       </ul></li>
       <li>
@@ -1993,6 +2037,8 @@
       <li><a href="dev/reference/project_config.commands.show.html#project_config.commands.show.show">show() (in module project_config.commands.show)</a>
 </li>
       <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.smart_fixer_by_expected_value">smart_fixer_by_expected_value() (in module project_config.utils.jmespath)</a>
+</li>
+      <li><a href="dev/reference/project_config.serializers.contrib.pre_commit.html#project_config.serializers.contrib.pre_commit.sort_pre_commit_config">sort_pre_commit_config() (in module project_config.serializers.contrib.pre_commit)</a>
 </li>
       <li>
     split()

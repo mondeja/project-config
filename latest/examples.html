@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Examples &mdash; project-config 0.9.0 documentation</title>
+  <title>Examples &mdash; project-config 0.9.1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -546,50 +546,14 @@ dist/
 <span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="p">{</span>
 <span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.pre-commit-config.yaml&quot;</span><span class="p">],</span>
-<span class="w">      </span><span class="nx">ifJMESPathsMatch</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="s2">&quot;.pre-commit-config.yaml&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">          </span><span class="p">[</span><span class="s2">&quot;type(@)&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">],</span>
-<span class="w">          </span><span class="p">[</span><span class="s2">&quot;type(repos)&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;array&quot;</span><span class="p">],</span>
-<span class="w">        </span><span class="p">],</span>
-<span class="w">      </span><span class="p">},</span>
-<span class="w">      </span><span class="nx">JMESPathsMatch</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">        </span><span class="c1">// Projects must use editorconfig checker pre-commit hook</span>
-<span class="w">        </span><span class="c1">// to follow editorconfig rules. If the repo is not found in the list</span>
-<span class="w">        </span><span class="c1">// of repos at this point, it will be added:</span>
+<span class="w">      </span><span class="nx">preCommitHookExists</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;https://github.com/editorconfig-checker/editorconfig-checker.python&quot;</span><span class="p">,</span>
 <span class="w">        </span><span class="p">[</span>
-<span class="w">          </span><span class="s2">&quot;length(repos[?repo==&#39;https://github.com/editorconfig-checker/editorconfig-checker.python&#39;])&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="mf">1</span><span class="p">,</span>
-<span class="w">          </span><span class="s2">&quot;set(@, &#39;repos&#39;, insert(repos, `-1`, {rev: gh_tags(&#39;editorconfig-checker&#39;, &#39;editorconfig-checker.python&#39;, True)[0], repo: &#39;https://github.com/editorconfig-checker/editorconfig-checker.python&#39;, hooks: [{id: &#39;editorconfig-checker&#39;, name: &#39;editorconfig-checker&#39;, alias: &#39;ec&#39;}]}))&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="p">],</span>
-
-<span class="w">        </span><span class="c1">//</span>
-<span class="w">        </span><span class="c1">// After it we can check that the fields have been successfully added:</span>
-<span class="w">        </span><span class="c1">//</span>
-<span class="w">        </span><span class="p">[</span>
-<span class="w">          </span><span class="c1">// the &#39;rev&#39; key must match the X.Y.Z regex pattern</span>
-<span class="w">          </span><span class="s2">&quot;regex_match(&#39;^\\d+\\.\\d+\\.\\d+$&#39;, repos[?repo==&#39;https://github.com/editorconfig-checker/editorconfig-checker.python&#39;] | [0].rev)&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">        </span><span class="p">],</span>
-<span class="w">        </span><span class="p">[</span>
-<span class="w">          </span><span class="c1">// must contain hooks</span>
-<span class="w">          </span><span class="s2">&quot;type(repos[?repo==&#39;https://github.com/editorconfig-checker/editorconfig-checker.python&#39;] | [0].hooks)&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="s2">&quot;array&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="p">],</span>
-
-<span class="w">        </span><span class="p">[</span>
-<span class="w">          </span><span class="c1">// the hook has an `id` field with &#39;editorconfig-checker&#39; value</span>
-<span class="w">          </span><span class="s2">&quot;contains(repos[?repo==&#39;https://github.com/editorconfig-checker/editorconfig-checker.python&#39;] | [0].hooks[*].id, &#39;editorconfig-checker&#39;)&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">        </span><span class="p">],</span>
-<span class="w">        </span><span class="p">[</span>
-<span class="w">          </span><span class="c1">// the hook has a `name` field with &#39;editorconfig-checker&#39; value</span>
-<span class="w">          </span><span class="s2">&quot;repos[?repo==&#39;https://github.com/editorconfig-checker/editorconfig-checker.python&#39;] | [0].hooks[?id==&#39;editorconfig-checker&#39;] | [0].name&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="s2">&quot;editorconfig-checker&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="p">],</span>
-<span class="w">        </span><span class="p">[</span>
-<span class="w">          </span><span class="c1">// the hook has an `alias` field with &#39;c&#39; value</span>
-<span class="w">          </span><span class="s2">&quot;repos[?repo==&#39;https://github.com/editorconfig-checker/editorconfig-checker.python&#39;] | [0].hooks[?id==&#39;editorconfig-checker&#39;] | [0].alias&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="s2">&quot;ec&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;editorconfig-checker&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;editorconfig-checker&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nx">alias</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;ec&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="p">},</span>
 <span class="w">        </span><span class="p">],</span>
 <span class="w">      </span><span class="p">],</span>
 <span class="w">    </span><span class="p">},</span>
@@ -598,12 +562,12 @@ dist/
 </pre></div>
 </div>
 </div><div aria-labelledby="tab-12-12-1" class="sphinx-tabs-panel" hidden="true" id="panel-12-12-1" name="12-1" role="tabpanel" tabindex="0"><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">repos</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">hooks</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ec</span>
-<span class="w">        </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">editorconfig-checker</span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">editorconfig-checker</span>
-<span class="w">    </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/editorconfig-checker/editorconfig-checker.python</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/editorconfig-checker/editorconfig-checker.python</span>
 <span class="w">    </span><span class="nt">rev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2.4.0</span>
+<span class="w">    </span><span class="nt">hooks</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">editorconfig-checker</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">editorconfig-checker</span>
+<span class="w">        </span><span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ec</span>
 </pre></div>
 </div>
 </div><div aria-labelledby="tab-12-12-2" class="sphinx-tabs-panel" hidden="true" id="panel-12-12-2" name="12-2" role="tabpanel" tabindex="0"><div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="n">style</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;style.json5&quot;</span>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.plugins &mdash; project-config 0.9.0 documentation</title>
+  <title>project_config.plugins &mdash; project-config 0.9.1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -294,7 +294,7 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">module_dotpath</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="c1"># TODO: raise error is the specification is not found</span>
+        <span class="c1"># TODO: raise error if the specification is not found</span>
         <span class="c1">#   this could happen if an user as defined an entrypoint</span>
         <span class="c1">#   pointing to a non existent module</span>
         <span class="n">module_spec</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">find_spec</span><span class="p">(</span><span class="n">module_dotpath</span><span class="p">)</span>
