@@ -166,10 +166,10 @@ def guess_serializer_for_path(
         serializer_name = _identify_serializer(
             os.path.basename(path),
         )
-        if serializer_name == "text":
-            return serializers_fallback, None
         if f".{serializer_name}" in serializers:
             return serializers[f".{serializer_name}"], None
+        if serializer_name == "text":
+            return serializers_fallback, None
         return None, serializer_name
     else:
         return None, _identify_serializer(os.path.basename(path))

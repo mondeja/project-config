@@ -1,6 +1,6 @@
 [project]
 name = "project-config"
-version = "0.9.0"
+version = "0.9.1"
 description = "Reproducible configuration across projects."
 authors = [{ name = "Álvaro Mondéjar Rubio", email = "mondejar1994@gmail.com" }]
 license = "BSD-3-Clause"
