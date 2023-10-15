@@ -44,7 +44,7 @@ class Style:
         Args:
             config (dict): Configuration for the project.
         """
-        self.plugins = Plugins(prepare_all=True)
+        self.plugins = Plugins()
         self.config = config
 
     @classmethod
