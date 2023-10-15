@@ -146,10 +146,10 @@ def _identify_serializer(filename: str) -> str:
     return tag if tag is not None else "text"
 
 
-def guess_serializer_from_path(
+def guess_serializer_for_path(
     path: str,
 ) -> tuple[Any, Any]:
-    """Guess serializer from path.
+    """Guess serializer for a path.
 
     Args:
         path (str): Path to guess serializer for.
@@ -199,7 +199,7 @@ def _get_serializer_function(  # noqa: PLR0912
                 ),
             )
     else:
-        serializer, serializer_name = guess_serializer_from_path(url_parts.path)
+        serializer, serializer_name = guess_serializer_for_path(url_parts.path)
         if serializer is None:
             raise SerializerError(
                 _file_can_not_be_serialized_as_object_error(
