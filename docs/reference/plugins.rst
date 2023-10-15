@@ -1196,7 +1196,7 @@ If ``inline-quotes`` config of `flake8`_ is defined to use double quotes,
 
 
 **********
-pre_commit
+pre-commit
 **********
 
 Plugins related to pre-commit hooks and configuration.
