@@ -205,6 +205,14 @@ def test_serialize_for_url_errors(
             ),
             id="foobar.strange",
         ),
+        pytest.param(
+            "picture.ai",
+            (
+                "project_config.serializers.text",
+                "project_config.serializers.text",
+            ),
+            id="picture.ai",
+        ),
     ),
 )
 def test_guess_serializer_for_path(

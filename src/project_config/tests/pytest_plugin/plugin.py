@@ -73,6 +73,13 @@ def project_config_plugin_action_asserter(  # noqa: PLR0913
             the ``fix`` mode active. Use ``expected_files`` to check the content
             of the files after the fix is applyed.
         expected_files (dict, optional): Dictionary of expected files.
+            Keys are the paths of the files and values are either strings
+            for file contents (the content will be checked to be included as
+            equality). an array of strings for partial file contents
+            (will be checked to be included as subsets with an ``in``
+            operation), a boolean to skip the file (useful to pass files that
+            doesn't exist to plugins) or ``None`` to expect the existence of a
+            directory.
 
     .. rubric:: Example
 

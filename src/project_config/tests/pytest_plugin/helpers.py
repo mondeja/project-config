@@ -4,8 +4,9 @@ from __future__ import annotations
 
 import os
 import pathlib
+import pprint
 import types
-from typing import TYPE_CHECKING, cast
+from typing import TYPE_CHECKING
 
 import pytest
 
@@ -28,7 +29,7 @@ def create_files(  # noqa: D103
         rootdir = str(rootdir)
     _files = files.items() if isinstance(files, dict) else files
     for fpath, content in _files:
-        if content is False:
+        if isinstance(content, bool):
             continue
         full_path = os.path.join(rootdir, fpath)
 
@@ -37,7 +38,6 @@ def create_files(  # noqa: D103
         else:
             # same name as an existent directory, means that `files` has been
             # passed as a list of tuples
-            content = cast(str, content)
             # ensure parent path directory exists
             parent_fpath, ext = os.path.splitext(full_path)
             if not ext:
@@ -85,16 +85,59 @@ def assert_expected_files(  # noqa: D103
         if isinstance(expected_files, dict)
         else expected_files
     )
-    for fpath, content in _expected_files:
+
+    for fpath, expected_content in _expected_files:
         full_path = os.path.join(rootdir, fpath)
-        if content is False:
+        if isinstance(expected_content, bool):
             assert not os.path.exists(full_path)
         else:
             assert os.path.exists(full_path)
-            if content is not None:
+            if expected_content is not None:
+                operators = []
+                if isinstance(expected_content, list):
+                    operation = "in"
+                    operators.extend(expected_content)
+
+                    def get_partial_content(
+                        expected: list[str],
+                        file_content: str,
+                    ) -> list[str]:
+                        return [c in file_content for c in expected]
+
+                    def matcher(
+                        expected: list[str],
+                        file_content: str,
+                    ) -> bool:
+                        return all(get_partial_content(expected, file_content))
+
+                else:
+                    operation = "equal"
+                    operators.append(expected_content)
+
+                    def get_partial_content(
+                        expected: list[str],  # noqa: ARG001
+                        file_content: str,
+                    ) -> list[str]:
+                        return [file_content]
+
+                    def matcher(
+                        expected: list[str],
+                        file_content: str,
+                    ) -> bool:
+                        return file_content == expected[0]
+
                 try:
                     with open(full_path, encoding="utf-8") as f:
-                        assert f.read() == content
+                        content = f.read()
+                        partial_render = pprint.pformat(
+                            get_partial_content(operators, content),
+                        )
+                        assert matcher(operators, content), (
+                            f"Expected: {pprint.pformat(operators)}\n"
+                            f"Operation: {operation}\n"
+                            f"File content: {content}"
+                            f"Partial content matches: {partial_render}"
+                        )
                 except IsADirectoryError:
                     continue
                 except PermissionError:
