@@ -223,6 +223,7 @@ def project_config_errors_report_asserter(  # noqa: PLR0913
     errors: list[ErrorDict],
     expected_result: str,
     fmt: str | None = None,
+    color: bool = True,  # noqa: FBT001, FBT002
 ) -> None:
     r"""Asserts an error report from a reporter module.
 
@@ -235,6 +236,8 @@ def project_config_errors_report_asserter(  # noqa: PLR0913
         errors (list): Errors.
         expected_result (str): Expected reported result.
         fmt (str, optional): Format to use. Default value is ``None``.
+        color (bool, optional): If ``True`` (default), the color version of
+            the reporter will be tested also.
 
     .. rubric:: Example
 
@@ -305,14 +308,18 @@ def project_config_errors_report_asserter(  # noqa: PLR0913
         bw_reporter.report_error(error)
     assert bw_reporter.generate_errors_report() == expected_result
 
-    ColorReporter = get_reporter_class_from_module(reporter_module, color=True)
-    color_reporter = ColorReporter(str(rootdir), fmt=fmt)
-    for error in copy.deepcopy(errors):
-        if "file" in error:
-            error["file"] = str(rootdir / error["file"])
-        color_reporter.report_error(error)
-    monkeypatch.setenv("NO_COLOR", "true")  # disable color a moment
-    assert color_reporter.generate_errors_report() == expected_result
+    if color:
+        ColorReporter = get_reporter_class_from_module(
+            reporter_module,
+            color=True,
+        )
+        color_reporter = ColorReporter(str(rootdir), fmt=fmt)
+        for error in copy.deepcopy(errors):
+            if "file" in error:
+                error["file"] = str(rootdir / error["file"])
+            color_reporter.report_error(error)
+        monkeypatch.setenv("NO_COLOR", "true")  # disable color a moment
+        assert color_reporter.generate_errors_report() == expected_result
 
 
 @pytest.fixture
