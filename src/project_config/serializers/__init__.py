@@ -161,18 +161,16 @@ def guess_serializer_for_path(
             return SERIALIZER_FROM_EXT_FILENAME[ext][filename], None
     try:
         return serializers[ext], None
-    except KeyError:
+    except Exception:
         # try to guess the file type with identify
         serializer_name = _identify_serializer(
             os.path.basename(path),
         )
         if f".{serializer_name}" in serializers:
             return serializers[f".{serializer_name}"], None
-        if serializer_name == "text":
+        if serializer_name == "text":  # pragma: no branch
             return serializers_fallback, None
         return None, serializer_name
-    else:
-        return None, _identify_serializer(os.path.basename(path))
 
 
 def _get_serializer_function(  # noqa: PLR0912
@@ -200,7 +198,7 @@ def _get_serializer_function(  # noqa: PLR0912
             )
     else:
         serializer, serializer_name = guess_serializer_for_path(url_parts.path)
-        if serializer is None:
+        if serializer is None:  # pragma: no cover
             raise SerializerError(
                 _file_can_not_be_serialized_as_object_error(
                     url,
