@@ -55,10 +55,10 @@ Documentation = "https://mondeja.github.io/project-config"
 Changelog = "https://github.com/mondeja/project-config/releases"
 
 [tool.hatch.build]
-include = ["/src", "/contrib/third_party_plugins"]
+include = ["/src"]
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/project_config", "/contrib/third_party_plugins"]
+packages = ["src/project_config"]
 
 [project.scripts]
 project-config = "project_config.__main__:main"
