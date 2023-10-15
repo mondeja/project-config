@@ -167,14 +167,13 @@ class PreCommitPlugin:
             # check if repo in file
             if "repos" not in instance:
                 instance["repos"] = []
-                if not context.fix:
-                    yield Error, {
-                        "message": "The key 'repos' must be set",
-                        "definition": ".preCommitHookExists",
-                        "file": f"{fpath}",
-                        "fixable": True,
-                        "fixed": context.fix,
-                    }
+                yield Error, {
+                    "message": "The key 'repos' must be set",
+                    "definition": ".preCommitHookExists",
+                    "file": f"{fpath}",
+                    "fixable": True,
+                    "fixed": context.fix,
+                }
 
             repo_index = -1
             for repo_i, repo_config in enumerate(instance["repos"]):
@@ -184,14 +183,13 @@ class PreCommitPlugin:
             if repo_index == -1:
                 instance["repos"].append({"repo": repo})
                 repo_index = len(instance["repos"]) - 1
-                if not context.fix:
-                    yield Error, {
-                        "message": (f"The repo '{repo}' must be set"),
-                        "definition": ".preCommitHookExists[0]",
-                        "file": f"{fpath}",
-                        "fixable": True,
-                        "fixed": context.fix,
-                    }
+                yield Error, {
+                    "message": (f"The repo '{repo}' must be set"),
+                    "definition": ".preCommitHookExists[0]",
+                    "file": f"{fpath}",
+                    "fixable": True,
+                    "fixed": context.fix,
+                }
 
             # found or added a new repo with our repo name
 
