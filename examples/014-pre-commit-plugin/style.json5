@@ -1,0 +1,11 @@
+{
+  rules: [
+    {
+      files: [".pre-commit-config.yaml"],
+      preCommitHookExists: [
+        "https://github.com/mondeja/project-config",
+        "project-config",
+      ],
+    },
+  ],
+}

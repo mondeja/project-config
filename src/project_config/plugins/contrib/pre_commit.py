@@ -1,0 +1,351 @@
+"""pre-commit plugin for project_config."""
+
+from __future__ import annotations
+
+import copy
+import os
+import stat
+from typing import TYPE_CHECKING, Any
+
+from project_config import (
+    ActionsContext,
+    Error,
+    InterruptingError,
+    tree,
+)
+from project_config.fetchers.github import get_latest_release_tags
+
+
+if TYPE_CHECKING:
+    from project_config import Results, Rule
+
+REPO_KEYS_ORDER = [
+    "repo",
+    "rev",
+    "hooks",
+]
+HOOK_KEYS_ORDER = [
+    "id",
+    "name",
+    "entry",
+    "language_version",
+    "files",
+    "exclude",
+    "types",
+    "stages",
+    "always_run",
+    "pass_filenames",
+    "additional_dependencies",
+    "args",
+    "exclude_types",
+]
+
+
+class PreCommitPlugin:
+    @staticmethod
+    def preCommitHookExists(
+        value: Any,
+        _rule: Rule,
+        context: ActionsContext,
+    ) -> Results:
+        if not isinstance(value, list):
+            yield (
+                InterruptingError,
+                {
+                    "message": (
+                        "The value of the pre-commit hook to check"
+                        " for existence must be of type array"
+                    ),
+                    "definition": ".preCommitHookExists",
+                },
+            )
+        elif not value:
+            yield (
+                InterruptingError,
+                {
+                    "message": (
+                        "The value of the pre-commit hook to check"
+                        " for existence must not be empty"
+                    ),
+                    "definition": ".preCommitHookExists",
+                },
+            )
+        elif len(value) != 2:  # noqa: PLR2004
+            yield (
+                InterruptingError,
+                {
+                    "message": (
+                        "The value of the pre-commit hook to check"
+                        " for existence must be of length 2"
+                    ),
+                    "definition": ".preCommitHookExists",
+                },
+            )
+
+        if not isinstance(value[0], str):
+            yield (
+                InterruptingError,
+                {
+                    "message": (
+                        "The URL of the pre-commit hook to check"
+                        " for existence must be of type string"
+                    ),
+                    "definition": ".preCommitHookExists[0]",
+                },
+            )
+        elif not value[0]:
+            yield (
+                InterruptingError,
+                {
+                    "message": (
+                        "The URL of the pre-commit hook to check"
+                        " for existence must not be empty"
+                    ),
+                    "definition": ".preCommitHookExists[0]",
+                },
+            )
+
+        if isinstance(value[1], str):
+            value[1] = [{"id": value[1]}]
+        if not isinstance(value[1], list):
+            yield (
+                InterruptingError,
+                {
+                    "message": (
+                        "The config of the pre-commit hook to check"
+                        " for existence must be of type string or array"
+                    ),
+                    "definition": ".preCommitHookExists[1]",
+                },
+            )
+        elif not value[1]:
+            yield (
+                InterruptingError,
+                {
+                    "message": (
+                        "The config of the pre-commit hook to check"
+                        " for existence must not be empty"
+                    ),
+                    "definition": ".preCommitHookExists[1]",
+                },
+            )
+        elif isinstance(value[1], list):
+            for i, hook in enumerate(value[1]):
+                if not isinstance(hook, dict) and not isinstance(hook, str):
+                    yield (
+                        InterruptingError,
+                        {
+                            "message": (
+                                "The config of the pre-commit hook"
+                                " to check for existence must be of"
+                                " type string or object"
+                            ),
+                            "definition": f".preCommitHookExists[1][{i}]",
+                        },
+                    )
+                elif not hook:
+                    yield (
+                        InterruptingError,
+                        {
+                            "message": (
+                                "The config of the pre-commit hook to check"
+                                " for existence must not be empty"
+                            ),
+                            "definition": f".preCommitHookExists[1][{i}]",
+                        },
+                    )
+                elif "id" not in hook:
+                    yield (
+                        InterruptingError,
+                        {
+                            "message": (
+                                "The config of the pre-commit hook to check"
+                                " for existence must have an id"
+                            ),
+                            "definition": f".preCommitHookExists[1][{i}]",
+                        },
+                    )
+
+                if isinstance(hook, str):
+                    value[1][i] = {"id": hook}
+                elif not isinstance(hook["id"], str):
+                    yield (
+                        InterruptingError,
+                        {
+                            "message": (
+                                "The id of the pre-commit hook to check"
+                                " for existence must be of type string"
+                            ),
+                            "definition": f".preCommitHookExists[1][{i}].id",
+                        },
+                    )
+
+        repo, expected_hooks = value
+
+        files = copy.copy(context.files)
+        for f, fpath in enumerate(files):
+            try:
+                fstat = os.stat(fpath)
+            except FileNotFoundError:
+                continue
+            if stat.S_ISDIR(fstat.st_mode):
+                yield InterruptingError, {
+                    "message": (
+                        "The pre-commit configuration"
+                        " is pointing to a directory"
+                    ),
+                    "definition": f".files[{f}]",
+                    "file": f'{fpath.rstrip("/")}/',
+                }
+
+            instance = tree.cached_local_file(fpath)
+
+            # check if repo in file
+            if "repos" not in instance:
+                instance["repos"] = []
+                if not context.fix:
+                    yield Error, {
+                        "message": ("The key 'repos' must be set"),
+                        "definition": ".preCommitHookExists[0]",
+                        "file": f'{fpath.rstrip("/")}/',
+                        "fixable": True,
+                        "fixed": context.fix,
+                    }
+
+            repo_index = -1
+            for repo_i, repo_config in enumerate(instance["repos"]):
+                if "repo" in repo_config and repo_config["repo"] == repo:
+                    repo_index = repo_i
+                    break
+            if repo_index == -1:
+                instance["repos"].append({"repo": repo})
+                repo_index = len(instance["repos"]) - 1
+                if not context.fix:
+                    yield Error, {
+                        "message": (f"The repo '{repo}' must be set"),
+                        "definition": ".preCommitHookExists[0]",
+                        "file": f'{fpath.rstrip("/")}/',
+                        "fixable": True,
+                        "fixed": context.fix,
+                    }
+
+            # found or added a new repo with our repo name
+
+            # check if rev in repo
+            if "rev" not in instance["repos"][repo_index]:
+                # if not found, get latest rev and set it
+                if context.fix:
+                    parts = list(reversed(repo.split("/")))
+                    repo_name, repo_owner = parts[0], parts[1]
+                    latest_tag = get_latest_release_tags(
+                        repo_owner,
+                        repo_name,
+                    )[0]
+                    instance["repos"][repo_index]["rev"] = latest_tag
+                else:
+                    instance["repos"][repo_index]["rev"] = "master"
+                yield Error, {
+                    "message": (
+                        f"The key rev of the repo '{repo}' must be set"
+                    ),
+                    "definition": ".preCommitHookExists[0]",
+                    "file": f'{fpath.rstrip("/")}/',
+                    "fixable": True,
+                    "fixed": context.fix,
+                }
+
+            # check if hook in repo
+            if "hooks" not in instance["repos"][repo_index]:
+                instance["repos"][repo_index]["hooks"] = []
+                yield Error, {
+                    "message": (
+                        f"The key 'hooks' of the repo '{repo}' must be set"
+                    ),
+                    "definition": ".preCommitHookExists[1]",
+                    "file": f'{fpath.rstrip("/")}/',
+                    "fixable": True,
+                    "fixed": context.fix,
+                }
+            elif not instance["repos"][repo_index]["hooks"]:
+                instance["repos"][repo_index]["hooks"] = []
+                yield Error, {
+                    "message": (
+                        f"The key 'hooks' of the repo '{repo}'"
+                        f" must not be empty"
+                    ),
+                    "definition": ".preCommitHookExists[1]",
+                    "file": f'{fpath.rstrip("/")}/',
+                    "fixable": True,
+                    "fixed": context.fix,
+                }
+
+            # check expected hooks exists with their configuration
+            for hook in expected_hooks:
+                hook_found = False
+                for repo_hook in instance["repos"][repo_index]["hooks"]:
+                    if repo_hook["id"] != hook["id"]:
+                        continue
+
+                    hook_found = True
+                    for expected_hook_key, expected_hook_value in hook.items():
+                        if repo_hook[expected_hook_key] == expected_hook_value:
+                            continue
+
+                        repo_hook[expected_hook_key] = expected_hook_value
+                        yield Error, {
+                            "message": (
+                                f"The configuration '{expected_hook_key}'"
+                                f' defined by the hook \'{hook["id"]}\''
+                                f" of the repo '{repo}' must be"
+                                f" '{expected_hook_value}' but is"
+                                f" '{repo_hook[expected_hook_key]}'"
+                            ),
+                            "definition": ".preCommitHookExists[1]",
+                            "file": f'{fpath.rstrip("/")}/',
+                            "fixable": True,
+                            "fixed": context.fix,
+                        }
+
+                if not hook_found:
+                    instance["repos"][repo_index]["hooks"].append(hook)
+                    yield Error, {
+                        "message": (
+                            f"The hook '{hook['id']}' of the repo '{repo}'"
+                            " must be set"
+                        ),
+                        "definition": ".preCommitHookExists[1]",
+                        "file": f'{fpath.rstrip("/")}/',
+                        "fixable": True,
+                        "fixed": context.fix,
+                    }
+
+            if context.fix:
+                sorted_repos = []
+
+                for unsorted_repo in instance["repos"]:
+                    sorted_repo = dict(
+                        sorted(
+                            unsorted_repo.items(),
+                            key=lambda x: (
+                                REPO_KEYS_ORDER.index(x[0])
+                                if x[0] in REPO_KEYS_ORDER
+                                else 999
+                            ),
+                        ),
+                    )
+                    sorted_hooks = []
+                    for unsorted_hook in unsorted_repo["hooks"]:
+                        sorted_hook = dict(
+                            sorted(
+                                unsorted_hook.items(),
+                                key=lambda x: HOOK_KEYS_ORDER.index(x[0])
+                                if x[0] in HOOK_KEYS_ORDER
+                                else 999,
+                            ),
+                        )
+                        sorted_hooks.append(sorted_hook)
+                    sorted_repo["hooks"] = sorted_hooks
+                    sorted_repos.append(sorted_repo)
+                instance["repos"] = sorted_repos
+
+                tree.edit_local_file(fpath, instance)

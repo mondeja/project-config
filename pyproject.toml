@@ -55,10 +55,10 @@ Documentation = "https://mondeja.github.io/project-config"
 Changelog = "https://github.com/mondeja/project-config/releases"
 
 [tool.hatch.build]
-include = ["/src"]
+include = ["/src", "/contrib/third_party_plugins"]
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/project_config"]
+packages = ["src/project_config", "/contrib/third_party_plugins"]
 
 [project.scripts]
 project-config = "project_config.__main__:main"
@@ -67,6 +67,7 @@ project-config = "project_config.__main__:main"
 inclusion = "project_config.plugins.inclusion:InclusionPlugin"
 jmespath = "project_config.plugins.jmespath:JMESPathPlugin"
 existence = "project_config.plugins.existence:ExistencePlugin"
+pre-commit = "project_config.plugins.contrib.pre_commit:PreCommitPlugin"
 
 [project."entry-points".pytest11]
 project-config-tester = "project_config.tests.pytest_plugin.plugin"

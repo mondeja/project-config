@@ -1,7 +1,7 @@
 repos:
-  - hooks:
-      - alias: ec
-        id: editorconfig-checker
-        name: editorconfig-checker
-    repo: https://github.com/editorconfig-checker/editorconfig-checker.python
+  - repo: https://github.com/editorconfig-checker/editorconfig-checker.python
     rev: 2.4.0
+    hooks:
+      - id: editorconfig-checker
+        name: editorconfig-checker
+        alias: ec

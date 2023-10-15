@@ -2,50 +2,14 @@
   rules: [
     {
       files: [".pre-commit-config.yaml"],
-      ifJMESPathsMatch: {
-        ".pre-commit-config.yaml": [
-          ["type(@)", "object"],
-          ["type(repos)", "array"],
-        ],
-      },
-      JMESPathsMatch: [
-        // Projects must use editorconfig checker pre-commit hook
-        // to follow editorconfig rules. If the repo is not found in the list
-        // of repos at this point, it will be added:
+      preCommitHookExists: [
+        "https://github.com/editorconfig-checker/editorconfig-checker.python",
         [
-          "length(repos[?repo=='https://github.com/editorconfig-checker/editorconfig-checker.python'])",
-          1,
-          "set(@, 'repos', insert(repos, `-1`, {rev: gh_tags('editorconfig-checker', 'editorconfig-checker.python', True)[0], repo: 'https://github.com/editorconfig-checker/editorconfig-checker.python', hooks: [{id: 'editorconfig-checker', name: 'editorconfig-checker', alias: 'ec'}]}))",
-        ],
-
-        //
-        // After it we can check that the fields have been successfully added:
-        //
-        [
-          // the 'rev' key must match the X.Y.Z regex pattern
-          "regex_match('^\\d+\\.\\d+\\.\\d+$', repos[?repo=='https://github.com/editorconfig-checker/editorconfig-checker.python'] | [0].rev)",
-          true,
-        ],
-        [
-          // must contain hooks
-          "type(repos[?repo=='https://github.com/editorconfig-checker/editorconfig-checker.python'] | [0].hooks)",
-          "array",
-        ],
-
-        [
-          // the hook has an `id` field with 'editorconfig-checker' value
-          "contains(repos[?repo=='https://github.com/editorconfig-checker/editorconfig-checker.python'] | [0].hooks[*].id, 'editorconfig-checker')",
-          true,
-        ],
-        [
-          // the hook has a `name` field with 'editorconfig-checker' value
-          "repos[?repo=='https://github.com/editorconfig-checker/editorconfig-checker.python'] | [0].hooks[?id=='editorconfig-checker'] | [0].name",
-          "editorconfig-checker",
-        ],
-        [
-          // the hook has an `alias` field with 'c' value
-          "repos[?repo=='https://github.com/editorconfig-checker/editorconfig-checker.python'] | [0].hooks[?id=='editorconfig-checker'] | [0].alias",
-          "ec",
+          {
+            id: "editorconfig-checker",
+            name: "editorconfig-checker",
+            alias: "ec",
+          },
         ],
       ],
     },
