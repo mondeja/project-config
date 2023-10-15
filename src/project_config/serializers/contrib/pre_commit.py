@@ -39,7 +39,7 @@ def sort_pre_commit_config(instance: dict[str, Any]) -> dict[str, Any]:
                 key=lambda x: (
                     REPO_KEYS_ORDER.index(x[0])
                     if x[0] in REPO_KEYS_ORDER
-                    else 999
+                    else len(REPO_KEYS_ORDER)
                 ),
             ),
         )
@@ -50,7 +50,7 @@ def sort_pre_commit_config(instance: dict[str, Any]) -> dict[str, Any]:
                     unsorted_hook.items(),
                     key=lambda x: HOOK_KEYS_ORDER.index(x[0])
                     if x[0] in HOOK_KEYS_ORDER
-                    else 999,
+                    else len(HOOK_KEYS_ORDER),
                 ),
             )
             sorted_hooks.append(sorted_hook)

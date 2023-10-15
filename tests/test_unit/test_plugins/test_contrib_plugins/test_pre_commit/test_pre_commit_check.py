@@ -151,6 +151,96 @@ from project_config.plugins.contrib.pre_commit import PreCommitPlugin
             ],
             id="invalid-instance-type",
         ),
+        pytest.param(
+            {".pre-commit-config.yaml": ""},
+            ["foobar", [2]],
+            None,
+            [
+                (
+                    InterruptingError,
+                    {
+                        "message": (
+                            "The config of the pre-commit hook to check"
+                            " for existence must be of type string or object"
+                        ),
+                        "definition": ".preCommitHookExists[1][0]",
+                    },
+                ),
+            ],
+            id="invalid-second-subsubvalue-type",
+        ),
+        pytest.param(
+            {".pre-commit-config.yaml": ""},
+            ["foobar", [""]],
+            None,
+            [
+                (
+                    InterruptingError,
+                    {
+                        "message": (
+                            "The config of the pre-commit hook to check"
+                            " for existence must not be empty"
+                        ),
+                        "definition": ".preCommitHookExists[1][0]",
+                    },
+                ),
+            ],
+            id="invalid-empty-second-subsubvalue",
+        ),
+        pytest.param(
+            {".pre-commit-config.yaml": ""},
+            ["foobar", [{"name": "hello"}]],
+            None,
+            [
+                (
+                    InterruptingError,
+                    {
+                        "message": (
+                            "The config of the pre-commit hook to check"
+                            " for existence must have an id"
+                        ),
+                        "definition": ".preCommitHookExists[1][0]",
+                    },
+                ),
+            ],
+            id="invalid-id-not-in-hook-second-subsubvalue",
+        ),
+        pytest.param(
+            {".pre-commit-config.yaml": ""},
+            ["foobar", [{"id": 5}]],
+            None,
+            [
+                (
+                    InterruptingError,
+                    {
+                        "message": (
+                            "The id of the pre-commit hook to check"
+                            " for existence must be of type string"
+                        ),
+                        "definition": ".preCommitHookExists[1][0].id",
+                    },
+                ),
+            ],
+            id="invalid-id-type-second-subsubvalue",
+        ),
+        pytest.param(
+            {".pre-commit-config.yaml": ""},
+            ["foobar", [{"id": ""}]],
+            None,
+            [
+                (
+                    InterruptingError,
+                    {
+                        "message": (
+                            "The id of the pre-commit hook to check"
+                            " for existence must not be empty"
+                        ),
+                        "definition": ".preCommitHookExists[1][0].id",
+                    },
+                ),
+            ],
+            id="invalid-empty-id-second-subsubvalue",
+        ),
     ),
 )
 def test_preCommitHookExists(

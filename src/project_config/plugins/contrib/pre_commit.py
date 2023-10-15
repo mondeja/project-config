@@ -90,45 +90,51 @@ class PreCommitPlugin:
                 ),
                 "definition": ".preCommitHookExists[1]",
             }
-        elif isinstance(value[1], list):
-            for i, hook in enumerate(value[1]):
-                if not isinstance(hook, dict) and not isinstance(hook, str):
-                    yield InterruptingError, {
-                        "message": (
-                            "The config of the pre-commit hook"
-                            " to check for existence must be of"
-                            " type string or object"
-                        ),
-                        "definition": f".preCommitHookExists[1][{i}]",
-                    }
-                elif not hook:
-                    yield InterruptingError, {
-                        "message": (
-                            "The config of the pre-commit hook to check"
-                            " for existence must not be empty"
-                        ),
-                        "definition": f".preCommitHookExists[1][{i}]",
-                    }
+        for i, hook in enumerate(value[1]):
+            if not isinstance(hook, dict) and not isinstance(hook, str):
+                yield InterruptingError, {
+                    "message": (
+                        "The config of the pre-commit hook"
+                        " to check for existence must be of"
+                        " type string or object"
+                    ),
+                    "definition": f".preCommitHookExists[1][{i}]",
+                }
+            elif not hook:
+                yield InterruptingError, {
+                    "message": (
+                        "The config of the pre-commit hook to check"
+                        " for existence must not be empty"
+                    ),
+                    "definition": f".preCommitHookExists[1][{i}]",
+                }
 
-                if isinstance(hook, str):
-                    value[1][i] = {"id": hook}
-                elif "id" not in hook:
-                    yield InterruptingError, {
-                        "message": (
-                            "The config of the pre-commit hook to check"
-                            " for existence must have an id"
-                        ),
-                        "definition": f".preCommitHookExists[1][{i}]",
-                    }
-
-                    if not isinstance(hook["id"], str):
-                        yield InterruptingError, {
-                            "message": (
-                                "The id of the pre-commit hook to check"
-                                " for existence must be of type string"
-                            ),
-                            "definition": f".preCommitHookExists[1][{i}].id",
-                        }
+            if isinstance(hook, str):
+                value[1][i] = {"id": hook}
+            elif "id" not in hook:
+                yield InterruptingError, {
+                    "message": (
+                        "The config of the pre-commit hook to check"
+                        " for existence must have an id"
+                    ),
+                    "definition": f".preCommitHookExists[1][{i}]",
+                }
+            elif not isinstance(hook["id"], str):
+                yield InterruptingError, {
+                    "message": (
+                        "The id of the pre-commit hook to check"
+                        " for existence must be of type string"
+                    ),
+                    "definition": f".preCommitHookExists[1][{i}].id",
+                }
+            elif not hook["id"]:
+                yield InterruptingError, {
+                    "message": (
+                        "The id of the pre-commit hook to check"
+                        " for existence must not be empty"
+                    ),
+                    "definition": f".preCommitHookExists[1][{i}].id",
+                }
 
         repo, expected_hooks = value
 
