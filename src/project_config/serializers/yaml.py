@@ -15,7 +15,7 @@ def dumps(
 ) -> str:
     """Deserializes an object converting it to string in YAML format."""
     f = io.StringIO()
-    yaml = ruamel.yaml.YAML(typ="safe", pure=True)
+    yaml = ruamel.yaml.YAML(typ="rt", pure=True)
     yaml.default_flow_style = False
     yaml.width = 88888
     yaml.indent(mapping=2, sequence=4, offset=2)

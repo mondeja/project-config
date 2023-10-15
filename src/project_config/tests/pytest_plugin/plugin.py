@@ -8,6 +8,7 @@ import functools
 import inspect
 import os
 import pathlib
+import pprint
 import re
 import types
 from typing import TYPE_CHECKING, Any
@@ -72,6 +73,13 @@ def project_config_plugin_action_asserter(  # noqa: PLR0913
             the ``fix`` mode active. Use ``expected_files`` to check the content
             of the files after the fix is applyed.
         expected_files (dict, optional): Dictionary of expected files.
+            Keys are the paths of the files and values are either strings
+            for file contents (the content will be checked to be included as
+            equality). an array of strings for partial file contents
+            (will be checked to be included as subsets with an ``in``
+            operation), a boolean to skip the file (useful to pass files that
+            doesn't exist to plugins) or ``None`` to expect the existence of a
+            directory.
 
     .. rubric:: Example
 
@@ -180,7 +188,10 @@ def project_config_plugin_action_asserter(  # noqa: PLR0913
         staticmethod,
     ), f"Plugin method '{plugin_method_name}' must be a static method"
 
-    assert len(results) == len(expected_results)
+    assert len(results) == len(expected_results), (
+        f"Results: {pprint.pformat(results)}\n"
+        f"Expected results: {pprint.pformat(expected_results)}"
+    )
 
     for (
         (result_type, result_value),
@@ -212,6 +223,7 @@ def project_config_errors_report_asserter(  # noqa: PLR0913
     errors: list[ErrorDict],
     expected_result: str,
     fmt: str | None = None,
+    color: bool = True,  # noqa: FBT001, FBT002
 ) -> None:
     r"""Asserts an error report from a reporter module.
 
@@ -224,6 +236,8 @@ def project_config_errors_report_asserter(  # noqa: PLR0913
         errors (list): Errors.
         expected_result (str): Expected reported result.
         fmt (str, optional): Format to use. Default value is ``None``.
+        color (bool, optional): If ``True`` (default), the color version of
+            the reporter will be tested also.
 
     .. rubric:: Example
 
@@ -294,14 +308,18 @@ def project_config_errors_report_asserter(  # noqa: PLR0913
         bw_reporter.report_error(error)
     assert bw_reporter.generate_errors_report() == expected_result
 
-    ColorReporter = get_reporter_class_from_module(reporter_module, color=True)
-    color_reporter = ColorReporter(str(rootdir), fmt=fmt)
-    for error in copy.deepcopy(errors):
-        if "file" in error:
-            error["file"] = str(rootdir / error["file"])
-        color_reporter.report_error(error)
-    monkeypatch.setenv("NO_COLOR", "true")  # disable color a moment
-    assert color_reporter.generate_errors_report() == expected_result
+    if color:
+        ColorReporter = get_reporter_class_from_module(
+            reporter_module,
+            color=True,
+        )
+        color_reporter = ColorReporter(str(rootdir), fmt=fmt)
+        for error in copy.deepcopy(errors):
+            if "file" in error:
+                error["file"] = str(rootdir / error["file"])
+            color_reporter.report_error(error)
+        monkeypatch.setenv("NO_COLOR", "true")  # disable color a moment
+        assert color_reporter.generate_errors_report() == expected_result
 
 
 @pytest.fixture

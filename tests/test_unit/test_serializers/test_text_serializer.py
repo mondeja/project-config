@@ -12,7 +12,7 @@ from project_config.serializers.text import dumps, loads
         ),
     ),
 )
-def test_serialize_text(string, expected_result):
+def test_text_loads(string, expected_result):
     assert loads(string) == expected_result
 
 
@@ -24,7 +24,12 @@ def test_serialize_text(string, expected_result):
             "foo\n\tbar\nbaz\n",
             id="basic",
         ),
+        pytest.param(
+            ["", "\tbar", ""],
+            "\n\tbar\n\n",
+            id="empty-lines",
+        ),
     ),
 )
-def test_deserialize_text(obj, expected_result):
+def test_text_dumps(obj, expected_result):
     assert dumps(obj) == expected_result

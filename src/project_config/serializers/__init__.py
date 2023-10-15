@@ -127,14 +127,50 @@ EMPTY_CONTENT_BY_SERIALIZER = {
     "json5": "{}",
 }
 
+SERIALIZER_FROM_EXT_FILENAME = {
+    ".yaml": {
+        ".pre-commit-config.yaml": (
+            [{"module": "project_config.serializers.yaml"}],
+            [{"module": "project_config.serializers.contrib.pre_commit"}],
+        ),
+    },
+}
+
 
 def _identify_serializer(filename: str) -> str:
     tag: str | None = None
-    for tag_ in identify.tags_from_filename(filename):
-        if f".{tag_}" in serializers:
-            tag = tag_
+    for identified_tag in identify.tags_from_filename(filename):
+        if f".{identified_tag}" in serializers:
+            tag = identified_tag
             break
     return tag if tag is not None else "text"
+
+
+def guess_serializer_for_path(
+    path: str,
+) -> tuple[Any, Any]:
+    """Guess serializer for a path.
+
+    Args:
+        path (str): Path to guess serializer for.
+    """
+    ext = os.path.splitext(path)[-1]
+    if ext in SERIALIZER_FROM_EXT_FILENAME:
+        filename = os.path.basename(path)
+        if filename in SERIALIZER_FROM_EXT_FILENAME[ext]:
+            return SERIALIZER_FROM_EXT_FILENAME[ext][filename], None
+    try:
+        return serializers[ext], None
+    except Exception:
+        # try to guess the file type with identify
+        serializer_name = _identify_serializer(
+            os.path.basename(path),
+        )
+        if f".{serializer_name}" in serializers:
+            return serializers[f".{serializer_name}"], None
+        if serializer_name == "text":  # pragma: no branch
+            return serializers_fallback, None
+        return None, serializer_name
 
 
 def _get_serializer_function(  # noqa: PLR0912
@@ -143,6 +179,7 @@ def _get_serializer_function(  # noqa: PLR0912
     loader_function_name: str = "loads",
 ) -> SerializerFunction:
     url_parts = urllib.parse.urlsplit(url)
+    serializer = None
 
     if prefer_serializer is not None:
         if f".{prefer_serializer}" in serializers:
@@ -160,28 +197,17 @@ def _get_serializer_function(  # noqa: PLR0912
                 ),
             )
     else:
-        ext = os.path.splitext(url_parts.path)[-1]
-        try:
-            serializer = serializers[ext]
-        except KeyError:  # pragma: no cover
-            # try to guess the file type with identify
-            serializer_name = _identify_serializer(
-                os.path.basename(url_parts.path),
-            )
-            if serializer_name == "text":
-                serializer = serializers_fallback
-            elif f".{serializer_name}" in serializers:
-                serializer = serializers[f".{serializer_name}"]
-            else:
-                raise SerializerError(
-                    _file_can_not_be_serialized_as_object_error(
-                        url,
-                        (
-                            f"\nSerializer detected as '{serializer_name}'"
-                            " not supported"
-                        ),
+        serializer, serializer_name = guess_serializer_for_path(url_parts.path)
+        if serializer is None:  # pragma: no cover
+            raise SerializerError(
+                _file_can_not_be_serialized_as_object_error(
+                    url,
+                    (
+                        f"\nSerializer detected as '{serializer_name}'"
+                        " not supported"
                     ),
-                ) from None
+                ),
+            ) from None
     serializer = serializer[0 if loader_function_name == "loads" else 1]  # type: ignore
     # prepare serializer function
     serializer_definition, module = None, None

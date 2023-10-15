@@ -19,8 +19,8 @@ from project_config.reporters import yaml
                 },
             ],
             """foo.py:
-  - definition: definition
-    message: message""",
+  - message: message
+    definition: definition""",
             id="basic",
         ),
         pytest.param(
@@ -42,15 +42,15 @@ from project_config.reporters import yaml
                     "definition": "definition 3",
                 },
             ],
-            """bar.py:
-  - definition: definition 3
-    message: message 3
-foo.py:
-  - definition: definition 1
-    message: message 1
-  - definition: definition 2
+            """foo.py:
+  - message: message 1
+    definition: definition 1
+  - message: message 2
+    definition: definition 2
     hint: a hint to solve it
-    message: message 2""",
+bar.py:
+  - message: message 3
+    definition: definition 3""",
             id="complex",
         ),
     ),
@@ -64,6 +64,7 @@ def test_errors_report(
         yaml,
         errors,
         expected_result,
+        color=False,
     )
 
 
@@ -184,15 +185,15 @@ rules:
       - bar.ext
   - files:
       not:
-        bar.ext: bar reason
         foo.ext: foo reason
+        bar.ext: bar reason
+    includeLines:
+      - line1
+      - line2
     ifIncludeLines:
       if-inc-1.ext:
         - if-inc-line-1
         - if-inc-line-2
-    includeLines:
-      - line1
-      - line2
   - files:
       not:
         - foo.ext

@@ -73,7 +73,7 @@ empty_value = ""  ; the parser is really lazy
         ),
     ),
 )
-def test_editorconfig_serializer(string, expected_result):
+def test_editorconfig_loads(string, expected_result):
     assert loads(string) == expected_result
 
 
@@ -114,5 +114,5 @@ empty_value = ""
         ),
     ),
 )
-def test_editorconfig_deserializer(obj, expected_result):
+def test_editorconfig_dumps(obj, expected_result):
     assert dumps(obj) == expected_result

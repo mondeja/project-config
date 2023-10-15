@@ -41,7 +41,7 @@ a_zero = 0
         ),
     ),
 )
-def test_ini_serializer(string, expected_result):
+def test_ini_loads(string, expected_result):
     assert loads(string) == expected_result
 
 
@@ -84,5 +84,5 @@ a_zero = 0
         ),
     ),
 )
-def test_ini_deserializer(obj, expected_result):
+def test_ini_dumps(obj, expected_result):
     assert dumps(obj) == expected_result
