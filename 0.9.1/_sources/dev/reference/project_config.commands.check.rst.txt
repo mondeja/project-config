@@ -1,0 +1,8 @@
+project\_config.commands.check module
+=====================================
+
+.. automodule:: project_config.commands.check
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:

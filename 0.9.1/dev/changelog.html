@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Changelog &mdash; project-config 0.9.1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/tabs.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/bolditalic.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/override-styles.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Contributing" href="contributing.html" />
+    <link rel="prev" title="Writing third party reporters" href="reporters.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            project-config
+          </a>
+              <div class="version">
+                0.9
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Quickstart</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basic-usage.html">Basic usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../reference/cli.html">project-config CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/config.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/styling.html">Styling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/plugins.html">Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/ci.html">Using on CI</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">In depth</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../in-depth/rationale.html">Rationale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../in-depth/serialization.html">Objects serialization</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For developers</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="plugins.html">Writing third party plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reporters.html">Writing third party reporters</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#release-v0-9-1">v0.9.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#release-v0-9-0">v0.9.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#release-v0-8-0">v0.8.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#release-v0-7-9">v0.7.9</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#release-v0-7-8">v0.7.8</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#release-v0-7-7">v0.7.7</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#release-v0-7-6">v0.7.6</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#release-v0-7-5">v0.7.5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#release-v0-7-4">v0.7.4</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#release-v0-7-3">v0.7.3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#release-v0-7-2">v0.7.2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#release-v0-7-1">v0.7.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#release-v0-7-0">v0.7.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#release-v0-6-0">v0.6.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#release-v0-5-0">v0.5.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#release-v0-4-0">v0.4.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#release-v0-3-1">v0.3.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#release-v0-3-0">v0.3.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#release-v0-2-0">v0.2.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#release-v0-1-0">v0.1.0</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference/modules.html">Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">project-config</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Changelog</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/dev/changelog.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="changelog">
+<h1>Changelog<a class="headerlink" href="#changelog" title="Permalink to this headline"></a></h1>
+<section id="release-v0-9-1">
+<h2>v0.9.1<a class="headerlink" href="#release-v0-9-1" title="Permalink to this headline"></a></h2>
+<p><em>Released on 2023-10-15 - <a class="reference external" href="https://github.com/mondeja/project-config/releases/tag/v0.9.1">GitHub</a> - <a class="reference external" href="https://pypi.org/project/project-config/v0.9.1/">PyPI</a></em></p>
+<h2>New features</h2>
+<ul>
+<li>Added a <em>pre-commit</em> plugin with a <code>preCommitHookExists</code> action to check pre-commit hooks configurations.</li>
+</ul>
+<h2>Bug fixes</h2>
+<ul>
+<li>Fixed keys unsorted when deserializing YAML content.</li>
+</ul></section>
+<section id="release-v0-9-0">
+<h2>v0.9.0<a class="headerlink" href="#release-v0-9-0" title="Permalink to this headline"></a></h2>
+<p><em>Released on 2023-10-14 - <a class="reference external" href="https://github.com/mondeja/project-config/releases/tag/v0.9.0">GitHub</a> - <a class="reference external" href="https://pypi.org/project/project-config/v0.9.0/">PyPI</a></em></p>
+<h2><g-emoji class="g-emoji" alias="warning">⚠️</g-emoji> Breaking changes</h2>
+<ul>
+<li>Removed support for Python 3.7</li>
+</ul>
+<h2>Enhancements</h2>
+<ul>
+<li>Added support for Python 3.12</li>
+</ul></section>
+<section id="release-v0-8-0">
+<h2>v0.8.0<a class="headerlink" href="#release-v0-8-0" title="Permalink to this headline"></a></h2>
+<p><em>Released on 2022-12-22 - <a class="reference external" href="https://github.com/mondeja/project-config/releases/tag/v0.8.0">GitHub</a> - <a class="reference external" href="https://pypi.org/project/project-config/v0.8.0/">PyPI</a></em></p>
+<h2><g-emoji class="g-emoji" alias="warning">⚠️</g-emoji> Breaking changes</h2>
+<ul>
+<li>Globs are not allowed inside <code>files</code> arrays of rules</li>
+<li>Tree API has been changed, so third party plugins must be updated accordingly</li>
+</ul>
+<h2>Bug fixes</h2>
+<ul>
+<li>Fixed some inconsistencies using <code>--rootdir</code> and <code>--config</code> CLI options</li>
+</ul>
+<h2>Enhancements</h2>
+<ul>
+<li>This version comes with a big refactor of some crucial parts of the program, which has allowed a x5 speedup improvement</li>
+<li>Don't depend on <code>typing_extensions</code> at runtime</li>
+</ul>
+<h2>New features</h2>
+<ul>
+<li>Added <code>project-config show reporters</code> command to show all available reporters</li>
+<li>Added JMESPath functions for some file system operations: <code>isfile</code>, <code>isdir</code>, <code>exists</code>, <code>mkdir</code>, <code>rmdir</code> and <code>glob</code></li>
+<li>Added new actions for <code>inclusion</code> plugin: <code>exludeLines</code> and <code>includeContent</code></li>
+</ul></section>
+<section id="release-v0-7-9">
+<h2>v0.7.9<a class="headerlink" href="#release-v0-7-9" title="Permalink to this headline"></a></h2>
+<p><em>Released on 2022-12-06 - <a class="reference external" href="https://github.com/mondeja/project-config/releases/tag/v0.7.9">GitHub</a> - <a class="reference external" href="https://pypi.org/project/project-config/v0.7.9/">PyPI</a></em></p>
+<ul>
+<li>Added support for JSON5 files on Python3.11.</li>
+</ul></section>
+<section id="release-v0-7-8">
+<h2>v0.7.8<a class="headerlink" href="#release-v0-7-8" title="Permalink to this headline"></a></h2>
+<p><em>Released on 2022-11-30 - <a class="reference external" href="https://github.com/mondeja/project-config/releases/tag/v0.7.8">GitHub</a> - <a class="reference external" href="https://pypi.org/project/project-config/v0.7.8/">PyPI</a></em></p>
+<p>Enhancements:</p>
+<ul>
+<li>Optimize <code>crossJMESPathsMatch</code> verb.</li>
+</ul></section>
+<section id="release-v0-7-7">
+<h2>v0.7.7<a class="headerlink" href="#release-v0-7-7" title="Permalink to this headline"></a></h2>
+<p><em>Released on 2022-10-01 - <a class="reference external" href="https://github.com/mondeja/project-config/releases/tag/v0.7.7">GitHub</a> - <a class="reference external" href="https://pypi.org/project/project-config/v0.7.7/">PyPI</a></em></p>
+<p>New features:</p>
+<ul>
+<li>Added <code>project-config show file</code>. Pass a path to a file or an URL as argument and it will print a JSON-serialized version of the content, for example <code>project-config show file pyproject.toml</code>.</li>
+</ul>
+<p>Bug fixes:</p>
+<ul>
+<li>Fixed errors derived from the fact that <code>files</code> existence check has been being executed before the <code>ifFilesExist</code> conditional, which raises false positives if some of the files are the same and don't exist.</li>
+</ul></section>
+<section id="release-v0-7-6">
+<h2>v0.7.6<a class="headerlink" href="#release-v0-7-6" title="Permalink to this headline"></a></h2>
+<p><em>Released on 2022-09-29 - <a class="reference external" href="https://github.com/mondeja/project-config/releases/tag/v0.7.6">GitHub</a> - <a class="reference external" href="https://pypi.org/project/project-config/v0.7.6/">PyPI</a></em></p>
+<p>Enhancements:</p>
+<ul>
+<li>The standard JMESPath functions <a href="https://jmespath.org/specification.html#starts-with" rel="nofollow"><code>starts_with</code></a> and <a href="https://jmespath.org/specification.html#ends-with" rel="nofollow"><code>ends_with</code></a> now are matching in <code>project-config</code> the specification of Python's <a href="https://docs.python.org/3/library/stdtypes.html?highlight=startswith#str.startswith" rel="nofollow"><code>str.startswith</code></a> and <a href="https://docs.python.org/3/library/stdtypes.html?highlight=startswith#bytearray.endswith" rel="nofollow"><code>str.endswith</code></a> allowing to pass an array of strings as second parameters and the arguments <code>start</code> and <code>end</code>, see <a href="https://mondeja.github.io/project-config/latest/reference/plugins.html#jmespath" rel="nofollow"><code>jmespath</code> plugin</a>.</li>
+</ul>
+<p>Bug fixes:</p>
+<ul>
+<li>Fixes some encoding issues in Windows.</li>
+<li>Fixes edge case exceptions when executing Python files to from JMESPath rules.</li>
+</ul></section>
+<section id="release-v0-7-5">
+<h2>v0.7.5<a class="headerlink" href="#release-v0-7-5" title="Permalink to this headline"></a></h2>
+<p><em>Released on 2022-07-28 - <a class="reference external" href="https://github.com/mondeja/project-config/releases/tag/v0.7.5">GitHub</a> - <a class="reference external" href="https://pypi.org/project/project-config/v0.7.5/">PyPI</a></em></p>
+<p>New features:</p>
+<ul>
+<li>Allow to install the <strong>project-config</strong> CLI from NPM with <code>npm install python-project-config</code>.</li>
+<li>Add new custom JMESPath function <a href="https://mondeja.github.io/project-config/0.7.5/reference/plugins.html#regex_escape" rel="nofollow"><code>regex_escape()</code></a>.</li>
+</ul></section>
+<section id="release-v0-7-4">
+<h2>v0.7.4<a class="headerlink" href="#release-v0-7-4" title="Permalink to this headline"></a></h2>
+<p><em>Released on 2022-07-21 - <a class="reference external" href="https://github.com/mondeja/project-config/releases/tag/v0.7.4">GitHub</a> - <a class="reference external" href="https://pypi.org/project/project-config/v0.7.4/">PyPI</a></em></p>
+<p>Enhancements:</p>
+<ul>
+<li>Allow to pass multiple optional operators and values as positional arguments to <a href="https://mondeja.github.io/project-config/latest/reference/plugins.html#op" rel="nofollow">custom JMESPath function <code>op()</code></a>.</li>
+</ul></section>
+<section id="release-v0-7-3">
+<h2>v0.7.3<a class="headerlink" href="#release-v0-7-3" title="Permalink to this headline"></a></h2>
+<p><em>Released on 2022-07-18 - <a class="reference external" href="https://github.com/mondeja/project-config/releases/tag/v0.7.3">GitHub</a> - <a class="reference external" href="https://pypi.org/project/project-config/v0.7.3/">PyPI</a></em></p>
+<p>Bug fixes:</p>
+<ul>
+<li>Handle uncatched exception in some subexpression fix queries.</li>
+</ul></section>
+<section id="release-v0-7-2">
+<h2>v0.7.2<a class="headerlink" href="#release-v0-7-2" title="Permalink to this headline"></a></h2>
+<p><em>Released on 2022-07-18 - <a class="reference external" href="https://github.com/mondeja/project-config/releases/tag/v0.7.2">GitHub</a> - <a class="reference external" href="https://pypi.org/project/project-config/v0.7.2/">PyPI</a></em></p>
+<p>Bug fixes:</p>
+<ul>
+<li>Fixed error autofixing subexpression with indexes.</li>
+</ul>
+<p>New features:</p>
+<ul>
+<li>Added custom JMESPath functions <a href="https://mondeja.github.io/project-config/0.7.2/reference/plugins.html#getenv" rel="nofollow"><code>getenv()</code></a> and <a href="https://mondeja.github.io/project-config/0.7.2/reference/plugins.html#setenv" rel="nofollow"><code>setenv()</code></a> to manipulate environment variables.</li>
+</ul></section>
+<section id="release-v0-7-1">
+<h2>v0.7.1<a class="headerlink" href="#release-v0-7-1" title="Permalink to this headline"></a></h2>
+<p><em>Released on 2022-07-15 - <a class="reference external" href="https://github.com/mondeja/project-config/releases/tag/v0.7.1">GitHub</a> - <a class="reference external" href="https://pypi.org/project/project-config/v0.7.1/">PyPI</a></em></p>
+<p>Bug fixes:</p>
+<ul>
+<li>Auto fixing of constants in subexpressions.</li>
+<li>Show that file existence and absent errors are fixable.</li>
+</ul>
+<p>New features:</p>
+<ul>
+<li>New custom JMESPath  function<a href="https://mondeja.github.io/project-config/0.7.1/reference/plugins.html#gh_tags" rel="nofollow"><code>gh_tags()</code></a> to get the latest tags of a github repository.</li>
+</ul></section>
+<section id="release-v0-7-0">
+<h2>v0.7.0<a class="headerlink" href="#release-v0-7-0" title="Permalink to this headline"></a></h2>
+<p><em>Released on 2022-07-15 - <a class="reference external" href="https://github.com/mondeja/project-config/releases/tag/v0.7.0">GitHub</a> - <a class="reference external" href="https://pypi.org/project/project-config/v0.7.0/">PyPI</a></em></p>
+<p>New features:</p>
+<ul>
+<li>Added <code>project-config fix</code> subcommand to apply manual and automatic fixes to errors. See <a href="https://mondeja.github.io/project-config/0.7.0/tutorials/pages/best-practices.html#best-practices" rel="nofollow">best practices guide</a>.</li>
+<li>Added new custom JMESPath function <a href="https://mondeja.github.io/project-config/0.7.0/reference/plugins.html#os" rel="nofollow"><code>os()</code></a> to get the platform in which the current execution is running.</li>
+<li>Added new option <a href="https://mondeja.github.io/project-config/0.7.0/reference/cli.html#project-config---only-hints" rel="nofollow"><code>--only-hints</code></a> / <a href="https://mondeja.github.io/project-config/0.7.0/reference/config.html#cli-only-hints-boolean" rel="nofollow"><code>only_hints = true</code></a> to only show hints rather than messages in errors.</li>
+</ul></section>
+<section id="release-v0-6-0">
+<h2>v0.6.0<a class="headerlink" href="#release-v0-6-0" title="Permalink to this headline"></a></h2>
+<p><em>Released on 2022-07-11 - <a class="reference external" href="https://github.com/mondeja/project-config/releases/tag/v0.6.0">GitHub</a> - <a class="reference external" href="https://pypi.org/project/project-config/v0.6.0/">PyPI</a></em></p>
+<p>New features:</p>
+<ul>
+<li>Added <a href="https://mondeja.github.io/project-config/0.6.0/reference/plugins.html#rootdir_name" rel="nofollow"><code>rootdir_name</code></a> custom function to jmespath plugin.</li>
+<li>Allow to override serializer used for other files in <a href="https://mondeja.github.io/project-config/0.6.0/reference/plugins.html#crossjmespathsmatch" rel="nofollow"><code>crossJMESPathsMatch</code> verb</a>.</li>
+<li>Added new subcommand <code>project-config init</code> to initialize a minimal configuration.</li>
+<li>Added <a href="https://megalinter.github.io" rel="nofollow">MegaLinter</a> plugin descriptor for project-config. See <a href="https://mondeja.github.io/project-config/0.6.0/install.html" rel="nofollow">Installation</a>.</li>
+</ul></section>
+<section id="release-v0-5-0">
+<h2>v0.5.0<a class="headerlink" href="#release-v0-5-0" title="Permalink to this headline"></a></h2>
+<p><em>Released on 2022-07-08 - <a class="reference external" href="https://github.com/mondeja/project-config/releases/tag/v0.5.0">GitHub</a> - <a class="reference external" href="https://pypi.org/project/project-config/v0.5.0/">PyPI</a></em></p>
+<p>New features:</p>
+<ul>
+<li>A lot of custom functions have been added to <a href="https://mondeja.github.io/project-config/0.5.0/reference/plugins.html#jmespath" rel="nofollow"><code>jmespath</code> plugin</a>.</li>
+</ul>
+<p>Enhancements:</p>
+<ul>
+<li>Concurrent fetching for faster caching of remote style files when they have not been cached yet.</li>
+</ul></section>
+<section id="release-v0-4-0">
+<h2>v0.4.0<a class="headerlink" href="#release-v0-4-0" title="Permalink to this headline"></a></h2>
+<p><em>Released on 2022-07-04 - <a class="reference external" href="https://github.com/mondeja/project-config/releases/tag/v0.4.0">GitHub</a> - <a class="reference external" href="https://pypi.org/project/project-config/v0.4.0/">PyPI</a></em></p>
+<p>Deprecations:</p>
+<ul>
+<li>The custom JMESPath function <code>regex_matchall</code> has been deprecated and will be removed in v1.0.0. Rewrite <code>regex_matchall('^foo$', ['foo', 'bar'])</code> as <code>op(length(['foo', 'bar'][?regex_match('^foo$', @)]), '==', length(['foo', 'bar']))</code>.</li>
+</ul>
+<p>New features:</p>
+<ul>
+<li>New <a href="https://mondeja.github.io/project-config/0.4.0/reference/plugins.html#crossjmespathsmatch" rel="nofollow"><code>crossJMESPathsMatch</code> verb</a> for <a href="https://mondeja.github.io/project-config/0.4.0/reference/plugins.html#jmespath" rel="nofollow"><code>jmespath</code> plugin</a>.</li>
+<li>New <a href="https://mondeja.github.io/project-config/0.4.0/reference/plugins.html#iffilesexist" rel="nofollow"><code>ifFilesExist</code> conditional</a>.</li>
+<li>New custom functions for <a href="https://mondeja.github.io/project-config/0.4.0/reference/plugins.html#jmespath" rel="nofollow"><code>jmespath</code> plugin</a>: <a href="https://mondeja.github.io/project-config/0.4.0/reference/plugins.html#shlex_split" rel="nofollow"><code>shlex_split</code></a> and <a href="https://mondeja.github.io/project-config/0.4.0/reference/plugins.html#shlex_join" rel="nofollow"><code>shlex_join</code></a>.</li>
+<li>Custom function <a href="https://mondeja.github.io/project-config/0.4.0/reference/plugins.html#op" rel="nofollow"><code>op</code></a> now can handle <a href="https://docs.python.org/3/library/stdtypes.html#set" rel="nofollow">sets</a> operations.</li>
+<li>New <a href="https://mondeja.github.io/project-config/0.4.0/in-depth/serialization.html#text" rel="nofollow">text serializer</a> as fallback for all text files.</li>
+</ul>
+<p>Enhancements:</p>
+<ul>
+<li>Better errors catching fetching and serializing files.</li>
+<li>Values validation in <a href="https://mondeja.github.io/project-config/0.4.0/reference/plugins.html#inclusion" rel="nofollow"><code>inclusion</code> plugin</a> actions.</li>
+</ul></section>
+<section id="release-v0-3-1">
+<h2>v0.3.1<a class="headerlink" href="#release-v0-3-1" title="Permalink to this headline"></a></h2>
+<p><em>Released on 2022-06-30 - <a class="reference external" href="https://github.com/mondeja/project-config/releases/tag/v0.3.1">GitHub</a> - <a class="reference external" href="https://pypi.org/project/project-config/v0.3.1/">PyPI</a></em></p>
+<p>Bug fixes:</p>
+<ul>
+<li>Fix error fetching styles when <code>rootdir</code> not specified.</li>
+</ul></section>
+<section id="release-v0-3-0">
+<h2>v0.3.0<a class="headerlink" href="#release-v0-3-0" title="Permalink to this headline"></a></h2>
+<p><em>Released on 2022-06-30 - <a class="reference external" href="https://github.com/mondeja/project-config/releases/tag/v0.3.0">GitHub</a> - <a class="reference external" href="https://pypi.org/project/project-config/v0.3.0/">PyPI</a></em></p>
+<p>New features:</p>
+<ul>
+<li>Accept recursive globs in <code>files</code> properties of rules.</li>
+<li>New verb <a href="https://mondeja.github.io/project-config/0.3.0/reference/plugins.html#excludecontent" rel="nofollow"><code>excludeContent</code></a> to assert that content does not exist in files.</li>
+<li>Allow to specify <a href="https://mondeja.github.io/project-config/0.3.0/reference/styling.html#hint-string" rel="nofollow">hints</a> in rules.</li>
+<li>Add <code>show plugins</code> command.</li>
+<li>Allow to specify custom colors in CLI reporters.</li>
+<li>Allow to configure CLI execution from configuration file.</li>
+</ul>
+<p>Bug fixes:</p>
+<ul>
+<li>Fix error processing multiple conditionals in the same rule.</li>
+<li>Fix encoding error on Windows.</li>
+</ul>
+<p>Enhancements:</p>
+<ul>
+<li>Allow to pass options in flexible order to CLI.</li>
+<li>Set environment variable <code>PROJECT_CONFIG</code> while CLI is running.</li>
+<li>Added <code>--no-cache</code> option to CLI.</li>
+<li>Retry connections in requests.</li>
+</ul></section>
+<section id="release-v0-2-0">
+<h2>v0.2.0<a class="headerlink" href="#release-v0-2-0" title="Permalink to this headline"></a></h2>
+<p><em>Released on 2022-06-23 - <a class="reference external" href="https://github.com/mondeja/project-config/releases/tag/v0.2.0">GitHub</a> - <a class="reference external" href="https://pypi.org/project/project-config/v0.2.0/">PyPI</a></em></p>
+<p>Bug fixes:</p>
+<ul>
+<li>Fixed default reporter not outputting actions when executing <code>project-config show style</code></li>
+<li>Fixed some errors serializing <code>.editorconfig</code> files</li>
+<li>Fixed absolute file paths resolving in Windows</li>
+</ul>
+<p>Improvements:</p>
+<ul>
+<li>Improved error message showing not found local extended relative styles filenames.</li>
+<li>A lot of improvements in documentation</li>
+</ul>
+<p>New features:</p>
+<ul>
+<li>Added <code>show cache</code> subcommand to output the cache directory location.</li>
+<li>Allowed to add third party reporters through plugins entrypoints</li>
+<li>Included pytest plugin in distribution for easy testing of third party plugins</li>
+</ul></section>
+<section id="release-v0-1-0">
+<h2>v0.1.0<a class="headerlink" href="#release-v0-1-0" title="Permalink to this headline"></a></h2>
+<p><em>Released on 2022-06-22 - <a class="reference external" href="https://github.com/mondeja/project-config/releases/tag/v0.1.0">GitHub</a> - <a class="reference external" href="https://pypi.org/project/project-config/v0.1.0/">PyPI</a></em></p>
+<p>First beta release</p></section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="reporters.html" class="btn btn-neutral float-left" title="Writing third party reporters" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="contributing.html" class="btn btn-neutral float-right" title="Contributing" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Álvaro Mondéjar Rubio &lt;mondejar1994@gmail.com&gt;.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
