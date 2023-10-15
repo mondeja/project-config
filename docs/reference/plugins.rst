@@ -1194,5 +1194,59 @@ If ``inline-quotes`` config of `flake8`_ is defined to use double quotes,
 
 .. versionadded:: 0.1.0
 
+
+**********
+pre_commit
+**********
+
+Plugins related to pre-commit hooks and configuration.
+
+preCommitHookExists
+===================
+
+Check if multiple pre-commit hooks exists in *.pre-commit-config.yaml*
+configuration, optionally defining the settings for each one.
+
+It accepts a tuple with two elements:
+
+* A string with the URL of the repository for the ``repo`` key.
+* A string with th id of a hook or an array with the configurations for
+  each hook. This array also accepts strings with the hook ids.
+
+.. rubric:: Examples
+
+.. code-block:: js
+
+   {
+     rules: [
+       {
+         files: [".pre-commit-config.yaml"],
+         preCommitHookExists: [
+           "https://github.com/mondeja/project-config",
+           "project-config",
+         ]
+       }
+     ]
+   }
+
+.. code-block:: js
+
+   {
+     rules: [
+       {
+         files: [".pre-commit-config.yaml"],
+         preCommitHookExists: [
+           "https://github.com/mondeja/project-config",
+           "[{"id": "project-config"}]",
+         ]
+       }
+     ]
+   }
+
+The ``rev`` key is added automatically to the configuration
+of the repositories if not exists in fix mode.
+
+.. versionadded:: 0.9.1
+
 .. _flake8: https://flake8.pycqa.org
 .. _black: https://black.readthedocs.io

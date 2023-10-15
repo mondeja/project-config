@@ -177,7 +177,7 @@ class PreCommitPlugin:
                         " is pointing to a directory"
                     ),
                     "definition": f".files[{f}]",
-                    "file": f'{fpath.rstrip("/")}/',
+                    "file": f'{fpath.rstrip("/")}',
                 }
 
             instance = tree.cached_local_file(fpath)
@@ -189,7 +189,7 @@ class PreCommitPlugin:
                     yield Error, {
                         "message": ("The key 'repos' must be set"),
                         "definition": ".preCommitHookExists[0]",
-                        "file": f'{fpath.rstrip("/")}/',
+                        "file": f'{fpath.rstrip("/")}',
                         "fixable": True,
                         "fixed": context.fix,
                     }
@@ -206,7 +206,7 @@ class PreCommitPlugin:
                     yield Error, {
                         "message": (f"The repo '{repo}' must be set"),
                         "definition": ".preCommitHookExists[0]",
-                        "file": f'{fpath.rstrip("/")}/',
+                        "file": f'{fpath.rstrip("/")}',
                         "fixable": True,
                         "fixed": context.fix,
                     }
@@ -231,7 +231,7 @@ class PreCommitPlugin:
                         f"The key rev of the repo '{repo}' must be set"
                     ),
                     "definition": ".preCommitHookExists[0]",
-                    "file": f'{fpath.rstrip("/")}/',
+                    "file": f'{fpath.rstrip("/")}',
                     "fixable": True,
                     "fixed": context.fix,
                 }
@@ -244,7 +244,7 @@ class PreCommitPlugin:
                         f"The key 'hooks' of the repo '{repo}' must be set"
                     ),
                     "definition": ".preCommitHookExists[1]",
-                    "file": f'{fpath.rstrip("/")}/',
+                    "file": f'{fpath.rstrip("/")}',
                     "fixable": True,
                     "fixed": context.fix,
                 }
@@ -256,7 +256,7 @@ class PreCommitPlugin:
                         f" must not be empty"
                     ),
                     "definition": ".preCommitHookExists[1]",
-                    "file": f'{fpath.rstrip("/")}/',
+                    "file": f'{fpath.rstrip("/")}',
                     "fixable": True,
                     "fixed": context.fix,
                 }
@@ -283,7 +283,7 @@ class PreCommitPlugin:
                                 f" '{repo_hook[expected_hook_key]}'"
                             ),
                             "definition": ".preCommitHookExists[1]",
-                            "file": f'{fpath.rstrip("/")}/',
+                            "file": f'{fpath.rstrip("/")}',
                             "fixable": True,
                             "fixed": context.fix,
                         }
@@ -296,7 +296,7 @@ class PreCommitPlugin:
                             " must be set"
                         ),
                         "definition": ".preCommitHookExists[1]",
-                        "file": f'{fpath.rstrip("/")}/',
+                        "file": f'{fpath.rstrip("/")}',
                         "fixable": True,
                         "fixed": context.fix,
                     }
