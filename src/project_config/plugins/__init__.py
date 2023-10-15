@@ -192,7 +192,7 @@ class Plugins:
         self,
         module_dotpath: str,
     ) -> Iterator[str]:
-        # TODO: raise error is the specification is not found
+        # TODO: raise error if the specification is not found
         #   this could happen if an user as defined an entrypoint
         #   pointing to a non existent module
         module_spec = importlib.util.find_spec(module_dotpath)
