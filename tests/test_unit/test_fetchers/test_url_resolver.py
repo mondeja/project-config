@@ -1,6 +1,7 @@
 import os
 
 import pytest
+
 from project_config.fetchers import resolve_maybe_relative_url
 
 

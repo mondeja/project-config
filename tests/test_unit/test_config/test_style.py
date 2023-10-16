@@ -1,4 +1,5 @@
 import pytest
+
 from project_config.config import Config
 from project_config.config.style import ProjectConfigInvalidStyle
 from project_config.plugins import Plugins

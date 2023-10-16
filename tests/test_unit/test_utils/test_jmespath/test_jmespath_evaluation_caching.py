@@ -3,6 +3,7 @@
 import os
 
 import pytest
+
 from project_config.utils import jmespath as jmespath_utils
 
 

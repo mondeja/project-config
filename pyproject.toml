@@ -135,12 +135,12 @@ serve = [
 cache = "30 days"
 style = [
   # Basic Python style: use Hatch, pre-commit, Github workflows, etc
-  "gh://mondeja/project-config-styles@v5/python/base.json5",
+  "gh://mondeja/project-config-styles@v5.1/python/base.json5",
   # Documentation styles: use Sphinx with Readthedocs theme
-  "gh://mondeja/project-config-styles@v5/python/sphinx.json5",
-  "gh://mondeja/project-config-styles@v5/python/readthedocs.json5",
+  "gh://mondeja/project-config-styles@v5.1/python/sphinx.json5",
+  "gh://mondeja/project-config-styles@v5.1/python/readthedocs.json5",
   # Type checking with mypy
-  "gh://mondeja/project-config-styles@v5/python/mypy.json5",
+  "gh://mondeja/project-config-styles@v5.1/python/mypy.json5",
 ]
 
 [tool.bump]
@@ -221,6 +221,7 @@ parametrize-values-row-type = "tuple"
 lines-after-imports = 2
 combine-as-imports = true
 force-wrap-aliases = true
+known-first-party = ["project_config", "testing_helpers"]
 known-local-folder = ["tests"]
 required-imports = ["from __future__ import annotations"]
 extra-standard-library = [

@@ -1,6 +1,7 @@
 import json
 
 import pytest
+
 from project_config.__main__ import run
 
 

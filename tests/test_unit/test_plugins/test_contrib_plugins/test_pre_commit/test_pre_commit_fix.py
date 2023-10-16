@@ -1,4 +1,5 @@
 import pytest
+
 from project_config import Error
 from project_config.plugins.contrib.pre_commit import PreCommitPlugin
 from testing_helpers import mark_end2end

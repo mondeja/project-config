@@ -1,4 +1,5 @@
 import pytest
+
 from project_config.config import _validate_cli_config, validate_cli_config
 from project_config.config.exceptions import ProjectConfigInvalidConfigSchema
 

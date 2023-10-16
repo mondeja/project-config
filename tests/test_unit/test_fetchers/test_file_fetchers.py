@@ -1,6 +1,7 @@
 import re
 
 import pytest
+
 from project_config.fetchers import FetchError, fetch
 
 

@@ -1,6 +1,7 @@
 import re
 
 import pytest
+
 from project_config.config import CONFIG_CACHE_REGEX, _cache_string_to_seconds
 
 

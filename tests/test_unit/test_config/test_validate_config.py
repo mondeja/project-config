@@ -1,6 +1,7 @@
 import os
 
 import pytest
+
 from project_config.config import (
     CONFIG_CACHE_REGEX,
     validate_config,

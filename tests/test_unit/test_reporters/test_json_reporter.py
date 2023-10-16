@@ -1,6 +1,7 @@
 import json
 
 import pytest
+
 from project_config.reporters import json_
 
 

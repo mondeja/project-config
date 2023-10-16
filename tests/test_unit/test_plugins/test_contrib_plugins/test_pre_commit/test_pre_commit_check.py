@@ -1,4 +1,5 @@
 import pytest
+
 from project_config import Error, InterruptingError
 from project_config.plugins.contrib.pre_commit import PreCommitPlugin
 

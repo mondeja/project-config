@@ -15,7 +15,7 @@ repos:
           - prettier-plugin-toml
         minimum_pre_commit_version: 2.9.0
   - repo: https://github.com/mondeja/project-config
-    rev: v0.9.1
+    rev: v0.9.2
     hooks:
       - id: project-config
   - repo: meta
@@ -32,7 +32,7 @@ repos:
           - --fix
           - --exit-non-zero-on-fix
   - repo: https://github.com/psf/black
-    rev: 22.12.0
+    rev: 23.9.1
     hooks:
       - id: black
   - repo: https://github.com/pre-commit/pre-commit-hooks

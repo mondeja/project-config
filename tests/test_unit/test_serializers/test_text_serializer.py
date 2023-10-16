@@ -1,4 +1,5 @@
 import pytest
+
 from project_config.serializers.text import dumps, loads
 
 

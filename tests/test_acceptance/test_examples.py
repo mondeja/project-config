@@ -3,6 +3,7 @@ import shutil
 import sys
 
 import pytest
+
 from project_config.__main__ import run
 from project_config.commands.check import check
 from project_config.exceptions import ProjectConfigException

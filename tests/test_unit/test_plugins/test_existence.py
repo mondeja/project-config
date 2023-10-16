@@ -1,4 +1,5 @@
 import pytest
+
 from project_config import InterruptingError, ResultValue
 from project_config.plugins.existence import ExistencePlugin
 

@@ -1,6 +1,7 @@
 import json
 
 import pytest
+
 from project_config import Error
 from project_config.constants import InterruptingError
 from project_config.plugins.jmespath import JMESPathPlugin

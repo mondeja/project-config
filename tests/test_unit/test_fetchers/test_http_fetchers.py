@@ -3,6 +3,7 @@ import re
 import urllib.parse
 
 import pytest
+
 from project_config.fetchers import FetchError, fetch
 from testing_helpers import TEST_SERVER_URL, mark_end2end
 

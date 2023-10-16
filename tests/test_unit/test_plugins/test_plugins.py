@@ -2,6 +2,7 @@ import os
 import re
 
 import pytest
+
 from project_config.compat import importlib_metadata
 from project_config.plugins import (
     PROJECT_CONFIG_PLUGINS_ENTRYPOINTS_GROUP,

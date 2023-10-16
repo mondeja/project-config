@@ -3,6 +3,7 @@ import shutil
 import sys
 
 import pytest
+
 from project_config.__main__ import run
 from project_config.cache import CACHE_DIR, generate_possible_cache_dirs
 
