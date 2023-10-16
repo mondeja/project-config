@@ -458,6 +458,21 @@ from project_config.plugins.contrib.pre_commit import PreCommitPlugin
             ],
             id="edit-hooks",
         ),
+        pytest.param(
+            {
+                ".pre-commit-config.yaml": (
+                    "repos:"
+                    " [{"
+                    " 'repo': 'meta',"
+                    " 'hooks': [{'id': 'check-hooks-apply'}]"
+                    "}]"
+                ),
+            },
+            ["meta", "check-hooks-apply"],
+            None,
+            [],
+            id="meta-repo-not-set-rev",
+        ),
     ),
 )
 def test_preCommitHookExists(
