@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.plugins.contrib.pre_commit &mdash; project-config 0.9.1 documentation</title>
+  <title>project_config.plugins.contrib.pre_commit &mdash; project-config 0.9.2 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
@@ -297,7 +297,7 @@
             <span class="c1"># found or added a new repo with our repo name</span>
 
             <span class="c1"># check if rev in repo</span>
-            <span class="k">if</span> <span class="s2">&quot;rev&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">instance</span><span class="p">[</span><span class="s2">&quot;repos&quot;</span><span class="p">][</span><span class="n">repo_index</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">repo</span> <span class="o">!=</span> <span class="s2">&quot;meta&quot;</span> <span class="ow">and</span> <span class="s2">&quot;rev&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">instance</span><span class="p">[</span><span class="s2">&quot;repos&quot;</span><span class="p">][</span><span class="n">repo_index</span><span class="p">]:</span>
                 <span class="c1"># if not found, get latest rev and set it</span>
                 <span class="k">if</span> <span class="n">context</span><span class="o">.</span><span class="n">fix</span><span class="p">:</span>
                     <span class="n">parts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">repo</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)))</span>
