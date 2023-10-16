@@ -194,7 +194,7 @@ class PreCommitPlugin:
             # found or added a new repo with our repo name
 
             # check if rev in repo
-            if "rev" not in instance["repos"][repo_index]:
+            if repo != "meta" and "rev" not in instance["repos"][repo_index]:
                 # if not found, get latest rev and set it
                 if context.fix:
                     parts = list(reversed(repo.split("/")))
