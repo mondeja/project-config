@@ -1,0 +1,8 @@
+project\_config.serializers.contrib.pre\_commit module
+======================================================
+
+.. automodule:: project_config.serializers.contrib.pre_commit
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
