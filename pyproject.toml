@@ -159,7 +159,8 @@ exclude_lines = [
   "def __repr__\\(",
   "@(abc\\.)?abstractmethod",
 ]
-omit = ["src/project_config/tests/*"]
+# Github actions reporter is visually tested in the CI
+omit = ["src/project_config/tests/*", "src/project-config/reporters/ghf_markdown.py"]
 fail_under = 1
 
 [tool.coverage.run]
@@ -167,12 +168,12 @@ source = ["src"]
 plugins = ["covdefaults"]
 
 [tool.mypy]
-python_version = "3.10"
+python_version = "3.11"
 strict = true
 
 [tool.black]
 line-length = 80
-target-version = ["py37"]
+target-version = ["py38"]
 
 [tool.ruff]
 line-length = 80
