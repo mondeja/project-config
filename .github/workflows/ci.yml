@@ -32,7 +32,7 @@ jobs:
       - name: Lint
         run: hatch run style:lint
 
-  self-run:
+  full-gha-report:
     name: project-config GHA reporter
     runs-on: ubuntu-latest
     steps:
@@ -140,6 +140,7 @@ jobs:
       - lint
       - test
       - test-docs
+      - full-gha-report
     name: Build package
     runs-on: ubuntu-latest
     steps:
