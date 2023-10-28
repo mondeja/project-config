@@ -22,6 +22,16 @@ def maybe_write_report_to_github_summary(report: str) -> None:
             f.write(report)
 
 
+def plugin_or_verb_docs_url_prefix() -> str:
+    """Return the URL to the plugin docs."""
+    import importlib_metadata as im
+
+    return (
+        "https://mondeja.github.io/project-config/"
+        f"{im.version('project-config')}/reference/plugins.html#"
+    )
+
+
 class GithubFlavoredMarkdownReporter(BaseNoopFormattedReporter):
     """Github flavored Markdown reporter."""
 
@@ -80,14 +90,26 @@ class GithubFlavoredMarkdownReporter(BaseNoopFormattedReporter):
         if data_key == "style":
             # TODO: Better output for style with details over each rule
             rules = data.get("rules", [])
-            rootdir_name = os.path.basename(self.rootdir)
             report += (
-                f"## project-config styles for {rootdir_name}\n\n"
+                f"## project-config styles\n\n"
                 f"<details>\n  <summary>Show {len(rules)} rules</summary>\n\n"
             )
             if len(rules) > 0:
                 report += f"```json\n{json.dumps(rules, indent=2)}\n```\n"
             report += "</details>\n\n"
+        elif data_key == "plugins":
+            url_prefix = plugin_or_verb_docs_url_prefix()
+            report += (
+                f"## project-config [plugins]({url_prefix.rstrip('#')})\n\n"
+            )
+            for plugin_name, plugin_verbs in data.items():
+                report += (
+                    f"### **[{plugin_name}]"
+                    f"({url_prefix}{plugin_name.lower()})**\n\n"
+                )
+                for verb in plugin_verbs:
+                    report += f"- [{verb}]({url_prefix}{verb.lower()})\n"
+                report += "\n"
         else:
             report += "## Configuration for project-config\n\n"
             for key, value in data.items():
@@ -99,7 +121,7 @@ class GithubFlavoredMarkdownReporter(BaseNoopFormattedReporter):
                 else:
                     report += f" {value}\n"
         maybe_write_report_to_github_summary(report)
-        return report
+        return report.rstrip()
 
 
 GithubFlavoredMarkdownColorReporter = GithubFlavoredMarkdownReporter
