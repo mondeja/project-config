@@ -32,6 +32,27 @@ jobs:
       - name: Lint
         run: hatch run style:lint
 
+  full-gha-report:
+    name: project-config GHA reporter
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: pip install -U hatch
+      - name: Report
+        run: |
+          echo "# project-config full report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          hatch run project-config show config -r github-actions
+          hatch run project-config show plugins -r github-actions
+          hatch run project-config show style -r github-actions
+          hatch run project-config check || \
+            hatch run project-config fix -r github-actions
+
   test:
     name: Test
     runs-on: ${{ matrix.platform }}
@@ -119,6 +140,7 @@ jobs:
       - lint
       - test
       - test-docs
+      - full-gha-report
     name: Build package
     runs-on: ubuntu-latest
     steps:
@@ -179,7 +201,7 @@ jobs:
         id: tag
         run: |
           TAG_TITLE=${GITHUB_REF#refs/*/}
-          echo ::set-output name=title::$TAG_TITLE
+          echo "title=$TAG_TITLE" >> $GITHUB_OUTPUT
           git -c protocol.version=2 fetch --prune --progress \
             --no-recurse-submodules origin \
             +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*
@@ -187,7 +209,7 @@ jobs:
           TAG_BODY="${TAG_BODY//'%'/'%25'}"
           TAG_BODY="${TAG_BODY//$'\n'/'%0A'}"
           TAG_BODY="${TAG_BODY//$'\r'/'%0D'}"
-          echo ::set-output name=body::$TAG_BODY
+          echo "body=$TAG_BODY" >> $GITHUB_OUTPUT
       - name: Create Release
         uses: softprops/action-gh-release@v1
         id: create-release

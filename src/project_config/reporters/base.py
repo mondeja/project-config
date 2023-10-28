@@ -96,14 +96,18 @@ class BaseReporter(abc.ABC):
         """
         return len(self.errors) == 0
 
-    def raise_errors(self) -> None:
+    def raise_errors(self, errors_report: str | None = None) -> None:
         """Raise errors failure if no success.
 
         Raise the correspondent exception class for the reporter
         if the reporter has reported any error.
         """
         if not self.success:
-            raise self.exception_class(self.generate_errors_report())
+            raise self.exception_class(
+                self.generate_errors_report()
+                if errors_report is None
+                else errors_report,
+            )
 
     def report_error(self, error: ErrorDict) -> None:
         """Report an error.

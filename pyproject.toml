@@ -1,6 +1,6 @@
 [project]
 name = "project-config"
-version = "0.9.2"
+version = "0.9.3"
 description = "Reproducible configuration across projects."
 authors = [{ name = "Álvaro Mondéjar Rubio", email = "mondejar1994@gmail.com" }]
 license = "BSD-3-Clause"
@@ -159,12 +159,13 @@ exclude_lines = [
   "def __repr__\\(",
   "@(abc\\.)?abstractmethod",
 ]
-omit = ["src/project_config/tests/*"]
 fail_under = 1
 
 [tool.coverage.run]
 source = ["src"]
 plugins = ["covdefaults"]
+# Github actions reporter is visually tested in the CI
+omit = ["src/project_config/tests/*", "src/project-config/reporters/ghf_markdown.py"]
 
 [tool.mypy]
 python_version = "3.11"

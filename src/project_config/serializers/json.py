@@ -8,6 +8,3 @@ from typing import Any
 
 def dumps(obj: Any, **kwargs: Any) -> str:  # noqa: D103
     return f"{json.dumps(obj, indent=2, **kwargs)}\n"
-
-
-loads = json.loads

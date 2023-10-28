@@ -62,11 +62,15 @@ reporters = {
     "json:pretty4": "JsonReporter",
     "toml": "TomlReporter",
     "yaml": "YamlReporter",
+    "markdown": "GithubFlavoredMarkdownReporter",
+    "github-actions": "GithubFlavoredMarkdownReporter",
     **{f"table:{fmt}": "TableReporter" for fmt in tabulate_formats},
 }
 
 reporters_modules = {
     "json": "json_",
+    "markdown": "ghf_markdown",
+    "github-actions": "ghf_markdown",
 }
 
 

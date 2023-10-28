@@ -57,8 +57,8 @@ serializers: dict[
     tuple[SerializerDefinitionsType, SerializerDefinitionsType],
 ] = {
     ".json": (
-        [{"module": "project_config.serializers.json_"}],  # loads
-        [{"module": "project_config.serializers.json_"}],  # dumps
+        [{"module": "json"}],  # loads
+        [{"module": "project_config.serializers.json"}],  # dumps
     ),
     ".json5": (
         [{"module": "pyjson5"}, {"module": "json5"}],
