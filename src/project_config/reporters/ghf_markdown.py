@@ -24,7 +24,7 @@ def maybe_write_report_to_github_summary(report: str) -> None:
 
 def plugin_or_verb_docs_url_prefix() -> str:
     """Return the URL to the plugin docs."""
-    import importlib_metadata as im
+    from project_config.compat import importlib_metadata as im
 
     return (
         "https://mondeja.github.io/project-config/"

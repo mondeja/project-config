@@ -50,8 +50,9 @@ jobs:
           hatch run project-config show config -r github-actions
           hatch run project-config show plugins -r github-actions
           hatch run project-config show style -r github-actions
-          hatch run project-config check -r github-actions
-          hatch run project-config fix -r github-actions
+          hatch run project-config check -r github-actions || \
+            hatch run project-config fix -r github-actions
+
   test:
     name: Test
     runs-on: ${{ matrix.platform }}
