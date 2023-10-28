@@ -6,9 +6,20 @@ import json
 import os
 from typing import Any
 
+from project_config.compat import (
+    cached_function,
+    importlib_metadata as im,
+)
 from project_config.reporters.base import (
     BaseNoopFormattedReporter,
 )
+
+
+CONFIG_SETTINGS_DOCS_TITLES = {
+    "style": "style-string-or-string",
+    "cache": "cache-string",
+    "cli": "cli-object",
+}
 
 
 def maybe_write_report_to_github_summary(report: str) -> None:
@@ -24,11 +35,36 @@ def maybe_write_report_to_github_summary(report: str) -> None:
 
 def plugin_or_verb_docs_url_prefix() -> str:
     """Return the URL to the plugin docs."""
-    from project_config.compat import importlib_metadata as im
-
     return (
         "https://mondeja.github.io/project-config/"
         f"{im.version('project-config')}/reference/plugins.html#"
+    )
+
+
+@cached_function
+def config_docs_url_prefix() -> str:
+    """Return the URL to the config docs."""
+    return (
+        "https://mondeja.github.io/project-config/"
+        f"{im.version('project-config')}/reference/config.html#"
+    )
+
+
+def config_docs_markdown_link(key: str) -> str:
+    """Return the markdown link to the config docs."""
+    if key not in CONFIG_SETTINGS_DOCS_TITLES:
+        return key
+    return (
+        f"[{key}]({config_docs_url_prefix()}{CONFIG_SETTINGS_DOCS_TITLES[key]})"
+    )
+
+
+@cached_function
+def styling_docs_url_prefix() -> str:
+    """Return the URL to the styling docs."""
+    return (
+        "https://mondeja.github.io/project-config/"
+        f"{im.version('project-config')}/reference/styling.html#"
     )
 
 
@@ -91,7 +127,7 @@ class GithubFlavoredMarkdownReporter(BaseNoopFormattedReporter):
             # TODO: Better output for style with details over each rule
             rules = data.get("rules", [])
             report += (
-                f"## project-config styles\n\n"
+                f"## [Styles]({styling_docs_url_prefix().rstrip('#')})\n\n"
                 f"<details>\n  <summary>Show {len(rules)} rules</summary>\n\n"
             )
             if len(rules) > 0:
@@ -99,9 +135,7 @@ class GithubFlavoredMarkdownReporter(BaseNoopFormattedReporter):
             report += "</details>\n\n"
         elif data_key == "plugins":
             url_prefix = plugin_or_verb_docs_url_prefix()
-            report += (
-                f"## project-config [plugins]({url_prefix.rstrip('#')})\n\n"
-            )
+            report += f"## [Plugins]({url_prefix.rstrip('#')})\n\n"
             for plugin_name, plugin_verbs in data.items():
                 report += (
                     f"### **[{plugin_name}]"
@@ -111,13 +145,20 @@ class GithubFlavoredMarkdownReporter(BaseNoopFormattedReporter):
                     report += f"- [{verb}]({url_prefix}{verb.lower()})\n"
                 report += "\n"
         else:
-            report += "## Configuration for project-config\n\n"
+            report += (
+                "## [Configuration]"
+                f"({config_docs_url_prefix().rstrip('#')})\n\n"
+            )
             for key, value in data.items():
-                report += f"- **{key}**:"
+                report += f"- **{config_docs_markdown_link(key)}**:"
                 if isinstance(value, list):
                     report += "\n"
                     for value_item in value:
                         report += f"  - {value_item}\n"
+                elif isinstance(value, dict):
+                    report += "\n"
+                    for value_k, value_v in value.items():
+                        report += f"  - **{value_k}**: {value_v}\n"
                 else:
                     report += f" {value}\n"
         maybe_write_report_to_github_summary(report)
