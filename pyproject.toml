@@ -159,13 +159,13 @@ exclude_lines = [
   "def __repr__\\(",
   "@(abc\\.)?abstractmethod",
 ]
-# Github actions reporter is visually tested in the CI
-omit = ["src/project_config/tests/*", "src/project-config/reporters/ghf_markdown.py"]
 fail_under = 1
 
 [tool.coverage.run]
 source = ["src"]
 plugins = ["covdefaults"]
+# Github actions reporter is visually tested in the CI
+omit = ["src/project_config/tests/*", "src/project-config/reporters/ghf_markdown.py"]
 
 [tool.mypy]
 python_version = "3.11"
