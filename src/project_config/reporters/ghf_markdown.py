@@ -49,7 +49,7 @@ class GithubFlavoredMarkdownReporter(BaseNoopFormattedReporter):
 
         report += "## Errors\n\n"
         for file, errors in self.errors.items():
-            report += f"<details>\n  <summary>{file}</summary>\n\n"
+            report += f"<details>\n  <summary>**{file}**</summary>\n\n"
             for error in errors:
                 fixed_item = (
                     "  :hammer_and_wrench: FIXED\n"
