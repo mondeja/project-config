@@ -165,4 +165,7 @@ class GithubFlavoredMarkdownReporter(BaseNoopFormattedReporter):
         return report.rstrip()
 
 
-GithubFlavoredMarkdownColorReporter = GithubFlavoredMarkdownReporter
+class GithubFlavoredMarkdownColorReporter(  # noqa: D101
+    GithubFlavoredMarkdownReporter,
+):
+    pass
