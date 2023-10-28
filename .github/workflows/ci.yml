@@ -33,7 +33,7 @@ jobs:
         run: hatch run style:lint
 
   self-run:
-    name: Run with Github Actions reporter
+    name: project-config GHA report
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
