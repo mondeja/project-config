@@ -3,5 +3,4 @@
    Exitcode: 0
    Online: true
 
-Set a pre-commit hook for ``editorconfig-checker`` inside `.pre-commit-config.yaml`
-with manual fixes.
+Set a pre-commit hook for ``editorconfig-checker`` inside `.pre-commit-config.yaml`.

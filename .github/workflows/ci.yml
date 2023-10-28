@@ -32,6 +32,20 @@ jobs:
       - name: Lint
         run: hatch run style:lint
 
+  self-run:
+    name: Run with Github Actions reporter
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: pip install -U hatch
+      - name: Run
+        run: hatch run project-config check --reporter github-actions
+
   test:
     name: Test
     runs-on: ${{ matrix.platform }}
