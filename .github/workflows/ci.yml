@@ -43,20 +43,15 @@ jobs:
           python-version: "3.11"
       - name: Install dependencies
         run: pip install -U hatch
-      - name: Start report
+      - name: Report
         run: |
           echo "# project-config full report" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-      - name: Show config
-        run: hatch run project-config show config -r github-actions
-      - name: Show plugins
-        run: hatch run project-config show plugins -r github-actions
-      - name: Show style
-        run: hatch run project-config show plugins -r github-actions
-      - name: Run
-        run: hatch run project-config check -r github-actions
-      - name: Fix
-        run: hatch run project-config fix -r github-actions
+          hatch run project-config show config -r github-actions
+          hatch run project-config show plugins -r github-actions
+          hatch run project-config show style -r github-actions
+          hatch run project-config check -r github-actions
+          hatch run project-config fix -r github-actions
   test:
     name: Test
     runs-on: ${{ matrix.platform }}
