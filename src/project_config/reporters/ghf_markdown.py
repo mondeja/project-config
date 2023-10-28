@@ -55,7 +55,7 @@ class GithubFlavoredMarkdownReporter(BaseNoopFormattedReporter):
                     "  - :hammer_and_wrench: FIXED\n"
                     if error.get("fixed")
                     else (
-                        "  - FIXABLE :wrench:\n"
+                        "  - :wrench: FIXABLE\n"
                         if error.get("fixable", False)
                         else ""
                     )
