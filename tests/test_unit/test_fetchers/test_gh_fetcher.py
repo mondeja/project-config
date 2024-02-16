@@ -2,33 +2,8 @@ import urllib.parse
 
 import pytest
 
-from project_config.fetchers.github import (
-    _get_default_branch_from_repo_branches_html,
-    fetch,
-)
+from project_config.fetchers.github import fetch
 from testing_helpers import mark_end2end
-
-
-@mark_end2end
-@pytest.mark.parametrize(
-    ("repo_name", "repo_owner", "expected_branch"),
-    (
-        ("simple-icons", "simple-icons", "develop"),
-        ("mondeja", "project-config", "master"),
-    ),
-)
-def test__get_default_branch_from_repo_branches_html(
-    repo_name,
-    repo_owner,
-    expected_branch,
-):
-    assert (
-        _get_default_branch_from_repo_branches_html(
-            repo_name,
-            repo_owner,
-        )
-        == expected_branch
-    )
 
 
 @mark_end2end
