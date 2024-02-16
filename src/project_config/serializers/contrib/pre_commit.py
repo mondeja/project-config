@@ -1,4 +1,5 @@
 """Serializer for pre-commit files."""
+
 from __future__ import annotations
 
 from typing import Any
@@ -48,9 +49,11 @@ def sort_pre_commit_config(instance: dict[str, Any]) -> dict[str, Any]:
             sorted_hook = dict(
                 sorted(
                     unsorted_hook.items(),
-                    key=lambda x: HOOK_KEYS_ORDER.index(x[0])
-                    if x[0] in HOOK_KEYS_ORDER
-                    else len(HOOK_KEYS_ORDER),
+                    key=lambda x: (
+                        HOOK_KEYS_ORDER.index(x[0])
+                        if x[0] in HOOK_KEYS_ORDER
+                        else len(HOOK_KEYS_ORDER)
+                    ),
                 ),
             )
             sorted_hooks.append(sorted_hook)

@@ -59,9 +59,9 @@ for maybe_merge_strategy_name in dir(deepmerge):
             maybe_merge_strategy_name,
         )
         if isinstance(maybe_merge_strategy_instance, deepmerge.Merger):
-            BUILTIN_DEEPMERGE_STRATEGIES[
-                maybe_merge_strategy_name
-            ] = maybe_merge_strategy_instance
+            BUILTIN_DEEPMERGE_STRATEGIES[maybe_merge_strategy_name] = (
+                maybe_merge_strategy_instance
+            )
 
 OPERATORS_FUNCTIONS = {
     "<": operator.lt,

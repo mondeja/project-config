@@ -34,8 +34,7 @@ if TYPE_CHECKING:
             self,
             _value: Any,
             **_kwargs: Any,
-        ) -> Any:
-            ...
+        ) -> Any: ...
 
     SerializerFunctionKwargs: TypeAlias = dict[str, Any]
 

@@ -25,14 +25,14 @@ repos:
       - id: check-useless-excludes
         name: check-useless-excludes
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.1.9
+    rev: v0.2.1
     hooks:
       - id: ruff
         args:
           - --fix
           - --exit-non-zero-on-fix
   - repo: https://github.com/psf/black
-    rev: 23.12.1
+    rev: 24.2.0
     hooks:
       - id: black
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -43,7 +43,7 @@ repos:
       - id: end-of-file-fixer
         name: end-of-file-fixer
   - repo: https://github.com/DavidAnson/markdownlint-cli2
-    rev: v0.11.0
+    rev: v0.12.1
     hooks:
       - id: markdownlint-cli2
   - repo: https://github.com/pre-commit/mirrors-mypy
@@ -58,7 +58,7 @@ repos:
           - types-appdirs
           - pytest
   - repo: https://github.com/Lucas-C/pre-commit-hooks
-    rev: v1.5.4
+    rev: v1.5.5
     hooks:
       - id: remove-crlf
         files: \.bat$
@@ -70,7 +70,7 @@ repos:
         name: editorconfig-checker
         alias: ec
   - repo: https://github.com/adrienverge/yamllint
-    rev: v1.33.0
+    rev: v1.35.0
     hooks:
       - id: yamllint
   - repo: https://github.com/tcort/markdown-link-check
