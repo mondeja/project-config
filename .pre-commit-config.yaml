@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v3.0.3
+    rev: v4.0.0-alpha.8
     hooks:
       - id: prettier
         types_or:
@@ -15,7 +15,7 @@ repos:
           - prettier-plugin-toml
         minimum_pre_commit_version: 2.9.0
   - repo: https://github.com/mondeja/project-config
-    rev: v0.9.2
+    rev: v0.9.3
     hooks:
       - id: project-config
   - repo: meta
@@ -25,14 +25,14 @@ repos:
       - id: check-useless-excludes
         name: check-useless-excludes
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.0.292
+    rev: v0.2.1
     hooks:
       - id: ruff
         args:
           - --fix
           - --exit-non-zero-on-fix
   - repo: https://github.com/psf/black
-    rev: 23.9.1
+    rev: 24.2.0
     hooks:
       - id: black
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -43,11 +43,11 @@ repos:
       - id: end-of-file-fixer
         name: end-of-file-fixer
   - repo: https://github.com/DavidAnson/markdownlint-cli2
-    rev: v0.10.0
+    rev: v0.12.1
     hooks:
       - id: markdownlint-cli2
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.6.0
+    rev: v1.8.0
     hooks:
       - id: mypy
         files: ^src
@@ -58,7 +58,7 @@ repos:
           - types-appdirs
           - pytest
   - repo: https://github.com/Lucas-C/pre-commit-hooks
-    rev: v1.4.1
+    rev: v1.5.5
     hooks:
       - id: remove-crlf
         files: \.bat$
@@ -70,7 +70,7 @@ repos:
         name: editorconfig-checker
         alias: ec
   - repo: https://github.com/adrienverge/yamllint
-    rev: v1.32.0
+    rev: v1.35.0
     hooks:
       - id: yamllint
   - repo: https://github.com/tcort/markdown-link-check

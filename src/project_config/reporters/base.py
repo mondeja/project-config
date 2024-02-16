@@ -104,9 +104,11 @@ class BaseReporter(abc.ABC):
         """
         if not self.success:
             raise self.exception_class(
-                self.generate_errors_report()
-                if errors_report is None
-                else errors_report,
+                (
+                    self.generate_errors_report()
+                    if errors_report is None
+                    else errors_report
+                ),
             )
 
     def report_error(self, error: ErrorDict) -> None:

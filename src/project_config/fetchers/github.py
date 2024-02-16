@@ -13,16 +13,6 @@ from project_config.utils.http import GET
 SEMVER_REGEX = r"\d+\.\d+\.\d+"
 
 
-def _get_default_branch_from_repo_branches_html(
-    repo_owner: str,
-    repo_name: str,
-) -> str | None:
-    # try from repository HTML
-    result = GET(f"https://github.com/{repo_owner}/{repo_name}/branches")
-    match = re.search(r'branch=["|\'](\w+)["|\']', result)
-    return match.group(1) if match else None
-
-
 def _get_default_branch_from_repo_github_api(
     repo_owner: str,
     repo_name: str,
@@ -38,19 +28,6 @@ def _get_default_branch_from_repo_github_api(
     # of the API rate limit with a Github token
     result = GET(f"https://api.github.com/repos/{repo_owner}/{repo_name}")
     return json.loads(result)["default_branch"]  # type: ignore
-
-
-def _get_default_branch_from_git_repo(
-    repo_owner: str,
-    repo_name: str,
-) -> str:  # pragma: no cover
-    return _get_default_branch_from_repo_branches_html(
-        repo_owner,
-        repo_name,
-    ) or _get_default_branch_from_repo_github_api(
-        repo_owner,
-        repo_name,
-    )
 
 
 def _build_raw_githubusercontent_url(
@@ -83,7 +60,7 @@ def resolve_url(url_parts: urllib.parse.SplitResult) -> str:
         project, git_reference = project_maybe_with_gitref.split("@")
     else:
         project = project_maybe_with_gitref
-        git_reference = _get_default_branch_from_git_repo(
+        git_reference = _get_default_branch_from_repo_github_api(
             url_parts.netloc,  # netloc is the repo owner here
             project,
         )

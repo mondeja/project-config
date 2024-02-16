@@ -15,9 +15,11 @@ class JsonReporter(BaseReporter):
         """Generate an errors report in black/white JSON format."""
         return json.dumps(
             self.errors,
-            indent=2
-            if self.format == "pretty"
-            else (4 if self.format == "pretty4" else None),
+            indent=(
+                2
+                if self.format == "pretty"
+                else (4 if self.format == "pretty4" else None)
+            ),
         )
 
     def generate_data_report(
@@ -28,9 +30,11 @@ class JsonReporter(BaseReporter):
         """Generate a data report in black/white JSON format."""
         return json.dumps(
             data,
-            indent=2
-            if self.format == "pretty"
-            else (4 if self.format == "pretty4" else None),
+            indent=(
+                2
+                if self.format == "pretty"
+                else (4 if self.format == "pretty4" else None)
+            ),
         )
 
 
@@ -234,9 +238,11 @@ class JsonColorReporter(BaseColorReporter):
                         for line_index, line in enumerate(
                             json.dumps(
                                 action_value,
-                                indent=None
-                                if not self.format
-                                else (4 if "4" in self.format else 2),
+                                indent=(
+                                    None
+                                    if not self.format
+                                    else (4 if "4" in self.format else 2)
+                                ),
                             ).splitlines(),
                         )
                     )

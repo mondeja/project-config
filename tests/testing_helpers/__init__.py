@@ -47,7 +47,7 @@ def build_testing_server():
 
     @test_server.route("/download/<content>/<filename>", methods=["GET"])
     def download_file(_filename, content):
-        response = response = flask.make_response(content, 200)
+        response = flask.make_response(content, 200)
         response.mimetype = "text/plain"
         return response
 

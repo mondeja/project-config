@@ -197,9 +197,9 @@ class ThirdPartyReporters:
         for reporter_entrypoint in importlib_metadata.entry_points(
             group=PROJECT_CONFIG_REPORTERS_ENTRYPOINTS_GROUP,
         ):
-            self.reporters_loaders[
-                reporter_entrypoint.name
-            ] = reporter_entrypoint.load
+            self.reporters_loaders[reporter_entrypoint.name] = (
+                reporter_entrypoint.load
+            )
 
     def load(self, reporter_name: str) -> types.ModuleType:
         """Load a third party reporter.
