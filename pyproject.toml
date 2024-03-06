@@ -1,6 +1,6 @@
 [project]
 name = "project-config"
-version = "0.9.4"
+version = "0.9.5"
 description = "Reproducible configuration across projects."
 authors = [{ name = "Álvaro Mondéjar Rubio", email = "mondejar1994@gmail.com" }]
 license = "BSD-3-Clause"
@@ -29,7 +29,7 @@ keywords = [
   "meta-linter"
 ]
 dependencies = [
-  "importlib-metadata-argparse-version",
+  "importlib-metadata-argparse-version>=2,<3",
   "contextlib-chdir",
   "tomli-w~=1.0",
   'pyjson5',
@@ -135,12 +135,12 @@ serve = [
 cache = "30 days"
 style = [
   # Basic Python style: use Hatch, pre-commit, Github workflows, etc
-  "gh://mondeja/project-config-styles@v5.2/python/base.json5",
+  "gh://mondeja/project-config-styles@v5.2.1/python/base.json5",
   # Documentation styles: use Sphinx with Readthedocs theme
-  "gh://mondeja/project-config-styles@v5.2/python/sphinx.json5",
-  "gh://mondeja/project-config-styles@v5.2/python/readthedocs.json5",
+  "gh://mondeja/project-config-styles@v5.2.1/python/sphinx.json5",
+  "gh://mondeja/project-config-styles@v5.2.1/python/readthedocs.json5",
   # Type checking with mypy
-  "gh://mondeja/project-config-styles@v5.2/python/mypy.json5",
+  "gh://mondeja/project-config-styles@v5.2.1/python/mypy.json5",
 ]
 
 [tool.bump]
