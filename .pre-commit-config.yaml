@@ -15,7 +15,7 @@ repos:
           - prettier-plugin-toml
         minimum_pre_commit_version: 2.9.0
   - repo: https://github.com/mondeja/project-config
-    rev: v0.9.3
+    rev: v0.9.4
     hooks:
       - id: project-config
   - repo: meta

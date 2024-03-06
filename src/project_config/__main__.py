@@ -83,7 +83,7 @@ def build_main_parser() -> argparse.ArgumentParser:  # noqa: D103
         "--version",
         action=ImportlibMetadataVersionAction,
         help="Show project-config's version number and exit.",
-        importlib_metadata_version_from="project-config",
+        version_from="project-config",
     )
 
     # common arguments
