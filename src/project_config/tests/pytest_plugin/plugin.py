@@ -10,7 +10,6 @@ import os
 import pathlib
 import pprint
 import re
-from types import ModuleType
 from typing import TYPE_CHECKING, Any
 
 import pytest
@@ -25,6 +24,8 @@ from project_config.types_ import ActionsContext
 
 
 if TYPE_CHECKING:
+    import types
+
     from project_config.tests.pytest_plugin.helpers import (
         FilesType,
         RootdirType,
@@ -49,8 +50,8 @@ def project_config_plugin_action_asserter(  # noqa: PLR0913
     """Convenient function to test a plugin action.
 
     Args:
-        rootdir (Path): Path to root directory. This is not needed to define
-            in the fixture as is inserted before the execution.
+        rootdir (pathlib.Path): Path to root directory. This is not needed to
+            define in the fixture as is inserted before the execution.
         plugin_class (type): Plugin class.
         plugin_method_name (str): Plugin method name.
         files (dict): Dictionary of files to create.
@@ -219,7 +220,7 @@ def assert_project_config_plugin_action(
 def project_config_errors_report_asserter(  # noqa: PLR0913
     monkeypatch: pytest.MonkeyPatch,
     rootdir: pathlib.Path,
-    reporter_module: ModuleType,
+    reporter_module: types.ModuleType,
     errors: list[ErrorDict],
     expected_result: str,
     fmt: str | None = None,
@@ -230,9 +231,9 @@ def project_config_errors_report_asserter(  # noqa: PLR0913
     Args:
         monkeypatch (pytest.MonkeyPatch): Monkeypatch fixture. This is not
             needed to define in the fixture as is inserted before the execution.
-        rootdir (Path): Path to root directory. This is not needed to define
-            in the fixture as is inserted before the execution.
-        reporter_module (types_.ModuleType): Module containing the reporters.
+        rootdir (pathlib.Path): Path to root directory. This is not needed to
+            define in the fixture as is inserted before the execution.
+        reporter_module (types.ModuleType): Module containing the reporters.
         errors (list): Errors.
         expected_result (str): Expected reported result.
         fmt (str, optional): Format to use. Default value is ``None``.
@@ -343,7 +344,7 @@ def assert_errors_report(
 def project_config_data_report_asserter(  # noqa: PLR0913
     monkeypatch: pytest.MonkeyPatch,
     rootdir: pathlib.Path,
-    reporter_module: ModuleType,
+    reporter_module: types.ModuleType,
     data_key: str,
     data: Any,
     expected_result: str,
@@ -355,9 +356,9 @@ def project_config_data_report_asserter(  # noqa: PLR0913
         monkeypatch (pytest.MonkeyPatch): Monkeypatch fixture. This is not
             needed to define in the fixture as is inserted before the
             execution.
-        rootdir (Path): Path to root directory. This is not needed to define
-            in the fixture as is inserted before the execution.
-        reporter_module (types_.ModuleType): Module containing the reporters.
+        rootdir (pathlib.Path): Path to root directory. This is not needed to
+            define in the fixture as is inserted before the execution.
+        reporter_module (ModuleType): Module containing the reporters.
         data_key (str): Data key.
         data (any): Data content to report.
         expected_result (str): Expected reported result.
