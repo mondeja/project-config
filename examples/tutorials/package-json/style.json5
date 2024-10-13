@@ -63,7 +63,7 @@
         [
           "type(funding.url)",
           "string",
-          "deepmerge(@, {funding: {url: 'https://www.patreon.com/my-account'}})",
+          "deepmerge(@, {funding: {url: 'https://patreon.com/my-account'}})",
         ],
 
         // repository
