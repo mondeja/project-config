@@ -343,15 +343,15 @@ class JMESPathProjectConfigFunctions(JMESPathFunctions):
                 operators.append((current_op, op_or_value))
 
         partial_result = a
-        for (func, operator), b_ in operators:  # type: ignore
+        for (func, operator_), b_ in operators:  # type: ignore
             if (
                 isinstance(b_, list)
                 and isinstance(partial_result, list)
-                and operator in SET_OPERATORS
+                and operator_ in SET_OPERATORS
             ):
                 # both values are lists and the operator is only valid for sets,
                 # so convert both values to set applying the operator
-                if operator in OPERATORS_THAT_RETURN_SET:
+                if operator_ in OPERATORS_THAT_RETURN_SET:
                     partial_result = list(func(set(partial_result), set(b_)))
                 else:
                     partial_result = func(set(partial_result), set(b_))

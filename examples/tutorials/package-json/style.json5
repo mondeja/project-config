@@ -63,7 +63,7 @@
         [
           "type(funding.url)",
           "string",
-          "deepmerge(@, {funding: {url: 'https://www.patreon.com/my-account'}})",
+          "deepmerge(@, {funding: {url: 'https://patreon.com/my-account'}})",
         ],
 
         // repository
@@ -116,7 +116,7 @@
           //   must be a valid SPDX OSI approved license identifier
           "license",
           [
-            "gh://spdx/license-list-data@v3.23/json/licenses.json",
+            "gh://spdx/license-list-data@v3.25.0/json/licenses.json",
             "licenses[?isOsiApproved] | [?!isDeprecatedLicenseId].licenseId",
           ],
           "contains([1], [0])",

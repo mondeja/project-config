@@ -1,6 +1,6 @@
 [project]
 name = "project-config"
-version = "0.9.5"
+version = "0.9.6"
 description = "Reproducible configuration across projects."
 authors = [{ name = "Álvaro Mondéjar Rubio", email = "mondejar1994@gmail.com" }]
 license = "BSD-3-Clause"
@@ -134,13 +134,13 @@ serve = [
 [tool.project-config]
 cache = "30 days"
 style = [
-  # Basic Python style: use Hatch, pre-commit, Github workflows, etc
-  "gh://mondeja/project-config-styles@v5.2.1/python/base.json5",
+  # Basic Python style: use Hatch, pre-commit, GitHub Workflows, etc
+  "gh://mondeja/project-config-styles@v5.4/python/base.json5",
   # Documentation styles: use Sphinx with Readthedocs theme
-  "gh://mondeja/project-config-styles@v5.2.1/python/sphinx.json5",
-  "gh://mondeja/project-config-styles@v5.2.1/python/readthedocs.json5",
+  "gh://mondeja/project-config-styles@v5.4/python/sphinx.json5",
+  "gh://mondeja/project-config-styles@v5.4/python/readthedocs.json5",
   # Type checking with mypy
-  "gh://mondeja/project-config-styles@v5.2.1/python/mypy.json5",
+  "gh://mondeja/project-config-styles@v5.4/python/mypy.json5",
 ]
 
 [tool.bump]
