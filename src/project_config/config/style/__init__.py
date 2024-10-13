@@ -22,7 +22,7 @@ class ProjectConfigInvalidStyle(ProjectConfigInvalidConfigSchema):
 if TYPE_CHECKING:
     from project_config.compat import NotRequired, TypeAlias, TypedDict
     from project_config.config import ConfigType
-    from project_config.types import Rule
+    from project_config.types_ import Rule
 
     class StyleType(TypedDict):
         """Style type."""

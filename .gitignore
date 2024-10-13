@@ -17,6 +17,7 @@ docs/_build/
 node_modules/
 package-lock.json
 .ruff_cache/
+.prettier-cache
 
 docs/dev/reference/
 docs/examples.rst

@@ -23,7 +23,7 @@ from project_config.utils.jmespath import (
 
 if TYPE_CHECKING:
     from project_config import Results, Rule
-    from project_config.types import ErrorDict
+    from project_config.types_ import ErrorDict
 
 
 def _directories_not_accepted_as_inputs_error(

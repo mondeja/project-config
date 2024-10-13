@@ -14,14 +14,14 @@ from typing import TYPE_CHECKING, Any
 
 from project_config.compat import importlib_metadata
 from project_config.exceptions import ProjectConfigException
-from project_config.types import ActionsContext
+from project_config.types_ import ActionsContext
 
 
 PROJECT_CONFIG_PLUGINS_ENTRYPOINTS_GROUP = "project_config.plugins"
 
 if TYPE_CHECKING:
     from project_config.compat import TypeAlias
-    from project_config.types import Results, Rule
+    from project_config.types_ import Results, Rule
 
     PluginMethod: TypeAlias = Callable[
         [Any, Rule, ActionsContext | None],
@@ -192,7 +192,7 @@ class Plugins:
         self,
         module_dotpath: str,
     ) -> Iterator[str]:
-        # TODO: raise error if the specification is not found
+        # TODO: raise error if specification or module not found
         #   this could happen if an user as defined an entrypoint
         #   pointing to a non existent module
         module_spec = importlib.util.find_spec(module_dotpath)
@@ -202,4 +202,3 @@ class Plugins:
                 with open(module_path, encoding="utf-8") as f:
                     for match in re.finditer(r"def ([^_]\w+)\(", f.read()):
                         yield match.group(1)
-            # else:  # TODO: this could even happen? raise error

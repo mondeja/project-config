@@ -76,19 +76,19 @@ methods. For example:
        ) -> Results:
            ...
 
-.. function:: action(value: typing.Any, rule: project_config.types.Rule, context: project_config.types.ActionsContext) -> project_config.types.Results
+.. function:: action(value: typing.Any, rule: project_config.types_.Rule, context: project_config.types_.ActionsContext) -> project_config.types_.Results
 
    Action definition.
 
    :param value: Value that takes the action. It could be of any type, it depends to the action.
    :type value: typing.Any
    :param rule: Complete rule dictionary in which the action is being executed.
-   :type rule: :py:class:`project_config.types.Rule`
+   :type rule: :py:class:`project_config.types_.Rule`
    :param context: Context of the actions. It has a property ``fix`` which is used to determine if the user has enabled the `fix` mode in the current execution and other property ``files`` which stores the content of the ``files`` array of the rule.
-   :type context: :py:class:`project_config.types.ActionsContext`
+   :type context: :py:class:`project_config.types_.ActionsContext`
 
    :yield: Checking results.
-   :rtype: :py:class:`project_config.types.Results`
+   :rtype: :py:class:`project_config.types_.Results`
 
 Results
 -------

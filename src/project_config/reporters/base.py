@@ -17,7 +17,7 @@ from project_config.exceptions import (
 
 if TYPE_CHECKING:
     from project_config.compat import TypeAlias
-    from project_config.types import ErrorDict
+    from project_config.types_ import ErrorDict
 
     FilesErrors: TypeAlias = dict[str, list[ErrorDict]]
     FormatterDefinitionType: TypeAlias = Callable[[str], str]

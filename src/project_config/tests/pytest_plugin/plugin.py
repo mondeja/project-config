@@ -10,7 +10,6 @@ import os
 import pathlib
 import pprint
 import re
-import types
 from typing import TYPE_CHECKING, Any
 
 import pytest
@@ -21,15 +20,17 @@ from project_config.tests.pytest_plugin.helpers import (
     create_files,
     get_reporter_class_from_module,
 )
-from project_config.types import ActionsContext
+from project_config.types_ import ActionsContext
 
 
 if TYPE_CHECKING:
+    import types
+
     from project_config.tests.pytest_plugin.helpers import (
         FilesType,
         RootdirType,
     )
-    from project_config.types import ErrorDict, Rule, StrictResultType
+    from project_config.types_ import ErrorDict, Rule, StrictResultType
 
 
 def project_config_plugin_action_asserter(  # noqa: PLR0913
@@ -232,7 +233,7 @@ def project_config_errors_report_asserter(  # noqa: PLR0913
             needed to define in the fixture as is inserted before the execution.
         rootdir (Path): Path to root directory. This is not needed to define
             in the fixture as is inserted before the execution.
-        reporter_module (types.ModuleType): Module containing the reporters.
+        reporter_module (types_.ModuleType): Module containing the reporters.
         errors (list): Errors.
         expected_result (str): Expected reported result.
         fmt (str, optional): Format to use. Default value is ``None``.
@@ -357,7 +358,7 @@ def project_config_data_report_asserter(  # noqa: PLR0913
             execution.
         rootdir (Path): Path to root directory. This is not needed to define
             in the fixture as is inserted before the execution.
-        reporter_module (types.ModuleType): Module containing the reporters.
+        reporter_module (types_.ModuleType): Module containing the reporters.
         data_key (str): Data key.
         data (any): Data content to report.
         expected_result (str): Expected reported result.

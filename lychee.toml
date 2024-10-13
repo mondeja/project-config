@@ -1,0 +1,15 @@
+exclude = [
+  '^https://raw.githubusercontent.com/mondeja/project-config/v[\d\.]+/contrib/mega-linter-plugin-project-config/project-config.megalinter-descriptor.yml',
+  '^http://localhost:8080/api/v1/users',
+  '^http://127\.0\.0\.1:8088/$',
+  '^http://127\.0\.0\.1:8089/$',
+  '^http://127\.0\.0\.1:9997/$',
+  '^https://(foobar)|(github)|(api)|(raw)/$',
+  '^https://github\.com/mondeja/package-json',
+  '^https://raw\.githubusercontent\.com/mondeja/$',
+  '^https://github\.com/mondeja/project-config/n$',
+  '^https://raw\.githubusercontent\.com/%7Brepo_owner%7D/%7Brepo_name%7D/$',
+  '^https://github\.com/mondeja/%7Brootdir_name%7D$',
+  '^https://github\.com/%7Brepo_owner%7D/%7Brepo_name%7D/tags$',
+  '^https://api\.github\.com/repos/%7Brepo_owner%7D/%7Brepo_name%7D$',
+]

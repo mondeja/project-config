@@ -7,16 +7,16 @@
     "foo",
     "bar"
   ],
-  "homepage": "https://www.github.com/mondeja/package-json",
+  "homepage": "https://github.com/mondeja/package-json",
   "bugs": {
-    "url": "https://www.github.com/mondeja/package-json/issues"
+    "url": "https://github.com/mondeja/package-json/issues"
   },
   "funding": {
     "type": "patreon",
-    "url": "https://www.patreon.com/my-account"
+    "url": "https://patreon.com/my-account"
   },
   "repository": {
-    "url": "https://www.github.com/mondeja/package-json.git",
+    "url": "https://github.com/mondeja/package-json.git",
     "type": "git"
   },
   "engines": {

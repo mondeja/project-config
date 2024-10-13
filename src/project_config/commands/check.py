@@ -17,11 +17,11 @@ from project_config.serializers import (
     EMPTY_CONTENT_BY_SERIALIZER,
     guess_preferred_serializer,
 )
-from project_config.types import ActionsContext
+from project_config.types_ import ActionsContext
 
 
 if TYPE_CHECKING:
-    from project_config.types import Rule
+    from project_config.types_ import Rule
 
 
 class InterruptCheck(Exception):

@@ -250,7 +250,8 @@ class PreCommitPlugin:
 
                     hook_found = True
                     for expected_hook_key, expected_hook_value in hook.items():
-                        if repo_hook[expected_hook_key] == expected_hook_value:
+                        hook_value = repo_hook.get(expected_hook_key)
+                        if hook_value == expected_hook_value:
                             continue
 
                         yield Error, {
@@ -259,7 +260,7 @@ class PreCommitPlugin:
                                 f' defined by the hook \'{hook["id"]}\''
                                 f" of the repo '{repo}' must be"
                                 f" '{expected_hook_value}' but is"
-                                f" '{repo_hook[expected_hook_key]}'"
+                                f" '{hook_value}'"
                             ),
                             "definition": (
                                 f".preCommitHookExists[1][{i}]"
