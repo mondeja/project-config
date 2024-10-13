@@ -12,5 +12,5 @@ exclude = [
   '^https://github\.com/mondeja/%7Brootdir_name%7D$',
   '^https://github\.com/%7Brepo_owner%7D/%7Brepo_name%7D/tags$',
   '^https://api\.github\.com/repos/%7Brepo_owner%7D/%7Brepo_name%7D$',
-  '^https://patreon.com/my-account$',
+  '^https://patreon.com/my-account',
 ]

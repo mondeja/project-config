@@ -10,6 +10,7 @@ import os
 import pathlib
 import pprint
 import re
+import types
 from typing import TYPE_CHECKING, Any
 
 import pytest
@@ -24,8 +25,6 @@ from project_config.types_ import ActionsContext
 
 
 if TYPE_CHECKING:
-    import types
-
     from project_config.tests.pytest_plugin.helpers import (
         FilesType,
         RootdirType,
