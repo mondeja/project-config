@@ -10,7 +10,7 @@ import os
 import pathlib
 import pprint
 import re
-import types
+from types import ModuleType
 from typing import TYPE_CHECKING, Any
 
 import pytest
@@ -219,7 +219,7 @@ def assert_project_config_plugin_action(
 def project_config_errors_report_asserter(  # noqa: PLR0913
     monkeypatch: pytest.MonkeyPatch,
     rootdir: pathlib.Path,
-    reporter_module: types.ModuleType,
+    reporter_module: ModuleType,
     errors: list[ErrorDict],
     expected_result: str,
     fmt: str | None = None,
@@ -343,7 +343,7 @@ def assert_errors_report(
 def project_config_data_report_asserter(  # noqa: PLR0913
     monkeypatch: pytest.MonkeyPatch,
     rootdir: pathlib.Path,
-    reporter_module: types.ModuleType,
+    reporter_module: ModuleType,
     data_key: str,
     data: Any,
     expected_result: str,
