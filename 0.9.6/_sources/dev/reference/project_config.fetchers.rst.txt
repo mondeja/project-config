@@ -1,0 +1,18 @@
+project\_config.fetchers package
+================================
+
+.. automodule:: project_config.fetchers
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   project_config.fetchers.file
+   project_config.fetchers.github
+   project_config.fetchers.https

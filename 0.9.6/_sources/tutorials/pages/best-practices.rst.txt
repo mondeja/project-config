@@ -1,0 +1,285 @@
+Best practices
+==============
+
+Is important to write your rules in a way that can be automatically fixable by **project-config** itself without defining a fix query. 
+ The next style file is documented showing best practices to follow when writing a style file and other helpful common patterns:
+
+.. code-block:: js
+
+   {
+     rules: [
+       {
+         // The directory `src/` and the file `src/.keep` must exist
+         // or will be created (FIXABLE):
+         files: ["src/", "src/.keep"],
+       },
+       {
+         // The file `data.json` is a file or will be created (FIXABLE):
+         files: ["data.json"],
+
+         // Using JMESPath we can query serialized files to expect
+         // that certain conditions match or edit theirs contents:
+         //
+         JMESPathsMatch: [
+           // note that you can fix a value automatically
+           // querying the type of the root object `@` (FIXABLE):
+           ["type(@)", "object"],
+
+           // The manual version of this and what I need for this
+           // example: initialize the file in `fix` with an empty object
+           // to trigger all other assertions as errors (MANUAL FIX)
+           ["null", true, "`{}`"],
+           //
+           // Note that I'm comparing ``null == true``, so this error
+           // will be raised always. You can use this pattern to create
+           // entire sections of files programatically.
+           //
+           // Take a look at how I'm adding a third item in the array to
+           // make an edition of the file. The value returned by this
+           // third JMESPath expression will be the new content of the file.
+
+           // Specify that a value must be a certain constant (FIXABLE):
+           ["string_constant", "my-string"],
+           ["number_constant", 42],
+           ["boolean_constant", true],
+           ["null_constant", null],
+
+           // If you need to create an intermediate object,
+           // define it of type `array` or `object` (FIXABLE):
+           ["type(an_object)", "object"],
+           ["type(an_array)", "array"],
+
+           // This also works lately in nested arrays of objects (FIXABLE):
+           ["type(an_object.a_nested_array)", "array"],
+           ["type(an_object.a_nested_object)", "object"],
+           ["type(an_object.a_nested_empty_string)", "string"],
+           ["type(an_object.a_nested_object.a_subnested_null)", "null"],
+
+           // You can make your own editions manually by specifying a fix query.
+           //
+           // For example, here if `boolean_constant` is `true`, the value
+           // of `conditional_constant` will be setted as 'enabled' (MANUAL FIX):
+           [
+             "boolean_constant",
+             false,
+             "set(@, 'conditional_constant', 'enabled')",
+           ],
+           // Here I'm using the function `set()` which returns the base
+           // object with a field updated, 'conditional_constant' in this case
+           // setted to 'enabled'.
+           //
+           // You can use `unset()` to delete keys from objects (MANUAL FIX):
+           [
+             "contains(keys(@), 'conditional_constant')",
+             false,
+             "unset(@, 'conditional_constant')",
+             // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             // Note that this expression will be always treated as an
+             // error and fixed because the previous is setting
+             // `conditional_constant` to `enabled`:
+           ],
+
+           [
+             "contains(keys(@), 'conditional_constant')",
+             true,
+             "set(@, 'conditional_constant', 'enabled')",
+           ],
+
+           // But the previous `unset()` expression is autofixable, so is
+           // not needed using `contains(keys(@), '<key>') -> false` (FIXABLE):
+           ["contains(keys(@), 'conditional_constant')", false],
+
+           // If you need to update the current object you can use `update()`:
+           //                                                    (MANUAL FIX)
+           [
+             "boolean_constant",
+             false,
+             "update(@, {string_constant: 'my-string', other_string_constant: 'my-other-string', other_boolean_constant: `false`})",
+           ],
+
+           // The function `insert()` can be used to insert an element in an array.
+           //
+           // If `an_array` is empty, set `an_array` in the root object (`@`) to be
+           // the previous `an_array` with the value `77` prepended at index 0 (MANUAL FIX):
+           [
+             "op(length(an_array), '>', `1`)",
+             true,
+             "set(@ , 'an_array', insert(an_array, `0`, `77`))",
+           ],
+
+           // With the function `deepmerge` we can make more complex updates of nested
+           // nodes following different strategies, even by type:
+           //
+           //   - Update the root object and a the nested dictionary `an_object`
+           //     using the default conservative merging strategy (MANUAL FIX):
+           [
+             "type(an_object.deepmerged_array)",
+             "array",
+             "deepmerge(@, {deepmerged_string: 'deep string', an_object: {deepmerged_array: [`1`, `2`, `3`, `4`, `[\"to-the-deep\"]`]}})",
+           ],
+           //
+           //   - Update the root object and a the nested dictionary `an_object`
+           //     using an 'always_merger' strategy, adding items to strings if the keys match
+           //     and replacing previous fields like strings (MANUAL FIX):
+           [
+             "op(length(an_object.deepmerged_array), '<', `6`)",
+             false,
+             "deepmerge(@, {deepmerged_string: 'even deeper string', an_object: {deepmerged_array: [`6`, `7`, `8`]}}, 'always_merger')",
+           ],
+           //
+           // The strategies can be defined for each type differently passing an array
+           // to the third argument with an array of three arrays:
+           //
+           // `[ [["<type>", ["<strategy>", ...]]... ], ["<strategy>", ...], ["<strategy>", ...]]`
+           //
+           // For example:
+           //
+           // `[ [['array', ['prepend']], ['object', ['merge']]], ['override'], ['override'] ]`
+           //     ^^^^^^^^^^^^^^^^^^^^^                           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+           //       |            |                                                     |
+           // The arrays will insert new items at the beginning of previous arrays     |
+           // and objects will merge the new values with the previous ones.            |
+           //                                                                          |
+           // For all the other types override the previous values and for types that enter
+           // in conflict when merging override the previous values too.
+         ],
+
+         crossJMESPathsMatch: [
+           //
+           // Working with online sources
+           // ---------------------------
+           //
+           // You can use the verb `crossJMESPathsMatch` to ensure that your data matches
+           // with an online source.
+           //
+           // For example, if you want to ensure that the value of the key `license`
+           // is OSI approved SPDX license identifier according to the official SPDX
+           // repository you can use:
+           [
+             "license",
+             [
+               "gh://spdx/license-list-data@v3.25.0/json/licenses.json",
+               "licenses[?isOsiApproved] | [?!isDeprecatedLicenseId].licenseId",
+             ],
+             "contains([1], [0])",
+             true,
+           ],
+           // Here we are defining the file URL using a Github protocol,
+           // which allows to query remote files located in Github repositories
+           // with the syntax `gh://<owner>/<repository>(@v<version>)?/<path>`
+           // (note that the `@v<version>` part is optional).
+           //
+           // So the previous expressions means that `license` from the 'data.json',
+           // represented in the final `contains()` argument as `[0]`: must be inside
+           // an array of OSI approved and non deprecated SPDX license identifiers
+           // obtained from the online source (`[1]`), as is defined for the final
+           // expected value `true`.
+           //
+         ],
+       },
+       {
+         //
+         // Working with text files
+         // -----------------------
+         //
+         // Text files like `.gitignores` are serialized in an array of lines,
+         // one string per line with line ends characters stripped.
+         //
+         files: [".gitignore"],
+         //
+         // You can use `includeLines` to force the inclusion of a line.
+         // For example, if you want to ensure that the file `.gitignore`
+         // has the line 'dist/' (FIXABLE):
+         includeLines: ["dist/"],
+         //
+         // TIP: Use `hint` field of rules to show a better error message
+         //      when the rule is not satisfied.
+         hint: "Enforce the addition of the line 'dist/' in the .gitignore file.",
+         //
+         // Only execute this rule if the file `.project-config.toml` exists:
+         ifFilesExist: [".project-config.toml"],
+       },
+       {
+         // A line must preceed another
+         // ---------------------------
+         //
+         files: ["data.json"],
+
+         // If you want to ensure that a line is preceded by another in a text file,
+         // you can use `crossJMESPathsMatch` with the `text` serializer.
+
+         // For example, I want that the `dependencies` field in the 'data.json'
+         // file to be defined before `devDependencies`:
+         crossJMESPathsMatch: [
+           [
+             "@",
+             [
+               "data.json?text",
+               "op(op(@, 'indexOf', '  \"dependencies\": {'), '<', op(@, 'indexOf', '  \"devDependencies\": {'))",
+             ],
+             "[1]",
+             true,
+           ],
+         ],
+         //
+         // With the syntax `?<serializer>` we can use other serializer to open
+         // the file, so in this example 'data.json' is opened as an array of lines
+         // rather than a JSON object (`[0]` in the last pipe).
+         //
+         // Only execute this assertion if the file `data.json` contains
+         // the lines '  "dependencies": {' and '  "devDependencies": {':
+         ifIncludeLines: {
+           "data.json": ['  "dependencies": {', '  "devDependencies": {'],
+         },
+         hint: "The field `dependencies` must preceed `devDependencies`",
+       },
+     ],
+   }
+
+.. code-block:: json
+
+   {
+     "string_constant": "my-string",
+     "number_constant": 42,
+     "devDependencies": {
+       "foo": "bar"
+     },
+     "dependencies": {
+       "foo": "bar"
+     },
+     "boolean_constant": true,
+     "an_object": {
+       "a_nested_array": [],
+       "a_nested_object": {},
+       "a_nested_empty_string": "",
+       "deepmerged_array": [1, 2, 3, 4, ["to-the-deep"], 6, 7, 8]
+     },
+     "an_array": [77, 77],
+     "other_string_constant": "my-other-string",
+     "other_boolean_constant": false,
+     "deepmerged_string": "even deeper string",
+     "conditional_constant": "enabled"
+   }
+
+.. code-block:: sh
+
+   user@hostname:~/ rm -rf data.json src && project-config fix
+   data.json
+     - (FIXED) JMESPath 'null' does not match. Expected True, returned None rules[1].JMESPathsMatch[0]
+     - (FIXED) JMESPath 'string_constant' does not match. Expected 'my-string', returned None rules[1].JMESPathsMatch[1]
+     - (FIXED) JMESPath 'number_constant' does not match. Expected 42, returned None rules[1].JMESPathsMatch[2]
+     - (FIXED) JMESPath 'boolean_constant' does not match. Expected True, returned None rules[1].JMESPathsMatch[3]
+     - (FIXED) JMESPath 'type(an_object)' does not match. Expected 'object', returned 'null' rules[1].JMESPathsMatch[5]
+     - (FIXED) JMESPath 'type(an_array)' does not match. Expected 'array', returned 'null' rules[1].JMESPathsMatch[6]
+     - (FIXED) JMESPath 'type(an_object.a_nested_array)' does not match. Expected 'array', returned 'null' rules[1].JMESPathsMatch[7]
+     - (FIXED) JMESPath 'type(an_object.a_nested_object)' does not match. Expected 'object', returned 'null' rules[1].JMESPathsMatch[8]
+     - (FIXED) JMESPath 'type(an_object.a_nested_empty_string)' does not match. Expected 'string', returned 'null' rules[1].JMESPathsMatch[9]
+     - (FIXED) JMESPath 'boolean_constant' does not match. Expected False, returned True rules[1].JMESPathsMatch[11]
+     - (FIXED) JMESPath 'contains(keys(@), 'conditional_constant')' does not match. Expected False, returned True rules[1].JMESPathsMatch[12]
+     - (FIXED) JMESPath 'contains(keys(@), 'conditional_constant')' does not match. Expected True, returned False rules[1].JMESPathsMatch[13]
+     - (FIXED) JMESPath 'boolean_constant' does not match. Expected False, returned True rules[1].JMESPathsMatch[14]
+     - (FIXED) JMESPath 'op(length(an_array), '>', `0`)' does not match. Expected True, returned False rules[1].JMESPathsMatch[15]
+     - (FIXED) JMESPath 'type(an_object.deepmerged_array)' does not match. Expected 'array', returned 'null' rules[1].JMESPathsMatch[16]
+     - (FIXED) JMESPath 'op(length(an_object.deepmerged_array), '<', `6`)' does not match. Expected False, returned True rules[1].JMESPathsMatch[18]
+     - JMESPath 'contains([1], [0])' does not match. Expected True, returned False rules[1].crossJMESPathsMatch[0]
+     - JMESPath '[1]' does not match. Expected True, returned False rules[3].crossJMESPathsMatch[0] The field `dependencies` must preceed `devDependencies`

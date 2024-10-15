@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>project_config.tests.pytest_plugin.plugin &mdash; project-config 0.9.6 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/bolditalic.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/override-styles.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            project-config
+          </a>
+              <div class="version">
+                0.9
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Quickstart</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../basic-usage.html">Basic usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/index.html">Tutorials</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../reference/cli.html">project-config CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../reference/config.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../reference/styling.html">Styling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../reference/plugins.html">Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../reference/ci.html">Using on CI</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">In depth</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../in-depth/rationale.html">Rationale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../in-depth/fetching.html">Fetching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../in-depth/serialization.html">Objects serialization</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For developers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../dev/plugins.html">Writing third party plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../dev/reporters.html">Writing third party reporters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../dev/changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../dev/contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../dev/reference/modules.html">Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">project-config</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">project_config.tests.pytest_plugin.plugin</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for project_config.tests.pytest_plugin.plugin</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;project-config pytest plugin.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span> <span class="nn">contextlib</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">functools</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pathlib</span>
+<span class="kn">import</span> <span class="nn">pprint</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Any</span>
+
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+<span class="kn">from</span> <span class="nn">project_config.constants</span> <span class="kn">import</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="n">ResultValue</span>
+<span class="kn">from</span> <span class="nn">project_config.tests.pytest_plugin.helpers</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">assert_expected_files</span><span class="p">,</span>
+    <span class="n">create_files</span><span class="p">,</span>
+    <span class="n">get_reporter_class_from_module</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">project_config.types_</span> <span class="kn">import</span> <span class="n">ActionsContext</span>
+
+
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">types</span>
+
+    <span class="kn">from</span> <span class="nn">project_config.tests.pytest_plugin.helpers</span> <span class="kn">import</span> <span class="p">(</span>
+        <span class="n">FilesType</span><span class="p">,</span>
+        <span class="n">RootdirType</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="kn">from</span> <span class="nn">project_config.types_</span> <span class="kn">import</span> <span class="n">ErrorDict</span><span class="p">,</span> <span class="n">Rule</span><span class="p">,</span> <span class="n">StrictResultType</span>
+
+
+<div class="viewcode-block" id="project_config_plugin_action_asserter"><a class="viewcode-back" href="../../../../dev/reference/project_config.tests.pytest_plugin.plugin.html#project_config.tests.pytest_plugin.project_config_plugin_action_asserter">[docs]</a><span class="k">def</span> <span class="nf">project_config_plugin_action_asserter</span><span class="p">(</span>  <span class="c1"># noqa: PLR0913</span>
+    <span class="n">rootdir</span><span class="p">:</span> <span class="n">RootdirType</span><span class="p">,</span>
+    <span class="n">plugin_class</span><span class="p">:</span> <span class="nb">type</span><span class="p">,</span>
+    <span class="n">plugin_method_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">files</span><span class="p">:</span> <span class="n">FilesType</span><span class="p">,</span>
+    <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+    <span class="n">rule</span><span class="p">:</span> <span class="n">Rule</span><span class="p">,</span>
+    <span class="n">expected_results</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">StrictResultType</span><span class="p">],</span>
+    <span class="n">additional_files</span><span class="p">:</span> <span class="n">FilesType</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">assert_case_method_name</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>  <span class="c1"># noqa: FBT001, FBT002</span>
+    <span class="n">deprecated</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>  <span class="c1"># noqa: FBT001, FBT002</span>
+    <span class="n">fix</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>  <span class="c1"># noqa: FBT001, FBT002</span>
+    <span class="n">expected_files</span><span class="p">:</span> <span class="n">FilesType</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convenient function to test a plugin action.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        rootdir (pathlib.Path): Path to root directory. This is not needed to</span>
+<span class="sd">            define in the fixture as is inserted before the execution.</span>
+<span class="sd">        plugin_class (type): Plugin class.</span>
+<span class="sd">        plugin_method_name (str): Plugin method name.</span>
+<span class="sd">        files (dict): Dictionary of files to create.</span>
+<span class="sd">            Must have the file paths as keys and the content as values.</span>
+<span class="sd">            The keys will be passed to the ``files`` property of the rule.</span>
+<span class="sd">            If the value is ``False``, the file will not be created.</span>
+<span class="sd">            If the value is ``None``, the file will be created as a directory.</span>
+<span class="sd">        value (typing.Any): Value passed to the action.</span>
+<span class="sd">        rule (dict): Rule definition.</span>
+<span class="sd">        expected_results (list): Expected results.</span>
+<span class="sd">        additional_files (dict, optional): Dictionary of additional files to</span>
+<span class="sd">            create. These will not be defined inside the ``files`` property of</span>
+<span class="sd">            the rule. Follows the same format as ``files``.</span>
+<span class="sd">        assert_case_method_name (bool, optional): If ``True`` (default), the</span>
+<span class="sd">            method name will be checked to match against camelCase or</span>
+<span class="sd">            PascalCase style.</span>
+<span class="sd">        deprecated (bool, optional): If ``True``, the action must raise a</span>
+<span class="sd">            deprecation warning. Default value is ``False``.</span>
+<span class="sd">        fix (bool, optional): If ``True``, the action will be called with</span>
+<span class="sd">            the ``fix`` mode active. Use ``expected_files`` to check the content</span>
+<span class="sd">            of the files after the fix is applyed.</span>
+<span class="sd">        expected_files (dict, optional): Dictionary of expected files.</span>
+<span class="sd">            Keys are the paths of the files and values are either strings</span>
+<span class="sd">            for file contents (the content will be checked to be included as</span>
+<span class="sd">            equality). an array of strings for partial file contents</span>
+<span class="sd">            (will be checked to be included as subsets with an ``in``</span>
+<span class="sd">            operation), a boolean to skip the file (useful to pass files that</span>
+<span class="sd">            doesn&#39;t exist to plugins) or ``None`` to expect the existence of a</span>
+<span class="sd">            directory.</span>
+
+<span class="sd">    .. rubric:: Example</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">       import pytest</span>
+
+<span class="sd">       from project_config import Error, InterruptingError, ResultValue</span>
+<span class="sd">       from project_config.plugins.include import IncludePlugin</span>
+
+<span class="sd">       @pytest.mark.parametrize(</span>
+<span class="sd">           (&quot;files&quot;, &quot;value&quot;, &quot;rule&quot;, &quot;expected_results&quot;),</span>
+<span class="sd">           (</span>
+<span class="sd">               pytest.param(</span>
+<span class="sd">                   {&quot;foo.ext&quot;: &quot;foo&quot;},</span>
+<span class="sd">                   [&quot;foo&quot;],</span>
+<span class="sd">                   None,</span>
+<span class="sd">                   [],</span>
+<span class="sd">                   id=&quot;ok&quot;,</span>
+<span class="sd">               ),</span>
+<span class="sd">               pytest.param(</span>
+<span class="sd">                   {&quot;foo.ext&quot;: &quot;foo&quot;},</span>
+<span class="sd">                   [&quot;bar&quot;],</span>
+<span class="sd">                   None,</span>
+<span class="sd">                   [</span>
+<span class="sd">                       (</span>
+<span class="sd">                           Error,</span>
+<span class="sd">                           {</span>
+<span class="sd">                               &quot;definition&quot;: &quot;.includeLines[0]&quot;,</span>
+<span class="sd">                               &quot;file&quot;: &quot;foo.ext&quot;,</span>
+<span class="sd">                               &quot;message&quot;: &quot;Expected line &#39;bar&#39; not found&quot;,</span>
+<span class="sd">                           },</span>
+<span class="sd">                       ),</span>
+<span class="sd">                   ],</span>
+<span class="sd">                   id=&quot;error&quot;,</span>
+<span class="sd">               ),</span>
+<span class="sd">           ),</span>
+<span class="sd">       )</span>
+<span class="sd">       def test_includeLines(</span>
+<span class="sd">           files,</span>
+<span class="sd">           value,</span>
+<span class="sd">           rule,</span>
+<span class="sd">           expected_results,</span>
+<span class="sd">           assert_project_config_plugin_action,</span>
+<span class="sd">       ):</span>
+<span class="sd">           assert_project_config_plugin_action(</span>
+<span class="sd">               IncludePlugin,</span>
+<span class="sd">               &#39;includeLines&#39;,</span>
+<span class="sd">               files,</span>
+<span class="sd">               value,</span>
+<span class="sd">               rule,</span>
+<span class="sd">               expected_results,</span>
+<span class="sd">           )</span>
+<span class="sd">    &quot;&quot;&quot;</span>  <span class="c1"># noqa: D417  (TODO: bug in flake8-docstrings?)</span>
+    <span class="n">create_files</span><span class="p">(</span><span class="n">files</span><span class="p">,</span> <span class="n">rootdir</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">additional_files</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">create_files</span><span class="p">(</span><span class="n">additional_files</span><span class="p">,</span> <span class="n">rootdir</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">plugin_method_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;files&quot;</span><span class="p">,</span> <span class="s2">&quot;hint&quot;</span><span class="p">),</span> <span class="p">(</span>
+        <span class="s2">&quot;Plugin action names can not be &#39;files&#39; or &#39;hint&#39; as they are reserved&quot;</span>
+        <span class="s2">&quot; as special properties for rules.&quot;</span>
+    <span class="p">)</span>
+
+    <span class="n">plugin_method</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">plugin_class</span><span class="p">,</span> <span class="n">plugin_method_name</span><span class="p">)</span>
+
+    <span class="n">deprecated_ctx</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">contextlib</span><span class="o">.</span><span class="n">nullcontext</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">deprecated</span> <span class="k">else</span> <span class="n">pytest</span><span class="o">.</span><span class="n">deprecated_call</span>
+    <span class="p">)</span>
+    <span class="k">with</span> <span class="n">deprecated_ctx</span><span class="p">():</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">rootdir</span><span class="p">)</span>
+
+        <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">result_type</span><span class="p">,</span> <span class="n">result_value</span> <span class="ow">in</span> <span class="n">plugin_method</span><span class="p">(</span>
+            <span class="n">value</span><span class="p">,</span>
+            <span class="n">rule</span><span class="p">,</span>
+            <span class="n">ActionsContext</span><span class="p">(</span><span class="n">fix</span><span class="o">=</span><span class="n">fix</span><span class="p">,</span> <span class="n">files</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">files</span><span class="p">)),</span>
+        <span class="p">):</span>
+            <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">result_type</span><span class="p">,</span> <span class="n">result_value</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">result_type</span> <span class="ow">is</span> <span class="n">InterruptingError</span> <span class="ow">or</span> <span class="p">(</span>
+                <span class="n">result_type</span> <span class="ow">is</span> <span class="n">ResultValue</span> <span class="ow">and</span> <span class="n">result_value</span> <span class="ow">is</span> <span class="kc">False</span>
+            <span class="p">):</span>
+                <span class="k">break</span>
+
+    <span class="k">assert</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+        <span class="sa">r</span><span class="s2">&quot;\w&quot;</span><span class="p">,</span>
+        <span class="n">plugin_method_name</span><span class="p">,</span>
+    <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Plugin method name &#39;</span><span class="si">{</span><span class="n">plugin_method_name</span><span class="si">}</span><span class="s2">&#39; must be public&quot;</span>
+
+    <span class="k">assert</span> <span class="n">plugin_method_name</span><span class="o">.</span><span class="n">isidentifier</span><span class="p">(),</span> <span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;Plugin method name &#39;</span><span class="si">{</span><span class="n">plugin_method_name</span><span class="si">}</span><span class="s2">&#39; must be a valid Python&quot;</span>
+        <span class="s2">&quot; identifier&quot;</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">assert_case_method_name</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+            <span class="sa">r</span><span class="s2">&quot;[A-Za-z]+((\d)|([A-Z0-9][a-z0-9]+))*([A-Z])?&quot;</span><span class="p">,</span>
+            <span class="n">plugin_method_name</span><span class="p">,</span>
+        <span class="p">),</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Plugin method name &#39;</span><span class="si">{</span><span class="n">plugin_method_name</span><span class="si">}</span><span class="s2">&#39; must be in&quot;</span>
+            <span class="s2">&quot; camelCase or PascalCase format&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
+        <span class="n">inspect</span><span class="o">.</span><span class="n">getattr_static</span><span class="p">(</span><span class="n">plugin_class</span><span class="p">,</span> <span class="n">plugin_method_name</span><span class="p">),</span>
+        <span class="nb">staticmethod</span><span class="p">,</span>
+    <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Plugin method &#39;</span><span class="si">{</span><span class="n">plugin_method_name</span><span class="si">}</span><span class="s2">&#39; must be a static method&quot;</span>
+
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">expected_results</span><span class="p">),</span> <span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;Results: </span><span class="si">{</span><span class="n">pprint</span><span class="o">.</span><span class="n">pformat</span><span class="p">(</span><span class="n">results</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;Expected results: </span><span class="si">{</span><span class="n">pprint</span><span class="o">.</span><span class="n">pformat</span><span class="p">(</span><span class="n">expected_results</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+
+    <span class="k">for</span> <span class="p">(</span>
+        <span class="p">(</span><span class="n">result_type</span><span class="p">,</span> <span class="n">result_value</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">expected_result_type</span><span class="p">,</span> <span class="n">expected_result_value</span><span class="p">),</span>
+    <span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">expected_results</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="n">result_type</span> <span class="o">==</span> <span class="n">expected_result_type</span><span class="p">,</span> <span class="n">result_value</span>
+        <span class="k">assert</span> <span class="n">result_value</span> <span class="o">==</span> <span class="n">expected_result_value</span>
+
+    <span class="k">if</span> <span class="n">expected_files</span><span class="p">:</span>
+        <span class="n">assert_expected_files</span><span class="p">(</span><span class="n">expected_files</span><span class="p">,</span> <span class="n">rootdir</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="assert_project_config_plugin_action"><a class="viewcode-back" href="../../../../dev/reference/project_config.tests.pytest_plugin.plugin.html#project_config.tests.pytest_plugin.assert_project_config_plugin_action">[docs]</a><span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<span class="k">def</span> <span class="nf">assert_project_config_plugin_action</span><span class="p">(</span>
+    <span class="n">tmp_path</span><span class="p">:</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Pytest fixture to assert a plugin action.</span>
+
+<span class="sd">    Returns a function that can be used to assert a plugin action.</span>
+<span class="sd">    See :py:func:`project_config.tests.pytest_plugin.plugin.project_config_plugin_action_asserter`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
+    <span class="k">return</span> <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">project_config_plugin_action_asserter</span><span class="p">,</span> <span class="n">tmp_path</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="project_config_errors_report_asserter"><a class="viewcode-back" href="../../../../dev/reference/project_config.tests.pytest_plugin.plugin.html#project_config.tests.pytest_plugin.project_config_errors_report_asserter">[docs]</a><span class="k">def</span> <span class="nf">project_config_errors_report_asserter</span><span class="p">(</span>  <span class="c1"># noqa: PLR0913</span>
+    <span class="n">monkeypatch</span><span class="p">:</span> <span class="n">pytest</span><span class="o">.</span><span class="n">MonkeyPatch</span><span class="p">,</span>
+    <span class="n">rootdir</span><span class="p">:</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">,</span>
+    <span class="n">reporter_module</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">ModuleType</span><span class="p">,</span>
+    <span class="n">errors</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ErrorDict</span><span class="p">],</span>
+    <span class="n">expected_result</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">fmt</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">color</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>  <span class="c1"># noqa: FBT001, FBT002</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Asserts an error report from a reporter module.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        monkeypatch (pytest.MonkeyPatch): Monkeypatch fixture. This is not</span>
+<span class="sd">            needed to define in the fixture as is inserted before the execution.</span>
+<span class="sd">        rootdir (pathlib.Path): Path to root directory. This is not needed to</span>
+<span class="sd">            define in the fixture as is inserted before the execution.</span>
+<span class="sd">        reporter_module (types.ModuleType): Module containing the reporters.</span>
+<span class="sd">        errors (list): Errors.</span>
+<span class="sd">        expected_result (str): Expected reported result.</span>
+<span class="sd">        fmt (str, optional): Format to use. Default value is ``None``.</span>
+<span class="sd">        color (bool, optional): If ``True`` (default), the color version of</span>
+<span class="sd">            the reporter will be tested also.</span>
+
+<span class="sd">    .. rubric:: Example</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">       import pytest</span>
+
+<span class="sd">       from project_config.reporters import default</span>
+
+<span class="sd">       @pytest.mark.parametrize(</span>
+<span class="sd">           (&quot;errors&quot;, &quot;expected_result&quot;),</span>
+<span class="sd">           (</span>
+<span class="sd">               pytest.param(</span>
+<span class="sd">                   [],</span>
+<span class="sd">                   &quot;&quot;,</span>
+<span class="sd">                   id=&quot;empty&quot;,</span>
+<span class="sd">               ),</span>
+<span class="sd">               pytest.param(</span>
+<span class="sd">                   [</span>
+<span class="sd">                       {</span>
+<span class="sd">                           &quot;file&quot;: &quot;foo.py&quot;,</span>
+<span class="sd">                           &quot;message&quot;: &quot;message&quot;,</span>
+<span class="sd">                           &quot;definition&quot;: &quot;definition&quot;,</span>
+<span class="sd">                       },</span>
+<span class="sd">                   ],</span>
+<span class="sd">                   &quot;foo.py\n  - message definition&quot;,</span>
+<span class="sd">                   id=&quot;basic&quot;,</span>
+<span class="sd">               ),</span>
+<span class="sd">               pytest.param(</span>
+<span class="sd">                   [</span>
+<span class="sd">                       {</span>
+<span class="sd">                           &quot;file&quot;: &quot;foo.py&quot;,</span>
+<span class="sd">                           &quot;message&quot;: &quot;message 1&quot;,</span>
+<span class="sd">                           &quot;definition&quot;: &quot;definition 1&quot;,</span>
+<span class="sd">                       },</span>
+<span class="sd">                       {</span>
+<span class="sd">                           &quot;file&quot;: &quot;foo.py&quot;,</span>
+<span class="sd">                           &quot;message&quot;: &quot;message 2&quot;,</span>
+<span class="sd">                           &quot;definition&quot;: &quot;definition 2&quot;,</span>
+<span class="sd">                       },</span>
+<span class="sd">                       {</span>
+<span class="sd">                           &quot;file&quot;: &quot;bar.py&quot;,</span>
+<span class="sd">                           &quot;message&quot;: &quot;message 3&quot;,</span>
+<span class="sd">                           &quot;definition&quot;: &quot;definition 3&quot;,</span>
+<span class="sd">                       },</span>
+<span class="sd">                   ],</span>
+<span class="sd">                   &#39;&#39;&#39;foo.py</span>
+<span class="sd">         - message 1 definition 1</span>
+<span class="sd">         - message 2 definition 2</span>
+<span class="sd">       bar.py</span>
+<span class="sd">         - message 3 definition 3&#39;&#39;&#39;,</span>
+<span class="sd">                   id=&quot;complex&quot;,</span>
+<span class="sd">               ),</span>
+<span class="sd">           ),</span>
+<span class="sd">       )</span>
+<span class="sd">       def test_default_errors_report(</span>
+<span class="sd">           errors,</span>
+<span class="sd">           expected_result,</span>
+<span class="sd">           assert_errors_report,</span>
+<span class="sd">       ):</span>
+<span class="sd">           assert_errors_report(default, errors, expected_result)</span>
+<span class="sd">    &quot;&quot;&quot;</span>  <span class="c1"># noqa: D417</span>
+    <span class="n">BwReporter</span> <span class="o">=</span> <span class="n">get_reporter_class_from_module</span><span class="p">(</span><span class="n">reporter_module</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">bw_reporter</span> <span class="o">=</span> <span class="n">BwReporter</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">rootdir</span><span class="p">),</span> <span class="n">fmt</span><span class="o">=</span><span class="n">fmt</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">error</span> <span class="ow">in</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">errors</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s2">&quot;file&quot;</span> <span class="ow">in</span> <span class="n">error</span><span class="p">:</span>
+            <span class="n">error</span><span class="p">[</span><span class="s2">&quot;file&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">rootdir</span> <span class="o">/</span> <span class="n">error</span><span class="p">[</span><span class="s2">&quot;file&quot;</span><span class="p">])</span>
+        <span class="n">bw_reporter</span><span class="o">.</span><span class="n">report_error</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">bw_reporter</span><span class="o">.</span><span class="n">generate_errors_report</span><span class="p">()</span> <span class="o">==</span> <span class="n">expected_result</span>
+
+    <span class="k">if</span> <span class="n">color</span><span class="p">:</span>
+        <span class="n">ColorReporter</span> <span class="o">=</span> <span class="n">get_reporter_class_from_module</span><span class="p">(</span>
+            <span class="n">reporter_module</span><span class="p">,</span>
+            <span class="n">color</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">color_reporter</span> <span class="o">=</span> <span class="n">ColorReporter</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">rootdir</span><span class="p">),</span> <span class="n">fmt</span><span class="o">=</span><span class="n">fmt</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">error</span> <span class="ow">in</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">errors</span><span class="p">):</span>
+            <span class="k">if</span> <span class="s2">&quot;file&quot;</span> <span class="ow">in</span> <span class="n">error</span><span class="p">:</span>
+                <span class="n">error</span><span class="p">[</span><span class="s2">&quot;file&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">rootdir</span> <span class="o">/</span> <span class="n">error</span><span class="p">[</span><span class="s2">&quot;file&quot;</span><span class="p">])</span>
+            <span class="n">color_reporter</span><span class="o">.</span><span class="n">report_error</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+        <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setenv</span><span class="p">(</span><span class="s2">&quot;NO_COLOR&quot;</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">)</span>  <span class="c1"># disable color a moment</span>
+        <span class="k">assert</span> <span class="n">color_reporter</span><span class="o">.</span><span class="n">generate_errors_report</span><span class="p">()</span> <span class="o">==</span> <span class="n">expected_result</span></div>
+
+
+<div class="viewcode-block" id="assert_errors_report"><a class="viewcode-back" href="../../../../dev/reference/project_config.tests.pytest_plugin.plugin.html#project_config.tests.pytest_plugin.assert_errors_report">[docs]</a><span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<span class="k">def</span> <span class="nf">assert_errors_report</span><span class="p">(</span>
+    <span class="n">monkeypatch</span><span class="p">:</span> <span class="n">pytest</span><span class="o">.</span><span class="n">MonkeyPatch</span><span class="p">,</span>
+    <span class="n">tmp_path</span><span class="p">:</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Pytest fixture to assert errors reports.</span>
+
+<span class="sd">    Returns a function that can be used to assert an errors report</span>
+<span class="sd">    from a reporters module.</span>
+<span class="sd">    See :py:func:`project_config.tests.pytest_plugin.plugin.project_config_errors_report_asserter`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
+    <span class="k">return</span> <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span>
+        <span class="n">project_config_errors_report_asserter</span><span class="p">,</span>
+        <span class="n">monkeypatch</span><span class="p">,</span>
+        <span class="n">tmp_path</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="project_config_data_report_asserter"><a class="viewcode-back" href="../../../../dev/reference/project_config.tests.pytest_plugin.plugin.html#project_config.tests.pytest_plugin.project_config_data_report_asserter">[docs]</a><span class="k">def</span> <span class="nf">project_config_data_report_asserter</span><span class="p">(</span>  <span class="c1"># noqa: PLR0913</span>
+    <span class="n">monkeypatch</span><span class="p">:</span> <span class="n">pytest</span><span class="o">.</span><span class="n">MonkeyPatch</span><span class="p">,</span>
+    <span class="n">rootdir</span><span class="p">:</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">,</span>
+    <span class="n">reporter_module</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">ModuleType</span><span class="p">,</span>
+    <span class="n">data_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">data</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+    <span class="n">expected_result</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">fmt</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Asserts a data report from a reporter module.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        monkeypatch (pytest.MonkeyPatch): Monkeypatch fixture. This is not</span>
+<span class="sd">            needed to define in the fixture as is inserted before the</span>
+<span class="sd">            execution.</span>
+<span class="sd">        rootdir (pathlib.Path): Path to root directory. This is not needed to</span>
+<span class="sd">            define in the fixture as is inserted before the execution.</span>
+<span class="sd">        reporter_module (ModuleType): Module containing the reporters.</span>
+<span class="sd">        data_key (str): Data key.</span>
+<span class="sd">        data (any): Data content to report.</span>
+<span class="sd">        expected_result (str): Expected reported result.</span>
+<span class="sd">        fmt (str, optional): Format to use. Default value is ``None``.</span>
+
+<span class="sd">    .. rubric:: Example</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">       import pytest</span>
+
+<span class="sd">       from project_config.reporters import default</span>
+
+<span class="sd">       @pytest.mark.parametrize(</span>
+<span class="sd">           (&quot;data_key&quot;, &quot;data&quot;, &quot;expected_result&quot;),</span>
+<span class="sd">           (</span>
+<span class="sd">               pytest.param(</span>
+<span class="sd">                   &quot;config&quot;,</span>
+<span class="sd">                   {</span>
+<span class="sd">                       &quot;cache&quot;: &quot;5 minutes&quot;,</span>
+<span class="sd">                       &quot;style&quot;: &quot;foo.json5&quot;,</span>
+<span class="sd">                   },</span>
+<span class="sd">                   &#39;&#39;&#39;cache: 5 minutes</span>
+<span class="sd">       style: foo.json5</span>
+<span class="sd">       &#39;&#39;&#39;,</span>
+<span class="sd">                   id=&quot;config-style-string&quot;,</span>
+<span class="sd">               ),</span>
+<span class="sd">               pytest.param(</span>
+<span class="sd">                   &quot;style&quot;,</span>
+<span class="sd">                   {</span>
+<span class="sd">                       &quot;rules&quot;: [</span>
+<span class="sd">                           {</span>
+<span class="sd">                               &quot;files&quot;: [&quot;foo.ext&quot;, &quot;bar.ext&quot;],</span>
+<span class="sd">                           },</span>
+<span class="sd">                       ],</span>
+<span class="sd">                   },</span>
+<span class="sd">                   &#39;&#39;&#39;rules:</span>
+<span class="sd">         - files:</span>
+<span class="sd">             - foo.ext</span>
+<span class="sd">             - bar.ext</span>
+<span class="sd">       &#39;&#39;&#39;,</span>
+<span class="sd">                   id=&quot;style-basic&quot;,</span>
+<span class="sd">               ),</span>
+<span class="sd">           ),</span>
+<span class="sd">       )</span>
+<span class="sd">       def test_default_data_report(</span>
+<span class="sd">           data_key,</span>
+<span class="sd">           data,</span>
+<span class="sd">           expected_result,</span>
+<span class="sd">           assert_data_report,</span>
+<span class="sd">       ):</span>
+<span class="sd">           assert_data_report(</span>
+<span class="sd">               default,</span>
+<span class="sd">               data_key,</span>
+<span class="sd">               data,</span>
+<span class="sd">               expected_result,</span>
+<span class="sd">           )</span>
+<span class="sd">    &quot;&quot;&quot;</span>  <span class="c1"># noqa: D417</span>
+    <span class="n">BwReporter</span> <span class="o">=</span> <span class="n">get_reporter_class_from_module</span><span class="p">(</span><span class="n">reporter_module</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">bw_reporter</span> <span class="o">=</span> <span class="n">BwReporter</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">rootdir</span><span class="p">),</span> <span class="n">fmt</span><span class="o">=</span><span class="n">fmt</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="p">(</span>
+        <span class="n">bw_reporter</span><span class="o">.</span><span class="n">generate_data_report</span><span class="p">(</span>
+            <span class="n">data_key</span><span class="p">,</span>
+            <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">data</span><span class="p">),</span>  <span class="c1"># data is probably edited inplace</span>
+        <span class="p">)</span>
+        <span class="o">==</span> <span class="n">expected_result</span>
+    <span class="p">)</span>
+
+    <span class="n">ColorReporter</span> <span class="o">=</span> <span class="n">get_reporter_class_from_module</span><span class="p">(</span><span class="n">reporter_module</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">color_reporter</span> <span class="o">=</span> <span class="n">ColorReporter</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">rootdir</span><span class="p">),</span> <span class="n">fmt</span><span class="o">=</span><span class="n">fmt</span><span class="p">)</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setenv</span><span class="p">(</span><span class="s2">&quot;NO_COLOR&quot;</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="p">(</span>
+        <span class="n">color_reporter</span><span class="o">.</span><span class="n">generate_data_report</span><span class="p">(</span>
+            <span class="n">data_key</span><span class="p">,</span>
+            <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">data</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="o">==</span> <span class="n">expected_result</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="assert_data_report"><a class="viewcode-back" href="../../../../dev/reference/project_config.tests.pytest_plugin.plugin.html#project_config.tests.pytest_plugin.assert_data_report">[docs]</a><span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<span class="k">def</span> <span class="nf">assert_data_report</span><span class="p">(</span>
+    <span class="n">monkeypatch</span><span class="p">:</span> <span class="n">pytest</span><span class="o">.</span><span class="n">MonkeyPatch</span><span class="p">,</span>
+    <span class="n">tmp_path</span><span class="p">:</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Pytest fixture to assert data reports.</span>
+
+<span class="sd">    Returns a function that can be used to assert a data report</span>
+<span class="sd">    from a reporters module.</span>
+<span class="sd">    See :py:func:`project_config.tests.pytest_plugin.plugin.project_config_data_report_asserter`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
+    <span class="k">return</span> <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span>
+        <span class="n">project_config_data_report_asserter</span><span class="p">,</span>
+        <span class="n">monkeypatch</span><span class="p">,</span>
+        <span class="n">tmp_path</span><span class="p">,</span>
+    <span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022-2024, Álvaro Mondéjar Rubio &lt;mondejar1994@gmail.com&gt;.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

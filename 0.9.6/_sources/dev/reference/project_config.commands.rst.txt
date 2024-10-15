@@ -1,0 +1,20 @@
+project\_config.commands package
+================================
+
+.. automodule:: project_config.commands
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   project_config.commands.check
+   project_config.commands.clean
+   project_config.commands.fix
+   project_config.commands.init
+   project_config.commands.show

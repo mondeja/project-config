@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>project_config.plugins.jmespath &mdash; project-config 0.9.6 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/bolditalic.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/override-styles.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            project-config
+          </a>
+              <div class="version">
+                0.9
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Quickstart</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../basic-usage.html">Basic usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/index.html">Tutorials</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference/cli.html">project-config CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference/config.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference/styling.html">Styling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference/plugins.html">Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference/ci.html">Using on CI</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">In depth</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../in-depth/rationale.html">Rationale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../in-depth/fetching.html">Fetching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../in-depth/serialization.html">Objects serialization</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For developers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/plugins.html">Writing third party plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/reporters.html">Writing third party reporters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/reference/modules.html">Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">project-config</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../plugins.html">project_config.plugins</a></li>
+      <li class="breadcrumb-item active">project_config.plugins.jmespath</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for project_config.plugins.jmespath</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;JMESPath expressions plugin.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pprint</span>
+<span class="kn">import</span> <span class="nn">stat</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Any</span>
+
+<span class="kn">from</span> <span class="nn">project_config</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ActionsContext</span><span class="p">,</span>
+    <span class="n">Error</span><span class="p">,</span>
+    <span class="n">InterruptingError</span><span class="p">,</span>
+    <span class="n">ResultValue</span><span class="p">,</span>
+    <span class="n">tree</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">project_config</span> <span class="kn">import</span> <span class="n">Results</span><span class="p">,</span> <span class="n">Rule</span>
+
+<span class="kn">from</span> <span class="nn">project_config.fetchers</span> <span class="kn">import</span> <span class="n">FetchError</span>
+<span class="kn">from</span> <span class="nn">project_config.serializers</span> <span class="kn">import</span> <span class="n">SerializerError</span>
+<span class="kn">from</span> <span class="nn">project_config.utils.jmespath</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">JMESPathError</span><span class="p">,</span>
+    <span class="n">compile_JMESPath_expression_or_error</span><span class="p">,</span>
+    <span class="n">compile_JMESPath_or_expected_value_error</span><span class="p">,</span>
+    <span class="n">compile_JMESPath_or_expected_value_from_other_file_error</span><span class="p">,</span>
+    <span class="n">evaluate_JMESPath</span><span class="p">,</span>
+    <span class="n">evaluate_JMESPath_or_expected_value_error</span><span class="p">,</span>
+    <span class="n">fix_tree_serialized_file_by_jmespath</span><span class="p">,</span>
+    <span class="n">is_literal_jmespath_expression</span><span class="p">,</span>
+    <span class="n">smart_fixer_by_expected_value</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="JMESPathPlugin"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathPlugin">[docs]</a><span class="k">class</span> <span class="nc">JMESPathPlugin</span><span class="p">:</span>
+<div class="viewcode-block" id="JMESPathPlugin.JMESPathsMatch"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathPlugin.JMESPathsMatch">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">JMESPathsMatch</span><span class="p">(</span>
+        <span class="n">value</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]],</span>
+        <span class="n">_rule</span><span class="p">:</span> <span class="n">Rule</span><span class="p">,</span>
+        <span class="n">context</span><span class="p">:</span> <span class="n">ActionsContext</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Results</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;The JMES path match tuples must be of type array&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="s2">&quot;.JMESPathsMatch&quot;</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">value</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;The JMES path match tuples must not be empty&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="s2">&quot;.JMESPathsMatch&quot;</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">jmespath_match_tuple</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">jmespath_match_tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="p">(</span>
+                        <span class="s2">&quot;The JMES path match tuple must be of type array&quot;</span>
+                    <span class="p">),</span>
+                    <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.JMESPathsMatch[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+                <span class="p">}</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">jmespath_match_tuple</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="p">(</span>
+                        <span class="s2">&quot;The JMES path match tuple must be of length 2 or 3&quot;</span>
+                    <span class="p">),</span>
+                    <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.JMESPathsMatch[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+                <span class="p">}</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">jmespath_match_tuple</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="p">(</span>
+                        <span class="s2">&quot;The JMES path expression must be of type string&quot;</span>
+                    <span class="p">),</span>
+                    <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.JMESPathsMatch[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">][0]&quot;</span><span class="p">,</span>
+                <span class="p">}</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">jmespath_match_tuple</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>  <span class="c1"># noqa: PLR2004</span>
+                <span class="n">jmespath_match_tuple</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">jmespath_match_tuple</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="p">(</span>
+                        <span class="s2">&quot;The JMES path fixer query must be of type string&quot;</span>
+                    <span class="p">),</span>
+                    <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.JMESPathsMatch[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">][2]&quot;</span><span class="p">,</span>
+                <span class="p">}</span>
+
+        <span class="n">files</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">files</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">f</span><span class="p">,</span> <span class="n">fpath</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">files</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">fstat</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">fpath</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_ISDIR</span><span class="p">(</span><span class="n">fstat</span><span class="o">.</span><span class="n">st_mode</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="p">(</span>
+                        <span class="s2">&quot;A JMES path can not be applied to a directory&quot;</span>
+                    <span class="p">),</span>
+                    <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.files[</span><span class="si">{</span><span class="n">f</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">fpath</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span><span class="si">}</span><span class="s1">/&#39;</span><span class="p">,</span>
+                <span class="p">}</span>
+
+            <span class="n">instance</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">cached_local_file</span><span class="p">(</span><span class="n">fpath</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">e</span><span class="p">,</span> <span class="p">(</span><span class="n">expression</span><span class="p">,</span> <span class="n">expected_value</span><span class="p">,</span> <span class="n">fixer_query</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span>
+                <span class="n">value</span><span class="p">,</span>
+            <span class="p">):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">compiled_expression</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="n">compile_JMESPath_or_expected_value_error</span><span class="p">(</span>
+                            <span class="n">expression</span><span class="p">,</span>
+                            <span class="n">expected_value</span><span class="p">,</span>
+                        <span class="p">)</span>
+                    <span class="p">)</span>
+                <span class="k">except</span> <span class="n">JMESPathError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                    <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                        <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">exc</span><span class="o">.</span><span class="n">message</span><span class="p">,</span>
+                        <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.JMESPathsMatch[</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">][0]&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="n">fpath</span><span class="p">,</span>
+                    <span class="p">}</span>
+
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">expression_result</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="n">evaluate_JMESPath_or_expected_value_error</span><span class="p">(</span>
+                            <span class="n">compiled_expression</span><span class="p">,</span>
+                            <span class="n">expected_value</span><span class="p">,</span>
+                            <span class="n">instance</span><span class="p">,</span>
+                        <span class="p">)</span>
+                    <span class="p">)</span>
+                <span class="k">except</span> <span class="n">JMESPathError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                    <span class="k">yield</span> <span class="n">Error</span><span class="p">,</span> <span class="p">{</span>
+                        <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">exc</span><span class="o">.</span><span class="n">message</span><span class="p">,</span>
+                        <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.JMESPathsMatch[</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="n">fpath</span><span class="p">,</span>
+                    <span class="p">}</span>
+                    <span class="k">continue</span>
+
+                <span class="k">if</span> <span class="n">expression_result</span> <span class="o">!=</span> <span class="n">expected_value</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">fixer_query</span><span class="p">:</span>
+                        <span class="n">fixer_query</span> <span class="o">=</span> <span class="p">(</span>  <span class="c1"># noqa: PLW2901</span>
+                            <span class="n">smart_fixer_by_expected_value</span><span class="p">(</span>
+                                <span class="n">compiled_expression</span><span class="p">,</span>
+                                <span class="n">expected_value</span><span class="p">,</span>
+                            <span class="p">)</span>
+                        <span class="p">)</span>
+                    <span class="k">if</span> <span class="n">context</span><span class="o">.</span><span class="n">fix</span> <span class="ow">and</span> <span class="n">fixer_query</span><span class="p">:</span>
+                        <span class="k">try</span><span class="p">:</span>
+                            <span class="n">compiled_fixer_query</span> <span class="o">=</span> <span class="p">(</span>
+                                <span class="n">compile_JMESPath_expression_or_error</span><span class="p">(</span>
+                                    <span class="n">fixer_query</span><span class="p">,</span>
+                                <span class="p">)</span>
+                            <span class="p">)</span>
+                        <span class="k">except</span> <span class="n">JMESPathError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                            <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                                <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">exc</span><span class="o">.</span><span class="n">message</span><span class="p">,</span>
+                                <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.JMESPathsMatch[</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">][2]&quot;</span><span class="p">,</span>
+                            <span class="p">}</span>
+
+                        <span class="k">try</span><span class="p">:</span>
+                            <span class="n">changed</span> <span class="o">=</span> <span class="n">fix_tree_serialized_file_by_jmespath</span><span class="p">(</span>
+                                <span class="n">compiled_fixer_query</span><span class="p">,</span>
+                                <span class="n">instance</span><span class="p">,</span>
+                                <span class="n">fpath</span><span class="p">,</span>
+                            <span class="p">)</span>
+                        <span class="k">except</span> <span class="n">JMESPathError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                            <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                                <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">exc</span><span class="o">.</span><span class="n">message</span><span class="p">,</span>
+                                <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.JMESPathsMatch[</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">][2]&quot;</span><span class="p">,</span>
+                            <span class="p">}</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">fixed</span> <span class="o">=</span> <span class="kc">True</span>
+                            <span class="k">if</span> <span class="ow">not</span> <span class="n">changed</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+                                <span class="k">continue</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">fixed</span> <span class="o">=</span> <span class="kc">False</span>
+
+                    <span class="k">yield</span> <span class="n">Error</span><span class="p">,</span> <span class="p">{</span>
+                        <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;JMESPath &#39;</span><span class="si">{</span><span class="n">expression</span><span class="si">}</span><span class="s2">&#39; does not match.&quot;</span>
+                            <span class="sa">f</span><span class="s2">&quot; Expected </span><span class="si">{</span><span class="n">pprint</span><span class="o">.</span><span class="n">pformat</span><span class="p">(</span><span class="n">expected_value</span><span class="p">)</span><span class="si">}</span><span class="s2">,&quot;</span>
+                            <span class="sa">f</span><span class="s2">&quot; returned </span><span class="si">{</span><span class="n">pprint</span><span class="o">.</span><span class="n">pformat</span><span class="p">(</span><span class="n">expression_result</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+                        <span class="p">),</span>
+                        <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.JMESPathsMatch[</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="n">fpath</span><span class="p">,</span>
+                        <span class="s2">&quot;fixed&quot;</span><span class="p">:</span> <span class="n">fixed</span><span class="p">,</span>
+                        <span class="s2">&quot;fixable&quot;</span><span class="p">:</span> <span class="nb">bool</span><span class="p">(</span><span class="n">fixer_query</span><span class="p">),</span>
+                    <span class="p">}</span></div>
+
+<div class="viewcode-block" id="JMESPathPlugin.ifJMESPathsMatch"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathPlugin.ifJMESPathsMatch">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">ifJMESPathsMatch</span><span class="p">(</span>
+        <span class="n">value</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]],</span>
+        <span class="n">_rule</span><span class="p">:</span> <span class="n">Rule</span><span class="p">,</span>
+        <span class="n">_context</span><span class="p">:</span> <span class="n">ActionsContext</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Results</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="p">(</span>
+                    <span class="s2">&quot;The files - JMES path match tuples must be of type object&quot;</span>
+                <span class="p">),</span>
+                <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="s2">&quot;.ifJMESPathsMatch&quot;</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="n">value</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="p">(</span>
+                    <span class="s2">&quot;The files - JMES path match tuples must not be empty&quot;</span>
+                <span class="p">),</span>
+                <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="s2">&quot;.ifJMESPathsMatch&quot;</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="k">for</span> <span class="n">fpath</span><span class="p">,</span> <span class="n">jmespath_match_tuples</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">jmespath_match_tuples</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="p">(</span>
+                        <span class="s2">&quot;The JMES path match tuples must be of type array&quot;</span>
+                    <span class="p">),</span>
+                    <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.ifJMESPathsMatch[</span><span class="si">{</span><span class="n">fpath</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+                <span class="p">}</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">jmespath_match_tuples</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;The JMES path match tuples must not be empty&quot;</span><span class="p">),</span>
+                    <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.ifJMESPathsMatch[</span><span class="si">{</span><span class="n">fpath</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+                <span class="p">}</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">jmespath_match_tuple</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">jmespath_match_tuples</span><span class="p">):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">jmespath_match_tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                    <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                        <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="p">(</span>
+                            <span class="s2">&quot;The JMES path match tuple must be of type array&quot;</span>
+                        <span class="p">),</span>
+                        <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.ifJMESPathsMatch[</span><span class="si">{</span><span class="n">fpath</span><span class="si">}</span><span class="s2">][</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+                    <span class="p">}</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">jmespath_match_tuple</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>  <span class="c1"># noqa: PLR2004</span>
+                    <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                        <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="p">(</span>
+                            <span class="s2">&quot;The JMES path match tuple must be of length 2&quot;</span>
+                        <span class="p">),</span>
+                        <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.ifJMESPathsMatch[</span><span class="si">{</span><span class="n">fpath</span><span class="si">}</span><span class="s2">][</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+                    <span class="p">}</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">jmespath_match_tuple</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
+                    <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                        <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;The JMES path must be of type string&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.ifJMESPathsMatch[</span><span class="si">{</span><span class="n">fpath</span><span class="si">}</span><span class="s2">][</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">][0]&quot;</span><span class="p">,</span>
+                    <span class="p">}</span>
+
+        <span class="k">for</span> <span class="n">fpath</span><span class="p">,</span> <span class="n">jmespath_match_tuples</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">fstat</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">fpath</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="p">(</span>
+                        <span class="s2">&quot;The file to check if matches against JMES paths does&quot;</span>
+                        <span class="s2">&quot; not exist&quot;</span>
+                    <span class="p">),</span>
+                    <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.ifJMESPathsMatch[</span><span class="si">{</span><span class="n">fpath</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="n">fpath</span><span class="p">,</span>
+                <span class="p">}</span>
+            <span class="k">if</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_ISDIR</span><span class="p">(</span><span class="n">fstat</span><span class="o">.</span><span class="n">st_mode</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;A JMES path can not be applied to a directory&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.ifJMESPathsMatch[</span><span class="si">{</span><span class="n">fpath</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">fpath</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span><span class="si">}</span><span class="s1">/&#39;</span><span class="p">,</span>
+                <span class="p">}</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">instance</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">cached_local_file</span><span class="p">(</span><span class="n">fpath</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">SerializerError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">exc</span><span class="o">.</span><span class="n">message</span><span class="p">,</span>
+                    <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.ifJMESPathsMatch[</span><span class="si">{</span><span class="n">fpath</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="n">fpath</span><span class="p">,</span>
+                <span class="p">}</span>
+
+            <span class="k">for</span> <span class="n">e</span><span class="p">,</span> <span class="p">(</span><span class="n">expression</span><span class="p">,</span> <span class="n">expected_value</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span>
+                <span class="n">jmespath_match_tuples</span><span class="p">,</span>
+            <span class="p">):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">compiled_expression</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="n">compile_JMESPath_or_expected_value_error</span><span class="p">(</span>
+                            <span class="n">expression</span><span class="p">,</span>
+                            <span class="n">expected_value</span><span class="p">,</span>
+                        <span class="p">)</span>
+                    <span class="p">)</span>
+                <span class="k">except</span> <span class="n">JMESPathError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                    <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                        <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">exc</span><span class="o">.</span><span class="n">message</span><span class="p">,</span>
+                        <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.ifJMESPathsMatch[</span><span class="si">{</span><span class="n">fpath</span><span class="si">}</span><span class="s2">][</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">][0]&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="n">fpath</span><span class="p">,</span>
+                    <span class="p">}</span>
+
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">expression_result</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="n">evaluate_JMESPath_or_expected_value_error</span><span class="p">(</span>
+                            <span class="n">compiled_expression</span><span class="p">,</span>
+                            <span class="n">expected_value</span><span class="p">,</span>
+                            <span class="n">instance</span><span class="p">,</span>
+                        <span class="p">)</span>
+                    <span class="p">)</span>
+                <span class="k">except</span> <span class="n">JMESPathError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                    <span class="k">yield</span> <span class="n">Error</span><span class="p">,</span> <span class="p">{</span>
+                        <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">exc</span><span class="o">.</span><span class="n">message</span><span class="p">,</span>
+                        <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.ifJMESPathsMatch[</span><span class="si">{</span><span class="n">fpath</span><span class="si">}</span><span class="s2">][</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="n">fpath</span><span class="p">,</span>
+                    <span class="p">}</span>
+                    <span class="k">continue</span>
+
+                <span class="k">if</span> <span class="n">expression_result</span> <span class="o">!=</span> <span class="n">expected_value</span><span class="p">:</span>
+                    <span class="k">yield</span> <span class="n">ResultValue</span><span class="p">,</span> <span class="kc">False</span>
+                    <span class="k">return</span>
+
+        <span class="k">yield</span> <span class="n">ResultValue</span><span class="p">,</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="JMESPathPlugin.crossJMESPathsMatch"><a class="viewcode-back" href="../../../dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathPlugin.crossJMESPathsMatch">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">crossJMESPathsMatch</span><span class="p">(</span>
+        <span class="n">value</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]],</span>
+        <span class="n">_rule</span><span class="p">:</span> <span class="n">Rule</span><span class="p">,</span>
+        <span class="n">context</span><span class="p">:</span> <span class="n">ActionsContext</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Results</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;The pipes must be of type array&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="s2">&quot;.crossJMESPathsMatch&quot;</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">value</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;The pipes must not be empty&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="s2">&quot;.crossJMESPathsMatch&quot;</span><span class="p">,</span>
+            <span class="p">}</span>
+
+        <span class="c1"># each pipe is evaluated for each file</span>
+        <span class="k">for</span> <span class="n">f</span><span class="p">,</span> <span class="n">fpath</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">files</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">fstat</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">fpath</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_ISDIR</span><span class="p">(</span><span class="n">fstat</span><span class="o">.</span><span class="n">st_mode</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="p">(</span>
+                        <span class="s2">&quot;A JMES path can not be applied to a directory&quot;</span>
+                    <span class="p">),</span>
+                    <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.files[</span><span class="si">{</span><span class="n">f</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">fpath</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span><span class="si">}</span><span class="s1">/&#39;</span><span class="p">,</span>
+                <span class="p">}</span>
+
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">pipe</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pipe</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                    <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                        <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;The pipe must be of type array&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.crossJMESPathsMatch[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+                    <span class="p">}</span>
+                <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">pipe</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>  <span class="c1"># noqa: PLR2004</span>
+                    <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                        <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;The pipe must be, at least, of length 3&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.crossJMESPathsMatch[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+                    <span class="p">}</span>
+
+                <span class="n">files_expression</span> <span class="o">=</span> <span class="n">pipe</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+                <span class="c1"># the first value in the array is the expression for `files`</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">files_expression</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                    <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                        <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;The file expression must be of type string&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.crossJMESPathsMatch[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">][0]&quot;</span><span class="p">,</span>
+                    <span class="p">}</span>
+                <span class="k">elif</span> <span class="ow">not</span> <span class="n">files_expression</span><span class="p">:</span>
+                    <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                        <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;The file expression must not be empty&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.crossJMESPathsMatch[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">][0]&quot;</span><span class="p">,</span>
+                    <span class="p">}</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">files_expression</span> <span class="o">=</span> <span class="n">files_expression</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+                <span class="n">final_expression</span> <span class="o">=</span> <span class="n">pipe</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">final_expression</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                    <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                        <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="p">(</span>
+                            <span class="s2">&quot;The final expression must be of type string&quot;</span>
+                        <span class="p">),</span>
+                        <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;.crossJMESPathsMatch[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">][</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">pipe</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">2</span><span class="si">}</span><span class="s2">]&quot;</span>
+                        <span class="p">),</span>
+                    <span class="p">}</span>
+                <span class="k">elif</span> <span class="ow">not</span> <span class="n">final_expression</span><span class="p">:</span>
+                    <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                        <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;The final expression must not be empty&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;.crossJMESPathsMatch[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">][</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">pipe</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">2</span><span class="si">}</span><span class="s2">]&quot;</span>
+                        <span class="p">),</span>
+                    <span class="p">}</span>
+
+                <span class="n">expected_value</span> <span class="o">=</span> <span class="n">pipe</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">final_compiled_expression</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="n">compile_JMESPath_or_expected_value_error</span><span class="p">(</span>  <span class="c1"># noqa: E501</span>
+                            <span class="n">final_expression</span><span class="p">,</span>
+                            <span class="n">expected_value</span><span class="p">,</span>
+                        <span class="p">)</span>
+                    <span class="p">)</span>
+                <span class="k">except</span> <span class="n">JMESPathError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                    <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                        <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">exc</span><span class="o">.</span><span class="n">message</span><span class="p">,</span>
+                        <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;.crossJMESPathsMatch[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">][</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">pipe</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">2</span><span class="si">}</span><span class="s2">]&quot;</span>
+                        <span class="p">),</span>
+                        <span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="n">fpath</span><span class="p">,</span>
+                    <span class="p">}</span>
+
+                <span class="k">if</span> <span class="n">is_literal_jmespath_expression</span><span class="p">(</span><span class="n">files_expression</span><span class="p">):</span>
+                    <span class="n">files_result</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">files_expression</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">files_instance</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">cached_local_file</span><span class="p">(</span><span class="n">fpath</span><span class="p">)</span>
+
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">files_compiled_expression</span> <span class="o">=</span> <span class="p">(</span>
+                            <span class="n">compile_JMESPath_expression_or_error</span><span class="p">(</span>  <span class="c1"># noqa: E501</span>
+                                <span class="n">files_expression</span><span class="p">,</span>
+                            <span class="p">)</span>
+                        <span class="p">)</span>
+                    <span class="k">except</span> <span class="n">JMESPathError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                        <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                            <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">exc</span><span class="o">.</span><span class="n">message</span><span class="p">,</span>
+                            <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.crossJMESPathsMatch[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">][0]&quot;</span><span class="p">,</span>
+                        <span class="p">}</span>
+
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">files_result</span> <span class="o">=</span> <span class="n">evaluate_JMESPath</span><span class="p">(</span>
+                            <span class="n">files_compiled_expression</span><span class="p">,</span>
+                            <span class="n">files_instance</span><span class="p">,</span>
+                        <span class="p">)</span>
+                    <span class="k">except</span> <span class="n">JMESPathError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                        <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                            <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">exc</span><span class="o">.</span><span class="n">message</span><span class="p">,</span>
+                            <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.crossJMESPathsMatch[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">][0]&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="n">fpath</span><span class="p">,</span>
+                        <span class="p">}</span>
+
+                <span class="n">other_results</span> <span class="o">=</span> <span class="p">[]</span>
+
+                <span class="k">for</span> <span class="n">other_index</span><span class="p">,</span> <span class="n">other_data</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">pipe</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">2</span><span class="p">]):</span>
+                    <span class="n">pipe_index</span> <span class="o">=</span> <span class="n">other_index</span> <span class="o">+</span> <span class="mi">1</span>
+
+                    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other_data</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                        <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                            <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="p">(</span>
+                                <span class="s2">&quot;The file path and expression tuple must be of&quot;</span>
+                                <span class="s2">&quot; type array&quot;</span>
+                            <span class="p">),</span>
+                            <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="p">(</span>
+                                <span class="sa">f</span><span class="s2">&quot;.crossJMESPathsMatch[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">][</span><span class="si">{</span><span class="n">pipe_index</span><span class="si">}</span><span class="s2">]&quot;</span>
+                            <span class="p">),</span>
+                        <span class="p">}</span>
+                    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">other_data</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>  <span class="c1"># noqa: PLR2004</span>
+                        <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                            <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="p">(</span>
+                                <span class="s2">&quot;The file path and expression tuple must be of&quot;</span>
+                                <span class="s2">&quot; length 2&quot;</span>
+                            <span class="p">),</span>
+                            <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="p">(</span>
+                                <span class="sa">f</span><span class="s2">&quot;.crossJMESPathsMatch[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">][</span><span class="si">{</span><span class="n">pipe_index</span><span class="si">}</span><span class="s2">]&quot;</span>
+                            <span class="p">),</span>
+                        <span class="p">}</span>
+
+                    <span class="n">other_fpath</span><span class="p">,</span> <span class="n">other_expression</span> <span class="o">=</span> <span class="n">other_data</span>
+
+                    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other_fpath</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                        <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                            <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;The file path must be of type string&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="p">(</span>
+                                <span class="sa">f</span><span class="s2">&quot;.crossJMESPathsMatch[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">][</span><span class="si">{</span><span class="n">pipe_index</span><span class="si">}</span><span class="s2">][0]&quot;</span>
+                            <span class="p">),</span>
+                        <span class="p">}</span>
+                    <span class="k">elif</span> <span class="ow">not</span> <span class="n">other_fpath</span><span class="p">:</span>
+                        <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                            <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;The file path must not be empty&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="p">(</span>
+                                <span class="sa">f</span><span class="s2">&quot;.crossJMESPathsMatch[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">][</span><span class="si">{</span><span class="n">pipe_index</span><span class="si">}</span><span class="s2">][0]&quot;</span>
+                            <span class="p">),</span>
+                        <span class="p">}</span>
+
+                    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other_expression</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                        <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                            <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;The expression must be of type string&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="p">(</span>
+                                <span class="sa">f</span><span class="s2">&quot;.crossJMESPathsMatch[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">][</span><span class="si">{</span><span class="n">pipe_index</span><span class="si">}</span><span class="s2">][1]&quot;</span>
+                            <span class="p">),</span>
+                        <span class="p">}</span>
+                    <span class="k">elif</span> <span class="ow">not</span> <span class="n">other_expression</span><span class="p">:</span>
+                        <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                            <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;The expression must not be empty&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="p">(</span>
+                                <span class="sa">f</span><span class="s2">&quot;.crossJMESPathsMatch[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">][</span><span class="si">{</span><span class="n">pipe_index</span><span class="si">}</span><span class="s2">][1]&quot;</span>
+                            <span class="p">),</span>
+                        <span class="p">}</span>
+
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">other_compiled_expression</span> <span class="o">=</span> <span class="n">compile_JMESPath_or_expected_value_from_other_file_error</span><span class="p">(</span>  <span class="c1"># noqa: E501</span>
+                            <span class="n">other_expression</span><span class="p">,</span>
+                            <span class="n">other_fpath</span><span class="p">,</span>
+                            <span class="n">other_expression</span><span class="p">,</span>
+                        <span class="p">)</span>
+                    <span class="k">except</span> <span class="n">JMESPathError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                        <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                            <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">exc</span><span class="o">.</span><span class="n">message</span><span class="p">,</span>
+                            <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="p">(</span>
+                                <span class="sa">f</span><span class="s2">&quot;.crossJMESPathsMatch[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">][</span><span class="si">{</span><span class="n">pipe_index</span><span class="si">}</span><span class="s2">]&quot;</span>
+                            <span class="p">),</span>
+                            <span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="n">other_fpath</span><span class="p">,</span>
+                        <span class="p">}</span>
+
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">other_instance</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">fetch_remote_file</span><span class="p">(</span><span class="n">other_fpath</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="p">(</span><span class="n">SerializerError</span><span class="p">,</span> <span class="n">FetchError</span><span class="p">)</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                        <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                            <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">exc</span><span class="o">.</span><span class="n">message</span><span class="p">,</span>
+                            <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="p">(</span>
+                                <span class="sa">f</span><span class="s2">&quot;.crossJMESPathsMatch[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">][</span><span class="si">{</span><span class="n">pipe_index</span><span class="si">}</span><span class="s2">][0]&quot;</span>
+                            <span class="p">),</span>
+                            <span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="n">other_fpath</span><span class="p">,</span>
+                        <span class="p">}</span>
+                    <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+                        <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                            <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">other_fpath</span><span class="si">}</span><span class="s2">&#39; file not found&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="p">(</span>
+                                <span class="sa">f</span><span class="s2">&quot;.crossJMESPathsMatch[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">][</span><span class="si">{</span><span class="n">pipe_index</span><span class="si">}</span><span class="s2">][0]&quot;</span>
+                            <span class="p">),</span>
+                            <span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="n">other_fpath</span><span class="p">,</span>
+                        <span class="p">}</span>
+
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">other_result</span> <span class="o">=</span> <span class="n">evaluate_JMESPath</span><span class="p">(</span>
+                            <span class="n">other_compiled_expression</span><span class="p">,</span>
+                            <span class="n">other_instance</span><span class="p">,</span>
+                        <span class="p">)</span>
+                    <span class="k">except</span> <span class="n">JMESPathError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                        <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                            <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">exc</span><span class="o">.</span><span class="n">message</span><span class="p">,</span>
+                            <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="p">(</span>
+                                <span class="sa">f</span><span class="s2">&quot;.crossJMESPathsMatch[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">][</span><span class="si">{</span><span class="n">pipe_index</span><span class="si">}</span><span class="s2">]&quot;</span>
+                            <span class="p">),</span>
+                            <span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="n">other_fpath</span><span class="p">,</span>
+                        <span class="p">}</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">other_results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">other_result</span><span class="p">)</span>
+
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">final_result</span> <span class="o">=</span> <span class="n">evaluate_JMESPath</span><span class="p">(</span>
+                        <span class="n">final_compiled_expression</span><span class="p">,</span>
+                        <span class="p">[</span><span class="n">files_result</span><span class="p">,</span> <span class="o">*</span><span class="n">other_results</span><span class="p">],</span>
+                    <span class="p">)</span>
+                <span class="k">except</span> <span class="n">JMESPathError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                    <span class="k">yield</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="p">{</span>
+                        <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">exc</span><span class="o">.</span><span class="n">message</span><span class="p">,</span>
+                        <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;.crossJMESPathsMatch[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">][</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">pipe</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">2</span><span class="si">}</span><span class="s2">]&quot;</span>
+                        <span class="p">),</span>
+                        <span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="n">fpath</span><span class="p">,</span>
+                    <span class="p">}</span>
+
+                <span class="k">if</span> <span class="n">final_result</span> <span class="o">!=</span> <span class="n">expected_value</span><span class="p">:</span>
+                    <span class="k">yield</span> <span class="n">Error</span><span class="p">,</span> <span class="p">{</span>
+                        <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;JMESPath &#39;</span><span class="si">{</span><span class="n">final_expression</span><span class="si">}</span><span class="s2">&#39; does not match.&quot;</span>
+                            <span class="sa">f</span><span class="s2">&quot; Expected </span><span class="si">{</span><span class="n">pprint</span><span class="o">.</span><span class="n">pformat</span><span class="p">(</span><span class="n">expected_value</span><span class="p">)</span><span class="si">}</span><span class="s2">,&quot;</span>
+                            <span class="sa">f</span><span class="s2">&quot; returned </span><span class="si">{</span><span class="n">pprint</span><span class="o">.</span><span class="n">pformat</span><span class="p">(</span><span class="n">final_result</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+                        <span class="p">),</span>
+                        <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;.crossJMESPathsMatch[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="n">fpath</span><span class="p">,</span>
+                    <span class="p">}</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022-2024, Álvaro Mondéjar Rubio &lt;mondejar1994@gmail.com&gt;.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

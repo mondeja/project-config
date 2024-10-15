@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Examples &mdash; project-config 0.9.6 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+      <link rel="stylesheet" href="_static/bolditalic.css" type="text/css" />
+      <link rel="stylesheet" href="_static/tabs.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/override-styles.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/tabs.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Tutorials" href="tutorials/index.html" />
+    <link rel="prev" title="Basic usage" href="basic-usage.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            project-config
+          </a>
+              <div class="version">
+                0.9
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Quickstart</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basic-usage.html">Basic usage</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#basic-usage">Basic usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#project-config-self-configuration">project-config self configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#files-absence">Files absence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#conditionals">Conditionals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#intercommunication-between-rules">Intercommunication between rules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#compare-values-between-files">Compare values between files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#jmespath-against-online-sources">JMESPath against online sources</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#assert-root-directory-name">Assert root directory name</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#toml-sections-order">TOML sections order</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#editing-a-gitignore-file">Editing a .gitignore file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#replacing-code-blocks-languages-in-rst-documents">Replacing code blocks languages in RST documents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#autofixing-editorconfig">Autofixing .editorconfig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#setting-hooks-in-pre-commit-config-yaml">Setting hooks in .pre-commit-config.yaml</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/index.html">Tutorials</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="reference/cli.html">project-config CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference/config.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference/styling.html">Styling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference/plugins.html">Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference/ci.html">Using on CI</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">In depth</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="in-depth/rationale.html">Rationale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="in-depth/fetching.html">Fetching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="in-depth/serialization.html">Objects serialization</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For developers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="dev/plugins.html">Writing third party plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev/reporters.html">Writing third party reporters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev/changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev/contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev/reference/modules.html">Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">project-config</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Examples</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/examples.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="examples">
+<h1>Examples<a class="headerlink" href="#examples" title="Permalink to this heading"></a></h1>
+<section id="basic-usage">
+<h2>Basic usage<a class="headerlink" href="#basic-usage" title="Permalink to this heading"></a></h2>
+<p>The file <cite>.gitignore</cite> must have a line with the content <code class="docutils literal notranslate"><span class="pre">/dist/</span></code>.</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">style.json</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">.gitignore</button><button aria-controls="panel-0-0-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-2" name="0-2" role="tab" tabindex="-1">.project-config.toml</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;rules&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;files&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.gitignore&quot;</span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;includeLines&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;/dist/&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/dist/
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-0-0-2" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-2" name="0-2" role="tabpanel" tabindex="0"><div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="n">style</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;style.json&quot;</span>
+</pre></div>
+</div>
+</div></div>
+</section>
+<section id="project-config-self-configuration">
+<h2>project-config self configuration<a class="headerlink" href="#project-config-self-configuration" title="Permalink to this heading"></a></h2>
+<p>project-config is defining a valid configuration, forcing the definition of <code class="docutils literal notranslate"><span class="pre">styles</span></code> as an array for styles and a valid <code class="docutils literal notranslate"><span class="pre">cache</span></code> value.</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-1-1-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-1-1-0" name="1-0" role="tab" tabindex="0">style.json5</button><button aria-controls="panel-1-1-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-1-1-1" name="1-1" role="tab" tabindex="-1">.project-config.toml</button></div><div aria-labelledby="tab-1-1-0" class="sphinx-tabs-panel" id="panel-1-1-0" name="1-0" role="tabpanel" tabindex="0"><div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.project-config.toml&quot;</span><span class="p">],</span>
+<span class="w">      </span><span class="nx">JMESPathsMatch</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="c1">// `style` must be defined in the file</span>
+<span class="w">        </span><span class="p">[</span><span class="s2">&quot;contains(keys(@), &#39;style&#39;)&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">],</span>
+<span class="w">        </span><span class="c1">// `style` must be an array</span>
+<span class="w">        </span><span class="p">[</span><span class="s2">&quot;type(style)&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;array&quot;</span><span class="p">],</span>
+<span class="w">        </span><span class="c1">// at least one style configured</span>
+<span class="w">        </span><span class="p">[</span><span class="s2">&quot;op(length(style), &#39;&gt;&#39;, `0`)&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">],</span>
+
+<span class="w">        </span><span class="c1">// configure cache explicitly</span>
+<span class="w">        </span><span class="p">[</span><span class="s2">&quot;contains(keys(@), &#39;cache&#39;)&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">],</span>
+<span class="w">        </span><span class="c1">// cache must have a valid value</span>
+<span class="w">        </span><span class="p">[</span>
+<span class="w">          </span><span class="s2">&quot;regex_match(&#39;^(\\d+ ((seconds?)|(minutes?)|(hours?)|(days?)|(weeks?)))|(never)$&#39;, cache)&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;set(@, &#39;cache&#39;, &#39;5 minutes&#39;)&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-1-1-1" class="sphinx-tabs-panel" hidden="true" id="panel-1-1-1" name="1-1" role="tabpanel" tabindex="0"><div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="n">style</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;style.json5&quot;</span><span class="p">]</span>
+<span class="n">cache</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;5 minutes&quot;</span>
+</pre></div>
+</div>
+</div></div>
+</section>
+<section id="files-absence">
+<h2>Files absence<a class="headerlink" href="#files-absence" title="Permalink to this heading"></a></h2>
+<p>The files <cite>readme.md</cite> and <cite>index.md</cite> must not exist.</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-2-2-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-2-2-0" name="2-0" role="tab" tabindex="0">style.yaml</button><button aria-controls="panel-2-2-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-2-2-1" name="2-1" role="tab" tabindex="-1">.project-config.toml</button></div><div aria-labelledby="tab-2-2-0" class="sphinx-tabs-panel" id="panel-2-2-0" name="2-0" role="tabpanel" tabindex="0"><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">files</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">not</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">readme.md</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Users are more used to seeing README.md file name in uppercase</span>
+<span class="w">    </span><span class="nt">hint</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Rename &#39;readme.md&#39; to &#39;README.md&#39;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">files</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">not</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">index.md</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-2-2-1" class="sphinx-tabs-panel" hidden="true" id="panel-2-2-1" name="2-1" role="tabpanel" tabindex="0"><div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="n">style</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;style.yaml&quot;</span>
+</pre></div>
+</div>
+</div></div>
+</section>
+<section id="conditionals">
+<h2>Conditionals<a class="headerlink" href="#conditionals" title="Permalink to this heading"></a></h2>
+<p>If <cite>.gitignore</cite> includes the line <code class="docutils literal notranslate"><span class="pre">__pycache__/</span></code> a <cite>pyproject.toml</cite> file must be present.</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-3-3-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-3-3-0" name="3-0" role="tab" tabindex="0">style.json</button><button aria-controls="panel-3-3-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-3-3-1" name="3-1" role="tab" tabindex="-1">.gitignore</button><button aria-controls="panel-3-3-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-3-3-2" name="3-2" role="tab" tabindex="-1">.project-config.toml</button><button aria-controls="panel-3-3-3" aria-selected="false" class="sphinx-tabs-tab" id="tab-3-3-3" name="3-3" role="tab" tabindex="-1">pyproject.toml</button></div><div aria-labelledby="tab-3-3-0" class="sphinx-tabs-panel" id="panel-3-3-0" name="3-0" role="tabpanel" tabindex="0"><div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;rules&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;ifIncludeLines&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;.gitignore&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;__pycache__/&quot;</span><span class="p">]</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;files&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;pyproject.toml&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-3-3-1" class="sphinx-tabs-panel" hidden="true" id="panel-3-3-1" name="3-1" role="tabpanel" tabindex="0"><div class="highlight-text notranslate"><div class="highlight"><pre><span></span>__pycache__/
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-3-3-2" class="sphinx-tabs-panel" hidden="true" id="panel-3-3-2" name="3-2" role="tabpanel" tabindex="0"><div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="n">style</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;style.json&quot;</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-3-3-3" class="sphinx-tabs-panel" hidden="true" id="panel-3-3-3" name="3-3" role="tabpanel" tabindex="0"><div class="highlight-toml notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div></div>
+</section>
+<section id="intercommunication-between-rules">
+<h2>Intercommunication between rules<a class="headerlink" href="#intercommunication-between-rules" title="Permalink to this heading"></a></h2>
+<p>Using <a class="reference internal" href="reference/plugins.html#getenv" title="getenv"><code class="xref py py-func docutils literal notranslate"><span class="pre">getenv()</span></code></a> and <a class="reference internal" href="reference/plugins.html#setenv" title="setenv"><code class="xref py py-func docutils literal notranslate"><span class="pre">setenv()</span></code></a> functions to pass arbitrary data between rules.</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-4-4-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-4-4-0" name="4-0" role="tab" tabindex="0">style.json5</button><button aria-controls="panel-4-4-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-4-4-1" name="4-1" role="tab" tabindex="-1">.project-config.toml</button></div><div aria-labelledby="tab-4-4-0" class="sphinx-tabs-panel" id="panel-4-4-0" name="4-0" role="tabpanel" tabindex="0"><div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="c1">// Setting environment variables</span>
+<span class="w">      </span><span class="c1">//</span>
+<span class="w">      </span><span class="c1">// If `cache` field is of type string, set an environment</span>
+<span class="w">      </span><span class="c1">// variable `PROJECT_CONFIG_TEST` with the value</span>
+<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.project-config.toml&quot;</span><span class="p">],</span>
+<span class="w">      </span><span class="nx">JMESPathsMatch</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">[</span>
+<span class="w">          </span><span class="s2">&quot;op(op(type(cache), &#39;!=&#39;, &#39;string&#39;), &#39;|&#39;, op(type(setenv(&#39;PROJECT_CONFIG_TEST&#39;, cache)), &#39;==&#39;, &#39;object&#39;))&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="c1">// Getting environment variables</span>
+<span class="w">      </span><span class="c1">//</span>
+<span class="w">      </span><span class="c1">// If the previous environment variable is setted, change `cache`</span>
+<span class="w">      </span><span class="c1">// to `never`.</span>
+<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.project-config.toml&quot;</span><span class="p">],</span>
+<span class="w">      </span><span class="nx">ifJMESPathsMatch</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="s2">&quot;.project-config.toml&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">[</span><span class="s2">&quot;type(getenv(&#39;PROJECT_CONFIG_TEST&#39;))&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">],</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nx">JMESPathsMatch</span><span class="o">:</span><span class="w"> </span><span class="p">[[</span><span class="s2">&quot;cache&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;never&quot;</span><span class="p">]],</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="c1">// Deleting environment variables</span>
+<span class="w">      </span><span class="c1">//</span>
+<span class="w">      </span><span class="c1">// If the previous environment variable is setted, delete it.</span>
+<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.project-config.toml&quot;</span><span class="p">],</span>
+<span class="w">      </span><span class="nx">ifJMESPathsMatch</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="s2">&quot;.project-config.toml&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">[</span><span class="s2">&quot;type(getenv(&#39;PROJECT_CONFIG_TEST&#39;))&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">],</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nx">JMESPathsMatch</span><span class="o">:</span><span class="w"> </span><span class="p">[[</span><span class="s2">&quot;type(setenv(&#39;PROJECT_CONFIG_TEST&#39;, null))&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">]],</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-4-4-1" class="sphinx-tabs-panel" hidden="true" id="panel-4-4-1" name="4-1" role="tabpanel" tabindex="0"><div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="n">style</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;style.json5&quot;</span>
+<span class="n">cache</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;never&quot;</span>
+</pre></div>
+</div>
+</div></div>
+</section>
+<section id="compare-values-between-files">
+<h2>Compare values between files<a class="headerlink" href="#compare-values-between-files" title="Permalink to this heading"></a></h2>
+<p>The version defined in <code class="docutils literal notranslate"><span class="pre">__version__</span></code> inside a Python script must match the metadata defined in <cite>pyproject.toml</cite> file.</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-5-5-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-5-5-0" name="5-0" role="tab" tabindex="0">style.toml</button><button aria-controls="panel-5-5-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-5-5-1" name="5-1" role="tab" tabindex="-1">pyproject.toml</button><button aria-controls="panel-5-5-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-5-5-2" name="5-2" role="tab" tabindex="-1">.project-config.toml</button><button aria-controls="panel-5-5-3" aria-selected="false" class="sphinx-tabs-tab" id="tab-5-5-3" name="5-3" role="tab" tabindex="-1">script.py</button></div><div aria-labelledby="tab-5-5-0" class="sphinx-tabs-panel" id="panel-5-5-0" name="5-0" role="tabpanel" tabindex="0"><div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[[rules]]</span>
+<span class="n">files</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;pyproject.toml&quot;</span><span class="p">]</span>
+<span class="n">crossJMESPathsMatch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">  </span><span class="p">[</span><span class="s2">&quot;project.version&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;script.py&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;__version__&quot;</span><span class="p">],</span><span class="w"> </span><span class="s2">&quot;op([0], &#39;==&#39;, [1])&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">],</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-5-5-1" class="sphinx-tabs-panel" hidden="true" id="panel-5-5-1" name="5-1" role="tabpanel" tabindex="0"><div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[project]</span>
+<span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;1.0.0&quot;</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-5-5-2" class="sphinx-tabs-panel" hidden="true" id="panel-5-5-2" name="5-2" role="tabpanel" tabindex="0"><div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="n">style</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;style.toml&quot;</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-5-5-3" class="sphinx-tabs-panel" hidden="true" id="panel-5-5-3" name="5-3" role="tabpanel" tabindex="0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;Simple script.&quot;&quot;&quot;</span>
+
+<span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;1.0.0&quot;</span>
+</pre></div>
+</div>
+</div></div>
+</section>
+<section id="jmespath-against-online-sources">
+<h2>JMESPath against online sources<a class="headerlink" href="#jmespath-against-online-sources" title="Permalink to this heading"></a></h2>
+<p>Check that the <code class="docutils literal notranslate"><span class="pre">license</span></code> field of <em>package.json</em> file is defined with a valid OSI approved SPDX license identifier.</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-6-6-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-6-6-0" name="6-0" role="tab" tabindex="0">style.json5</button><button aria-controls="panel-6-6-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-6-6-1" name="6-1" role="tab" tabindex="-1">package.json</button><button aria-controls="panel-6-6-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-6-6-2" name="6-2" role="tab" tabindex="-1">.project-config.toml</button></div><div aria-labelledby="tab-6-6-0" class="sphinx-tabs-panel" id="panel-6-6-0" name="6-0" role="tabpanel" tabindex="0"><div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;package.json&quot;</span><span class="p">],</span>
+<span class="w">      </span><span class="nx">crossJMESPathsMatch</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">[</span>
+<span class="w">          </span><span class="s2">&quot;license&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">&quot;gh://spdx/license-list-data@v3.25.0/json/licenses.json&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;licenses[?isOsiApproved] | [?!isDeprecatedLicenseId].licenseId&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="p">],</span>
+<span class="w">          </span><span class="s2">&quot;contains([1], [0])&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-6-6-1" class="sphinx-tabs-panel" hidden="true" id="panel-6-6-1" name="6-1" role="tabpanel" tabindex="0"><div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;license&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;BSD-3-Clause&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-6-6-2" class="sphinx-tabs-panel" hidden="true" id="panel-6-6-2" name="6-2" role="tabpanel" tabindex="0"><div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="n">style</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;style.json5&quot;</span>
+</pre></div>
+</div>
+</div></div>
+</section>
+<section id="assert-root-directory-name">
+<h2>Assert root directory name<a class="headerlink" href="#assert-root-directory-name" title="Permalink to this heading"></a></h2>
+<p>Check that the name of the directory that is the root of the project matches against certain regular expression.</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-7-7-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-7-7-0" name="7-0" role="tab" tabindex="0">style.json5</button><button aria-controls="panel-7-7-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-7-7-1" name="7-1" role="tab" tabindex="-1">.project-config.toml</button></div><div aria-labelledby="tab-7-7-0" class="sphinx-tabs-panel" id="panel-7-7-0" name="7-0" role="tabpanel" tabindex="0"><div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.project-config.toml&quot;</span><span class="p">],</span>
+<span class="w">      </span><span class="nx">hint</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;The name of the root directory must match the regex &#39;[a-z0-9-]+$&#39;&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">JMESPathsMatch</span><span class="o">:</span><span class="w"> </span><span class="p">[[</span><span class="s2">&quot;regex_match(&#39;[a-z0-9-]+$&#39;, rootdir_name())&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">]],</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-7-7-1" class="sphinx-tabs-panel" hidden="true" id="panel-7-7-1" name="7-1" role="tabpanel" tabindex="0"><div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="n">style</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;style.json5&quot;</span>
+</pre></div>
+</div>
+</div></div>
+</section>
+<section id="toml-sections-order">
+<h2>TOML sections order<a class="headerlink" href="#toml-sections-order" title="Permalink to this heading"></a></h2>
+<p>Check that the section <code class="docutils literal notranslate"><span class="pre">[foo]</span></code> of a TOML file is placed before the section <code class="docutils literal notranslate"><span class="pre">[bar]</span></code>.</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-8-8-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-8-8-0" name="8-0" role="tab" tabindex="0">style.json5</button><button aria-controls="panel-8-8-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-8-8-1" name="8-1" role="tab" tabindex="-1">pyproject.toml</button><button aria-controls="panel-8-8-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-8-8-2" name="8-2" role="tab" tabindex="-1">.project-config.toml</button></div><div aria-labelledby="tab-8-8-0" class="sphinx-tabs-panel" id="panel-8-8-0" name="8-0" role="tabpanel" tabindex="0"><div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;pyproject.toml&quot;</span><span class="p">],</span>
+<span class="w">      </span><span class="nx">hint</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;The section &#39;[foo]&#39; must be defined before the section &#39;[bar]&#39;&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">crossJMESPathsMatch</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">[</span>
+<span class="w">          </span><span class="s2">&quot;`null`&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="p">[</span><span class="s2">&quot;pyproject.toml?text&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;@&quot;</span><span class="p">],</span>
+<span class="w">          </span><span class="s2">&quot;op(op([1], &#39;indexOf&#39;, &#39;[foo]&#39;), &#39;&lt;&#39;, op([1], &#39;indexOf&#39;, &#39;[bar]&#39;))&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-8-8-1" class="sphinx-tabs-panel" hidden="true" id="panel-8-8-1" name="8-1" role="tabpanel" tabindex="0"><div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[foo]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;foo&quot;</span>
+
+<span class="k">[bar]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;bar&quot;</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-8-8-2" class="sphinx-tabs-panel" hidden="true" id="panel-8-8-2" name="8-2" role="tabpanel" tabindex="0"><div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="n">style</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;style.json5&quot;</span>
+</pre></div>
+</div>
+</div></div>
+</section>
+<section id="editing-a-gitignore-file">
+<h2>Editing a .gitignore file<a class="headerlink" href="#editing-a-gitignore-file" title="Permalink to this heading"></a></h2>
+<p>Enforce the existence of certain lines in a <cite>.gitignore</cite> file.</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-9-9-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-9-9-0" name="9-0" role="tab" tabindex="0">style.json5</button><button aria-controls="panel-9-9-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-9-9-1" name="9-1" role="tab" tabindex="-1">.gitignore</button><button aria-controls="panel-9-9-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-9-9-2" name="9-2" role="tab" tabindex="-1">.project-config.toml</button></div><div aria-labelledby="tab-9-9-0" class="sphinx-tabs-panel" id="panel-9-9-0" name="9-0" role="tabpanel" tabindex="0"><div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.gitignore&quot;</span><span class="p">],</span><span class="w"> </span><span class="c1">// Enforce the existence of a &#39;.gitignore&#39; file</span>
+<span class="w">      </span><span class="nx">hint</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;The line &#39;__pycache__/&#39; must be present in .gitignore file&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">includeLines</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;__pycache__/&quot;</span><span class="p">],</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.gitignore&quot;</span><span class="p">],</span>
+<span class="w">      </span><span class="nx">hint</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;As a directory &#39;tests/&#39; has been found, the line &#39;.pytest_cache/&#39; must be present in the &#39;.gitignore&#39; file&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">ifFilesExist</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;tests/&quot;</span><span class="p">],</span>
+<span class="w">      </span><span class="nx">includeLines</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.pytest_cache/&quot;</span><span class="p">],</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.gitignore&quot;</span><span class="p">],</span>
+<span class="w">      </span><span class="nx">hint</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;As a directory &#39;tests/&#39; has been found, the line &#39;.pytest_cache&#39; must not be present as it is implicitly naming a directory&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">ifFilesExist</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;tests/&quot;</span><span class="p">],</span>
+<span class="w">      </span><span class="nx">excludeLines</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.pytest_cache&quot;</span><span class="p">],</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.gitignore&quot;</span><span class="p">],</span>
+<span class="w">      </span><span class="nx">hint</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Enforce &#39;*.egg-info/&#39; at the end of the .gitignore if is not already present&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">includeLines</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">[</span>
+<span class="w">          </span><span class="s2">&quot;*.egg-info/&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;op([?!starts_with(@, &#39;*.egg-info&#39;)], `+`, [&#39;*.egg-info/&#39;])&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.gitignore&quot;</span><span class="p">],</span>
+<span class="w">      </span><span class="nx">hint</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;The line &#39;dist/&#39; must be included in .gitignore&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">includeLines</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">[</span>
+<span class="w">          </span><span class="s2">&quot;dist/&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;op([?!contains([&#39;/dist/&#39;, &#39;dist&#39;, &#39;dist/&#39;], @)], &#39;+&#39;, [&#39;dist/&#39;])&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="s2">&quot;__pycache__/&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-9-9-1" class="sphinx-tabs-panel" hidden="true" id="panel-9-9-1" name="9-1" role="tabpanel" tabindex="0"><div class="highlight-text notranslate"><div class="highlight"><pre><span></span>.pytest_cache/
+__pycache__/
+*.egg-info/
+/dist/
+dist/
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-9-9-2" class="sphinx-tabs-panel" hidden="true" id="panel-9-9-2" name="9-2" role="tabpanel" tabindex="0"><div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="n">style</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;style.json5&quot;</span>
+</pre></div>
+</div>
+</div></div>
+</section>
+<section id="replacing-code-blocks-languages-in-rst-documents">
+<h2>Replacing code blocks languages in RST documents<a class="headerlink" href="#replacing-code-blocks-languages-in-rst-documents" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>Don’t allow code blocks in RST documentation files:</dt><dd><ul class="simple">
+<li><p>Bash is not a POSIX compliant shell, use Shell lexer.</p></li>
+<li><p>Pygments’ JSON5 lexer is not implemented yet, use Javascript lexer.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-10-10-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-10-10-0" name="10-0" role="tab" tabindex="0">style.json5</button><button aria-controls="panel-10-10-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-10-10-1" name="10-1" role="tab" tabindex="-1">file.rst</button><button aria-controls="panel-10-10-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-10-10-2" name="10-2" role="tab" tabindex="-1">.project-config.toml</button></div><div aria-labelledby="tab-10-10-0" class="sphinx-tabs-panel" id="panel-10-10-0" name="10-0" role="tabpanel" tabindex="0"><div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;file.rst&quot;</span><span class="p">],</span>
+<span class="w">      </span><span class="nx">excludeContent</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">[</span>
+<span class="w">          </span><span class="s2">&quot;.. code-block::  &quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;map(&amp;replace(@, &#39;code-block::  &#39;, &#39;code-block:: &#39;), @)&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="p">[</span>
+<span class="w">          </span><span class="s2">&quot;.. code-block:: bash&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;map(&amp;replace(@, &#39;code-block:: bash&#39;, &#39;code-block:: sh&#39;), @)&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="p">[</span>
+<span class="w">          </span><span class="s2">&quot;.. code-block:: json5&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;map(&amp;replace(@, &#39;code-block:: json5&#39;, &#39;code-block:: js&#39;), @)&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-10-10-1" class="sphinx-tabs-panel" hidden="true" id="panel-10-10-1" name="10-1" role="tabpanel" tabindex="0"><div class="highlight-restructuredtext notranslate"><div class="highlight"><pre><span></span><span class="p">..</span> <span class="ow">code-block</span><span class="p">::</span> <span class="k">python</span>
+
+   <span class="n">foo</span> <span class="o">=</span> <span class="s2">&quot;bar&quot;</span>
+
+<span class="p">..</span> <span class="ow">code-block</span><span class="p">::</span> <span class="k">js</span>
+
+   <span class="p">{}</span>
+
+<span class="p">..</span> <span class="ow">code-block</span><span class="p">::</span> <span class="k">sh</span>
+
+   <span class="ch">#!/bin/sh</span>
+   curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8080/api/v1/users
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-10-10-2" class="sphinx-tabs-panel" hidden="true" id="panel-10-10-2" name="10-2" role="tabpanel" tabindex="0"><div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="n">style</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;style.json5&quot;</span>
+</pre></div>
+</div>
+</div></div>
+</section>
+<section id="autofixing-editorconfig">
+<h2>Autofixing .editorconfig<a class="headerlink" href="#autofixing-editorconfig" title="Permalink to this heading"></a></h2>
+<p>If you run the next example using <code class="docutils literal notranslate"><span class="pre">project-config</span> <span class="pre">fix</span></code> subcommand without creating an <cite>.editorconfig</cite> file it will be created and populated with the sections defined in the rule.</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-11-11-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-11-11-0" name="11-0" role="tab" tabindex="0">style.json5</button><button aria-controls="panel-11-11-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-11-11-1" name="11-1" role="tab" tabindex="-1">.editorconfig</button><button aria-controls="panel-11-11-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-11-11-2" name="11-2" role="tab" tabindex="-1">.project-config.toml</button></div><div aria-labelledby="tab-11-11-0" class="sphinx-tabs-panel" id="panel-11-11-0" name="11-0" role="tabpanel" tabindex="0"><div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.editorconfig&quot;</span><span class="p">],</span>
+<span class="w">      </span><span class="nx">JMESPathsMatch</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">[</span><span class="s2">&quot;type(@)&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">],</span>
+<span class="w">        </span><span class="p">[</span><span class="s1">&#39;type(&quot;&quot;)&#39;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">],</span>
+<span class="w">        </span><span class="p">[</span><span class="s1">&#39;&quot;&quot;.root&#39;</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">],</span>
+<span class="w">        </span><span class="p">[</span><span class="s1">&#39;&quot;*&quot;.end_of_line&#39;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;lf&quot;</span><span class="p">],</span>
+<span class="w">        </span><span class="p">[</span><span class="s1">&#39;&quot;*&quot;.indent_style&#39;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;space&quot;</span><span class="p">],</span>
+<span class="w">        </span><span class="p">[</span><span class="s1">&#39;&quot;*&quot;.charset&#39;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;utf-8&quot;</span><span class="p">],</span>
+<span class="w">        </span><span class="p">[</span><span class="s1">&#39;&quot;*&quot;.trim_trailing_whitespace&#39;</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">],</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-11-11-1" class="sphinx-tabs-panel" hidden="true" id="panel-11-11-1" name="11-1" role="tabpanel" tabindex="0"><div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="na">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">true</span>
+
+<span class="k">[*]</span>
+<span class="na">end_of_line</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">lf</span>
+<span class="na">indent_style</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">space</span>
+<span class="na">charset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">utf-8</span>
+<span class="na">trim_trailing_whitespace</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">true</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-11-11-2" class="sphinx-tabs-panel" hidden="true" id="panel-11-11-2" name="11-2" role="tabpanel" tabindex="0"><div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="n">style</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;style.json5&quot;</span>
+</pre></div>
+</div>
+</div></div>
+</section>
+<section id="setting-hooks-in-pre-commit-config-yaml">
+<h2>Setting hooks in .pre-commit-config.yaml<a class="headerlink" href="#setting-hooks-in-pre-commit-config-yaml" title="Permalink to this heading"></a></h2>
+<p>Set a pre-commit hook for <code class="docutils literal notranslate"><span class="pre">editorconfig-checker</span></code> inside <cite>.pre-commit-config.yaml</cite>.</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-12-12-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-12-12-0" name="12-0" role="tab" tabindex="0">style.json5</button><button aria-controls="panel-12-12-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-12-12-1" name="12-1" role="tab" tabindex="-1">.pre-commit-config.yaml</button><button aria-controls="panel-12-12-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-12-12-2" name="12-2" role="tab" tabindex="-1">.project-config.toml</button></div><div aria-labelledby="tab-12-12-0" class="sphinx-tabs-panel" id="panel-12-12-0" name="12-0" role="tabpanel" tabindex="0"><div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.pre-commit-config.yaml&quot;</span><span class="p">],</span>
+<span class="w">      </span><span class="nx">preCommitHookExists</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;https://github.com/editorconfig-checker/editorconfig-checker.python&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="p">[</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;editorconfig-checker&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;editorconfig-checker&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nx">alias</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;ec&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="p">},</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-12-12-1" class="sphinx-tabs-panel" hidden="true" id="panel-12-12-1" name="12-1" role="tabpanel" tabindex="0"><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">repos</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/editorconfig-checker/editorconfig-checker.python</span>
+<span class="w">    </span><span class="nt">rev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2.4.0</span>
+<span class="w">    </span><span class="nt">hooks</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">editorconfig-checker</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">editorconfig-checker</span>
+<span class="w">        </span><span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ec</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-12-12-2" class="sphinx-tabs-panel" hidden="true" id="panel-12-12-2" name="12-2" role="tabpanel" tabindex="0"><div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="n">style</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;style.json5&quot;</span>
+</pre></div>
+</div>
+</div></div>
+<hr><div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>For more complex examples check my own styles at <a class="reference external" href="https://github.com/mondeja/project-config-styles">mondeja/project-config-styles</a>.</p>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="basic-usage.html" class="btn btn-neutral float-left" title="Basic usage" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="tutorials/index.html" class="btn btn-neutral float-right" title="Tutorials" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022-2024, Álvaro Mondéjar Rubio &lt;mondejar1994@gmail.com&gt;.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

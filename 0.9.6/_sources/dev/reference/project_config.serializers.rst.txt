@@ -1,0 +1,30 @@
+project\_config.serializers package
+===================================
+
+.. automodule:: project_config.serializers
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   project_config.serializers.contrib
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   project_config.serializers.editorconfig
+   project_config.serializers.ini
+   project_config.serializers.json
+   project_config.serializers.python
+   project_config.serializers.text
+   project_config.serializers.toml
+   project_config.serializers.yaml
