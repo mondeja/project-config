@@ -67,7 +67,7 @@ Valid resource types are:
   ``@`` syntax is used to pin a GIT reference (commit, tag, branch) and is optional,
   if is not specified the main branch of the repository will be used.
 * Raw URLs like
-  ``https://raw.githubusercontent.com/mondeja/project-config-styles/master/python/version/min-37.json5``.
+  ``https://raw.githubusercontent.com/mondeja/project-config-styles/master/python/base.json5``.
 
 The rules of the styles are applied in the same order that they are defined.
 

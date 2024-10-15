@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Contributing &mdash; project-config 0.9.2 documentation</title>
+  <title>Contributing &mdash; project-config 0.9.6 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/tabs.css" type="text/css" />
       <link rel="stylesheet" href="../_static/bolditalic.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/override-styles.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -18,7 +17,9 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -66,6 +67,7 @@
 <p class="caption" role="heading"><span class="caption-text">In depth</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../in-depth/rationale.html">Rationale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../in-depth/fetching.html">Fetching</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../in-depth/serialization.html">Objects serialization</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">For developers</span></p>
@@ -109,9 +111,9 @@
            <div itemprop="articleBody">
              
   <section id="contributing">
-<h1>Contributing<a class="headerlink" href="#contributing" title="Permalink to this headline"></a></h1>
+<h1>Contributing<a class="headerlink" href="#contributing" title="Permalink to this heading"></a></h1>
 <section id="development-install">
-<h2>Development install<a class="headerlink" href="#development-install" title="Permalink to this headline"></a></h2>
+<h2>Development install<a class="headerlink" href="#development-install" title="Permalink to this heading"></a></h2>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/mondeja/project-config
 <span class="nb">cd</span><span class="w"> </span>project-config
 pip<span class="w"> </span>install<span class="w"> </span>hatch
@@ -119,7 +121,7 @@ pip<span class="w"> </span>install<span class="w"> </span>hatch
 </div>
 </section>
 <section id="run-tests">
-<h2>Run tests<a class="headerlink" href="#run-tests" title="Permalink to this headline"></a></h2>
+<h2>Run tests<a class="headerlink" href="#run-tests" title="Permalink to this heading"></a></h2>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>hatch<span class="w"> </span>run<span class="w"> </span>tests:unit
 <span class="c1"># hatch run tests:all</span>
 <span class="c1"># hatch run tests:cov</span>
@@ -127,20 +129,20 @@ pip<span class="w"> </span>install<span class="w"> </span>hatch
 </div>
 </section>
 <section id="linting-and-formatting">
-<h2>Linting and formatting<a class="headerlink" href="#linting-and-formatting" title="Permalink to this headline"></a></h2>
+<h2>Linting and formatting<a class="headerlink" href="#linting-and-formatting" title="Permalink to this heading"></a></h2>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>hatch<span class="w"> </span>run<span class="w"> </span>style:lint
 </pre></div>
 </div>
 </section>
 <section id="build-documentation">
-<h2>Build documentation<a class="headerlink" href="#build-documentation" title="Permalink to this headline"></a></h2>
+<h2>Build documentation<a class="headerlink" href="#build-documentation" title="Permalink to this heading"></a></h2>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>hatch<span class="w"> </span>run<span class="w"> </span>docs:build
 <span class="c1"># hatch run docs:serve</span>
 </pre></div>
 </div>
 </section>
 <section id="release">
-<h2>Release<a class="headerlink" href="#release" title="Permalink to this headline"></a></h2>
+<h2>Release<a class="headerlink" href="#release" title="Permalink to this heading"></a></h2>
 <p>You must have administrator permissions on the repository.</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nv">version</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>hatch<span class="w"> </span>run<span class="w"> </span>bump<span class="w"> </span>&lt;major/minor/patch&gt;<span class="k">)</span><span class="s2">&quot;</span>
 git<span class="w"> </span>add<span class="w"> </span>.
@@ -164,7 +166,7 @@ git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2022, Álvaro Mondéjar Rubio &lt;mondejar1994@gmail.com&gt;.</p>
+    <p>&#169; Copyright 2022-2024, Álvaro Mondéjar Rubio &lt;mondejar1994@gmail.com&gt;.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

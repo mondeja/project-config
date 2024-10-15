@@ -3,11 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.commands.check &mdash; project-config 0.9.2 documentation</title>
+  <title>project_config.commands.check &mdash; project-config 0.9.6 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/tabs.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/bolditalic.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/override-styles.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -17,8 +16,9 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/tabs.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -64,6 +64,7 @@
 <p class="caption" role="heading"><span class="caption-text">In depth</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../in-depth/rationale.html">Rationale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../in-depth/fetching.html">Fetching</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../in-depth/serialization.html">Objects serialization</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">For developers</span></p>
@@ -119,11 +120,11 @@
     <span class="n">EMPTY_CONTENT_BY_SERIALIZER</span><span class="p">,</span>
     <span class="n">guess_preferred_serializer</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">project_config.types</span> <span class="kn">import</span> <span class="n">ActionsContext</span>
+<span class="kn">from</span> <span class="nn">project_config.types_</span> <span class="kn">import</span> <span class="n">ActionsContext</span>
 
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">project_config.types</span> <span class="kn">import</span> <span class="n">Rule</span>
+    <span class="kn">from</span> <span class="nn">project_config.types_</span> <span class="kn">import</span> <span class="n">Rule</span>
 
 
 <div class="viewcode-block" id="InterruptCheck"><a class="viewcode-back" href="../../../dev/reference/project_config.commands.check.html#project_config.commands.check.InterruptCheck">[docs]</a><span class="k">class</span> <span class="nc">InterruptCheck</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
@@ -430,7 +431,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2022, Álvaro Mondéjar Rubio &lt;mondejar1994@gmail.com&gt;.</p>
+    <p>&#169; Copyright 2022-2024, Álvaro Mondéjar Rubio &lt;mondejar1994@gmail.com&gt;.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

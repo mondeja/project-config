@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Writing third party plugins &mdash; project-config 0.9.2 documentation</title>
+  <title>Writing third party plugins &mdash; project-config 0.9.6 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/tabs.css" type="text/css" />
       <link rel="stylesheet" href="../_static/bolditalic.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/tabs.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/override-styles.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
@@ -18,7 +18,9 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
         <script src="../_static/tabs.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -67,12 +69,14 @@
 <p class="caption" role="heading"><span class="caption-text">In depth</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../in-depth/rationale.html">Rationale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../in-depth/fetching.html">Fetching</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../in-depth/serialization.html">Objects serialization</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">For developers</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Writing third party plugins</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#plugin-class">Plugin class</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#action"><code class="docutils literal notranslate"><span class="pre">action()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#results">Results</a></li>
 </ul>
 </li>
@@ -110,7 +114,7 @@
            <div itemprop="articleBody">
              
   <section id="writing-third-party-plugins">
-<h1>Writing third party plugins<a class="headerlink" href="#writing-third-party-plugins" title="Permalink to this headline"></a></h1>
+<h1>Writing third party plugins<a class="headerlink" href="#writing-third-party-plugins" title="Permalink to this heading"></a></h1>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <p><a class="reference internal" href="../reference/plugins.html"><span class="doc">Plugins</span></a></p>
@@ -119,12 +123,12 @@
 looking for classes in the entrypoints group <code class="docutils literal notranslate"><span class="pre">project_config.plugins</span></code>,
 so the first thing is to add the entrypoint to the group:</p>
 <div class="sphinx-tabs docutils container">
-<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">hatch</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">poetry</button><button aria-controls="panel-0-0-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-2" name="0-2" role="tab" tabindex="-1">setup.cfg</button><button aria-controls="panel-0-0-3" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-3" name="0-3" role="tab" tabindex="-1">setup.py</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[project.&quot;entry-points&quot;.&quot;project_config.plugins&quot;]</span>
-<span class="n">my_plugin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;package.subpackage.my_plugin_module:PluginClass&quot;</span>
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">hatch</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">poetry</button><button aria-controls="panel-0-0-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-2" name="0-2" role="tab" tabindex="-1">setup.cfg</button><button aria-controls="panel-0-0-3" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-3" name="0-3" role="tab" tabindex="-1">setup.py</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[project.</span><span class="s2">&quot;entry-points&quot;</span><span class="k">.</span><span class="s2">&quot;project_config.plugins&quot;</span><span class="k">]</span>
+<span class="n">my_plugin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;package.subpackage.my_plugin_module:PluginClass&quot;</span>
 </pre></div>
 </div>
-</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[tool.poetry.plugins.&quot;project_config.plugins&quot;]</span>
-<span class="n">my_plugin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;package.subpackage.my_plugin_module:PluginClass&quot;</span>
+</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[tool.poetry.plugins.</span><span class="s2">&quot;project_config.plugins&quot;</span><span class="k">]</span>
+<span class="n">my_plugin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;package.subpackage.my_plugin_module:PluginClass&quot;</span>
 </pre></div>
 </div>
 </div><div aria-labelledby="tab-0-0-2" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-2" name="0-2" role="tabpanel" tabindex="0"><div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[options.entry_points]</span>
@@ -144,7 +148,7 @@ so the first thing is to add the entrypoint to the group:</p>
 is the name of the plugin, the one that must be defined in <a class="reference internal" href="../reference/styling.html#style-plugins"><span class="std std-ref">plugins (string[])</span></a>
 if the style need it.</p>
 <section id="plugin-class">
-<h2>Plugin class<a class="headerlink" href="#plugin-class" title="Permalink to this headline"></a></h2>
+<h2>Plugin class<a class="headerlink" href="#plugin-class" title="Permalink to this heading"></a></h2>
 <p>A valid plugin class must implement actions, which must be public static
 methods. For example:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
@@ -170,31 +174,31 @@ methods. For example:</p>
 </div>
 <dl class="py function">
 <dt class="sig sig-object py" id="action">
-<span class="sig-name descname"><span class="pre">action</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">rule</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">project_config.types.Rule</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="reference/project_config.types.html#project_config.types.ActionsContext" title="project_config.types.ActionsContext"><span class="pre">project_config.types.ActionsContext</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">project_config.types.Results</span></span></span><a class="headerlink" href="#action" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">action</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><span class="pre">Any</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">rule</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">project_config.types_.Rule</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="reference/project_config.types_.html#project_config.types_.ActionsContext" title="project_config.types_.ActionsContext"><span class="pre">project_config.types_.ActionsContext</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">project_config.types_.Results</span></span></span><a class="headerlink" href="#action" title="Permalink to this definition"></a></dt>
 <dd><p>Action definition.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><em>Any</em></a>) – Value that takes the action. It could be of any type, it depends to the action.</p></li>
-<li><p><strong>rule</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">project_config.types.Rule</span></code>) – Complete rule dictionary in which the action is being executed.</p></li>
-<li><p><strong>context</strong> (<a class="reference internal" href="reference/project_config.types.html#project_config.types.ActionsContext" title="project_config.types.ActionsContext"><code class="xref py py-class docutils literal notranslate"><span class="pre">project_config.types.ActionsContext</span></code></a>) – Context of the actions. It has a property <code class="docutils literal notranslate"><span class="pre">fix</span></code> which is used to determine if the user has enabled the <cite>fix</cite> mode in the current execution and other property <code class="docutils literal notranslate"><span class="pre">files</span></code> which stores the content of the <code class="docutils literal notranslate"><span class="pre">files</span></code> array of the rule.</p></li>
+<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a>) – Value that takes the action. It could be of any type, it depends to the action.</p></li>
+<li><p><strong>rule</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">project_config.types_.Rule</span></code>) – Complete rule dictionary in which the action is being executed.</p></li>
+<li><p><strong>context</strong> (<a class="reference internal" href="reference/project_config.types_.html#project_config.types_.ActionsContext" title="project_config.types_.ActionsContext"><code class="xref py py-class docutils literal notranslate"><span class="pre">project_config.types_.ActionsContext</span></code></a>) – Context of the actions. It has a property <code class="docutils literal notranslate"><span class="pre">fix</span></code> which is used to determine if the user has enabled the <cite>fix</cite> mode in the current execution and other property <code class="docutils literal notranslate"><span class="pre">files</span></code> which stores the content of the <code class="docutils literal notranslate"><span class="pre">files</span></code> array of the rule.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Yield</dt>
+<dt class="field-even">Yield<span class="colon">:</span></dt>
 <dd class="field-even"><p>Checking results.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">project_config.types.Results</span></code></p>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">project_config.types_.Results</span></code></p>
 </dd>
 </dl>
 </dd></dl>
 
 <section id="results">
-<h3>Results<a class="headerlink" href="#results" title="Permalink to this headline"></a></h3>
+<h3>Results<a class="headerlink" href="#results" title="Permalink to this heading"></a></h3>
 <p>Each action must yield results, which are tuples of two items,
 defined next as <cite>result type</cite> - <cite>result value</cite>:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">Error</span></code> - Checking error, a dictionary (optionally but recommendably typed as <code class="xref py py-class docutils literal notranslate"><span class="pre">project_config.types.ErrorDict</span></code>) which must contains the required keys <code class="docutils literal notranslate"><span class="pre">message</span></code> (error message shown in the report) and <code class="docutils literal notranslate"><span class="pre">definition</span></code> (definition in which the error has been thrown) and an optional key <code class="docutils literal notranslate"><span class="pre">file</span></code> (file for which the error has been thrown). If raised from conditionals their behaviour is the same that raising an <code class="docutils literal notranslate"><span class="pre">InterruptingError</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Error</span></code> - Checking error, a dictionary (optionally but recommendably typed as <code class="xref py py-class docutils literal notranslate"><span class="pre">project_config.types_.ErrorDict</span></code>) which must contains the required keys <code class="docutils literal notranslate"><span class="pre">message</span></code> (error message shown in the report) and <code class="docutils literal notranslate"><span class="pre">definition</span></code> (definition in which the error has been thrown) and an optional key <code class="docutils literal notranslate"><span class="pre">file</span></code> (file for which the error has been thrown). If raised from conditionals their behaviour is the same that raising an <code class="docutils literal notranslate"><span class="pre">InterruptingError</span></code>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">InterruptingError</span></code> - The same as a checking error, but this type of error will stop the execution of the subsequent rules during the checking. Useful if the user has passed some unexpected value that could lead to an invalid context in some later rule.</p></li>
 </ul>
 <p>Additionally, conditionals can yield result values, which
@@ -220,7 +224,7 @@ is checking the source code of the simplest built-in plugins:</p>
 </section>
 </section>
 <section id="testing-plugins">
-<h2>Testing plugins<a class="headerlink" href="#testing-plugins" title="Permalink to this headline"></a></h2>
+<h2>Testing plugins<a class="headerlink" href="#testing-plugins" title="Permalink to this heading"></a></h2>
 <p><strong>project-config</strong> comes with a built-in <a class="reference external" href="https://docs.pytest.org/en/latest/explanation/fixtures.html">pytest fixture</a> to
 easily test plugin actions. See
 <a class="reference internal" href="reference/project_config.tests.pytest_plugin.plugin.html#module-project_config.tests.pytest_plugin.plugin" title="project_config.tests.pytest_plugin.plugin"><code class="xref py py-mod docutils literal notranslate"><span class="pre">project_config.tests.pytest_plugin.plugin</span></code></a>.</p>
@@ -238,7 +242,7 @@ easily test plugin actions. See
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2022, Álvaro Mondéjar Rubio &lt;mondejar1994@gmail.com&gt;.</p>
+    <p>&#169; Copyright 2022-2024, Álvaro Mondéjar Rubio &lt;mondejar1994@gmail.com&gt;.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

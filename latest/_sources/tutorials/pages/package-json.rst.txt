@@ -70,7 +70,7 @@ The next style file fixes a ``package.json`` file using **project-config**:
            [
              "type(funding.url)",
              "string",
-             "deepmerge(@, {funding: {url: 'https://www.patreon.com/my-account'}})",
+             "deepmerge(@, {funding: {url: 'https://patreon.com/my-account'}})",
            ],
 
            // repository
@@ -123,7 +123,7 @@ The next style file fixes a ``package.json`` file using **project-config**:
              //   must be a valid SPDX OSI approved license identifier
              "license",
              [
-               "gh://spdx/license-list-data@v3.22/json/licenses.json",
+               "gh://spdx/license-list-data@v3.25.0/json/licenses.json",
                "licenses[?isOsiApproved] | [?!isDeprecatedLicenseId].licenseId",
              ],
              "contains([1], [0])",
@@ -145,16 +145,16 @@ The next style file fixes a ``package.json`` file using **project-config**:
        "foo",
        "bar"
      ],
-     "homepage": "https://www.github.com/mondeja/package-json",
+     "homepage": "https://github.com/mondeja/package-json",
      "bugs": {
-       "url": "https://www.github.com/mondeja/package-json/issues"
+       "url": "https://github.com/mondeja/package-json/issues"
      },
      "funding": {
        "type": "patreon",
-       "url": "https://www.patreon.com/my-account"
+       "url": "https://patreon.com/my-account"
      },
      "repository": {
-       "url": "https://www.github.com/mondeja/package-json.git",
+       "url": "https://github.com/mondeja/package-json.git",
        "type": "git"
      },
      "engines": {

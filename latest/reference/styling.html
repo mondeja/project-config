@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Styling &mdash; project-config 0.9.2 documentation</title>
+  <title>Styling &mdash; project-config 0.9.6 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/tabs.css" type="text/css" />
       <link rel="stylesheet" href="../_static/bolditalic.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/tabs.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/override-styles.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
@@ -18,7 +18,9 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
         <script src="../_static/tabs.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -80,6 +82,7 @@
 <p class="caption" role="heading"><span class="caption-text">In depth</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../in-depth/rationale.html">Rationale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../in-depth/fetching.html">Fetching</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../in-depth/serialization.html">Objects serialization</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">For developers</span></p>
@@ -116,7 +119,7 @@
            <div itemprop="articleBody">
              
   <section id="styling">
-<h1>Styling<a class="headerlink" href="#styling" title="Permalink to this headline"></a></h1>
+<h1>Styling<a class="headerlink" href="#styling" title="Permalink to this heading"></a></h1>
 <p>Styles can be defined in any object-serializable file format (see
 <a class="reference internal" href="../in-depth/serialization.html#objects-serialization"><span class="std std-ref">Objects serialization</span></a>).</p>
 <p>We recommend to use YAML or JSON5 because are the most readable, flexible
@@ -130,11 +133,11 @@ and allows comments, which are really useful writing styles.</p>
 <p>At least one rule or extension is required to be a valid style. At least one
 rule must be collected after styles extensions to be a valid merged style.</p>
 <section id="rules-object">
-<h2><code class="docutils literal notranslate"><span class="pre">rules</span></code> (<cite>object[]</cite>)<a class="headerlink" href="#rules-object" title="Permalink to this headline"></a></h2>
+<h2><code class="docutils literal notranslate"><span class="pre">rules</span></code> (<cite>object[]</cite>)<a class="headerlink" href="#rules-object" title="Permalink to this heading"></a></h2>
 <p>Define the actions to execute against files. It must be an array of objects
 with at least one object.</p>
 <section id="files-string-or-object-not-not">
-<h3><code class="docutils literal notranslate"><span class="pre">files</span></code> (<cite>string[]</cite> or <cite>object{not{} | not[]}</cite>)<a class="headerlink" href="#files-string-or-object-not-not" title="Permalink to this headline"></a></h3>
+<h3><code class="docutils literal notranslate"><span class="pre">files</span></code> (<cite>string[]</cite> or <cite>object{not{} | not[]}</cite>)<a class="headerlink" href="#files-string-or-object-not-not" title="Permalink to this heading"></a></h3>
 <p>Unique mandatory field for all rules. It specifies the subject of the rule,
 that is, the files for which the verbs will be applied.</p>
 <p>It must be either an array of strings or an object with an unique key <code class="docutils literal notranslate"><span class="pre">not</span></code>.</p>
@@ -169,7 +172,7 @@ of actions of the rule.</p>
 </div>
 </div></div>
 <section id="enforce-files-absence">
-<h4>Enforce files absence<a class="headerlink" href="#enforce-files-absence" title="Permalink to this headline"></a></h4>
+<h4>Enforce files absence<a class="headerlink" href="#enforce-files-absence" title="Permalink to this heading"></a></h4>
 <p>Defining <code class="docutils literal notranslate"><span class="pre">files</span></code> as an object, it must be an unique key <code class="docutils literal notranslate"><span class="pre">not</span></code>. The value
 of <code class="docutils literal notranslate"><span class="pre">not</span></code> must be either:</p>
 <ul class="simple">
@@ -181,7 +184,7 @@ value indicating a reason that explain why this file must be absent.</p></li>
 as this has no sense. The attempt will raise an error validating the style.</p>
 </section>
 <section id="file-syntax-convention">
-<h4>File syntax convention<a class="headerlink" href="#file-syntax-convention" title="Permalink to this headline"></a></h4>
+<h4>File syntax convention<a class="headerlink" href="#file-syntax-convention" title="Permalink to this heading"></a></h4>
 <ul class="simple">
 <li><p>Files are defined relative to the root directory of the project, which will be the
 current working directory if no other is passed in <a class="reference internal" href="cli.html#project-config---rootdir"><span class="std std-ref">–rootdir</span></a>
@@ -192,7 +195,7 @@ so you must always use <code class="docutils literal notranslate"><span class="p
 </section>
 </section>
 <section id="hint-string">
-<h3><code class="docutils literal notranslate"><span class="pre">hint</span></code> (<cite>string</cite>)<a class="headerlink" href="#hint-string" title="Permalink to this headline"></a></h3>
+<h3><code class="docutils literal notranslate"><span class="pre">hint</span></code> (<cite>string</cite>)<a class="headerlink" href="#hint-string" title="Permalink to this heading"></a></h3>
 <p>Optional field for all rules. It specifies a hint that will be displayed along
 the error message when a checking error occurred using the <code class="docutils literal notranslate"><span class="pre">check</span></code> command.
 It is specially useful for complex rules which show abstract error messages.</p>
@@ -211,7 +214,7 @@ It is specially useful for complex rules which show abstract error messages.</p>
 </section>
 </section>
 <section id="extends-string">
-<h2><code class="docutils literal notranslate"><span class="pre">extends</span></code> (<cite>string[]</cite>)<a class="headerlink" href="#extends-string" title="Permalink to this headline"></a></h2>
+<h2><code class="docutils literal notranslate"><span class="pre">extends</span></code> (<cite>string[]</cite>)<a class="headerlink" href="#extends-string" title="Permalink to this heading"></a></h2>
 <p>Array of strings to define other styles from which the current will extend.
 Extended rules will be executed before the rules of the current style.</p>
 <p>Can be defined with the same syntax of styles in configuration, from a local
@@ -230,7 +233,7 @@ using <code class="docutils literal notranslate"><span class="pre">extends:</spa
 </div>
 </section>
 <section id="plugins-string">
-<span id="style-plugins"></span><h2><code class="docutils literal notranslate"><span class="pre">plugins</span></code> (<cite>string[]</cite>)<a class="headerlink" href="#plugins-string" title="Permalink to this headline"></a></h2>
+<span id="style-plugins"></span><h2><code class="docutils literal notranslate"><span class="pre">plugins</span></code> (<cite>string[]</cite>)<a class="headerlink" href="#plugins-string" title="Permalink to this heading"></a></h2>
 <p>Additional third party plugin names on which the rules of the style depend.
 Built-in plugins don’t need to be defined here, as are loaded by default.</p>
 <p class="rubric">Example</p>
@@ -263,7 +266,7 @@ Built-in plugins don’t need to be defined here, as are loaded by default.</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2022, Álvaro Mondéjar Rubio &lt;mondejar1994@gmail.com&gt;.</p>
+    <p>&#169; Copyright 2022-2024, Álvaro Mondéjar Rubio &lt;mondejar1994@gmail.com&gt;.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

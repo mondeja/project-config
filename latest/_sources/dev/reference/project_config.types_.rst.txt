@@ -1,0 +1,8 @@
+project\_config.types\_ module
+==============================
+
+.. automodule:: project_config.types_
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:

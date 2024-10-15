@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Changelog &mdash; project-config 0.9.2 documentation</title>
+  <title>Changelog &mdash; project-config 0.9.6 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/tabs.css" type="text/css" />
       <link rel="stylesheet" href="../_static/bolditalic.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/override-styles.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -18,7 +17,9 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -66,6 +67,7 @@
 <p class="caption" role="heading"><span class="caption-text">In depth</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../in-depth/rationale.html">Rationale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../in-depth/fetching.html">Fetching</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../in-depth/serialization.html">Objects serialization</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">For developers</span></p>
@@ -73,6 +75,11 @@
 <li class="toctree-l1"><a class="reference internal" href="plugins.html">Writing third party plugins</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reporters.html">Writing third party reporters</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#release-v0-9-6">v0.9.6</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#release-v0-9-5">v0.9.5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#release-v0-9-4">v0.9.4</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#release-v0-9-3">v0.9.3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#release-v0-9-2">v0.9.2</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#release-v0-9-1">v0.9.1</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#release-v0-9-0">v0.9.0</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#release-v0-8-0">v0.8.0</a></li>
@@ -124,20 +131,52 @@
            <div itemprop="articleBody">
              
   <section id="changelog">
-<h1>Changelog<a class="headerlink" href="#changelog" title="Permalink to this headline"></a></h1>
+<h1>Changelog<a class="headerlink" href="#changelog" title="Permalink to this heading"></a></h1>
+<section id="release-v0-9-6">
+<h2>v0.9.6<a class="headerlink" href="#release-v0-9-6" title="Permalink to this heading"></a></h2>
+<p><em>Released on 2024-10-15 - <a class="reference external" href="https://github.com/mondeja/project-config/releases/tag/v0.9.6">GitHub</a> - <a class="reference external" href="https://pypi.org/project/project-config/v0.9.6/">PyPI</a></em></p>
+<p>Add documentation about resource fetching (<a class="issue-link js-issue-link" data-error-text="Failed to load title" data-id="2589943904" data-permission-text="Title is private" data-url="https://github.com/mondeja/project-config/issues/198" data-hovercard-type="pull_request" data-hovercard-url="/mondeja/project-config/pull/198/hovercard" href="https://github.com/mondeja/project-config/pull/198">#198</a>)</p></section>
+<section id="release-v0-9-5">
+<h2>v0.9.5<a class="headerlink" href="#release-v0-9-5" title="Permalink to this heading"></a></h2>
+<p><em>Released on 2024-03-06 - <a class="reference external" href="https://github.com/mondeja/project-config/releases/tag/v0.9.5">GitHub</a> - <a class="reference external" href="https://pypi.org/project/project-config/v0.9.5/">PyPI</a></em></p>
+<h2>Bug fixes</h2>
+<ul>
+<li>Fix error running CLI when using <code>importlib-metadata-argparse-version==2.0.0</code></li>
+</ul></section>
+<section id="release-v0-9-4">
+<h2>v0.9.4<a class="headerlink" href="#release-v0-9-4" title="Permalink to this heading"></a></h2>
+<p><em>Released on 2024-02-16 - <a class="reference external" href="https://github.com/mondeja/project-config/releases/tag/v0.9.4">GitHub</a> - <a class="reference external" href="https://pypi.org/project/project-config/v0.9.4/">PyPI</a></em></p>
+<h2>Changes</h2>
+<ul>
+<li>Get always default Github branches using the API.</li>
+</ul></section>
+<section id="release-v0-9-3">
+<h2>v0.9.3<a class="headerlink" href="#release-v0-9-3" title="Permalink to this heading"></a></h2>
+<p><em>Released on 2023-10-28 - <a class="reference external" href="https://github.com/mondeja/project-config/releases/tag/v0.9.3">GitHub</a> - <a class="reference external" href="https://pypi.org/project/project-config/v0.9.3/">PyPI</a></em></p>
+<h2>New features</h2>
+<ul>
+<li>Added <code>github-actions</code> reporter.</li>
+</ul></section>
+<section id="release-v0-9-2">
+<h2>v0.9.2<a class="headerlink" href="#release-v0-9-2" title="Permalink to this heading"></a></h2>
+<p><em>Released on 2023-10-16 - <a class="reference external" href="https://github.com/mondeja/project-config/releases/tag/v0.9.2">GitHub</a> - <a class="reference external" href="https://pypi.org/project/project-config/v0.9.2/">PyPI</a></em></p>
+<h2>Bug fixes</h2>
+<ul>
+<li>Don't require <code>rev</code> repo keys for "meta" repos in <code>preCommitHookExists</code> action of pre-commit plugin.</li>
+</ul></section>
 <section id="release-v0-9-1">
-<h2>v0.9.1<a class="headerlink" href="#release-v0-9-1" title="Permalink to this headline"></a></h2>
+<h2>v0.9.1<a class="headerlink" href="#release-v0-9-1" title="Permalink to this heading"></a></h2>
 <p><em>Released on 2023-10-15 - <a class="reference external" href="https://github.com/mondeja/project-config/releases/tag/v0.9.1">GitHub</a> - <a class="reference external" href="https://pypi.org/project/project-config/v0.9.1/">PyPI</a></em></p>
 <h2>New features</h2>
 <ul>
-<li>Added a <em>pre-commit</em> plugin with a <code>preCommitHookExists</code> action to check pre-commit hooks configurations.</li>
+<li>Added <a href="https://mondeja.github.io/project-config/latest/reference/plugins.html#pre-commit" rel="nofollow"><strong>pre-commit</strong></a> plugin with a <a href="https://mondeja.github.io/project-config/latest/reference/plugins.html#precommithookexists" rel="nofollow"><code>preCommitHookExists</code></a> action to check pre-commit hooks configurations.</li>
 </ul>
 <h2>Bug fixes</h2>
 <ul>
 <li>Fixed keys unsorted when deserializing YAML content.</li>
 </ul></section>
 <section id="release-v0-9-0">
-<h2>v0.9.0<a class="headerlink" href="#release-v0-9-0" title="Permalink to this headline"></a></h2>
+<h2>v0.9.0<a class="headerlink" href="#release-v0-9-0" title="Permalink to this heading"></a></h2>
 <p><em>Released on 2023-10-14 - <a class="reference external" href="https://github.com/mondeja/project-config/releases/tag/v0.9.0">GitHub</a> - <a class="reference external" href="https://pypi.org/project/project-config/v0.9.0/">PyPI</a></em></p>
 <h2><g-emoji class="g-emoji" alias="warning">⚠️</g-emoji> Breaking changes</h2>
 <ul>
@@ -148,12 +187,12 @@
 <li>Added support for Python 3.12</li>
 </ul></section>
 <section id="release-v0-8-0">
-<h2>v0.8.0<a class="headerlink" href="#release-v0-8-0" title="Permalink to this headline"></a></h2>
+<h2>v0.8.0<a class="headerlink" href="#release-v0-8-0" title="Permalink to this heading"></a></h2>
 <p><em>Released on 2022-12-22 - <a class="reference external" href="https://github.com/mondeja/project-config/releases/tag/v0.8.0">GitHub</a> - <a class="reference external" href="https://pypi.org/project/project-config/v0.8.0/">PyPI</a></em></p>
 <h2><g-emoji class="g-emoji" alias="warning">⚠️</g-emoji> Breaking changes</h2>
 <ul>
 <li>Globs are not allowed inside <code>files</code> arrays of rules</li>
-<li>Tree API has been changed, so third party plugins must be updated accordingly</li>
+<li>Tree API has been changed. Third party plugins must be updated accordingly</li>
 </ul>
 <h2>Bug fixes</h2>
 <ul>
@@ -171,20 +210,20 @@
 <li>Added new actions for <code>inclusion</code> plugin: <code>exludeLines</code> and <code>includeContent</code></li>
 </ul></section>
 <section id="release-v0-7-9">
-<h2>v0.7.9<a class="headerlink" href="#release-v0-7-9" title="Permalink to this headline"></a></h2>
+<h2>v0.7.9<a class="headerlink" href="#release-v0-7-9" title="Permalink to this heading"></a></h2>
 <p><em>Released on 2022-12-06 - <a class="reference external" href="https://github.com/mondeja/project-config/releases/tag/v0.7.9">GitHub</a> - <a class="reference external" href="https://pypi.org/project/project-config/v0.7.9/">PyPI</a></em></p>
 <ul>
 <li>Added support for JSON5 files on Python3.11.</li>
 </ul></section>
 <section id="release-v0-7-8">
-<h2>v0.7.8<a class="headerlink" href="#release-v0-7-8" title="Permalink to this headline"></a></h2>
+<h2>v0.7.8<a class="headerlink" href="#release-v0-7-8" title="Permalink to this heading"></a></h2>
 <p><em>Released on 2022-11-30 - <a class="reference external" href="https://github.com/mondeja/project-config/releases/tag/v0.7.8">GitHub</a> - <a class="reference external" href="https://pypi.org/project/project-config/v0.7.8/">PyPI</a></em></p>
 <p>Enhancements:</p>
 <ul>
 <li>Optimize <code>crossJMESPathsMatch</code> verb.</li>
 </ul></section>
 <section id="release-v0-7-7">
-<h2>v0.7.7<a class="headerlink" href="#release-v0-7-7" title="Permalink to this headline"></a></h2>
+<h2>v0.7.7<a class="headerlink" href="#release-v0-7-7" title="Permalink to this heading"></a></h2>
 <p><em>Released on 2022-10-01 - <a class="reference external" href="https://github.com/mondeja/project-config/releases/tag/v0.7.7">GitHub</a> - <a class="reference external" href="https://pypi.org/project/project-config/v0.7.7/">PyPI</a></em></p>
 <p>New features:</p>
 <ul>
@@ -195,7 +234,7 @@
 <li>Fixed errors derived from the fact that <code>files</code> existence check has been being executed before the <code>ifFilesExist</code> conditional, which raises false positives if some of the files are the same and don't exist.</li>
 </ul></section>
 <section id="release-v0-7-6">
-<h2>v0.7.6<a class="headerlink" href="#release-v0-7-6" title="Permalink to this headline"></a></h2>
+<h2>v0.7.6<a class="headerlink" href="#release-v0-7-6" title="Permalink to this heading"></a></h2>
 <p><em>Released on 2022-09-29 - <a class="reference external" href="https://github.com/mondeja/project-config/releases/tag/v0.7.6">GitHub</a> - <a class="reference external" href="https://pypi.org/project/project-config/v0.7.6/">PyPI</a></em></p>
 <p>Enhancements:</p>
 <ul>
@@ -207,7 +246,7 @@
 <li>Fixes edge case exceptions when executing Python files to from JMESPath rules.</li>
 </ul></section>
 <section id="release-v0-7-5">
-<h2>v0.7.5<a class="headerlink" href="#release-v0-7-5" title="Permalink to this headline"></a></h2>
+<h2>v0.7.5<a class="headerlink" href="#release-v0-7-5" title="Permalink to this heading"></a></h2>
 <p><em>Released on 2022-07-28 - <a class="reference external" href="https://github.com/mondeja/project-config/releases/tag/v0.7.5">GitHub</a> - <a class="reference external" href="https://pypi.org/project/project-config/v0.7.5/">PyPI</a></em></p>
 <p>New features:</p>
 <ul>
@@ -215,21 +254,21 @@
 <li>Add new custom JMESPath function <a href="https://mondeja.github.io/project-config/0.7.5/reference/plugins.html#regex_escape" rel="nofollow"><code>regex_escape()</code></a>.</li>
 </ul></section>
 <section id="release-v0-7-4">
-<h2>v0.7.4<a class="headerlink" href="#release-v0-7-4" title="Permalink to this headline"></a></h2>
+<h2>v0.7.4<a class="headerlink" href="#release-v0-7-4" title="Permalink to this heading"></a></h2>
 <p><em>Released on 2022-07-21 - <a class="reference external" href="https://github.com/mondeja/project-config/releases/tag/v0.7.4">GitHub</a> - <a class="reference external" href="https://pypi.org/project/project-config/v0.7.4/">PyPI</a></em></p>
 <p>Enhancements:</p>
 <ul>
 <li>Allow to pass multiple optional operators and values as positional arguments to <a href="https://mondeja.github.io/project-config/latest/reference/plugins.html#op" rel="nofollow">custom JMESPath function <code>op()</code></a>.</li>
 </ul></section>
 <section id="release-v0-7-3">
-<h2>v0.7.3<a class="headerlink" href="#release-v0-7-3" title="Permalink to this headline"></a></h2>
+<h2>v0.7.3<a class="headerlink" href="#release-v0-7-3" title="Permalink to this heading"></a></h2>
 <p><em>Released on 2022-07-18 - <a class="reference external" href="https://github.com/mondeja/project-config/releases/tag/v0.7.3">GitHub</a> - <a class="reference external" href="https://pypi.org/project/project-config/v0.7.3/">PyPI</a></em></p>
 <p>Bug fixes:</p>
 <ul>
 <li>Handle uncatched exception in some subexpression fix queries.</li>
 </ul></section>
 <section id="release-v0-7-2">
-<h2>v0.7.2<a class="headerlink" href="#release-v0-7-2" title="Permalink to this headline"></a></h2>
+<h2>v0.7.2<a class="headerlink" href="#release-v0-7-2" title="Permalink to this heading"></a></h2>
 <p><em>Released on 2022-07-18 - <a class="reference external" href="https://github.com/mondeja/project-config/releases/tag/v0.7.2">GitHub</a> - <a class="reference external" href="https://pypi.org/project/project-config/v0.7.2/">PyPI</a></em></p>
 <p>Bug fixes:</p>
 <ul>
@@ -240,7 +279,7 @@
 <li>Added custom JMESPath functions <a href="https://mondeja.github.io/project-config/0.7.2/reference/plugins.html#getenv" rel="nofollow"><code>getenv()</code></a> and <a href="https://mondeja.github.io/project-config/0.7.2/reference/plugins.html#setenv" rel="nofollow"><code>setenv()</code></a> to manipulate environment variables.</li>
 </ul></section>
 <section id="release-v0-7-1">
-<h2>v0.7.1<a class="headerlink" href="#release-v0-7-1" title="Permalink to this headline"></a></h2>
+<h2>v0.7.1<a class="headerlink" href="#release-v0-7-1" title="Permalink to this heading"></a></h2>
 <p><em>Released on 2022-07-15 - <a class="reference external" href="https://github.com/mondeja/project-config/releases/tag/v0.7.1">GitHub</a> - <a class="reference external" href="https://pypi.org/project/project-config/v0.7.1/">PyPI</a></em></p>
 <p>Bug fixes:</p>
 <ul>
@@ -252,7 +291,7 @@
 <li>New custom JMESPath  function<a href="https://mondeja.github.io/project-config/0.7.1/reference/plugins.html#gh_tags" rel="nofollow"><code>gh_tags()</code></a> to get the latest tags of a github repository.</li>
 </ul></section>
 <section id="release-v0-7-0">
-<h2>v0.7.0<a class="headerlink" href="#release-v0-7-0" title="Permalink to this headline"></a></h2>
+<h2>v0.7.0<a class="headerlink" href="#release-v0-7-0" title="Permalink to this heading"></a></h2>
 <p><em>Released on 2022-07-15 - <a class="reference external" href="https://github.com/mondeja/project-config/releases/tag/v0.7.0">GitHub</a> - <a class="reference external" href="https://pypi.org/project/project-config/v0.7.0/">PyPI</a></em></p>
 <p>New features:</p>
 <ul>
@@ -261,7 +300,7 @@
 <li>Added new option <a href="https://mondeja.github.io/project-config/0.7.0/reference/cli.html#project-config---only-hints" rel="nofollow"><code>--only-hints</code></a> / <a href="https://mondeja.github.io/project-config/0.7.0/reference/config.html#cli-only-hints-boolean" rel="nofollow"><code>only_hints = true</code></a> to only show hints rather than messages in errors.</li>
 </ul></section>
 <section id="release-v0-6-0">
-<h2>v0.6.0<a class="headerlink" href="#release-v0-6-0" title="Permalink to this headline"></a></h2>
+<h2>v0.6.0<a class="headerlink" href="#release-v0-6-0" title="Permalink to this heading"></a></h2>
 <p><em>Released on 2022-07-11 - <a class="reference external" href="https://github.com/mondeja/project-config/releases/tag/v0.6.0">GitHub</a> - <a class="reference external" href="https://pypi.org/project/project-config/v0.6.0/">PyPI</a></em></p>
 <p>New features:</p>
 <ul>
@@ -271,7 +310,7 @@
 <li>Added <a href="https://megalinter.github.io" rel="nofollow">MegaLinter</a> plugin descriptor for project-config. See <a href="https://mondeja.github.io/project-config/0.6.0/install.html" rel="nofollow">Installation</a>.</li>
 </ul></section>
 <section id="release-v0-5-0">
-<h2>v0.5.0<a class="headerlink" href="#release-v0-5-0" title="Permalink to this headline"></a></h2>
+<h2>v0.5.0<a class="headerlink" href="#release-v0-5-0" title="Permalink to this heading"></a></h2>
 <p><em>Released on 2022-07-08 - <a class="reference external" href="https://github.com/mondeja/project-config/releases/tag/v0.5.0">GitHub</a> - <a class="reference external" href="https://pypi.org/project/project-config/v0.5.0/">PyPI</a></em></p>
 <p>New features:</p>
 <ul>
@@ -282,7 +321,7 @@
 <li>Concurrent fetching for faster caching of remote style files when they have not been cached yet.</li>
 </ul></section>
 <section id="release-v0-4-0">
-<h2>v0.4.0<a class="headerlink" href="#release-v0-4-0" title="Permalink to this headline"></a></h2>
+<h2>v0.4.0<a class="headerlink" href="#release-v0-4-0" title="Permalink to this heading"></a></h2>
 <p><em>Released on 2022-07-04 - <a class="reference external" href="https://github.com/mondeja/project-config/releases/tag/v0.4.0">GitHub</a> - <a class="reference external" href="https://pypi.org/project/project-config/v0.4.0/">PyPI</a></em></p>
 <p>Deprecations:</p>
 <ul>
@@ -302,14 +341,14 @@
 <li>Values validation in <a href="https://mondeja.github.io/project-config/0.4.0/reference/plugins.html#inclusion" rel="nofollow"><code>inclusion</code> plugin</a> actions.</li>
 </ul></section>
 <section id="release-v0-3-1">
-<h2>v0.3.1<a class="headerlink" href="#release-v0-3-1" title="Permalink to this headline"></a></h2>
+<h2>v0.3.1<a class="headerlink" href="#release-v0-3-1" title="Permalink to this heading"></a></h2>
 <p><em>Released on 2022-06-30 - <a class="reference external" href="https://github.com/mondeja/project-config/releases/tag/v0.3.1">GitHub</a> - <a class="reference external" href="https://pypi.org/project/project-config/v0.3.1/">PyPI</a></em></p>
 <p>Bug fixes:</p>
 <ul>
 <li>Fix error fetching styles when <code>rootdir</code> not specified.</li>
 </ul></section>
 <section id="release-v0-3-0">
-<h2>v0.3.0<a class="headerlink" href="#release-v0-3-0" title="Permalink to this headline"></a></h2>
+<h2>v0.3.0<a class="headerlink" href="#release-v0-3-0" title="Permalink to this heading"></a></h2>
 <p><em>Released on 2022-06-30 - <a class="reference external" href="https://github.com/mondeja/project-config/releases/tag/v0.3.0">GitHub</a> - <a class="reference external" href="https://pypi.org/project/project-config/v0.3.0/">PyPI</a></em></p>
 <p>New features:</p>
 <ul>
@@ -333,7 +372,7 @@
 <li>Retry connections in requests.</li>
 </ul></section>
 <section id="release-v0-2-0">
-<h2>v0.2.0<a class="headerlink" href="#release-v0-2-0" title="Permalink to this headline"></a></h2>
+<h2>v0.2.0<a class="headerlink" href="#release-v0-2-0" title="Permalink to this heading"></a></h2>
 <p><em>Released on 2022-06-23 - <a class="reference external" href="https://github.com/mondeja/project-config/releases/tag/v0.2.0">GitHub</a> - <a class="reference external" href="https://pypi.org/project/project-config/v0.2.0/">PyPI</a></em></p>
 <p>Bug fixes:</p>
 <ul>
@@ -353,7 +392,7 @@
 <li>Included pytest plugin in distribution for easy testing of third party plugins</li>
 </ul></section>
 <section id="release-v0-1-0">
-<h2>v0.1.0<a class="headerlink" href="#release-v0-1-0" title="Permalink to this headline"></a></h2>
+<h2>v0.1.0<a class="headerlink" href="#release-v0-1-0" title="Permalink to this heading"></a></h2>
 <p><em>Released on 2022-06-22 - <a class="reference external" href="https://github.com/mondeja/project-config/releases/tag/v0.1.0">GitHub</a> - <a class="reference external" href="https://pypi.org/project/project-config/v0.1.0/">PyPI</a></em></p>
 <p>First beta release</p></section>
 </section>
@@ -369,7 +408,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2022, Álvaro Mondéjar Rubio &lt;mondejar1994@gmail.com&gt;.</p>
+    <p>&#169; Copyright 2022-2024, Álvaro Mondéjar Rubio &lt;mondejar1994@gmail.com&gt;.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

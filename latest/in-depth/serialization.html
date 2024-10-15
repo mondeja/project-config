@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Objects serialization &mdash; project-config 0.9.2 documentation</title>
+  <title>Objects serialization &mdash; project-config 0.9.6 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/tabs.css" type="text/css" />
       <link rel="stylesheet" href="../_static/bolditalic.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/tabs.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/override-styles.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
@@ -18,13 +18,15 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
         <script src="../_static/tabs.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Writing third party plugins" href="../dev/plugins.html" />
-    <link rel="prev" title="Rationale" href="rationale.html" /> 
+    <link rel="prev" title="Fetching" href="fetching.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -67,6 +69,7 @@
 <p class="caption" role="heading"><span class="caption-text">In depth</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="rationale.html">Rationale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fetching.html">Fetching</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Objects serialization</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#json">JSON</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#json5">JSON5</a></li>
@@ -113,7 +116,7 @@
            <div itemprop="articleBody">
              
   <section id="objects-serialization">
-<h1>Objects serialization<a class="headerlink" href="#objects-serialization" title="Permalink to this headline"></a></h1>
+<h1>Objects serialization<a class="headerlink" href="#objects-serialization" title="Permalink to this heading"></a></h1>
 <p>Some plugins like <a class="reference internal" href="../reference/plugins.html#jmespath"><span class="std std-ref">jmespath</span></a> apply their
 actions against object-serialized version of files. Also, the style
 files itself parsed by <strong>project-config</strong> to execute the rules are
@@ -128,21 +131,21 @@ of the files. The format is discovered, based mostly on file names,
 using <a class="reference external" href="https://github.com/pre-commit/identify">identify</a>.</p>
 <p>The next formats are currently supported:</p>
 <section id="json">
-<h2>JSON<a class="headerlink" href="#json" title="Permalink to this headline"></a></h2>
+<h2>JSON<a class="headerlink" href="#json" title="Permalink to this heading"></a></h2>
 <ul class="simple">
-<li><p>Loader: <a class="reference external" href="https://docs.python.org/3/library/json.html#json.loads" title="(in Python v3.12)"><code class="xref py py-func docutils literal notranslate"><span class="pre">json.loads()</span></code></a>.</p></li>
-<li><p>Dumper: <a class="reference external" href="https://docs.python.org/3/library/json.html#json.dumps" title="(in Python v3.12)"><code class="xref py py-func docutils literal notranslate"><span class="pre">json.dumps()</span></code></a>.</p></li>
+<li><p>Loader: <a class="reference external" href="https://docs.python.org/3/library/json.html#json.loads" title="(in Python v3.13)"><code class="xref py py-func docutils literal notranslate"><span class="pre">json.loads()</span></code></a>.</p></li>
+<li><p>Dumper: <a class="reference external" href="https://docs.python.org/3/library/json.html#json.dumps" title="(in Python v3.13)"><code class="xref py py-func docutils literal notranslate"><span class="pre">json.dumps()</span></code></a>.</p></li>
 </ul>
 </section>
 <section id="json5">
-<h2>JSON5<a class="headerlink" href="#json5" title="Permalink to this headline"></a></h2>
+<h2>JSON5<a class="headerlink" href="#json5" title="Permalink to this heading"></a></h2>
 <ul class="simple">
-<li><p>Loader: <a class="reference external" href="https://pyjson5.readthedocs.io/en/latest/decoder.html#pyjson5.loads" title="(in PyJSON5 v1.6.4)"><code class="xref py py-func docutils literal notranslate"><span class="pre">pyjson5.loads()</span></code></a> or <a class="reference external" href="https://github.com/dpranke/pyjson5">json5.loads</a> as fallback.</p></li>
-<li><p>Dumper: <a class="reference external" href="https://pyjson5.readthedocs.io/en/latest/encoder.html#pyjson5.dumps" title="(in PyJSON5 v1.6.4)"><code class="xref py py-func docutils literal notranslate"><span class="pre">pyjson5.dumps()</span></code></a> or <a class="reference external" href="https://github.com/dpranke/pyjson5">json5.dumps</a> as fallback.</p></li>
+<li><p>Loader: <a class="reference external" href="https://pyjson5.readthedocs.io/en/latest/decoder.html#pyjson5.loads" title="(in PyJSON5 v1.6.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">pyjson5.loads()</span></code></a> or <a class="reference external" href="https://github.com/dpranke/pyjson5">json5.loads</a> as fallback.</p></li>
+<li><p>Dumper: <a class="reference external" href="https://pyjson5.readthedocs.io/en/latest/encoder.html#pyjson5.dumps" title="(in PyJSON5 v1.6.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">pyjson5.dumps()</span></code></a> or <a class="reference external" href="https://github.com/dpranke/pyjson5">json5.dumps</a> as fallback.</p></li>
 </ul>
 </section>
 <section id="yaml-v1-2">
-<h2>YAML (v1.2)<a class="headerlink" href="#yaml-v1-2" title="Permalink to this headline"></a></h2>
+<h2>YAML (v1.2)<a class="headerlink" href="#yaml-v1-2" title="Permalink to this heading"></a></h2>
 <ul class="simple">
 <li><p>Loader: <a class="reference internal" href="../dev/reference/project_config.serializers.yaml.html#project_config.serializers.yaml.loads" title="project_config.serializers.yaml.loads"><code class="xref py py-func docutils literal notranslate"><span class="pre">project_config.serializers.yaml.loads()</span></code></a> (based on <a class="reference external" href="https://yaml.readthedocs.io/en/latest">ruamel.yaml</a>).</p></li>
 <li><p>Dumper: <a class="reference internal" href="../dev/reference/project_config.serializers.yaml.html#project_config.serializers.yaml.dumps" title="project_config.serializers.yaml.dumps"><code class="xref py py-func docutils literal notranslate"><span class="pre">project_config.serializers.yaml.dumps()</span></code></a> (based on <a class="reference external" href="https://yaml.readthedocs.io/en/latest">ruamel.yaml</a>).</p></li>
@@ -150,7 +153,7 @@ using <a class="reference external" href="https://github.com/pre-commit/identify
 </ul>
 </section>
 <section id="toml-v1">
-<h2>TOML (v1)<a class="headerlink" href="#toml-v1" title="Permalink to this headline"></a></h2>
+<h2>TOML (v1)<a class="headerlink" href="#toml-v1" title="Permalink to this heading"></a></h2>
 <ul class="simple">
 <li><p>Loader: <a class="reference external" href="https://github.com/sdispater/tomlkit/blob/master/docs/quickstart.rst#parsing">tomlkit.parse</a>.</p></li>
 <li><p>Dumper: <a class="reference external" href="https://github.com/sdispater/tomlkit/blob/master/docs/quickstart.rst#modifying">tomlkit.dumps</a>.</p></li>
@@ -158,14 +161,14 @@ using <a class="reference external" href="https://github.com/pre-commit/identify
 </ul>
 </section>
 <section id="ini">
-<h2>INI<a class="headerlink" href="#ini" title="Permalink to this headline"></a></h2>
+<h2>INI<a class="headerlink" href="#ini" title="Permalink to this heading"></a></h2>
 <ul class="simple">
 <li><p>Loader: <a class="reference internal" href="../dev/reference/project_config.serializers.ini.html#project_config.serializers.ini.loads" title="project_config.serializers.ini.loads"><code class="xref py py-func docutils literal notranslate"><span class="pre">project_config.serializers.ini.loads()</span></code></a>.</p></li>
 <li><p>Dumper: <a class="reference internal" href="../dev/reference/project_config.serializers.ini.html#project_config.serializers.ini.dumps" title="project_config.serializers.ini.dumps"><code class="xref py py-func docutils literal notranslate"><span class="pre">project_config.serializers.ini.dumps()</span></code></a>.</p></li>
 </ul>
 </section>
 <section id="editorconfig">
-<h2>Editorconfig<a class="headerlink" href="#editorconfig" title="Permalink to this headline"></a></h2>
+<h2>Editorconfig<a class="headerlink" href="#editorconfig" title="Permalink to this heading"></a></h2>
 <ul class="simple">
 <li><p>Loader: <a class="reference internal" href="../dev/reference/project_config.serializers.editorconfig.html#project_config.serializers.editorconfig.loads" title="project_config.serializers.editorconfig.loads"><code class="xref py py-func docutils literal notranslate"><span class="pre">project_config.serializers.editorconfig.loads()</span></code></a>.</p></li>
 <li><p>Dumper: <a class="reference internal" href="../dev/reference/project_config.serializers.editorconfig.html#project_config.serializers.editorconfig.dumps" title="project_config.serializers.editorconfig.dumps"><code class="xref py py-func docutils literal notranslate"><span class="pre">project_config.serializers.editorconfig.dumps()</span></code></a>.</p></li>
@@ -197,7 +200,7 @@ using <a class="reference external" href="https://github.com/pre-commit/identify
 </div></div>
 </section>
 <section id="python">
-<h2>Python<a class="headerlink" href="#python" title="Permalink to this headline"></a></h2>
+<h2>Python<a class="headerlink" href="#python" title="Permalink to this heading"></a></h2>
 <p>For Python files, the global namespace is exposed after executing the file in
 a Python dictionary, including the key <code class="docutils literal notranslate"><span class="pre">__file__</span></code> with the script file path.</p>
 <ul class="simple">
@@ -222,7 +225,7 @@ of scripts only when the tool is running.</p>
 </div>
 </section>
 <section id="text">
-<h2>Text<a class="headerlink" href="#text" title="Permalink to this headline"></a></h2>
+<h2>Text<a class="headerlink" href="#text" title="Permalink to this heading"></a></h2>
 <p>Fallback for all serialized files. Just converts the string to an array
 of lines, excluding line endings.</p>
 <ul class="simple">
@@ -230,7 +233,7 @@ of lines, excluding line endings.</p>
 <li><p>Dumper: <a class="reference internal" href="../dev/reference/project_config.serializers.text.html#project_config.serializers.text.dumps" title="project_config.serializers.text.dumps"><code class="xref py py-func docutils literal notranslate"><span class="pre">project_config.serializers.text.dumps()</span></code></a>.</p></li>
 </ul>
 <div class="sphinx-tabs docutils container">
-<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-2-2-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-2-2-0" name="2-0" role="tab" tabindex="0">foo.txt</button><button aria-controls="panel-2-2-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-2-2-1" name="2-1" role="tab" tabindex="-1">object</button></div><div aria-labelledby="tab-2-2-0" class="sphinx-tabs-panel" id="panel-2-2-0" name="2-0" role="tabpanel" tabindex="0"><div class="highlight-text notranslate"><div class="highlight"><pre><span></span>bar
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-2-2-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-2-2-0" name="2-0" role="tab" tabindex="0">.gitignore</button><button aria-controls="panel-2-2-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-2-2-1" name="2-1" role="tab" tabindex="-1">object</button></div><div aria-labelledby="tab-2-2-0" class="sphinx-tabs-panel" id="panel-2-2-0" name="2-0" role="tabpanel" tabindex="0"><div class="highlight-text notranslate"><div class="highlight"><pre><span></span>bar
 baz
 </pre></div>
 </div>
@@ -245,14 +248,14 @@ baz
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="rationale.html" class="btn btn-neutral float-left" title="Rationale" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="fetching.html" class="btn btn-neutral float-left" title="Fetching" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="../dev/plugins.html" class="btn btn-neutral float-right" title="Writing third party plugins" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2022, Álvaro Mondéjar Rubio &lt;mondejar1994@gmail.com&gt;.</p>
+    <p>&#169; Copyright 2022-2024, Álvaro Mondéjar Rubio &lt;mondejar1994@gmail.com&gt;.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

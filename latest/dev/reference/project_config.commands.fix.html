@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.commands.fix module &mdash; project-config 0.9.2 documentation</title>
+  <title>project_config.commands.fix module &mdash; project-config 0.9.6 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/tabs.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/bolditalic.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/override-styles.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -18,7 +17,9 @@
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -66,6 +67,7 @@
 <p class="caption" role="heading"><span class="caption-text">In depth</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../in-depth/rationale.html">Rationale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../in-depth/fetching.html">Fetching</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../in-depth/serialization.html">Objects serialization</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">For developers</span></p>
@@ -76,6 +78,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">Reference</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="project_config.html">project_config package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="project_config.html#project_config.ActionsContext"><code class="docutils literal notranslate"><span class="pre">ActionsContext</span></code></a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="project_config.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l4 current"><a class="reference internal" href="project_config.commands.html">project_config.commands package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="project_config.config.html">project_config.config package</a></li>
@@ -122,7 +125,7 @@
            <div itemprop="articleBody">
              
   <section id="module-project_config.commands.fix">
-<span id="project-config-commands-fix-module"></span><h1>project_config.commands.fix module<a class="headerlink" href="#module-project_config.commands.fix" title="Permalink to this headline"></a></h1>
+<span id="project-config-commands-fix-module"></span><h1>project_config.commands.fix module<a class="headerlink" href="#module-project_config.commands.fix" title="Permalink to this heading"></a></h1>
 <p>project-config fix command.</p>
 </section>
 
@@ -137,7 +140,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2022, Álvaro Mondéjar Rubio &lt;mondejar1994@gmail.com&gt;.</p>
+    <p>&#169; Copyright 2022-2024, Álvaro Mondéjar Rubio &lt;mondejar1994@gmail.com&gt;.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

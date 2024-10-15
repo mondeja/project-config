@@ -3,11 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Index &mdash; project-config 0.9.2 documentation</title>
+  <title>Index &mdash; project-config 0.9.6 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/custom.css" type="text/css" />
-      <link rel="stylesheet" href="_static/tabs.css" type="text/css" />
       <link rel="stylesheet" href="_static/bolditalic.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/override-styles.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -17,8 +16,9 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
-        <script src="_static/tabs.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="#" />
     <link rel="search" title="Search" href="search.html" /> 
@@ -64,6 +64,7 @@
 <p class="caption" role="heading"><span class="caption-text">In depth</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="in-depth/rationale.html">Rationale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="in-depth/fetching.html">Fetching</a></li>
 <li class="toctree-l1"><a class="reference internal" href="in-depth/serialization.html">Objects serialization</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">For developers</span></p>
@@ -146,6 +147,10 @@
 </li>
         <li><a href="dev/reference/project_config.reporters.default.html#project_config.reporters.default.DefaultReporter._abc_impl">(project_config.reporters.default.DefaultReporter attribute)</a>
 </li>
+        <li><a href="dev/reference/project_config.reporters.ghf_markdown.html#project_config.reporters.ghf_markdown.GithubFlavoredMarkdownColorReporter._abc_impl">(project_config.reporters.ghf_markdown.GithubFlavoredMarkdownColorReporter attribute)</a>
+</li>
+        <li><a href="dev/reference/project_config.reporters.ghf_markdown.html#project_config.reporters.ghf_markdown.GithubFlavoredMarkdownReporter._abc_impl">(project_config.reporters.ghf_markdown.GithubFlavoredMarkdownReporter attribute)</a>
+</li>
         <li><a href="dev/reference/project_config.reporters.json_.html#project_config.reporters.json_.JsonColorReporter._abc_impl">(project_config.reporters.json_.JsonColorReporter attribute)</a>
 </li>
         <li><a href="dev/reference/project_config.reporters.json_.html#project_config.reporters.json_.JsonReporter._abc_impl">(project_config.reporters.json_.JsonReporter attribute)</a>
@@ -167,7 +172,7 @@
 </li>
       <li><a href="dev/reference/project_config.plugins.html#project_config.plugins.Plugins._add_plugin_to_cache">_add_plugin_to_cache() (project_config.plugins.Plugins method)</a>
 </li>
-      <li><a href="dev/reference/project_config.fetchers.github.html#project_config.fetchers.github._build_raw_githubusercontent_url">_build_raw_githubusercontent_url() (in module project_config.fetchers.github)</a>
+      <li><a href="dev/reference/project_config.fetchers.github.html#project_config.fetchers.github._build_github_api_url">_build_github_api_url() (in module project_config.fetchers.github)</a>
 </li>
       <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath._build_reverse_jmes_type_object">_build_reverse_jmes_type_object() (in module project_config.utils.jmespath)</a>
 </li>
@@ -269,12 +274,12 @@
 </li>
       <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_isspace">_func_isspace() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_istitle">_func_istitle() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
 </li>
       <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_isupper">_func_isupper() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_listdir">_func_listdir() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
 </li>
       <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_ljust">_func_ljust() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
@@ -355,17 +360,13 @@
 </li>
       <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions._func_zfill">_func_zfill() (project_config.utils.jmespath.JMESPathProjectConfigFunctions method)</a>
 </li>
-      <li><a href="dev/reference/project_config.fetchers.github.html#project_config.fetchers.github._get_default_branch_from_git_repo">_get_default_branch_from_git_repo() (in module project_config.fetchers.github)</a>
-</li>
-      <li><a href="dev/reference/project_config.fetchers.github.html#project_config.fetchers.github._get_default_branch_from_repo_branches_html">_get_default_branch_from_repo_branches_html() (in module project_config.fetchers.github)</a>
-</li>
-      <li><a href="dev/reference/project_config.fetchers.github.html#project_config.fetchers.github._get_default_branch_from_repo_github_api">_get_default_branch_from_repo_github_api() (in module project_config.fetchers.github)</a>
-</li>
       <li><a href="dev/reference/project_config.utils.http.html#project_config.utils.http._GET_impl">_GET_impl() (in module project_config.utils.http)</a>
 </li>
       <li><a href="dev/reference/project_config.fetchers.html#project_config.fetchers._get_scheme_from_urlparts">_get_scheme_from_urlparts() (in module project_config.fetchers)</a>
 </li>
       <li><a href="dev/reference/project_config.serializers.html#project_config.serializers._get_serializer_function">_get_serializer_function() (in module project_config.serializers)</a>
+</li>
+      <li><a href="dev/reference/project_config.fetchers.github.html#project_config.fetchers.github._github_headers">_github_headers() (in module project_config.fetchers.github)</a>
 </li>
       <li><a href="dev/reference/project_config.serializers.html#project_config.serializers._identify_serializer">_identify_serializer() (in module project_config.serializers)</a>
 </li>
@@ -421,6 +422,8 @@
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="dev/reference/project_config.fetchers.github.html#project_config.fetchers.github.AcceptHeader">AcceptHeader (class in project_config.fetchers.github)</a>
+</li>
       <li>
     action()
 
@@ -431,7 +434,7 @@
       <li><a href="dev/reference/project_config.html#project_config.ActionsContext">ActionsContext (class in project_config)</a>
 
       <ul>
-        <li><a href="dev/reference/project_config.types.html#project_config.types.ActionsContext">(class in project_config.types)</a>
+        <li><a href="dev/reference/project_config.types_.html#project_config.types_.ActionsContext">(class in project_config.types_)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -652,10 +655,10 @@
         <li><a href="dev/reference/project_config.cache.html#project_config.cache.Cache.clean">(project_config.cache.Cache static method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="dev/reference/project_config.reporters.base.html#project_config.reporters.base.colored_color_exists">colored_color_exists() (in module project_config.reporters.base)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.compile_JMESPath_expression">compile_JMESPath_expression() (in module project_config.utils.jmespath)</a>
 </li>
       <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.compile_JMESPath_expression_or_error">compile_JMESPath_expression_or_error() (in module project_config.utils.jmespath)</a>
@@ -667,6 +670,10 @@
       <li><a href="dev/reference/project_config.commands.check.html#project_config.commands.check.ConditionalsFalseResult">ConditionalsFalseResult</a>
 </li>
       <li><a href="dev/reference/project_config.config.html#project_config.config.Config">Config (class in project_config.config)</a>
+</li>
+      <li><a href="dev/reference/project_config.reporters.ghf_markdown.html#project_config.reporters.ghf_markdown.config_docs_markdown_link">config_docs_markdown_link() (in module project_config.reporters.ghf_markdown)</a>
+</li>
+      <li><a href="dev/reference/project_config.reporters.ghf_markdown.html#project_config.reporters.ghf_markdown.config_docs_url_prefix">config_docs_url_prefix() (in module project_config.reporters.ghf_markdown)</a>
 </li>
       <li><a href="dev/reference/project_config.config.exceptions.html#project_config.config.exceptions.ConfigurationFilesNotFound">ConfigurationFilesNotFound</a>
 </li>
@@ -717,7 +724,7 @@
 </li>
         <li><a href="dev/reference/project_config.serializers.ini.html#project_config.serializers.ini.dumps">(in module project_config.serializers.ini)</a>
 </li>
-        <li><a href="dev/reference/project_config.serializers.json_.html#project_config.serializers.json_.dumps">(in module project_config.serializers.json_)</a>
+        <li><a href="dev/reference/project_config.serializers.json.html#project_config.serializers.json.dumps">(in module project_config.serializers.json)</a>
 </li>
         <li><a href="dev/reference/project_config.serializers.python.html#project_config.serializers.python.dumps">(in module project_config.serializers.python)</a>
 </li>
@@ -796,7 +803,7 @@
       <li><a href="dev/reference/project_config.html#project_config.ActionsContext.files">files (project_config.ActionsContext attribute)</a>
 
       <ul>
-        <li><a href="dev/reference/project_config.types.html#project_config.types.ActionsContext.files">(project_config.types.ActionsContext attribute)</a>
+        <li><a href="dev/reference/project_config.types_.html#project_config.types_.ActionsContext.files">(project_config.types_.ActionsContext attribute)</a>
 </li>
       </ul></li>
       <li>
@@ -809,7 +816,7 @@
       <li><a href="dev/reference/project_config.html#project_config.ActionsContext.fix">fix (project_config.ActionsContext attribute)</a>
 
       <ul>
-        <li><a href="dev/reference/project_config.types.html#project_config.types.ActionsContext.fix">(project_config.types.ActionsContext attribute)</a>
+        <li><a href="dev/reference/project_config.types_.html#project_config.types_.ActionsContext.fix">(project_config.types_.ActionsContext attribute)</a>
 </li>
       </ul></li>
       <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.fix_tree_serialized_file_by_jmespath">fix_tree_serialized_file_by_jmespath() (in module project_config.utils.jmespath)</a>
@@ -919,6 +926,8 @@
       <ul>
         <li><a href="dev/reference/project_config.reporters.default.html#project_config.reporters.default.BaseDefaultReporter.generate_data_report">(project_config.reporters.default.BaseDefaultReporter method)</a>
 </li>
+        <li><a href="dev/reference/project_config.reporters.ghf_markdown.html#project_config.reporters.ghf_markdown.GithubFlavoredMarkdownReporter.generate_data_report">(project_config.reporters.ghf_markdown.GithubFlavoredMarkdownReporter method)</a>
+</li>
         <li><a href="dev/reference/project_config.reporters.json_.html#project_config.reporters.json_.JsonColorReporter.generate_data_report">(project_config.reporters.json_.JsonColorReporter method)</a>
 </li>
         <li><a href="dev/reference/project_config.reporters.json_.html#project_config.reporters.json_.JsonReporter.generate_data_report">(project_config.reporters.json_.JsonReporter method)</a>
@@ -936,6 +945,8 @@
 
       <ul>
         <li><a href="dev/reference/project_config.reporters.default.html#project_config.reporters.default.BaseDefaultReporter.generate_errors_report">(project_config.reporters.default.BaseDefaultReporter method)</a>
+</li>
+        <li><a href="dev/reference/project_config.reporters.ghf_markdown.html#project_config.reporters.ghf_markdown.GithubFlavoredMarkdownReporter.generate_errors_report">(project_config.reporters.ghf_markdown.GithubFlavoredMarkdownReporter method)</a>
 </li>
         <li><a href="dev/reference/project_config.reporters.json_.html#project_config.reporters.json_.JsonColorReporter.generate_errors_report">(project_config.reporters.json_.JsonColorReporter method)</a>
 </li>
@@ -984,6 +995,10 @@
         <li><a href="reference/plugins.html#gh_tags">built-in function</a>
 </li>
       </ul></li>
+      <li><a href="dev/reference/project_config.reporters.ghf_markdown.html#project_config.reporters.ghf_markdown.GithubFlavoredMarkdownColorReporter">GithubFlavoredMarkdownColorReporter (class in project_config.reporters.ghf_markdown)</a>
+</li>
+      <li><a href="dev/reference/project_config.reporters.ghf_markdown.html#project_config.reporters.ghf_markdown.GithubFlavoredMarkdownReporter">GithubFlavoredMarkdownReporter (class in project_config.reporters.ghf_markdown)</a>
+</li>
       <li>
     glob()
 
@@ -1172,6 +1187,8 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="dev/reference/project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathPlugin.JMESPathsMatch">JMESPathsMatch() (project_config.plugins.jmespath.JMESPathPlugin static method)</a>
 </li>
+      <li><a href="dev/reference/project_config.fetchers.github.html#project_config.fetchers.github.AcceptHeader.JSON">JSON (project_config.fetchers.github.AcceptHeader attribute)</a>
+</li>
       <li><a href="dev/reference/project_config.reporters.json_.html#project_config.reporters.json_.JsonColorReporter">JsonColorReporter (class in project_config.reporters.json_)</a>
 </li>
       <li><a href="dev/reference/project_config.reporters.json_.html#project_config.reporters.json_.JsonReporter">JsonReporter (class in project_config.reporters.json_)</a>
@@ -1237,6 +1254,8 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="dev/reference/project_config.__main__.html#project_config.__main__.main">main() (in module project_config.__main__)</a>
+</li>
+      <li><a href="dev/reference/project_config.reporters.ghf_markdown.html#project_config.reporters.ghf_markdown.maybe_write_report_to_github_summary">maybe_write_report_to_github_summary() (in module project_config.reporters.ghf_markdown)</a>
 </li>
       <li><a href="dev/reference/project_config.exceptions.html#project_config.exceptions.ProjectConfigException.message">message (project_config.exceptions.ProjectConfigException attribute)</a>
 </li>
@@ -1307,6 +1326,8 @@
 </li>
         <li><a href="dev/reference/project_config.reporters.default.html#module-project_config.reporters.default">project_config.reporters.default</a>
 </li>
+        <li><a href="dev/reference/project_config.reporters.ghf_markdown.html#module-project_config.reporters.ghf_markdown">project_config.reporters.ghf_markdown</a>
+</li>
         <li><a href="dev/reference/project_config.reporters.json_.html#module-project_config.reporters.json_">project_config.reporters.json_</a>
 </li>
         <li><a href="dev/reference/project_config.reporters.table.html#module-project_config.reporters.table">project_config.reporters.table</a>
@@ -1325,7 +1346,7 @@
 </li>
         <li><a href="dev/reference/project_config.serializers.ini.html#module-project_config.serializers.ini">project_config.serializers.ini</a>
 </li>
-        <li><a href="dev/reference/project_config.serializers.json_.html#module-project_config.serializers.json_">project_config.serializers.json_</a>
+        <li><a href="dev/reference/project_config.serializers.json.html#module-project_config.serializers.json">project_config.serializers.json</a>
 </li>
         <li><a href="dev/reference/project_config.serializers.python.html#module-project_config.serializers.python">project_config.serializers.python</a>
 </li>
@@ -1345,7 +1366,7 @@
 </li>
         <li><a href="dev/reference/project_config.tree.html#module-project_config.tree">project_config.tree</a>
 </li>
-        <li><a href="dev/reference/project_config.types.html#module-project_config.types">project_config.types</a>
+        <li><a href="dev/reference/project_config.types_.html#module-project_config.types_">project_config.types_</a>
 </li>
         <li><a href="dev/reference/project_config.utils.html#module-project_config.utils">project_config.utils</a>
 </li>
@@ -1402,6 +1423,8 @@
       <li><a href="dev/reference/project_config.plugins.html#project_config.plugins.Plugins.plugin_action_names">plugin_action_names (project_config.plugins.Plugins property)</a>
 </li>
       <li><a href="dev/reference/project_config.plugins.html#project_config.plugins.Plugins.plugin_names">plugin_names (project_config.plugins.Plugins property)</a>
+</li>
+      <li><a href="dev/reference/project_config.reporters.ghf_markdown.html#project_config.reporters.ghf_markdown.plugin_or_verb_docs_url_prefix">plugin_or_verb_docs_url_prefix() (in module project_config.reporters.ghf_markdown)</a>
 </li>
       <li><a href="dev/reference/project_config.plugins.html#project_config.plugins.Plugins">Plugins (class in project_config.plugins)</a>
 </li>
@@ -1610,6 +1633,13 @@
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li>
+    project_config.reporters.ghf_markdown
+
+      <ul>
+        <li><a href="dev/reference/project_config.reporters.ghf_markdown.html#module-project_config.reporters.ghf_markdown">module</a>
+</li>
+      </ul></li>
+      <li>
     project_config.reporters.json_
 
       <ul>
@@ -1673,10 +1703,10 @@
 </li>
       </ul></li>
       <li>
-    project_config.serializers.json_
+    project_config.serializers.json
 
       <ul>
-        <li><a href="dev/reference/project_config.serializers.json_.html#module-project_config.serializers.json_">module</a>
+        <li><a href="dev/reference/project_config.serializers.json.html#module-project_config.serializers.json">module</a>
 </li>
       </ul></li>
       <li>
@@ -1743,10 +1773,10 @@
 </li>
       </ul></li>
       <li>
-    project_config.types
+    project_config.types_
 
       <ul>
-        <li><a href="dev/reference/project_config.types.html#module-project_config.types">module</a>
+        <li><a href="dev/reference/project_config.types_.html#module-project_config.types_">module</a>
 </li>
       </ul></li>
       <li>
@@ -1826,7 +1856,11 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseReporter.raise_errors">raise_errors() (project_config.reporters.base.BaseReporter method)</a>
+
+      <ul>
+        <li><a href="dev/reference/project_config.reporters.ghf_markdown.html#project_config.reporters.ghf_markdown.GithubFlavoredMarkdownReporter.raise_errors">(project_config.reporters.ghf_markdown.GithubFlavoredMarkdownReporter method)</a>
 </li>
+      </ul></li>
       <li>
     range()
 
@@ -2032,10 +2066,10 @@
         <li><a href="reference/plugins.html#shlex_split">built-in function</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="dev/reference/project_config.commands.show.html#project_config.commands.show.show">show() (in module project_config.commands.show)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.smart_fixer_by_expected_value">smart_fixer_by_expected_value() (in module project_config.utils.jmespath)</a>
 </li>
       <li><a href="dev/reference/project_config.serializers.contrib.pre_commit.html#project_config.serializers.contrib.pre_commit.sort_pre_commit_config">sort_pre_commit_config() (in module project_config.serializers.contrib.pre_commit)</a>
@@ -2069,6 +2103,8 @@
 </li>
       </ul></li>
       <li><a href="dev/reference/project_config.config.style.html#project_config.config.style.Style">Style (class in project_config.config.style)</a>
+</li>
+      <li><a href="dev/reference/project_config.reporters.ghf_markdown.html#project_config.reporters.ghf_markdown.styling_docs_url_prefix">styling_docs_url_prefix() (in module project_config.reporters.ghf_markdown)</a>
 </li>
       <li><a href="dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseReporter.success">success (project_config.reporters.base.BaseReporter property)</a>
 </li>
@@ -2205,7 +2241,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2022, Álvaro Mondéjar Rubio &lt;mondejar1994@gmail.com&gt;.</p>
+    <p>&#169; Copyright 2022-2024, Álvaro Mondéjar Rubio &lt;mondejar1994@gmail.com&gt;.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

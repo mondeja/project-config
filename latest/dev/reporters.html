@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Writing third party reporters &mdash; project-config 0.9.2 documentation</title>
+  <title>Writing third party reporters &mdash; project-config 0.9.6 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/tabs.css" type="text/css" />
       <link rel="stylesheet" href="../_static/bolditalic.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/tabs.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/override-styles.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
@@ -18,7 +18,9 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
         <script src="../_static/tabs.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -67,6 +69,7 @@
 <p class="caption" role="heading"><span class="caption-text">In depth</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../in-depth/rationale.html">Rationale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../in-depth/fetching.html">Fetching</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../in-depth/serialization.html">Objects serialization</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">For developers</span></p>
@@ -107,7 +110,7 @@
            <div itemprop="articleBody">
              
   <section id="writing-third-party-reporters">
-<h1>Writing third party reporters<a class="headerlink" href="#writing-third-party-reporters" title="Permalink to this headline"></a></h1>
+<h1>Writing third party reporters<a class="headerlink" href="#writing-third-party-reporters" title="Permalink to this heading"></a></h1>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <p><a class="reference internal" href="../reference/cli.html#reporting"><span class="std std-ref">Reporting</span></a></p>
@@ -116,12 +119,12 @@
 looking for modules in the entrypoints group <code class="docutils literal notranslate"><span class="pre">project_config.reporters</span></code>,
 so the first thing is to add the entrypoint to the group:</p>
 <div class="sphinx-tabs docutils container">
-<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">hatch</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">poetry</button><button aria-controls="panel-0-0-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-2" name="0-2" role="tab" tabindex="-1">setup.cfg</button><button aria-controls="panel-0-0-3" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-3" name="0-3" role="tab" tabindex="-1">setup.py</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[project.&quot;entry-points&quot;.&quot;project_config.plugins&quot;]</span>
-<span class="n">my_reporter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;package.subpackage.my_reporter_module&quot;</span>
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">hatch</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">poetry</button><button aria-controls="panel-0-0-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-2" name="0-2" role="tab" tabindex="-1">setup.cfg</button><button aria-controls="panel-0-0-3" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-3" name="0-3" role="tab" tabindex="-1">setup.py</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[project.</span><span class="s2">&quot;entry-points&quot;</span><span class="k">.</span><span class="s2">&quot;project_config.plugins&quot;</span><span class="k">]</span>
+<span class="n">my_reporter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;package.subpackage.my_reporter_module&quot;</span>
 </pre></div>
 </div>
-</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[tool.poetry.plugins.&quot;project_config.reporters&quot;]</span>
-<span class="n">my_reporter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;package.subpackage.my_reporter_module&quot;</span>
+</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[tool.poetry.plugins.</span><span class="s2">&quot;project_config.reporters&quot;</span><span class="k">]</span>
+<span class="n">my_reporter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;package.subpackage.my_reporter_module&quot;</span>
 </pre></div>
 </div>
 </div><div aria-labelledby="tab-0-0-2" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-2" name="0-2" role="tabpanel" tabindex="0"><div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[options.entry_points]</span>
@@ -141,7 +144,7 @@ so the first thing is to add the entrypoint to the group:</p>
 is the name of the reporter that you must pass in the CLI option
 <a class="reference internal" href="../reference/cli.html#project-config---reporter"><span class="std std-ref">project-config --reporter</span></a> to use it.</p>
 <section id="reporters-module">
-<h2>Reporters module<a class="headerlink" href="#reporters-module" title="Permalink to this headline"></a></h2>
+<h2>Reporters module<a class="headerlink" href="#reporters-module" title="Permalink to this heading"></a></h2>
 <p>A valid reporters module is made of two public classes which inherit from
 <a class="reference internal" href="reference/project_config.reporters.base.html#project_config.reporters.base.BaseReporter" title="project_config.reporters.base.BaseReporter"><code class="xref py py-class docutils literal notranslate"><span class="pre">project_config.reporters.base.BaseReporter</span></code></a>, one with <code class="docutils literal notranslate"><span class="pre">ColorReporter</span></code>
 (the colorized version of the reporter) as part of the name of the class
@@ -167,7 +170,7 @@ parts of the output.</p>
 and the <a class="reference internal" href="reference/project_config.reporters.base.html#module-project_config.reporters.base" title="project_config.reporters.base"><code class="xref py py-mod docutils literal notranslate"><span class="pre">project_config.reporters.base</span></code></a> module for more information.</p>
 </section>
 <section id="testing-reporters">
-<h2>Testing reporters<a class="headerlink" href="#testing-reporters" title="Permalink to this headline"></a></h2>
+<h2>Testing reporters<a class="headerlink" href="#testing-reporters" title="Permalink to this heading"></a></h2>
 <p><strong>project-config</strong> comes with built-in <a class="reference external" href="https://docs.pytest.org/en/latest/explanation/fixtures.html">pytest fixtures</a> to
 easily test reports generated from reporters. See
 <a class="reference internal" href="reference/project_config.tests.pytest_plugin.plugin.html#module-project_config.tests.pytest_plugin.plugin" title="project_config.tests.pytest_plugin.plugin"><code class="xref py py-mod docutils literal notranslate"><span class="pre">project_config.tests.pytest_plugin.plugin</span></code></a>.</p>
@@ -185,7 +188,7 @@ easily test reports generated from reporters. See
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2022, Álvaro Mondéjar Rubio &lt;mondejar1994@gmail.com&gt;.</p>
+    <p>&#169; Copyright 2022-2024, Álvaro Mondéjar Rubio &lt;mondejar1994@gmail.com&gt;.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

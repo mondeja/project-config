@@ -221,13 +221,12 @@ The version defined in ``__version__`` inside a Python script must match the met
            ["project.version", ["script.py", "__version__"], "op([0], '==', [1])", true],
          ]
 
-   .. tab:: script.py
+   .. tab:: pyproject.toml
 
-      .. code-block:: python
+      .. code-block:: toml
 
-         """Simple script."""
-
-         __version__ = "1.0.0"
+         [project]
+         version = "1.0.0"
 
    .. tab:: .project-config.toml
 
@@ -235,12 +234,13 @@ The version defined in ``__version__`` inside a Python script must match the met
 
          style = "style.toml"
 
-   .. tab:: pyproject.toml
+   .. tab:: script.py
 
-      .. code-block:: toml
+      .. code-block:: python
 
-         [project]
-         version = "1.0.0"
+         """Simple script."""
+
+         __version__ = "1.0.0"
 
 JMESPath against online sources
 ===============================
@@ -261,7 +261,7 @@ Check that the ``license`` field of *package.json* file is defined with a valid 
                  [
                    "license",
                    [
-                     "gh://spdx/license-list-data@v3.22/json/licenses.json",
+                     "gh://spdx/license-list-data@v3.25.0/json/licenses.json",
                      "licenses[?isOsiApproved] | [?!isDeprecatedLicenseId].licenseId",
                    ],
                    "contains([1], [0])",
@@ -341,12 +341,6 @@ Check that the section ``[foo]`` of a TOML file is placed before the section ``[
            ],
          }
 
-   .. tab:: .project-config.toml
-
-      .. code-block:: toml
-
-         style = "style.json5"
-
    .. tab:: pyproject.toml
 
       .. code-block:: toml
@@ -356,6 +350,12 @@ Check that the section ``[foo]`` of a TOML file is placed before the section ``[
 
          [bar]
          name = "bar"
+
+   .. tab:: .project-config.toml
+
+      .. code-block:: toml
+
+         style = "style.json5"
 
 Editing a .gitignore file
 =========================
@@ -534,7 +534,7 @@ If you run the next example using ``project-config fix`` subcommand without crea
 Setting hooks in .pre-commit-config.yaml
 ========================================
 
-Set a pre-commit hook for ``editorconfig-checker`` inside `.pre-commit-config.yaml` with manual fixes.
+Set a pre-commit hook for ``editorconfig-checker`` inside `.pre-commit-config.yaml`.
 
 .. tabs::
 

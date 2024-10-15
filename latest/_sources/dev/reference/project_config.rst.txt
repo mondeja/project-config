@@ -34,4 +34,4 @@ Submodules
    project_config.constants
    project_config.exceptions
    project_config.tree
-   project_config.types
+   project_config.types_

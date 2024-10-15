@@ -3,11 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.utils.jmespath &mdash; project-config 0.9.2 documentation</title>
+  <title>project_config.utils.jmespath &mdash; project-config 0.9.6 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/tabs.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/bolditalic.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/override-styles.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -17,8 +16,9 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/tabs.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -64,6 +64,7 @@
 <p class="caption" role="heading"><span class="caption-text">In depth</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../in-depth/rationale.html">Rationale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../in-depth/fetching.html">Fetching</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../in-depth/serialization.html">Objects serialization</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">For developers</span></p>
@@ -161,9 +162,9 @@
             <span class="n">maybe_merge_strategy_name</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">maybe_merge_strategy_instance</span><span class="p">,</span> <span class="n">deepmerge</span><span class="o">.</span><span class="n">Merger</span><span class="p">):</span>
-            <span class="n">BUILTIN_DEEPMERGE_STRATEGIES</span><span class="p">[</span>
-                <span class="n">maybe_merge_strategy_name</span>
-            <span class="p">]</span> <span class="o">=</span> <span class="n">maybe_merge_strategy_instance</span>
+            <span class="n">BUILTIN_DEEPMERGE_STRATEGIES</span><span class="p">[</span><span class="n">maybe_merge_strategy_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">maybe_merge_strategy_instance</span>
+            <span class="p">)</span>
 
 <span class="n">OPERATORS_FUNCTIONS</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;&lt;&quot;</span><span class="p">:</span> <span class="n">operator</span><span class="o">.</span><span class="n">lt</span><span class="p">,</span>
@@ -445,15 +446,15 @@
                 <span class="n">operators</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">current_op</span><span class="p">,</span> <span class="n">op_or_value</span><span class="p">))</span>
 
         <span class="n">partial_result</span> <span class="o">=</span> <span class="n">a</span>
-        <span class="k">for</span> <span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">operator</span><span class="p">),</span> <span class="n">b_</span> <span class="ow">in</span> <span class="n">operators</span><span class="p">:</span>  <span class="c1"># type: ignore</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">operator_</span><span class="p">),</span> <span class="n">b_</span> <span class="ow">in</span> <span class="n">operators</span><span class="p">:</span>  <span class="c1"># type: ignore</span>
             <span class="k">if</span> <span class="p">(</span>
                 <span class="nb">isinstance</span><span class="p">(</span><span class="n">b_</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
                 <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">partial_result</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
-                <span class="ow">and</span> <span class="n">operator</span> <span class="ow">in</span> <span class="n">SET_OPERATORS</span>
+                <span class="ow">and</span> <span class="n">operator_</span> <span class="ow">in</span> <span class="n">SET_OPERATORS</span>
             <span class="p">):</span>
                 <span class="c1"># both values are lists and the operator is only valid for sets,</span>
                 <span class="c1"># so convert both values to set applying the operator</span>
-                <span class="k">if</span> <span class="n">operator</span> <span class="ow">in</span> <span class="n">OPERATORS_THAT_RETURN_SET</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">operator_</span> <span class="ow">in</span> <span class="n">OPERATORS_THAT_RETURN_SET</span><span class="p">:</span>
                     <span class="n">partial_result</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">func</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">partial_result</span><span class="p">),</span> <span class="nb">set</span><span class="p">(</span><span class="n">b_</span><span class="p">)))</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">partial_result</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">partial_result</span><span class="p">),</span> <span class="nb">set</span><span class="p">(</span><span class="n">b_</span><span class="p">))</span>
@@ -1290,7 +1291,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2022, Álvaro Mondéjar Rubio &lt;mondejar1994@gmail.com&gt;.</p>
+    <p>&#169; Copyright 2022-2024, Álvaro Mondéjar Rubio &lt;mondejar1994@gmail.com&gt;.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

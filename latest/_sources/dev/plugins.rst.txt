@@ -76,19 +76,19 @@ methods. For example:
        ) -> Results:
            ...
 
-.. function:: action(value: typing.Any, rule: project_config.types.Rule, context: project_config.types.ActionsContext) -> project_config.types.Results
+.. function:: action(value: typing.Any, rule: project_config.types_.Rule, context: project_config.types_.ActionsContext) -> project_config.types_.Results
 
    Action definition.
 
    :param value: Value that takes the action. It could be of any type, it depends to the action.
    :type value: typing.Any
    :param rule: Complete rule dictionary in which the action is being executed.
-   :type rule: :py:class:`project_config.types.Rule`
+   :type rule: :py:class:`project_config.types_.Rule`
    :param context: Context of the actions. It has a property ``fix`` which is used to determine if the user has enabled the `fix` mode in the current execution and other property ``files`` which stores the content of the ``files`` array of the rule.
-   :type context: :py:class:`project_config.types.ActionsContext`
+   :type context: :py:class:`project_config.types_.ActionsContext`
 
    :yield: Checking results.
-   :rtype: :py:class:`project_config.types.Results`
+   :rtype: :py:class:`project_config.types_.Results`
 
 Results
 -------
@@ -96,7 +96,7 @@ Results
 Each action must yield results, which are tuples of two items,
 defined next as `result type` - `result value`:
 
-* ``Error`` - Checking error, a dictionary (optionally but recommendably typed as :py:class:`project_config.types.ErrorDict`) which must contains the required keys ``message`` (error message shown in the report) and ``definition`` (definition in which the error has been thrown) and an optional key ``file`` (file for which the error has been thrown). If raised from conditionals their behaviour is the same that raising an ``InterruptingError``.
+* ``Error`` - Checking error, a dictionary (optionally but recommendably typed as :py:class:`project_config.types_.ErrorDict`) which must contains the required keys ``message`` (error message shown in the report) and ``definition`` (definition in which the error has been thrown) and an optional key ``file`` (file for which the error has been thrown). If raised from conditionals their behaviour is the same that raising an ``InterruptingError``.
 * ``InterruptingError`` - The same as a checking error, but this type of error will stop the execution of the subsequent rules during the checking. Useful if the user has passed some unexpected value that could lead to an invalid context in some later rule.
 
 Additionally, conditionals can yield result values, which

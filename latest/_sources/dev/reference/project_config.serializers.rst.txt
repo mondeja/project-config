@@ -23,7 +23,7 @@ Submodules
 
    project_config.serializers.editorconfig
    project_config.serializers.ini
-   project_config.serializers.json_
+   project_config.serializers.json
    project_config.serializers.python
    project_config.serializers.text
    project_config.serializers.toml

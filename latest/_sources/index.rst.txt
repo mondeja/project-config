@@ -29,6 +29,7 @@ multiple projects.
    :caption: In depth
 
    in-depth/rationale
+   in-depth/fetching
    in-depth/serialization
 
 .. toctree::

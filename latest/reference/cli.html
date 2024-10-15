@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project-config CLI &mdash; project-config 0.9.2 documentation</title>
+  <title>project-config CLI &mdash; project-config 0.9.6 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/tabs.css" type="text/css" />
       <link rel="stylesheet" href="../_static/bolditalic.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/override-styles.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -18,7 +17,9 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -70,6 +71,7 @@
 <p class="caption" role="heading"><span class="caption-text">In depth</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../in-depth/rationale.html">Rationale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../in-depth/fetching.html">Fetching</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../in-depth/serialization.html">Objects serialization</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">For developers</span></p>
@@ -106,7 +108,7 @@
            <div itemprop="articleBody">
              
   <section id="project-config-cli">
-<h1>project-config CLI<a class="headerlink" href="#project-config-cli" title="Permalink to this headline"></a></h1>
+<h1>project-config CLI<a class="headerlink" href="#project-config-cli" title="Permalink to this heading"></a></h1>
 <p><p>Validate the configuration of your project against the configured styles.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">project</span><span class="o">-</span><span class="n">config</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">T</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">c</span> <span class="n">CONFIG</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">root</span> <span class="n">ROOTDIR</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">r</span> <span class="n">NAME</span><span class="p">[:</span><span class="n">FORMAT</span><span class="p">];</span><span class="n">OPTION</span><span class="o">=</span><span class="n">VALUE</span><span class="p">]</span>
                <span class="p">[</span><span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">color</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">cache</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">only</span><span class="o">-</span><span class="n">hints</span><span class="p">]</span>
@@ -114,13 +116,13 @@
 </pre></div>
 </div>
 <section id="project-config-positional-arguments">
-<h2>project-config positional arguments<a class="headerlink" href="#project-config-positional-arguments" title="Permalink to this headline"></a></h2>
+<h2>project-config positional arguments<a class="headerlink" href="#project-config-positional-arguments" title="Permalink to this heading"></a></h2>
 <ul class="simple">
 <li><p id="project-config-command"><a class="reference internal" href="#project-config-command" title="project-config command"><strong><code class="docutils literal notranslate"><span class="pre">command</span></code></strong></a> - Command to execute. (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)</p></li>
 </ul>
 </section>
 <section id="project-config-options">
-<h2>project-config options<a class="headerlink" href="#project-config-options" title="Permalink to this headline"></a></h2>
+<h2>project-config options<a class="headerlink" href="#project-config-options" title="Permalink to this heading"></a></h2>
 <ul class="simple">
 <li><p id="project-config--h"><span id="project-config---help"></span><a class="reference internal" href="#project-config--h" title="project-config -h"><strong><code class="docutils literal notranslate"><span class="pre">-h</span></code></strong></a>, <a class="reference internal" href="#project-config---help" title="project-config --help"><strong><code class="docutils literal notranslate"><span class="pre">--help</span></code></strong></a> - Show project-config’s help and exit.</p></li>
 <li><p id="project-config--v"><span id="project-config---version"></span><a class="reference internal" href="#project-config--v" title="project-config -v"><strong><code class="docutils literal notranslate"><span class="pre">-v</span></code></strong></a>, <a class="reference internal" href="#project-config---version" title="project-config --version"><strong><code class="docutils literal notranslate"><span class="pre">--version</span></code></strong></a> - Show project-config’s version number and exit.</p></li>
@@ -153,7 +155,7 @@
 is running.</p>
 </div>
 <section id="reporting">
-<h2>Reporting<a class="headerlink" href="#reporting" title="Permalink to this headline"></a></h2>
+<h2>Reporting<a class="headerlink" href="#reporting" title="Permalink to this heading"></a></h2>
 <p><strong>project-config</strong> supports multiple formats for reporting. Currently,
 the following reporters are supported:</p>
 <ul class="simple">
@@ -187,7 +189,7 @@ the report in the command line use always the
 </div>
 </section>
 <section id="examples-of-usage">
-<h2>Examples of usage<a class="headerlink" href="#examples-of-usage" title="Permalink to this headline"></a></h2>
+<h2>Examples of usage<a class="headerlink" href="#examples-of-usage" title="Permalink to this heading"></a></h2>
 <p>Check the styles of the current project reporting in TOML format without
 color and making all requests to remote sources:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>project-config<span class="w"> </span>check<span class="w"> </span>-r<span class="w"> </span>toml<span class="w"> </span>--no-color<span class="w"> </span>--no-cache
@@ -262,7 +264,7 @@ a custom file located in a relative project root directory:</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2022, Álvaro Mondéjar Rubio &lt;mondejar1994@gmail.com&gt;.</p>
+    <p>&#169; Copyright 2022-2024, Álvaro Mondéjar Rubio &lt;mondejar1994@gmail.com&gt;.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

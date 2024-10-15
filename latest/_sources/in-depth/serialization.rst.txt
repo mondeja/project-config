@@ -153,7 +153,7 @@ of lines, excluding line endings.
 
 .. tabs::
 
-   .. tab:: foo.txt
+   .. tab:: .gitignore
 
       .. code-block:: text
 
