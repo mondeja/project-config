@@ -71,7 +71,7 @@ def write_file(fpath: str, value: Any) -> None:  # noqa: D102
 
 
 class Cache:
-    """Global cache to avoid recomputation of expensive intermediate objects."""
+    """Global cache to avoid recomputing expensive intermediate objects."""
 
     _expiration_time: float | int | None = 30
 
