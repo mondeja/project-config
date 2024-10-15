@@ -5,21 +5,22 @@ from __future__ import annotations
 import hashlib
 
 
-def hash_digest(data: bytes) -> bytes:
-    """Return the hash digest of the data.
+def _build_hash(data: bytes) -> hashlib.blake2b:
+    return hashlib.blake2b(data, digest_size=32)
+
+
+def hash_hexdigest(data: bytes) -> str:
+    """Return the hexadecimal hash digest of the data.
 
     :param data: The data to hash.
     :type data: bytes
-    :return: The hash digest of the data.
-    :rtype: bytes
+    :return: The hexadecimal hash digest of the data.
+    :rtype: str
     """
-    return hashlib.blake2b(
-        data,
-        digest_size=32,
-    ).digest()
+    return _build_hash(data).hexdigest()
 
 
-def hash_file(filename: str) -> bytes:
+def hash_file(filename: str) -> str:
     """Return the hash digest of the file.
 
     :param filename: The file to hash.
@@ -28,4 +29,4 @@ def hash_file(filename: str) -> bytes:
     :rtype: str
     """
     with open(filename, "rb") as f:
-        return hash_digest(f.read())
+        return hash_hexdigest(f.read())
