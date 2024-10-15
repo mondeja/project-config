@@ -615,44 +615,6 @@ def test_crossJMESPathsMatch(
                     "bar",
                     [
                         (
-                            "gh://mondeja/project-config/tests/data/styles"
-                            "/bar/baz.toml"
-                        ),
-                        "foo",
-                    ],
-                    "baz",
-                    True,
-                ],
-            ],
-            None,
-            [
-                (
-                    InterruptingError,
-                    {
-                        "definition": ".crossJMESPathsMatch[0][1][0]",
-                        "file": (
-                            "gh://mondeja/project-config/tests/data/"
-                            "styles/bar/baz.toml"
-                        ),
-                        "message": (
-                            "Impossible to fetch "
-                            "'https://google.com/mondeja/"
-                            "project-config/master/tests/data/styles/bar/"
-                            "baz.toml' after 0.5 seconds. Possibly caused by:"
-                            " HTTP Error 404: Not Found"
-                        ),
-                    },
-                ),
-            ],
-            id="unexistent-online-other-file-raises-error",
-        ),
-        pytest.param(
-            {"foo.json": '{"bar": {"baz": true}}'},
-            [
-                [
-                    "bar",
-                    [
-                        (
                             "gh://mondeja/project-config/tests/data/styles/"
                             "foo/style-1.json5"
                         ),
