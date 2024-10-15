@@ -7,6 +7,7 @@ import json
 import os
 import re
 import urllib.parse
+from enum import Enum
 from typing import Any
 
 from project_config import __version__
@@ -16,12 +17,19 @@ from project_config.utils.http import GET
 SEMVER_REGEX = r"\d+\.\d+\.\d+"
 
 
-def _github_headers() -> dict[str, str]:
+class AcceptHeader(Enum):
+    """Accept header values for Github API."""
+
+    JSON = "application/vnd.github+json"
+
+
+def _github_headers(accept: AcceptHeader | None = None) -> dict[str, str]:
     headers = {
-        "Accept": "application/vnd.github+json",
         "X-GitHub-Api-Version": "2022-11-28",
         "User-Agent": f"project-config v{__version__}",
     }
+    if accept == AcceptHeader.JSON:
+        headers["Accept"] = "application/vnd.github+json"
 
     github_token = os.environ.get("GITHUB_TOKEN")
     if github_token:
@@ -81,7 +89,7 @@ def fetch(url_parts: urllib.parse.SplitResult, **kwargs: Any) -> Any:
     """
     if "headers" not in kwargs:
         kwargs["headers"] = {}
-    kwargs["headers"].update(_github_headers())
+    kwargs["headers"].update(_github_headers(accept=AcceptHeader.JSON))
     response = json.loads(GET(resolve_url(url_parts), **kwargs))
     if "content" in response:
         return base64.b64decode(response["content"]).decode("utf-8")
