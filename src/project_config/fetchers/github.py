@@ -2,44 +2,43 @@
 
 from __future__ import annotations
 
+import base64
 import json
 import os
 import re
 import urllib.parse
 from typing import Any
 
+from project_config import __version__
 from project_config.utils.http import GET
 
 
 SEMVER_REGEX = r"\d+\.\d+\.\d+"
 
 
-def _get_default_branch_from_repo_github_api(
-    repo_owner: str,
-    repo_name: str,
-) -> str:  # pragma: no cover
-    # try from API
-    #
-    # note that this function is not covered by the tests because
-    # the previous function that retrieves the default branch from the
-    # HTML of the repo must be the one that works, this only acts as
-    # a fallback, though could reach the limit of usage of the API
-    #
-    # if the previous becomes problematic we should improve the management
-    # of the API rate limit with a Github token
-    result = GET(f"https://api.github.com/repos/{repo_owner}/{repo_name}")
-    return json.loads(result)["default_branch"]  # type: ignore
+def _github_headers() -> dict[str, str]:
+    headers = {
+        "Accept": "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28",
+        "User-Agent": f"project-config v{__version__}",
+    }
+
+    github_token = os.environ.get("GITHUB_TOKEN")
+    if github_token:
+        headers["Authorization"] = f"Bearer {github_token}"
+    return headers
 
 
-def _build_raw_githubusercontent_url(
+def _build_github_api_url(
     repo_owner: str,
     repo_name: str,
-    git_reference: str,
+    git_reference: str | None,
     fpath: str,
 ) -> str:
+    query_parameters = "" if not git_reference else f"?ref={git_reference}"
     return (
-        f"https://raw.githubusercontent.com/{repo_owner}/{repo_name}/"
-        f"{git_reference}/{fpath}"
+        f"https://api.github.com/repos/{repo_owner}/{repo_name}"
+        f"/contents/{fpath}{query_parameters}"
     )
 
 
@@ -60,13 +59,9 @@ def resolve_url(url_parts: urllib.parse.SplitResult) -> str:
     if "@" in project_maybe_with_gitref:
         project, git_reference = project_maybe_with_gitref.split("@")
     else:
-        project = project_maybe_with_gitref
-        git_reference = _get_default_branch_from_repo_github_api(
-            url_parts.netloc,  # netloc is the repo owner here
-            project,
-        )
+        project, git_reference = (project_maybe_with_gitref, None)
 
-    return _build_raw_githubusercontent_url(
+    return _build_github_api_url(
         url_parts.netloc,
         project,
         git_reference,
@@ -84,10 +79,13 @@ def fetch(url_parts: urllib.parse.SplitResult, **kwargs: Any) -> Any:
     Returns:
         str: The fetched resource content.
     """
-    github_token = os.environ.get("GITHUB_TOKEN")
-    if github_token:
-        kwargs["headers"] = {"Authorization": f"Bearer {github_token}"}
-    return GET(resolve_url(url_parts), **kwargs)
+    if "headers" not in kwargs:
+        kwargs["headers"] = {}
+    kwargs["headers"].update(_github_headers())
+    response = json.loads(GET(resolve_url(url_parts), **kwargs))
+    if "content" in response:
+        return base64.b64decode(response["content"]).decode("utf-8")
+    return response
 
 
 def get_latest_release_tags(
@@ -105,7 +103,10 @@ def get_latest_release_tags(
     Returns:
         str: The latest release tag.
     """
-    result = GET(f"https://github.com/{repo_owner}/{repo_name}/tags")
+    result = GET(
+        f"https://github.com/{repo_owner}/{repo_name}/tags",
+        headers=_github_headers(),
+    )
     regex = (
         rf'/{re.escape(repo_owner)}/{re.escape(repo_name)}/releases/tag/([^"]+)'
     )
