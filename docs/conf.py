@@ -75,6 +75,7 @@ nitpick_ignore = [
     ("py:class", "project_config.types_.ErrorDict"),
     ("py:class", "pytest.MonkeyPatch"),
     ("py:class", "_pytest.monkeypatch.MonkeyPatch"),
+    ("py:class", "_blake2.blake2b"),
 ]
 nitpick_ignore_regex = [
     ("py:class", r"^t.[A-Z]\w+$"),
