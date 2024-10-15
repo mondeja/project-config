@@ -636,8 +636,8 @@ def test_crossJMESPathsMatch(
                         ),
                         "message": (
                             "Impossible to fetch "
-                            "'https://raw.githubusercontent.com/mondeja/"
-                            "project-config/master/tests/data/styles/bar/"
+                            "'https://api.github.com/repos/mondeja/"
+                            "project-config/contents/tests/data/styles/bar/"
                             "baz.toml' after 0.5 seconds. Possibly caused by:"
                             " HTTP Error 404: Not Found"
                         ),

@@ -4,8 +4,9 @@ from __future__ import annotations
 
 import os
 import time
-import urllib.request
 from typing import Any
+from urllib.error import ContentTooShortError, HTTPError, URLError
+from urllib.request import Request, urlopen
 
 from project_config.cache import Cache
 from project_config.exceptions import ProjectConfigException
@@ -23,6 +24,7 @@ def _GET_impl(
     url: str,
     timeout: float | None = None,
     sleep: float = 1.0,
+    headers: dict[str, str] | None = None,
 ) -> str:
     start = time.time()
     timeout = timeout or float(
@@ -30,14 +32,18 @@ def _GET_impl(
     )
     end = start + timeout
     err = None
+    request = Request(url)
+    if headers:
+        for key, value in headers.items():
+            request.add_header(key, value)
     while time.time() < end:
         try:
-            with urllib.request.urlopen(url) as req:
+            with urlopen(request) as req:
                 response = req.read().decode("utf-8")
         except (
-            urllib.error.URLError,
-            urllib.error.HTTPError,
-            urllib.error.ContentTooShortError,
+            URLError,
+            HTTPError,
+            ContentTooShortError,
         ) as exc:
             err = exc.__str__()
             time.sleep(sleep)

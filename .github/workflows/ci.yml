@@ -31,6 +31,8 @@ jobs:
           key: ${{ steps.project-config-cache.outputs.directory }}
       - name: Lint
         run: hatch run style:lint
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   full-gha-report:
     name: project-config GHA reporter
@@ -52,6 +54,8 @@ jobs:
           hatch run project-config show style -r github-actions
           hatch run project-config check || \
             hatch run project-config fix -r github-actions
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   test:
     name: Test
@@ -108,6 +112,8 @@ jobs:
         run: pip install -U hatch
       - name: Run tests
         run: hatch run +py=${{ matrix.py }} tests:all
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Convert coverage to XML
         run: |
           pip install coverage covdefaults
