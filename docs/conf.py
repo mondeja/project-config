@@ -113,7 +113,6 @@ autosectionlabel_prefix_document = True
 
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3", None),
-    "diskcache": ("https://grantjenks.com/docs/diskcache", None),
     "pyjson5": ("https://pyjson5.readthedocs.io/en/latest/", None),
     "deepmerge": ("https://deepmerge.readthedocs.io/en/latest/", None),
 }

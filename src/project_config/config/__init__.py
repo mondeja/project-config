@@ -293,6 +293,8 @@ class FileConfig:
             store_raw_config (bool): If ``True``, the raw configuration
                 of the file will be stored in the ``raw_`` attribute.
         """
+        Cache.ensure_dir()
+
         self.path, config = read_config(rootdir, path)
 
         if store_raw_config:

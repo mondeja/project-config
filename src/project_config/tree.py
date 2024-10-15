@@ -125,6 +125,7 @@ def cache_file(  # noqa: PLR0912, PLR0915
             # the file is a directory, skip caching
             return
 
+        # use hashes for files with multiple serializers
         fhash = hash_file(fname)
 
         previous_value_in_cache = Cache.get(fhash)
@@ -143,10 +144,7 @@ def cache_file(  # noqa: PLR0912, PLR0915
                         prefer_serializer=serializer,
                     )
 
-            Cache.set(
-                fhash,
-                new_cache_value,
-            )
+            Cache.set(fhash, new_cache_value)
         else:
             # file is already cached, just update serialized versions
             _changed = False
@@ -161,10 +159,7 @@ def cache_file(  # noqa: PLR0912, PLR0915
                         _changed = True
 
             if _changed:
-                Cache.set(
-                    fhash,
-                    previous_value_in_cache,
-                )
+                Cache.set(fhash, previous_value_in_cache)
     else:
         # the file is remote, check if resides in the cache
         previous_value_in_cache = Cache.get(fname)
@@ -253,10 +248,7 @@ def cached_local_file(
             result = previous_value_in_cache.pop("py")
         else:
             result = previous_value_in_cache[serializer]
-        Cache.set(
-            fhash,
-            previous_value_in_cache,
-        )
+        Cache.set(fhash, previous_value_in_cache)
     else:
         result = previous_value_in_cache[serializer]
     return result
