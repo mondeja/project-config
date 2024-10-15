@@ -86,7 +86,7 @@ def fetch(url_parts: urllib.parse.SplitResult, **kwargs: Any) -> Any:
     """
     github_token = os.environ.get("GITHUB_TOKEN")
     if github_token:
-        kwargs["headers"] = {"Authorization": f"token {github_token}"}
+        kwargs["headers"] = {"Authorization": f"Bearer {github_token}"}
     return GET(resolve_url(url_parts), **kwargs)
 
 
