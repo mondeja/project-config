@@ -11,8 +11,7 @@ import sys
 from collections.abc import Sequence
 from typing import Any
 
-from importlib_metadata_argparse_version import ImportlibMetadataVersionAction
-
+from project_config import __version__
 from project_config.exceptions import ProjectConfigException
 
 
@@ -81,9 +80,9 @@ def build_main_parser() -> argparse.ArgumentParser:  # noqa: D103
     parser.add_argument(
         "-v",
         "--version",
-        action=ImportlibMetadataVersionAction,
+        action="version",
+        version=__version__,
         help="Show project-config's version number and exit.",
-        version_from="project-config",
     )
 
     # common arguments
