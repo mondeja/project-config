@@ -183,7 +183,9 @@ jobs:
         with:
           python-version: "3.11"
       - name: Install dependencies
-        run: pip install -U pyinstaller
+        run: pip install -U hatch pyinstaller
+      - name: Install package
+        run: hatch run pip install .
       - name: Build standalone distribution
         shell: bash
         run: sh scripts/build.sh
