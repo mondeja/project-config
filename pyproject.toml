@@ -1,11 +1,11 @@
 [project]
 name = "project-config"
-version = "0.9.7"
+version = "0.9.8"
 description = "Reproducible configuration across projects."
 authors = [{ name = "Álvaro Mondéjar Rubio", email = "mondejar1994@gmail.com" }]
 license = "BSD-3-Clause"
 readme = "README.md"
-requires-python = ">=3.8,<3.13"
+requires-python = ">=3.8,<3.14"
 classifiers = [
   "Development Status :: 4 - Beta",
   "Operating System :: OS Independent",
@@ -19,6 +19,7 @@ classifiers = [
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
 ]
 keywords = [
   "reproducible",
@@ -71,11 +72,11 @@ pre-commit = "project_config.plugins.contrib.pre_commit:PreCommitPlugin"
 project-config-tester = "project_config.tests.pytest_plugin.plugin"
 
 [tool.hatch.envs.default]
-python = "3.11"
+python = "3.12"
 dependencies = ["mondeja-bump"]
 
 [tool.hatch.envs.style]
-python = "3.11"
+python = "3.12"
 detached = true
 dependencies = ["pre-commit"]
 
@@ -84,14 +85,14 @@ lint = "pre-commit run -a"
 
 [tool.hatch.envs.tests]
 dependencies = [
-  "pytest~=7.0",
-  "coverage~=6.4",
+  "pytest~=8.3",
+  "coverage~=7.6",
   "covdefaults",
   "contextlib-chdir",
   "pytest-maybe-raises~=0.1",
-  "pytest-mock~=3.0",
-  "flask~=2.0",
-  "pysetenv~=1.0",
+  "pytest-mock>3,<4",
+  "flask>2,<3",
+  "pysetenv>1,<2",
   "pre-commit",
 ]
 
@@ -106,7 +107,7 @@ cov = [
 ]
 
 [[tool.hatch.envs.tests.matrix]]
-python = ["py38", "py39", "py310", "py311", "py312"]
+python = ["py38", "py39", "py310", "py311", "py312", "py313"]
 
 [tool.hatch.envs.docs]
 python = "3.10"
@@ -117,7 +118,7 @@ dependencies = [
   "chios~=1.0",
   "sphinx-argparse-cli~=1.8",
   "sphinx-github-changelog~=1.2",
-  "pytest~=7.0",
+  "pytest~=8.3",
   "typing-extensions",
 ]
 
@@ -167,7 +168,7 @@ omit = [
 ]
 
 [tool.mypy]
-python_version = "3.11"
+python_version = "3.12"
 strict = true
 
 [tool.black]
