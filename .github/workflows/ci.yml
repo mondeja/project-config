@@ -194,6 +194,8 @@ jobs:
         run: sh scripts/build.sh
       - name: Check
         run: ./dist/project-config check
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Prepare upload
         run: mv dist/project-config dist/project-config-${{ matrix.runs-on }}
       - uses: actions/upload-artifact@v4
