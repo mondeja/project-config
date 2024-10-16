@@ -166,7 +166,7 @@ jobs:
           name: wheel-sdist
 
   build-standalone-dist:
-    name: Build standalone distribution binaries
+    name: Build standalone
     needs: build-wheel-sdist
     runs-on: ubuntu-latest
     strategy:
@@ -188,7 +188,7 @@ jobs:
         run: hatch run pip install .
       - name: Build standalone distribution
         shell: bash
-        run: sh scripts/build.sh
+        run: hatch run sh scripts/build.sh
       - name: Prepare upload
         run: mv dist/project-config dist/project-config-${{ matrix.runs-on }}
       - uses: actions/upload-artifact@v4
