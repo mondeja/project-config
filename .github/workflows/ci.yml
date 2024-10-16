@@ -143,11 +143,11 @@ jobs:
           path: docs/_build/html/*
 
   build-wheel-sdist:
-    needs:
-      - lint
-      - test
-      - test-docs
-      - full-gha-report
+    # needs:
+    #   - lint
+    #   - test
+    #   - test-docs
+    #   - full-gha-report
     name: Build package wheel and sdist
     runs-on: ubuntu-latest
     steps:
