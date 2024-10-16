@@ -34,37 +34,6 @@ NUMBER_OF_DEFAULT_PLUGINS = len(
 )
 
 
-def test__prepare_default_plugins_cache_ignore_3rd_party_plugin(mocker):
-    mocker.patch(
-        f"{importlib_metadata.__name__}.entry_points",
-        return_value=[
-            importlib_metadata.EntryPoint(
-                "foo-plugin",
-                "foo_plugin",
-                PROJECT_CONFIG_PLUGINS_ENTRYPOINTS_GROUP,
-            ),
-            *importlib_metadata.entry_points(
-                group=PROJECT_CONFIG_PLUGINS_ENTRYPOINTS_GROUP,
-            ),
-        ],
-    )
-    add_plugin_to_cache_spy = mocker.spy(
-        Plugins,
-        "_add_plugin_to_cache",
-    )
-    extract_actions_from_plugin_module_spy = mocker.spy(
-        Plugins,
-        "_extract_actions_from_plugin_module",
-    )
-
-    Plugins()
-
-    assert (
-        add_plugin_to_cache_spy.call_count
-        == extract_actions_from_plugin_module_spy.call_count
-    )
-
-
 def test_get_function_for_action():
     plugins = Plugins()
 

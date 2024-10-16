@@ -25,7 +25,7 @@ jobs:
         id: project-config-cache
         run: echo "directory=$(hatch --quiet --no-interactive run project-config show cache)" >> $GITHUB_OUTPUT
       - name: Cache project-config
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ${{ steps.project-config-cache.outputs.directory }}
           key: ${{ steps.project-config-cache.outputs.directory }}
@@ -142,14 +142,13 @@ jobs:
         with:
           path: docs/_build/html/*
 
-  build-dist:
-    if: startsWith(github.ref, 'refs/tags/')
+  build-wheel-sdist:
     needs:
       - lint
       - test
       - test-docs
       - full-gha-report
-    name: Build package
+    name: Build package wheel and sdist
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -164,17 +163,109 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           path: dist/*
-          name: distribution
+          name: wheel-sdist
+
+  build-standalone-dist:
+    name: Build standalone
+    needs: build-wheel-sdist
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        runs-on:
+          - ubuntu-latest
+          # ARM
+          - macos-14
+          # X86
+          - macos-13
+          - windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: pip install -U pyinstaller
+      - name: Install package
+        run: pip install .
+      - name: Build standalone distribution
+        shell: bash
+        run: sh scripts/build.sh
+      - name: Prepare upload
+        run: mv dist/project-config dist/project-config-${{ matrix.runs-on }}
+      - uses: actions/upload-artifact@v4
+        with:
+          path: dist/*
+          name: ${{ matrix.runs-on }}-build
+          if-no-files-found: error
+          overwrite: true
+
+  build-dist:
+    name: Build final distribution
+    runs-on: ubuntu-latest
+    needs:
+      - build-wheel-sdist
+      - build-standalone-dist
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: wheel-sdist
+          path: dist
+      - name: Download MacOS ARM artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: macos-14-build
+          path: ./build/mac-arm64
+      - name: Download MacOS X86 artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: macos-13-build
+          path: ./build/mac-x64
+      - name: Download Linux artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ubuntu-latest-build
+          path: ./build/linux
+      - name: Download Windows artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: windows-latest-build
+          path: ./build/windows
+      - name: Create Linux tarball
+        run: |
+          mv build/linux/project-config-ubuntu-latest build/linux/project-config
+          tar -czf dist/project-config-linux-x64.tar.gz -C build/linux project-config
+      - name: Create MacOS tarballs
+        run: |
+          mv build/mac-x64/project-config-macos-13 build/mac-x64/project-config
+          mv build/mac-arm64/project-config-macos-14 build/mac-arm64/project-config
+          tar -czf dist/project-config-mac-x64.tar.gz -C build/mac-x64 project-config
+          tar -czf dist/project-config-mac-arm64.tar.gz -C build/mac-arm64 project-config
+      - name: Create Windows zip
+        run: |
+          cd build/windows
+          mv project-config-windows-latest project-config.exe
+          7z a -tzip ../../dist/project-config-windows-x64.zip project-config.exe
+      - name: Remove build directories
+        run: rm -rf build
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: ./dist
 
   pypi-upload:
     name: Upload to PyPI
+    if: startsWith(github.ref, 'refs/tags/')
     needs: build-dist
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
         with:
-          name: distribution
-          path: dist
+          name: wheel-sdist
+          path: ./dist
       - uses: pypa/gh-action-pypi-publish@release/v1
         with:
           user: __token__
@@ -183,8 +274,9 @@ jobs:
           skip-existing: true
 
   npm-upload:
-    needs: pypi-upload
     name: Upload to NPM
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: pypi-upload
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -201,7 +293,8 @@ jobs:
 
   release:
     name: Release
-    needs: build-dist
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: npm-upload
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -230,8 +323,8 @@ jobs:
       - uses: actions/download-artifact@v4
         name: Download builds
         with:
-          name: distribution
-          path: dist
+          name: dist
+          path: ./dist
       - uses: shogo82148/actions-upload-release-asset@v1
         name: Upload release assets
         with:

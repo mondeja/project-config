@@ -4,6 +4,22 @@ Installation
 
 .. tabs::
 
+   .. tab:: Standalone binaries
+
+      Auto contained binaries are provided through `GitHub releases page`_ for
+      multiple platforms.
+
+      .. _GitHub releases page: https://github.com/mondeja/project-config/releases
+
+      .. rubric:: Linux x64
+
+      .. code-block:: sh
+
+         wget -qO- \
+            https://github.com/mondeja/project-config/releases/download/v0.9.7/project-config-linux-x64.tar.gz \
+            | tar xvz \
+            && sudo install -v project-config /usr/local/bin
+
    .. tab:: Python
 
       .. rubric:: pip

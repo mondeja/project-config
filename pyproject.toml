@@ -29,7 +29,6 @@ keywords = [
   "meta-linter"
 ]
 dependencies = [
-  "importlib-metadata-argparse-version>=2,<3",
   "contextlib-chdir",
   "tomli-w~=1.0",
   'pyjson5',
