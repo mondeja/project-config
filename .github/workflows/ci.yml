@@ -185,10 +185,10 @@ jobs:
       - name: Install dependencies
         run: pip install -U hatch pyinstaller
       - name: Install package
-        run: hatch run pip install .
+        run: pip install .
       - name: Build standalone distribution
         shell: bash
-        run: hatch run sh scripts/build.sh
+        run: sh scripts/build.sh
       - name: Prepare upload
         run: mv dist/project-config dist/project-config-${{ matrix.runs-on }}
       - uses: actions/upload-artifact@v4
