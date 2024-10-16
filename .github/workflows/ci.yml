@@ -77,17 +77,17 @@ jobs:
             python-version: "3.11"
             py: py311
           - platform: ubuntu-latest
-            python-version: "3.12"
-            py: py312
+            python-version: "3.13"
+            py: py313
           - platform: macos-latest
             python-version: 3.8
             py: py38
           - platform: macos-latest
-            python-version: "3.11"
+            python-version: "3.12"
             py: py311
           - platform: macos-latest
-            python-version: "3.12"
-            py: py312
+            python-version: "3.13"
+            py: py313
           - platform: windows-latest
             python-version: 3.8
             py: py38
@@ -95,8 +95,8 @@ jobs:
             python-version: "3.11"
             py: py311
           - platform: windows-latest
-            python-version: "3.12"
-            py: py312
+            python-version: "3.13"
+            py: py313
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python v${{ matrix.python-version }}
