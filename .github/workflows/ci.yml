@@ -234,16 +234,16 @@ jobs:
           name: windows-latest-build
           path: ./build/windows
       - name: Create Linux tarball
-        run: tar -czf dist/hledger-fmt-linux-x64.tar.gz -C build/linux hledger-fmt
+        run: tar -czf dist/project-config-linux-x64.tar.gz -C build/linux project-config
       - name: Create MacOS tarballs
         run: |
-          tar -czf dist/hledger-fmt-mac-x64.tar.gz -C build/mac-x64 hledger-fmt
-          tar -czf dist/hledger-fmt-mac-arm64.tar.gz -C build/mac-arm64 hledger-fmt
+          tar -czf dist/project-config-mac-x64.tar.gz -C build/mac-x64 project-config
+          tar -czf dist/project-config-mac-arm64.tar.gz -C build/mac-arm64 project-config
       - name: Create Windows zip
         run: |
           cd build/windows
-          mv hledger-fmt hledger-fmt.exe
-          7z a -tzip ../../dist/hledger-fmt-windows-x64.zip hledger-fmt.exe
+          mv project-config project-config.exe
+          7z a -tzip ../../dist/project-config-windows-x64.zip project-config.exe
       - name: Remove build directories
         run: rm -rf build
       - name: Upload artifacts
