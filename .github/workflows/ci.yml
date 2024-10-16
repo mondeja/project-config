@@ -202,7 +202,7 @@ jobs:
           overwrite: true
 
   build-dist:
-    name: Download distributions
+    name: Build final distribution
     runs-on: ubuntu-latest
     needs:
       - build-wheel-sdist
@@ -234,15 +234,19 @@ jobs:
           name: windows-latest-build
           path: ./build/windows
       - name: Create Linux tarball
-        run: tar -czf dist/project-config-linux-x64.tar.gz -C build/linux project-config
+        run: |
+          mv build/linux/project-config-ubuntu-latest build/linux/project-config
+          tar -czf dist/project-config-linux-x64.tar.gz -C build/linux project-config
       - name: Create MacOS tarballs
         run: |
+          mv build/mac-x64/project-config-macos-13 build/mac-x64/project-config
+          mv build/mac-arm64/project-config-macos-14 build/mac-arm64/project-config
           tar -czf dist/project-config-mac-x64.tar.gz -C build/mac-x64 project-config
           tar -czf dist/project-config-mac-arm64.tar.gz -C build/mac-arm64 project-config
       - name: Create Windows zip
         run: |
           cd build/windows
-          mv project-config project-config.exe
+          mv project-config-windows-latest project-config.exe
           7z a -tzip ../../dist/project-config-windows-x64.zip project-config.exe
       - name: Remove build directories
         run: rm -rf build
