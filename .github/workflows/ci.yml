@@ -25,7 +25,7 @@ jobs:
         id: project-config-cache
         run: echo "directory=$(hatch --quiet --no-interactive run project-config show cache)" >> $GITHUB_OUTPUT
       - name: Cache project-config
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ${{ steps.project-config-cache.outputs.directory }}
           key: ${{ steps.project-config-cache.outputs.directory }}
