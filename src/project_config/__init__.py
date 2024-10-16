@@ -9,7 +9,7 @@ from project_config.constants import Error, InterruptingError, ResultValue
 from project_config.types_ import ActionsContext
 
 
-__version__ = "0.9.7"
+__version__ = "0.9.8"
 
 
 __all__ = [

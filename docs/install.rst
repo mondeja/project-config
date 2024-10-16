@@ -16,7 +16,7 @@ Installation
       .. code-block:: sh
 
          wget -qO- \
-            https://github.com/mondeja/project-config/releases/download/v0.9.7/project-config-linux-x64.tar.gz \
+            https://github.com/mondeja/project-config/releases/download/v0.9.8/project-config-linux-x64.tar.gz \
             | tar xvz \
             && sudo install -v project-config /usr/local/bin
 
@@ -57,7 +57,7 @@ Installation
       .. code-block:: yaml
 
          - repo: https://github.com/mondeja/project-config
-           rev: v0.9.7
+           rev: v0.9.8
            hooks:
              - id: project-config
 
@@ -66,7 +66,7 @@ Installation
       .. code-block:: yaml
 
          - repo: https://github.com/mondeja/project-config
-           rev: v0.9.7
+           rev: v0.9.8
            hooks:
              - id: project-config-fix
 
@@ -81,7 +81,7 @@ Installation
       .. code-block:: yaml
 
          PLUGINS:
-           - https://raw.githubusercontent.com/mondeja/project-config/v0.9.7/contrib/mega-linter-plugin-project-config/project-config.megalinter-descriptor.yml
+           - https://raw.githubusercontent.com/mondeja/project-config/v0.9.8/contrib/mega-linter-plugin-project-config/project-config.megalinter-descriptor.yml
          ENABLE_LINTERS:
            - PROJECT_CONFIG
 
