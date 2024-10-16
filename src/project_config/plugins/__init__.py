@@ -6,10 +6,8 @@ properties of styles.
 
 from __future__ import annotations
 
-import importlib.util
 import inspect
-import re
-from collections.abc import Callable, Iterator
+from collections.abc import Callable
 from typing import TYPE_CHECKING, Any
 
 from project_config.compat import importlib_metadata
@@ -50,9 +48,6 @@ class Plugins:
         # map from plugin names to loaded classes
         self.loaded_plugins: dict[str, type] = {}
 
-        # map from plugin names to plugin class loaders functions
-        self.plugin_names_loaders: dict[str, Callable[[], type]] = {}
-
         # map from actions to plugins names
         self.actions_plugin_names: dict[str, str] = {}
 
@@ -71,7 +66,7 @@ class Plugins:
     @property
     def plugin_names(self) -> list[str]:
         """Available plugin names."""
-        return list(self.plugin_names_loaders)
+        return list(self.loaded_plugins)
 
     @property
     def plugin_action_names(self) -> dict[str, list[str]]:
@@ -100,12 +95,7 @@ class Plugins:
         """
         if action not in self.actions_static_methods:
             plugin_name = self.actions_plugin_names[action]
-            if plugin_name not in self.loaded_plugins:
-                load_plugin = self.plugin_names_loaders[plugin_name]
-                plugin_class = load_plugin()
-                self.loaded_plugins[plugin_name] = plugin_class
-            else:
-                plugin_class = self.loaded_plugins[plugin_name]
+            plugin_class = self.loaded_plugins[plugin_name]
             method = getattr(plugin_class, action)
 
             # the actions in plugins must be defined as static methods
@@ -178,27 +168,14 @@ class Plugins:
 
     def _add_plugin_to_cache(
         self,
-        plugin: importlib_metadata.EntryPoint,
+        plugin_entry_point: importlib_metadata.EntryPoint,
     ) -> None:
-        # do not load plugin until any action is called
-        # instead just save in cache and will be loaded on demand
-        self.plugin_names_loaders[plugin.name] = plugin.load
+        if plugin_entry_point.name in self.loaded_plugins:
+            return
+        plugin = plugin_entry_point.load()
+        self.loaded_plugins[plugin_entry_point.name] = plugin
 
-        for action in self._extract_actions_from_plugin_module(plugin.module):
-            if action not in self.actions_plugin_names:
-                self.actions_plugin_names[action] = plugin.name
-
-    def _extract_actions_from_plugin_module(
-        self,
-        module_dotpath: str,
-    ) -> Iterator[str]:
-        # TODO: raise error if specification or module not found
-        #   this could happen if an user as defined an entrypoint
-        #   pointing to a non existent module
-        module_spec = importlib.util.find_spec(module_dotpath)
-        if module_spec is not None:
-            module_path = module_spec.origin
-            if module_path is not None:
-                with open(module_path, encoding="utf-8") as f:
-                    for match in re.finditer(r"def ([^_]\w+)\(", f.read()):
-                        yield match.group(1)
+        for action in dir(plugin):
+            if action.startswith("_"):
+                continue
+            self.actions_plugin_names[action] = plugin_entry_point.name

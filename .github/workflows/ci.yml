@@ -142,14 +142,13 @@ jobs:
         with:
           path: docs/_build/html/*
 
-  build-dist:
-    if: startsWith(github.ref, 'refs/tags/')
+  build-wheel-sdist:
     needs:
       - lint
       - test
       - test-docs
       - full-gha-report
-    name: Build package
+    name: Build package wheel and sdist
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -164,16 +163,73 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           path: dist/*
-          name: distribution
+          name: wheel-sdist
+
+  build-standalone-dist:
+    name: Build standalone distribution binaries
+    needs: build-wheel-sdist
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        runs-on:
+          - ubuntu-latest
+          - macos-latest
+          - windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: pip install -U pyinstaller
+      - name: Build standalone distribution
+        shell: bash
+        run: sh scripts/build.sh
+      - name: Prepare upload
+        run: mv dist/project-config dist/project-config-${{ matrix.runs-on }}
+      - uses: actions/upload-artifact@v4
+        with:
+          path: dist/*
+          name: standalone-dist-${{ matrix.runs-on }}
+
+  download-dists:
+    name: Download distributions
+    runs-on: ubuntu-latest
+    needs:
+      - build-wheel-sdist
+      - build-standalone-dist
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: wheel-sdist
+          path: dist
+      - uses: actions/download-artifact@v4
+        with:
+          name: standalone-dist-ubuntu-latest
+          path: dist
+      - uses: actions/download-artifact@v4
+        with:
+          name: standalone-dist-macos-latest
+          path: dist
+      - uses: actions/download-artifact@v4
+        with:
+          name: standalone-dist-windows-latest
+          path: dist
+      - name: Check downloaded files
+        run: ls -l dist
 
   pypi-upload:
     name: Upload to PyPI
-    needs: build-dist
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: build-wheel-sdist
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
         with:
-          name: distribution
+          name: wheel-sdist
           path: dist
       - uses: pypa/gh-action-pypi-publish@release/v1
         with:
@@ -183,8 +239,9 @@ jobs:
           skip-existing: true
 
   npm-upload:
-    needs: pypi-upload
     name: Upload to NPM
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: pypi-upload
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -201,7 +258,12 @@ jobs:
 
   release:
     name: Release
-    needs: build-dist
+    if: startsWith(github.ref, 'refs/tags/')
+    needs:
+      - build-wheel-sdist
+      - build-standalone-dist
+      - pypi-upload
+      - npm-upload
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -230,7 +292,7 @@ jobs:
       - uses: actions/download-artifact@v4
         name: Download builds
         with:
-          name: distribution
+          name: wheel-sdist
           path: dist
       - uses: shogo82148/actions-upload-release-asset@v1
         name: Upload release assets
