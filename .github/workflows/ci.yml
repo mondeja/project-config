@@ -77,14 +77,20 @@ jobs:
             python-version: "3.11"
             py: py311
           - platform: ubuntu-latest
+            python-version: "3.12"
+            py: py312
+          - platform: ubuntu-latest
             python-version: "3.13"
             py: py313
           - platform: macos-latest
             python-version: 3.8
             py: py38
           - platform: macos-latest
+            python-version: "3.10"
+            py: py310
+          - platform: macos-latest
             python-version: "3.12"
-            py: py311
+            py: py312
           - platform: macos-latest
             python-version: "3.13"
             py: py313
