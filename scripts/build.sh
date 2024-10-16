@@ -6,6 +6,7 @@ rm -rf build dist
 TMPDIR=/var/tmp/ pyinstaller \
     -y \
     --onefile \
+    --optimize 2 \
     --name project-config \
     --copy-metadata project-config \
     --hidden-import project_config.serializers.editorconfig \
