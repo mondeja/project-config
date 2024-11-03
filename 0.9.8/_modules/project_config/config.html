@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>project_config.config &mdash; project-config 0.9.8 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/bolditalic.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/override-styles.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            project-config
+          </a>
+              <div class="version">
+                0.9
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Quickstart</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../basic-usage.html">Basic usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/cli.html">project-config CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/config.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/styling.html">Styling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/plugins.html">Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/ci.html">Using on CI</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">In depth</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../in-depth/rationale.html">Rationale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../in-depth/fetching.html">Fetching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../in-depth/serialization.html">Objects serialization</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For developers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/plugins.html">Writing third party plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/reporters.html">Writing third party reporters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/reference/modules.html">Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">project-config</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">project_config.config</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for project_config.config</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Configuration handler.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Any</span>
+
+<span class="kn">from</span> <span class="nn">project_config</span> <span class="kn">import</span> <span class="n">tree</span>
+<span class="kn">from</span> <span class="nn">project_config.cache</span> <span class="kn">import</span> <span class="n">Cache</span>
+<span class="kn">from</span> <span class="nn">project_config.config.exceptions</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ConfigurationFilesNotFound</span><span class="p">,</span>
+    <span class="n">CustomConfigFileNotFound</span><span class="p">,</span>
+    <span class="n">ProjectConfigAlreadyInitialized</span><span class="p">,</span>
+    <span class="n">ProjectConfigInvalidConfig</span><span class="p">,</span>
+    <span class="n">ProjectConfigInvalidConfigSchema</span><span class="p">,</span>
+    <span class="n">PyprojectTomlFoundButHasNoConfig</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">project_config.config.style</span> <span class="kn">import</span> <span class="n">Style</span>
+<span class="kn">from</span> <span class="nn">project_config.reporters</span> <span class="kn">import</span> <span class="n">DEFAULT_REPORTER</span><span class="p">,</span> <span class="n">get_reporter</span><span class="p">,</span> <span class="n">reporters</span>
+
+
+<span class="n">CONFIG_CACHE_REGEX</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="sa">r</span><span class="s2">&quot;^(\d+ ((seconds?)|(minutes?)|(hours?)|(days?)|(weeks?)))|(never)$&quot;</span>
+<span class="p">)</span>
+
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">project_config.compat</span> <span class="kn">import</span> <span class="n">NotRequired</span><span class="p">,</span> <span class="n">TypedDict</span>
+    <span class="kn">from</span> <span class="nn">project_config.config.style</span> <span class="kn">import</span> <span class="n">StyleType</span>
+
+    <span class="k">class</span> <span class="nc">CLIConfigType</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>  <span class="c1"># noqa: D101</span>
+        <span class="n">rootdir</span><span class="p">:</span> <span class="nb">str</span>
+        <span class="n">reporter</span><span class="p">:</span> <span class="nb">str</span>
+        <span class="n">color</span><span class="p">:</span> <span class="nb">bool</span>
+        <span class="n">colors</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
+        <span class="n">only_hints</span><span class="p">:</span> <span class="nb">bool</span>
+        <span class="n">_reporter_definition</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+
+    <span class="k">class</span> <span class="nc">BaseConfigType</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>  <span class="c1"># noqa: D101</span>
+        <span class="n">style</span><span class="p">:</span> <span class="n">NotRequired</span><span class="p">[</span><span class="n">StyleType</span><span class="p">]</span>
+        <span class="n">cli</span><span class="p">:</span> <span class="n">CLIConfigType</span>
+
+    <span class="k">class</span> <span class="nc">RawConfigType</span><span class="p">(</span><span class="n">BaseConfigType</span><span class="p">):</span>  <span class="c1"># noqa: D101</span>
+        <span class="n">cache</span><span class="p">:</span> <span class="nb">str</span>
+
+    <span class="k">class</span> <span class="nc">ConfigType</span><span class="p">(</span><span class="n">BaseConfigType</span><span class="p">):</span>  <span class="c1"># noqa: D101</span>
+        <span class="n">cache</span><span class="p">:</span> <span class="nb">int</span>
+
+
+<div class="viewcode-block" id="read_config_from_pyproject_toml"><a class="viewcode-back" href="../../dev/reference/project_config.config.html#project_config.config.read_config_from_pyproject_toml">[docs]</a><span class="k">def</span> <span class="nf">read_config_from_pyproject_toml</span><span class="p">(</span><span class="n">fpath</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Read the configuration from the `pyproject.toml` file.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        object: ``None`` if not found, configuration data otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">tree</span><span class="o">.</span><span class="n">cache_file</span><span class="p">(</span><span class="n">fpath</span><span class="p">)</span>
+    <span class="n">pyproject_toml</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">cached_local_file</span><span class="p">(</span><span class="n">fpath</span><span class="p">,</span> <span class="n">serializer</span><span class="o">=</span><span class="s2">&quot;toml&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;tool&quot;</span> <span class="ow">in</span> <span class="n">pyproject_toml</span> <span class="ow">and</span> <span class="s2">&quot;project-config&quot;</span> <span class="ow">in</span> <span class="n">pyproject_toml</span><span class="p">[</span><span class="s2">&quot;tool&quot;</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="n">pyproject_toml</span><span class="p">[</span><span class="s2">&quot;tool&quot;</span><span class="p">][</span><span class="s2">&quot;project-config&quot;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="read_config"><a class="viewcode-back" href="../../dev/reference/project_config.config.html#project_config.config.read_config">[docs]</a><span class="k">def</span> <span class="nf">read_config</span><span class="p">(</span>
+    <span class="n">rootdir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">custom_fpath</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Read the configuration from a file.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        rootdir (str): Project root directory.</span>
+<span class="sd">        custom_fpath (str): Custom configuration file path</span>
+<span class="sd">            or ``None`` if the configuration must be read from</span>
+<span class="sd">            one of the default configuration file paths.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        object: Configuration data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">custom_fpath</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">custom_fpath</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">CustomConfigFileNotFound</span><span class="p">(</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">custom_fpath</span><span class="p">,</span> <span class="n">rootdir</span><span class="p">),</span>
+            <span class="p">)</span>
+        <span class="n">tree</span><span class="o">.</span><span class="n">cache_file</span><span class="p">(</span><span class="n">custom_fpath</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">custom_fpath</span><span class="p">,</span> <span class="n">tree</span><span class="o">.</span><span class="n">cached_local_file</span><span class="p">(</span>
+            <span class="n">custom_fpath</span><span class="p">,</span>
+            <span class="n">serializer</span><span class="o">=</span><span class="s2">&quot;toml&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="n">pyproject_toml_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">rootdir</span><span class="p">,</span> <span class="s2">&quot;pyproject.toml&quot;</span><span class="p">)</span>
+    <span class="n">pyproject_toml_exists</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">pyproject_toml_path</span><span class="p">)</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">pyproject_toml_exists</span><span class="p">:</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">read_config_from_pyproject_toml</span><span class="p">(</span><span class="n">pyproject_toml_path</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">config</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;&quot;pyproject.toml&quot;.[tool.project-config]&#39;</span><span class="p">,</span> <span class="n">config</span>
+
+    <span class="n">project_config_toml_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">rootdir</span><span class="p">,</span> <span class="s2">&quot;.project-config.toml&quot;</span><span class="p">)</span>
+    <span class="n">project_config_toml_exists</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">project_config_toml_path</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">project_config_toml_exists</span><span class="p">:</span>
+        <span class="n">tree</span><span class="o">.</span><span class="n">cache_file</span><span class="p">(</span><span class="s2">&quot;.project-config.toml&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;.project-config.toml&quot;</span><span class="p">,</span> <span class="n">tree</span><span class="o">.</span><span class="n">cached_local_file</span><span class="p">(</span>
+            <span class="s2">&quot;.project-config.toml&quot;</span><span class="p">,</span>
+            <span class="n">serializer</span><span class="o">=</span><span class="s2">&quot;toml&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">pyproject_toml_exists</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">PyprojectTomlFoundButHasNoConfig</span><span class="p">()</span>
+    <span class="k">raise</span> <span class="n">ConfigurationFilesNotFound</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="validate_config_style"><a class="viewcode-back" href="../../dev/reference/project_config.config.html#project_config.config.validate_config_style">[docs]</a><span class="k">def</span> <span class="nf">validate_config_style</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>  <span class="c1"># noqa: PLR0912</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate the ``style`` field of a configuration object.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        config (object): Configuration data to validate.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list: Found error messages.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">error_messages</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="s2">&quot;style&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>
+        <span class="n">error_messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;style -&gt; at least one is required&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;style&quot;</span><span class="p">],</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
+        <span class="n">error_messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;style -&gt; must be of type string or array&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;style&quot;</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;style&quot;</span><span class="p">]:</span>
+            <span class="n">error_messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;style -&gt; at least one is required&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">style</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;style&quot;</span><span class="p">]):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">style</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                    <span class="n">error_messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;style[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">] -&gt; must be of type string&quot;</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="k">elif</span> <span class="ow">not</span> <span class="n">style</span><span class="p">:</span>
+                    <span class="n">error_messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;style[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">] -&gt; must not be empty&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">fpath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;_path&quot;</span><span class="p">]),</span>
+                        <span class="n">style</span><span class="p">,</span>
+                    <span class="p">)</span>
+                    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">fpath</span><span class="p">):</span>
+                        <span class="n">config</span><span class="p">[</span><span class="s2">&quot;style&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">fpath</span>
+    <span class="k">elif</span> <span class="ow">not</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;style&quot;</span><span class="p">]:</span>
+        <span class="n">error_messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;style -&gt; must not be empty&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">fpath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;_path&quot;</span><span class="p">]),</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;style&quot;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">fpath</span><span class="p">):</span>
+            <span class="n">config</span><span class="p">[</span><span class="s2">&quot;style&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fpath</span>
+    <span class="k">return</span> <span class="n">error_messages</span></div>
+
+
+<div class="viewcode-block" id="_cache_string_to_seconds"><a class="viewcode-back" href="../../dev/reference/project_config.config.html#project_config.config._cache_string_to_seconds">[docs]</a><span class="k">def</span> <span class="nf">_cache_string_to_seconds</span><span class="p">(</span><span class="n">cache_string</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">&quot;never&quot;</span> <span class="ow">in</span> <span class="n">cache_string</span><span class="p">:</span>
+        <span class="c1"># The cache is not really disabled internally because</span>
+        <span class="c1"># is needed for project-config to run. Just use a very</span>
+        <span class="c1"># short time to &quot;expire it&quot; after the execution</span>
+        <span class="k">return</span> <span class="mi">1</span>  <span class="c1"># 1 second</span>
+    <span class="n">cache_number</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">cache_string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">maxsplit</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="s2">&quot;minute&quot;</span> <span class="ow">in</span> <span class="n">cache_string</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">cache_number</span> <span class="o">*</span> <span class="mi">60</span>
+    <span class="k">if</span> <span class="s2">&quot;hour&quot;</span> <span class="ow">in</span> <span class="n">cache_string</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">cache_number</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span>
+    <span class="k">if</span> <span class="s2">&quot;day&quot;</span> <span class="ow">in</span> <span class="n">cache_string</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">cache_number</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">24</span>
+    <span class="k">if</span> <span class="s2">&quot;second&quot;</span> <span class="ow">in</span> <span class="n">cache_string</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">cache_number</span>
+    <span class="k">if</span> <span class="s2">&quot;week&quot;</span> <span class="ow">in</span> <span class="n">cache_string</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">cache_number</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">7</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">cache_string</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="validate_config_cache"><a class="viewcode-back" href="../../dev/reference/project_config.config.html#project_config.config.validate_config_cache">[docs]</a><span class="k">def</span> <span class="nf">validate_config_cache</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate the ``cache`` field of a configuration object.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        config (object): Configuration data to validate.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list: Found error messages.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">error_messages</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="s2">&quot;cache&quot;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;cache&quot;</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">error_messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;cache -&gt; must be of type string&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;cache&quot;</span><span class="p">]:</span>
+            <span class="n">error_messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;cache -&gt; must not be empty&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">CONFIG_CACHE_REGEX</span><span class="p">,</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;cache&quot;</span><span class="p">]):</span>
+            <span class="n">error_messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;cache -&gt; must match the regex </span><span class="si">{</span><span class="n">CONFIG_CACHE_REGEX</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># 5 minutes as default cache</span>
+        <span class="n">config</span><span class="p">[</span><span class="s2">&quot;cache&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;5 minutes&quot;</span>
+    <span class="k">return</span> <span class="n">error_messages</span></div>
+
+
+<div class="viewcode-block" id="validate_config"><a class="viewcode-back" href="../../dev/reference/project_config.config.html#project_config.config.validate_config">[docs]</a><span class="k">def</span> <span class="nf">validate_config</span><span class="p">(</span><span class="n">config_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate a configuration.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        config_path (str): Configuration file path.</span>
+<span class="sd">        config (object): Configuration data to validate.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">error_messages</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="o">*</span><span class="n">validate_config_style</span><span class="p">(</span><span class="n">config</span><span class="p">),</span>
+        <span class="o">*</span><span class="n">validate_config_cache</span><span class="p">(</span><span class="n">config</span><span class="p">),</span>
+    <span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">error_messages</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ProjectConfigInvalidConfigSchema</span><span class="p">(</span>
+            <span class="n">config_path</span><span class="p">,</span>
+            <span class="n">error_messages</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="_validate_cli_config"><a class="viewcode-back" href="../../dev/reference/project_config.config.html#project_config.config._validate_cli_config">[docs]</a><span class="k">def</span> <span class="nf">_validate_cli_config</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="n">errors</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="s2">&quot;reporter&quot;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;reporter&quot;</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;cli.reporter -&gt; must be of type string&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;reporter&quot;</span><span class="p">]:</span>
+            <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;cli.reporter -&gt; must not be empty&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;reporter&quot;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">reporters</span><span class="p">:</span>
+            <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="s2">&quot;cli.reporter -&gt; must be one of the available reporters&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;color&quot;</span> <span class="ow">in</span> <span class="n">config</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;color&quot;</span><span class="p">],</span> <span class="nb">bool</span><span class="p">):</span>
+        <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;cli.color -&gt; must be of type boolean&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;colors&quot;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;colors&quot;</span><span class="p">],</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;cli.colors -&gt; must be of type object&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;colors&quot;</span><span class="p">]:</span>
+            <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;cli.colors -&gt; must not be empty&quot;</span><span class="p">)</span>
+
+        <span class="c1"># colors are validated in the reporter</span>
+
+    <span class="k">if</span> <span class="s2">&quot;rootdir&quot;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;rootdir&quot;</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;cli.rootdir -&gt; must be of type string&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;rootdir&quot;</span><span class="p">]:</span>
+            <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;cli.rootdir -&gt; must not be empty&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">config</span><span class="p">[</span><span class="s2">&quot;rootdir&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;rootdir&quot;</span><span class="p">]),</span>
+            <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">errors</span></div>
+
+
+<div class="viewcode-block" id="validate_cli_config"><a class="viewcode-back" href="../../dev/reference/project_config.config.html#project_config.config.validate_cli_config">[docs]</a><span class="k">def</span> <span class="nf">validate_cli_config</span><span class="p">(</span>
+    <span class="n">config_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validates the CLI configuration.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        config_path (str): Configuration file path.</span>
+<span class="sd">        config (dict): Raw CLI configuration.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        object: CLI configuration data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">errors</span> <span class="o">=</span> <span class="n">_validate_cli_config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">errors</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ProjectConfigInvalidConfigSchema</span><span class="p">(</span><span class="n">config_path</span><span class="p">,</span> <span class="n">errors</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">config</span></div>
+
+
+<div class="viewcode-block" id="FileConfig"><a class="viewcode-back" href="../../dev/reference/project_config.config.html#project_config.config.FileConfig">[docs]</a><span class="k">class</span> <span class="nc">FileConfig</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;File configuration wrapper.</span>
+
+<span class="sd">    Stores the data of the project-config configuration defined in</span>
+<span class="sd">    the file &#39;.project-config.toml&#39; or equivalent. The configuration</span>
+<span class="sd">    of the file is stored in the ``dict_`` attribute.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">rootdir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">store_raw_config</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>  <span class="c1"># noqa: FBT001, FBT002</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;File configuration wrapper initializer.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            rootdir (str): Project root directory.</span>
+<span class="sd">            path (str): Path to the file from which the configuration</span>
+<span class="sd">                will be loaded.</span>
+<span class="sd">            store_raw_config (bool): If ``True``, the raw configuration</span>
+<span class="sd">                of the file will be stored in the ``raw_`` attribute.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">Cache</span><span class="o">.</span><span class="n">ensure_dir</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">config</span> <span class="o">=</span> <span class="n">read_config</span><span class="p">(</span><span class="n">rootdir</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">store_raw_config</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">copy</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">raw_</span><span class="p">:</span> <span class="n">RawConfigType</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+
+        <span class="c1"># Temporally store configuration path to use in validation</span>
+        <span class="n">config</span><span class="p">[</span><span class="s2">&quot;_path&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span>
+
+        <span class="n">validate_config</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+        <span class="n">config</span><span class="p">[</span><span class="s2">&quot;cache&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_cache_string_to_seconds</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;cache&quot;</span><span class="p">])</span>
+
+        <span class="c1"># cli configuration in file</span>
+        <span class="n">config</span><span class="p">[</span><span class="s2">&quot;cli&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">validate_cli_config</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;cli&quot;</span><span class="p">,</span> <span class="p">{}))</span>
+
+        <span class="k">del</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;_path&quot;</span><span class="p">]</span>
+
+        <span class="c1"># set the cache expiration time globally</span>
+        <span class="n">Cache</span><span class="o">.</span><span class="n">set_expiration_time</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;cache&quot;</span><span class="p">])</span>
+
+        <span class="c1"># configuration</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dict_</span><span class="p">:</span> <span class="n">ConfigType</span> <span class="o">=</span> <span class="n">config</span>
+
+<div class="viewcode-block" id="FileConfig.load_style"><a class="viewcode-back" href="../../dev/reference/project_config.config.html#project_config.config.FileConfig.load_style">[docs]</a>    <span class="k">def</span> <span class="nf">load_style</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: D102</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">style</span> <span class="o">=</span> <span class="n">Style</span><span class="o">.</span><span class="n">from_config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="Config"><a class="viewcode-back" href="../../dev/reference/project_config.config.html#project_config.config.Config">[docs]</a><span class="k">class</span> <span class="nc">Config</span><span class="p">(</span><span class="n">FileConfig</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Main configuration wrapper.</span>
+
+<span class="sd">    This class is the main configuration wrapper. It is used to</span>
+<span class="sd">    load a configuration object from CLI arguments.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Guess the final configuration merging file with CLI arguments.&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">rootdir</span> <span class="ow">or</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="n">args</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="c1"># Disable cache from CLI</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;PROJECT_CONFIG_USE_CACHE&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;false&quot;</span>
+            <span class="ow">or</span> <span class="n">args</span><span class="o">.</span><span class="n">cache</span> <span class="ow">is</span> <span class="kc">False</span>
+        <span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">dict_</span><span class="p">[</span><span class="s2">&quot;cache&quot;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dict_</span><span class="p">[</span><span class="s2">&quot;cache&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="c1"># colorize output?</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dict_</span><span class="p">[</span><span class="s2">&quot;cli&quot;</span><span class="p">][</span><span class="s2">&quot;color&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dict_</span><span class="p">[</span><span class="s2">&quot;cli&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;color&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">color</span> <span class="ow">is</span> <span class="kc">True</span> <span class="k">else</span> <span class="n">args</span><span class="o">.</span><span class="n">color</span>
+        <span class="p">)</span>
+
+        <span class="c1"># reporter definition</span>
+        <span class="n">reporter_kwargs</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">reporter</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;kwargs&quot;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="n">reporter_id</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">reporter</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dict_</span><span class="p">[</span><span class="s2">&quot;cli&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;reporter&quot;</span><span class="p">,</span> <span class="n">DEFAULT_REPORTER</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;:&quot;</span> <span class="ow">in</span> <span class="n">reporter_id</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">reporter</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="n">reporter_kwargs</span><span class="p">[</span><span class="s2">&quot;fmt&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">reporter_id</span><span class="o">.</span><span class="n">split</span><span class="p">(</span>
+                <span class="s2">&quot;:&quot;</span><span class="p">,</span>
+                <span class="n">maxsplit</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">reporter</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">reporter_id</span>
+
+        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">color</span> <span class="ow">in</span> <span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="k">if</span> <span class="s2">&quot;colors&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dict_</span><span class="p">[</span><span class="s2">&quot;cli&quot;</span><span class="p">]:</span>
+                <span class="n">colors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dict_</span><span class="p">[</span><span class="s2">&quot;cli&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;colors&quot;</span><span class="p">,</span> <span class="p">{})</span>
+                <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">reporter_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;colors&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="n">colors</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>  <span class="c1"># cli overrides config</span>
+                <span class="n">reporter_kwargs</span><span class="p">[</span><span class="s2">&quot;colors&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">colors</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">reporter</span><span class="p">[</span><span class="s2">&quot;kwargs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">reporter_kwargs</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">reporter</span><span class="p">[</span><span class="s2">&quot;kwargs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">reporter_kwargs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dict_</span><span class="p">[</span><span class="s2">&quot;cli&quot;</span><span class="p">][</span><span class="s2">&quot;_reporter_definition&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">reporter</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">rootdir</span><span class="p">:</span>
+            <span class="n">_rootdir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dict_</span><span class="p">[</span><span class="s2">&quot;cli&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;rootdir&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">_rootdir</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dict_</span><span class="p">[</span><span class="s2">&quot;cli&quot;</span><span class="p">][</span><span class="s2">&quot;rootdir&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="n">_rootdir</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dict_</span><span class="p">[</span><span class="s2">&quot;cli&quot;</span><span class="p">][</span><span class="s2">&quot;rootdir&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dict_</span><span class="p">[</span><span class="s2">&quot;cli&quot;</span><span class="p">][</span><span class="s2">&quot;rootdir&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">rootdir</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dict_</span><span class="p">[</span><span class="s2">&quot;cli&quot;</span><span class="p">][</span><span class="s2">&quot;rootdir&quot;</span><span class="p">]):</span>  <span class="c1"># pragma: no cover</span>
+            <span class="n">rootdir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dict_</span><span class="p">[</span><span class="s2">&quot;cli&quot;</span><span class="p">][</span><span class="s2">&quot;rootdir&quot;</span><span class="p">]</span>
+            <span class="k">raise</span> <span class="n">ProjectConfigInvalidConfig</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Root directory &#39;</span><span class="si">{</span><span class="n">rootdir</span><span class="si">}</span><span class="s2">&#39; must be an existing directory&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="c1"># set rootdir as an internal environment variable to be</span>
+        <span class="c1"># used by plugins</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;PROJECT_CONFIG_ROOTDIR&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dict_</span><span class="p">[</span><span class="s2">&quot;cli&quot;</span><span class="p">][</span><span class="s2">&quot;rootdir&quot;</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">dict_</span><span class="p">[</span><span class="s2">&quot;cli&quot;</span><span class="p">][</span><span class="s2">&quot;only_hints&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dict_</span><span class="p">[</span><span class="s2">&quot;cli&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;only_hints&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">True</span>
+            <span class="ow">or</span> <span class="n">args</span><span class="o">.</span><span class="n">only_hints</span> <span class="ow">is</span> <span class="kc">True</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="reporter_from_config"><a class="viewcode-back" href="../../dev/reference/project_config.config.html#project_config.config.reporter_from_config">[docs]</a><span class="k">def</span> <span class="nf">reporter_from_config</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">Config</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Instanciate a reporter from a configuration object.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        config (Config): Configuration object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">config_cli</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">dict_</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;cli&quot;</span><span class="p">,</span> <span class="p">{})</span>
+    <span class="k">return</span> <span class="n">get_reporter</span><span class="p">(</span>
+        <span class="n">config_cli</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;_reporter_definition&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">,</span>
+            <span class="n">DEFAULT_REPORTER</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="n">config_cli</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;_reporter_definition&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;kwargs&quot;</span><span class="p">,</span> <span class="p">{}),</span>
+        <span class="n">config_cli</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;color&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+        <span class="n">config_cli</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;rootdir&quot;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()),</span>
+        <span class="n">only_hints</span><span class="o">=</span><span class="n">config_cli</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;only_hints&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="initialize_config"><a class="viewcode-back" href="../../dev/reference/project_config.config.html#project_config.config.initialize_config">[docs]</a><span class="k">def</span> <span class="nf">initialize_config</span><span class="p">(</span><span class="n">config_fpath</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize the configuration.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        config_fpath (str): Path to the file in which the configuration will</span>
+<span class="sd">            be stored.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: Path to the configuration.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">config_dirpath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">config_fpath</span><span class="p">)),</span>
+    <span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">config_dirpath</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">config_fpath</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">config_fpath</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+    <span class="n">style_fpath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config_dirpath</span><span class="p">,</span> <span class="s2">&quot;style.json5&quot;</span><span class="p">)</span>
+
+    <span class="n">config_file_basename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">config_fpath</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">create_default_style_file</span><span class="p">(</span>
+        <span class="n">config_prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;@&quot;</span><span class="p">,</span>
+        <span class="n">prefix_jmespaths</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create the default style file if it does not exist.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">config_prefix</span> <span class="o">==</span> <span class="s2">&quot;@&quot;</span><span class="p">:</span>
+
+            <span class="k">def</span> <span class="nf">key_matcher</span><span class="p">(</span><span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">key</span>
+
+            <span class="n">style_setter</span> <span class="o">=</span> <span class="s2">&quot;set(@, &#39;style&#39;, [&#39;style.json5&#39;])&quot;</span>
+            <span class="n">cache_setter</span> <span class="o">=</span> <span class="s2">&quot;set(@, &#39;cache&#39;, &#39;5 minutes&#39;)&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+
+            <span class="k">def</span> <span class="nf">key_matcher</span><span class="p">(</span><span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+                <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;tool.</span><span class="se">\\</span><span class="s1">&quot;project-config</span><span class="se">\\</span><span class="s1">&quot;.</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1">&#39;</span>
+
+            <span class="n">style_setter</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="s2">&quot;set(@, &#39;tool&#39;, set(tool, &#39;project-config&#39;,&quot;</span>
+                <span class="s1">&#39; set(tool.</span><span class="se">\\</span><span class="s1">&quot;project-config</span><span class="se">\\</span><span class="s1">&quot;,&#39;</span>
+                <span class="s2">&quot; &#39;style&#39;, [&#39;style.json5&#39;])))&quot;</span>
+            <span class="p">)</span>
+            <span class="n">cache_setter</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="s2">&quot;set(@, &#39;tool&#39;, set(tool, &#39;project-config&#39;,&quot;</span>
+                <span class="s1">&#39; set(tool.</span><span class="se">\\</span><span class="s1">&quot;project-config</span><span class="se">\\</span><span class="s1">&quot;,&#39;</span>
+                <span class="s2">&quot; &#39;cache&#39;, &#39;5 minutes&#39;)))&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">style_fpath</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+<span class="w">                </span><span class="sd">&#39;&#39;&#39;{</span>
+<span class="sd">  rules: [</span>
+<span class="sd">    {</span>
+<span class="sd">      files: [&quot;&#39;&#39;&#39;</span>
+                <span class="o">+</span> <span class="n">config_file_basename</span>
+                <span class="o">+</span> <span class="s2">&quot;&quot;&quot;&quot;],</span>
+<span class="s2">      JMESPathsMatch: [</span><span class="se">\n</span><span class="s2">        &quot;&quot;&quot;</span>
+                <span class="o">+</span> <span class="n">prefix_jmespaths</span>
+                <span class="o">+</span> <span class="s2">&quot;&quot;&quot;[&quot;type(&quot;&quot;&quot;</span>
+                <span class="o">+</span> <span class="n">key_matcher</span><span class="p">(</span><span class="s2">&quot;style&quot;</span><span class="p">)</span>
+                <span class="o">+</span> <span class="s2">&quot;&quot;&quot;)&quot;, &quot;array&quot;],</span>
+<span class="s2">        [&quot;op(length(&quot;&quot;&quot;</span>
+                <span class="o">+</span> <span class="n">key_matcher</span><span class="p">(</span><span class="s2">&quot;style&quot;</span><span class="p">)</span>
+                <span class="o">+</span> <span class="s2">&quot;&quot;&quot;), &#39;&gt;&#39;, `0`)&quot;, true, &quot;&quot;&quot;</span>
+                <span class="o">+</span> <span class="s1">&#39;&quot;&#39;</span>
+                <span class="o">+</span> <span class="n">style_setter</span>
+                <span class="o">+</span> <span class="s1">&#39;&quot;&#39;</span>
+                <span class="o">+</span> <span class="s2">&quot;&quot;&quot;],</span>
+<span class="s2">        [&quot;type(&quot;&quot;&quot;</span>
+                <span class="o">+</span> <span class="n">key_matcher</span><span class="p">(</span><span class="s2">&quot;cache&quot;</span><span class="p">)</span>
+                <span class="o">+</span> <span class="s2">&quot;&quot;&quot;)&quot;, &quot;string&quot;, &quot;&quot;&quot;</span>
+                <span class="o">+</span> <span class="s1">&#39;&quot;&#39;</span>
+                <span class="o">+</span> <span class="n">cache_setter</span>
+                <span class="o">+</span> <span class="s1">&#39;&quot;&#39;</span>
+                <span class="o">+</span> <span class="s2">&quot;&quot;&quot;],</span>
+<span class="s2">        [</span>
+<span class="s2">          &quot;regex_match(&#39;(</span><span class="se">\\\\</span><span class="s2">d+ ((seconds?)|(minutes?)|(hours?)|(days?)|(weeks?)))|(never)$&#39;, &quot;&quot;&quot;</span>  <span class="c1"># noqa: E501,</span>
+                <span class="o">+</span> <span class="n">key_matcher</span><span class="p">(</span><span class="s2">&quot;cache&quot;</span><span class="p">)</span>
+                <span class="o">+</span> <span class="s2">&quot;&quot;&quot;)&quot;,</span>
+<span class="s2">          true,</span>
+<span class="s2">          &quot;5 minutes&quot;,</span>
+<span class="s2">        ],</span>
+<span class="s2">      ]</span>
+<span class="s2">    }</span>
+<span class="s2">  ]</span>
+<span class="s2">}</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">build_config_string</span><span class="p">(</span>
+        <span class="n">pyproject_toml</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>  <span class="c1"># noqa: FBT001, FBT002</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">pyproject_toml</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">+=</span> <span class="s2">&quot;[tool.project-config]</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s1">style = [&quot;style.json5&quot;]</span><span class="se">\n</span><span class="s1">cache = &quot;5 minutes&quot;</span><span class="se">\n</span><span class="s1">&#39;</span>
+
+    <span class="k">def</span> <span class="nf">add_config_string_to_file</span><span class="p">(</span><span class="n">string</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">config_fpath</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">config_lines</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+        <span class="n">add_separator</span> <span class="o">=</span> <span class="n">config_lines</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="k">if</span> <span class="n">config_lines</span> <span class="k">else</span> <span class="kc">False</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">config_fpath</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">add_separator</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">config_file_basename</span> <span class="o">==</span> <span class="s2">&quot;pyproject.toml&quot;</span><span class="p">:</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">read_config_from_pyproject_toml</span><span class="p">(</span><span class="n">config_fpath</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">config</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ProjectConfigAlreadyInitialized</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">config_fpath</span><span class="si">}</span><span class="s2">[tool.project-config]&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="n">add_config_string_to_file</span><span class="p">(</span><span class="n">build_config_string</span><span class="p">(</span><span class="n">pyproject_toml</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+
+        <span class="n">create_default_style_file</span><span class="p">(</span>
+            <span class="n">config_prefix</span><span class="o">=</span><span class="s1">&#39;tool.</span><span class="se">\\</span><span class="s1">&quot;project-config</span><span class="se">\\</span><span class="s1">&quot;&#39;</span><span class="p">,</span>
+            <span class="n">prefix_jmespaths</span><span class="o">=</span><span class="p">(</span>
+                <span class="s1">&#39;[&quot;type(tool)&quot;, &quot;object&quot;],&#39;</span>
+                <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">        [&quot;type(tool.</span><span class="se">\\</span><span class="s1">&quot;project-config</span><span class="se">\\</span><span class="s1">&quot;)&quot;, &quot;object&quot;],&#39;</span>
+                <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">        &quot;</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">config_fpath</span><span class="si">}</span><span class="s2">[tool.project-config]&quot;</span>
+
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">config_fpath</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">config_fpath</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">():</span>
+                <span class="k">raise</span> <span class="n">ProjectConfigAlreadyInitialized</span><span class="p">(</span><span class="n">config_fpath</span><span class="p">)</span>
+
+    <span class="n">add_config_string_to_file</span><span class="p">(</span><span class="n">build_config_string</span><span class="p">())</span>
+    <span class="n">create_default_style_file</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">config_fpath</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022-2024, Álvaro Mondéjar Rubio &lt;mondejar1994@gmail.com&gt;.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

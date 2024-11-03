@@ -1,0 +1,8 @@
+project\_config.plugins.contrib.pre\_commit module
+==================================================
+
+.. automodule:: project_config.plugins.contrib.pre_commit
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:

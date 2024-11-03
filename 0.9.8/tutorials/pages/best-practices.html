@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Best practices &mdash; project-config 0.9.8 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/bolditalic.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/override-styles.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Linting a package.json file" href="package-json.html" />
+    <link rel="prev" title="Tutorials" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            project-config
+          </a>
+              <div class="version">
+                0.9
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Quickstart</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../basic-usage.html">Basic usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Tutorials</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Best practices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="package-json.html">Linting a <code class="docutils literal notranslate"><span class="pre">package.json</span></code> file</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/cli.html">project-config CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/config.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/styling.html">Styling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/plugins.html">Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/ci.html">Using on CI</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">In depth</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../in-depth/rationale.html">Rationale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../in-depth/fetching.html">Fetching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../in-depth/serialization.html">Objects serialization</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For developers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/plugins.html">Writing third party plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/reporters.html">Writing third party reporters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/reference/modules.html">Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">project-config</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Tutorials</a></li>
+      <li class="breadcrumb-item active">Best practices</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/tutorials/pages/best-practices.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="best-practices">
+<h1>Best practices<a class="headerlink" href="#best-practices" title="Permalink to this heading"></a></h1>
+<dl class="simple">
+<dt>Is important to write your rules in a way that can be automatically fixable by <strong>project-config</strong> itself without defining a fix query.</dt><dd><p>The next style file is documented showing best practices to follow when writing a style file and other helpful common patterns:</p>
+</dd>
+</dl>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="c1">// The directory `src/` and the file `src/.keep` must exist</span>
+<span class="w">      </span><span class="c1">// or will be created (FIXABLE):</span>
+<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;src/&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;src/.keep&quot;</span><span class="p">],</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="c1">// The file `data.json` is a file or will be created (FIXABLE):</span>
+<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;data.json&quot;</span><span class="p">],</span>
+
+<span class="w">      </span><span class="c1">// Using JMESPath we can query serialized files to expect</span>
+<span class="w">      </span><span class="c1">// that certain conditions match or edit theirs contents:</span>
+<span class="w">      </span><span class="c1">//</span>
+<span class="w">      </span><span class="nx">JMESPathsMatch</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="c1">// note that you can fix a value automatically</span>
+<span class="w">        </span><span class="c1">// querying the type of the root object `@` (FIXABLE):</span>
+<span class="w">        </span><span class="p">[</span><span class="s2">&quot;type(@)&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">],</span>
+
+<span class="w">        </span><span class="c1">// The manual version of this and what I need for this</span>
+<span class="w">        </span><span class="c1">// example: initialize the file in `fix` with an empty object</span>
+<span class="w">        </span><span class="c1">// to trigger all other assertions as errors (MANUAL FIX)</span>
+<span class="w">        </span><span class="p">[</span><span class="s2">&quot;null&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;`{}`&quot;</span><span class="p">],</span>
+<span class="w">        </span><span class="c1">//</span>
+<span class="w">        </span><span class="c1">// Note that I&#39;m comparing ``null == true``, so this error</span>
+<span class="w">        </span><span class="c1">// will be raised always. You can use this pattern to create</span>
+<span class="w">        </span><span class="c1">// entire sections of files programatically.</span>
+<span class="w">        </span><span class="c1">//</span>
+<span class="w">        </span><span class="c1">// Take a look at how I&#39;m adding a third item in the array to</span>
+<span class="w">        </span><span class="c1">// make an edition of the file. The value returned by this</span>
+<span class="w">        </span><span class="c1">// third JMESPath expression will be the new content of the file.</span>
+
+<span class="w">        </span><span class="c1">// Specify that a value must be a certain constant (FIXABLE):</span>
+<span class="w">        </span><span class="p">[</span><span class="s2">&quot;string_constant&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;my-string&quot;</span><span class="p">],</span>
+<span class="w">        </span><span class="p">[</span><span class="s2">&quot;number_constant&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">42</span><span class="p">],</span>
+<span class="w">        </span><span class="p">[</span><span class="s2">&quot;boolean_constant&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">],</span>
+<span class="w">        </span><span class="p">[</span><span class="s2">&quot;null_constant&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">],</span>
+
+<span class="w">        </span><span class="c1">// If you need to create an intermediate object,</span>
+<span class="w">        </span><span class="c1">// define it of type `array` or `object` (FIXABLE):</span>
+<span class="w">        </span><span class="p">[</span><span class="s2">&quot;type(an_object)&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">],</span>
+<span class="w">        </span><span class="p">[</span><span class="s2">&quot;type(an_array)&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;array&quot;</span><span class="p">],</span>
+
+<span class="w">        </span><span class="c1">// This also works lately in nested arrays of objects (FIXABLE):</span>
+<span class="w">        </span><span class="p">[</span><span class="s2">&quot;type(an_object.a_nested_array)&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;array&quot;</span><span class="p">],</span>
+<span class="w">        </span><span class="p">[</span><span class="s2">&quot;type(an_object.a_nested_object)&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">],</span>
+<span class="w">        </span><span class="p">[</span><span class="s2">&quot;type(an_object.a_nested_empty_string)&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">],</span>
+<span class="w">        </span><span class="p">[</span><span class="s2">&quot;type(an_object.a_nested_object.a_subnested_null)&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;null&quot;</span><span class="p">],</span>
+
+<span class="w">        </span><span class="c1">// You can make your own editions manually by specifying a fix query.</span>
+<span class="w">        </span><span class="c1">//</span>
+<span class="w">        </span><span class="c1">// For example, here if `boolean_constant` is `true`, the value</span>
+<span class="w">        </span><span class="c1">// of `conditional_constant` will be setted as &#39;enabled&#39; (MANUAL FIX):</span>
+<span class="w">        </span><span class="p">[</span>
+<span class="w">          </span><span class="s2">&quot;boolean_constant&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;set(@, &#39;conditional_constant&#39;, &#39;enabled&#39;)&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="c1">// Here I&#39;m using the function `set()` which returns the base</span>
+<span class="w">        </span><span class="c1">// object with a field updated, &#39;conditional_constant&#39; in this case</span>
+<span class="w">        </span><span class="c1">// setted to &#39;enabled&#39;.</span>
+<span class="w">        </span><span class="c1">//</span>
+<span class="w">        </span><span class="c1">// You can use `unset()` to delete keys from objects (MANUAL FIX):</span>
+<span class="w">        </span><span class="p">[</span>
+<span class="w">          </span><span class="s2">&quot;contains(keys(@), &#39;conditional_constant&#39;)&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;unset(@, &#39;conditional_constant&#39;)&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="c1">// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^</span>
+<span class="w">          </span><span class="c1">// Note that this expression will be always treated as an</span>
+<span class="w">          </span><span class="c1">// error and fixed because the previous is setting</span>
+<span class="w">          </span><span class="c1">// `conditional_constant` to `enabled`:</span>
+<span class="w">        </span><span class="p">],</span>
+
+<span class="w">        </span><span class="p">[</span>
+<span class="w">          </span><span class="s2">&quot;contains(keys(@), &#39;conditional_constant&#39;)&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;set(@, &#39;conditional_constant&#39;, &#39;enabled&#39;)&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="p">],</span>
+
+<span class="w">        </span><span class="c1">// But the previous `unset()` expression is autofixable, so is</span>
+<span class="w">        </span><span class="c1">// not needed using `contains(keys(@), &#39;&lt;key&gt;&#39;) -&gt; false` (FIXABLE):</span>
+<span class="w">        </span><span class="p">[</span><span class="s2">&quot;contains(keys(@), &#39;conditional_constant&#39;)&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">],</span>
+
+<span class="w">        </span><span class="c1">// If you need to update the current object you can use `update()`:</span>
+<span class="w">        </span><span class="c1">//                                                    (MANUAL FIX)</span>
+<span class="w">        </span><span class="p">[</span>
+<span class="w">          </span><span class="s2">&quot;boolean_constant&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;update(@, {string_constant: &#39;my-string&#39;, other_string_constant: &#39;my-other-string&#39;, other_boolean_constant: `false`})&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="p">],</span>
+
+<span class="w">        </span><span class="c1">// The function `insert()` can be used to insert an element in an array.</span>
+<span class="w">        </span><span class="c1">//</span>
+<span class="w">        </span><span class="c1">// If `an_array` is empty, set `an_array` in the root object (`@`) to be</span>
+<span class="w">        </span><span class="c1">// the previous `an_array` with the value `77` prepended at index 0 (MANUAL FIX):</span>
+<span class="w">        </span><span class="p">[</span>
+<span class="w">          </span><span class="s2">&quot;op(length(an_array), &#39;&gt;&#39;, `1`)&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;set(@ , &#39;an_array&#39;, insert(an_array, `0`, `77`))&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="p">],</span>
+
+<span class="w">        </span><span class="c1">// With the function `deepmerge` we can make more complex updates of nested</span>
+<span class="w">        </span><span class="c1">// nodes following different strategies, even by type:</span>
+<span class="w">        </span><span class="c1">//</span>
+<span class="w">        </span><span class="c1">//   - Update the root object and a the nested dictionary `an_object`</span>
+<span class="w">        </span><span class="c1">//     using the default conservative merging strategy (MANUAL FIX):</span>
+<span class="w">        </span><span class="p">[</span>
+<span class="w">          </span><span class="s2">&quot;type(an_object.deepmerged_array)&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;array&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;deepmerge(@, {deepmerged_string: &#39;deep string&#39;, an_object: {deepmerged_array: [`1`, `2`, `3`, `4`, `[\&quot;to-the-deep\&quot;]`]}})&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="c1">//</span>
+<span class="w">        </span><span class="c1">//   - Update the root object and a the nested dictionary `an_object`</span>
+<span class="w">        </span><span class="c1">//     using an &#39;always_merger&#39; strategy, adding items to strings if the keys match</span>
+<span class="w">        </span><span class="c1">//     and replacing previous fields like strings (MANUAL FIX):</span>
+<span class="w">        </span><span class="p">[</span>
+<span class="w">          </span><span class="s2">&quot;op(length(an_object.deepmerged_array), &#39;&lt;&#39;, `6`)&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;deepmerge(@, {deepmerged_string: &#39;even deeper string&#39;, an_object: {deepmerged_array: [`6`, `7`, `8`]}}, &#39;always_merger&#39;)&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="c1">//</span>
+<span class="w">        </span><span class="c1">// The strategies can be defined for each type differently passing an array</span>
+<span class="w">        </span><span class="c1">// to the third argument with an array of three arrays:</span>
+<span class="w">        </span><span class="c1">//</span>
+<span class="w">        </span><span class="c1">// `[ [[&quot;&lt;type&gt;&quot;, [&quot;&lt;strategy&gt;&quot;, ...]]... ], [&quot;&lt;strategy&gt;&quot;, ...], [&quot;&lt;strategy&gt;&quot;, ...]]`</span>
+<span class="w">        </span><span class="c1">//</span>
+<span class="w">        </span><span class="c1">// For example:</span>
+<span class="w">        </span><span class="c1">//</span>
+<span class="w">        </span><span class="c1">// `[ [[&#39;array&#39;, [&#39;prepend&#39;]], [&#39;object&#39;, [&#39;merge&#39;]]], [&#39;override&#39;], [&#39;override&#39;] ]`</span>
+<span class="w">        </span><span class="c1">//     ^^^^^^^^^^^^^^^^^^^^^                           ^^^^^^^^^^^^^^^^^^^^^^^^^^</span>
+<span class="w">        </span><span class="c1">//       |            |                                                     |</span>
+<span class="w">        </span><span class="c1">// The arrays will insert new items at the beginning of previous arrays     |</span>
+<span class="w">        </span><span class="c1">// and objects will merge the new values with the previous ones.            |</span>
+<span class="w">        </span><span class="c1">//                                                                          |</span>
+<span class="w">        </span><span class="c1">// For all the other types override the previous values and for types that enter</span>
+<span class="w">        </span><span class="c1">// in conflict when merging override the previous values too.</span>
+<span class="w">      </span><span class="p">],</span>
+
+<span class="w">      </span><span class="nx">crossJMESPathsMatch</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="c1">//</span>
+<span class="w">        </span><span class="c1">// Working with online sources</span>
+<span class="w">        </span><span class="c1">// ---------------------------</span>
+<span class="w">        </span><span class="c1">//</span>
+<span class="w">        </span><span class="c1">// You can use the verb `crossJMESPathsMatch` to ensure that your data matches</span>
+<span class="w">        </span><span class="c1">// with an online source.</span>
+<span class="w">        </span><span class="c1">//</span>
+<span class="w">        </span><span class="c1">// For example, if you want to ensure that the value of the key `license`</span>
+<span class="w">        </span><span class="c1">// is OSI approved SPDX license identifier according to the official SPDX</span>
+<span class="w">        </span><span class="c1">// repository you can use:</span>
+<span class="w">        </span><span class="p">[</span>
+<span class="w">          </span><span class="s2">&quot;license&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">&quot;gh://spdx/license-list-data@v3.25.0/json/licenses.json&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;licenses[?isOsiApproved] | [?!isDeprecatedLicenseId].licenseId&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="p">],</span>
+<span class="w">          </span><span class="s2">&quot;contains([1], [0])&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="c1">// Here we are defining the file URL using a Github protocol,</span>
+<span class="w">        </span><span class="c1">// which allows to query remote files located in Github repositories</span>
+<span class="w">        </span><span class="c1">// with the syntax `gh://&lt;owner&gt;/&lt;repository&gt;(@v&lt;version&gt;)?/&lt;path&gt;`</span>
+<span class="w">        </span><span class="c1">// (note that the `@v&lt;version&gt;` part is optional).</span>
+<span class="w">        </span><span class="c1">//</span>
+<span class="w">        </span><span class="c1">// So the previous expressions means that `license` from the &#39;data.json&#39;,</span>
+<span class="w">        </span><span class="c1">// represented in the final `contains()` argument as `[0]`: must be inside</span>
+<span class="w">        </span><span class="c1">// an array of OSI approved and non deprecated SPDX license identifiers</span>
+<span class="w">        </span><span class="c1">// obtained from the online source (`[1]`), as is defined for the final</span>
+<span class="w">        </span><span class="c1">// expected value `true`.</span>
+<span class="w">        </span><span class="c1">//</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="c1">//</span>
+<span class="w">      </span><span class="c1">// Working with text files</span>
+<span class="w">      </span><span class="c1">// -----------------------</span>
+<span class="w">      </span><span class="c1">//</span>
+<span class="w">      </span><span class="c1">// Text files like `.gitignores` are serialized in an array of lines,</span>
+<span class="w">      </span><span class="c1">// one string per line with line ends characters stripped.</span>
+<span class="w">      </span><span class="c1">//</span>
+<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.gitignore&quot;</span><span class="p">],</span>
+<span class="w">      </span><span class="c1">//</span>
+<span class="w">      </span><span class="c1">// You can use `includeLines` to force the inclusion of a line.</span>
+<span class="w">      </span><span class="c1">// For example, if you want to ensure that the file `.gitignore`</span>
+<span class="w">      </span><span class="c1">// has the line &#39;dist/&#39; (FIXABLE):</span>
+<span class="w">      </span><span class="nx">includeLines</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;dist/&quot;</span><span class="p">],</span>
+<span class="w">      </span><span class="c1">//</span>
+<span class="w">      </span><span class="c1">// TIP: Use `hint` field of rules to show a better error message</span>
+<span class="w">      </span><span class="c1">//      when the rule is not satisfied.</span>
+<span class="w">      </span><span class="nx">hint</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Enforce the addition of the line &#39;dist/&#39; in the .gitignore file.&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="c1">//</span>
+<span class="w">      </span><span class="c1">// Only execute this rule if the file `.project-config.toml` exists:</span>
+<span class="w">      </span><span class="nx">ifFilesExist</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.project-config.toml&quot;</span><span class="p">],</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="c1">// A line must preceed another</span>
+<span class="w">      </span><span class="c1">// ---------------------------</span>
+<span class="w">      </span><span class="c1">//</span>
+<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;data.json&quot;</span><span class="p">],</span>
+
+<span class="w">      </span><span class="c1">// If you want to ensure that a line is preceded by another in a text file,</span>
+<span class="w">      </span><span class="c1">// you can use `crossJMESPathsMatch` with the `text` serializer.</span>
+
+<span class="w">      </span><span class="c1">// For example, I want that the `dependencies` field in the &#39;data.json&#39;</span>
+<span class="w">      </span><span class="c1">// file to be defined before `devDependencies`:</span>
+<span class="w">      </span><span class="nx">crossJMESPathsMatch</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">[</span>
+<span class="w">          </span><span class="s2">&quot;@&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">&quot;data.json?text&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;op(op(@, &#39;indexOf&#39;, &#39;  \&quot;dependencies\&quot;: {&#39;), &#39;&lt;&#39;, op(@, &#39;indexOf&#39;, &#39;  \&quot;devDependencies\&quot;: {&#39;))&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="p">],</span>
+<span class="w">          </span><span class="s2">&quot;[1]&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">      </span><span class="c1">//</span>
+<span class="w">      </span><span class="c1">// With the syntax `?&lt;serializer&gt;` we can use other serializer to open</span>
+<span class="w">      </span><span class="c1">// the file, so in this example &#39;data.json&#39; is opened as an array of lines</span>
+<span class="w">      </span><span class="c1">// rather than a JSON object (`[0]` in the last pipe).</span>
+<span class="w">      </span><span class="c1">//</span>
+<span class="w">      </span><span class="c1">// Only execute this assertion if the file `data.json` contains</span>
+<span class="w">      </span><span class="c1">// the lines &#39;  &quot;dependencies&quot;: {&#39; and &#39;  &quot;devDependencies&quot;: {&#39;:</span>
+<span class="w">      </span><span class="nx">ifIncludeLines</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="s2">&quot;data.json&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;  &quot;dependencies&quot;: {&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;  &quot;devDependencies&quot;: {&#39;</span><span class="p">],</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nx">hint</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;The field `dependencies` must preceed `devDependencies`&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;string_constant&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my-string&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;number_constant&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;devDependencies&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;foo&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;bar&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;dependencies&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;foo&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;bar&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;boolean_constant&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;an_object&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;a_nested_array&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
+<span class="w">    </span><span class="nt">&quot;a_nested_object&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
+<span class="w">    </span><span class="nt">&quot;a_nested_empty_string&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;deepmerged_array&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;to-the-deep&quot;</span><span class="p">],</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w"> </span><span class="mi">7</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="p">]</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;an_array&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">77</span><span class="p">,</span><span class="w"> </span><span class="mi">77</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;other_string_constant&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my-other-string&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;other_boolean_constant&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;deepmerged_string&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;even deeper string&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;conditional_constant&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;enabled&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>user@hostname:~/<span class="w"> </span>rm<span class="w"> </span>-rf<span class="w"> </span>data.json<span class="w"> </span>src<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>project-config<span class="w"> </span>fix
+data.json
+<span class="w">  </span>-<span class="w"> </span><span class="o">(</span>FIXED<span class="o">)</span><span class="w"> </span>JMESPath<span class="w"> </span><span class="s1">&#39;null&#39;</span><span class="w"> </span>does<span class="w"> </span>not<span class="w"> </span>match.<span class="w"> </span>Expected<span class="w"> </span>True,<span class="w"> </span>returned<span class="w"> </span>None<span class="w"> </span>rules<span class="o">[</span><span class="m">1</span><span class="o">]</span>.JMESPathsMatch<span class="o">[</span><span class="m">0</span><span class="o">]</span>
+<span class="w">  </span>-<span class="w"> </span><span class="o">(</span>FIXED<span class="o">)</span><span class="w"> </span>JMESPath<span class="w"> </span><span class="s1">&#39;string_constant&#39;</span><span class="w"> </span>does<span class="w"> </span>not<span class="w"> </span>match.<span class="w"> </span>Expected<span class="w"> </span><span class="s1">&#39;my-string&#39;</span>,<span class="w"> </span>returned<span class="w"> </span>None<span class="w"> </span>rules<span class="o">[</span><span class="m">1</span><span class="o">]</span>.JMESPathsMatch<span class="o">[</span><span class="m">1</span><span class="o">]</span>
+<span class="w">  </span>-<span class="w"> </span><span class="o">(</span>FIXED<span class="o">)</span><span class="w"> </span>JMESPath<span class="w"> </span><span class="s1">&#39;number_constant&#39;</span><span class="w"> </span>does<span class="w"> </span>not<span class="w"> </span>match.<span class="w"> </span>Expected<span class="w"> </span><span class="m">42</span>,<span class="w"> </span>returned<span class="w"> </span>None<span class="w"> </span>rules<span class="o">[</span><span class="m">1</span><span class="o">]</span>.JMESPathsMatch<span class="o">[</span><span class="m">2</span><span class="o">]</span>
+<span class="w">  </span>-<span class="w"> </span><span class="o">(</span>FIXED<span class="o">)</span><span class="w"> </span>JMESPath<span class="w"> </span><span class="s1">&#39;boolean_constant&#39;</span><span class="w"> </span>does<span class="w"> </span>not<span class="w"> </span>match.<span class="w"> </span>Expected<span class="w"> </span>True,<span class="w"> </span>returned<span class="w"> </span>None<span class="w"> </span>rules<span class="o">[</span><span class="m">1</span><span class="o">]</span>.JMESPathsMatch<span class="o">[</span><span class="m">3</span><span class="o">]</span>
+<span class="w">  </span>-<span class="w"> </span><span class="o">(</span>FIXED<span class="o">)</span><span class="w"> </span>JMESPath<span class="w"> </span><span class="s1">&#39;type(an_object)&#39;</span><span class="w"> </span>does<span class="w"> </span>not<span class="w"> </span>match.<span class="w"> </span>Expected<span class="w"> </span><span class="s1">&#39;object&#39;</span>,<span class="w"> </span>returned<span class="w"> </span><span class="s1">&#39;null&#39;</span><span class="w"> </span>rules<span class="o">[</span><span class="m">1</span><span class="o">]</span>.JMESPathsMatch<span class="o">[</span><span class="m">5</span><span class="o">]</span>
+<span class="w">  </span>-<span class="w"> </span><span class="o">(</span>FIXED<span class="o">)</span><span class="w"> </span>JMESPath<span class="w"> </span><span class="s1">&#39;type(an_array)&#39;</span><span class="w"> </span>does<span class="w"> </span>not<span class="w"> </span>match.<span class="w"> </span>Expected<span class="w"> </span><span class="s1">&#39;array&#39;</span>,<span class="w"> </span>returned<span class="w"> </span><span class="s1">&#39;null&#39;</span><span class="w"> </span>rules<span class="o">[</span><span class="m">1</span><span class="o">]</span>.JMESPathsMatch<span class="o">[</span><span class="m">6</span><span class="o">]</span>
+<span class="w">  </span>-<span class="w"> </span><span class="o">(</span>FIXED<span class="o">)</span><span class="w"> </span>JMESPath<span class="w"> </span><span class="s1">&#39;type(an_object.a_nested_array)&#39;</span><span class="w"> </span>does<span class="w"> </span>not<span class="w"> </span>match.<span class="w"> </span>Expected<span class="w"> </span><span class="s1">&#39;array&#39;</span>,<span class="w"> </span>returned<span class="w"> </span><span class="s1">&#39;null&#39;</span><span class="w"> </span>rules<span class="o">[</span><span class="m">1</span><span class="o">]</span>.JMESPathsMatch<span class="o">[</span><span class="m">7</span><span class="o">]</span>
+<span class="w">  </span>-<span class="w"> </span><span class="o">(</span>FIXED<span class="o">)</span><span class="w"> </span>JMESPath<span class="w"> </span><span class="s1">&#39;type(an_object.a_nested_object)&#39;</span><span class="w"> </span>does<span class="w"> </span>not<span class="w"> </span>match.<span class="w"> </span>Expected<span class="w"> </span><span class="s1">&#39;object&#39;</span>,<span class="w"> </span>returned<span class="w"> </span><span class="s1">&#39;null&#39;</span><span class="w"> </span>rules<span class="o">[</span><span class="m">1</span><span class="o">]</span>.JMESPathsMatch<span class="o">[</span><span class="m">8</span><span class="o">]</span>
+<span class="w">  </span>-<span class="w"> </span><span class="o">(</span>FIXED<span class="o">)</span><span class="w"> </span>JMESPath<span class="w"> </span><span class="s1">&#39;type(an_object.a_nested_empty_string)&#39;</span><span class="w"> </span>does<span class="w"> </span>not<span class="w"> </span>match.<span class="w"> </span>Expected<span class="w"> </span><span class="s1">&#39;string&#39;</span>,<span class="w"> </span>returned<span class="w"> </span><span class="s1">&#39;null&#39;</span><span class="w"> </span>rules<span class="o">[</span><span class="m">1</span><span class="o">]</span>.JMESPathsMatch<span class="o">[</span><span class="m">9</span><span class="o">]</span>
+<span class="w">  </span>-<span class="w"> </span><span class="o">(</span>FIXED<span class="o">)</span><span class="w"> </span>JMESPath<span class="w"> </span><span class="s1">&#39;boolean_constant&#39;</span><span class="w"> </span>does<span class="w"> </span>not<span class="w"> </span>match.<span class="w"> </span>Expected<span class="w"> </span>False,<span class="w"> </span>returned<span class="w"> </span>True<span class="w"> </span>rules<span class="o">[</span><span class="m">1</span><span class="o">]</span>.JMESPathsMatch<span class="o">[</span><span class="m">11</span><span class="o">]</span>
+<span class="w">  </span>-<span class="w"> </span><span class="o">(</span>FIXED<span class="o">)</span><span class="w"> </span>JMESPath<span class="w"> </span><span class="s1">&#39;contains(keys(@), &#39;</span>conditional_constant<span class="s1">&#39;)&#39;</span><span class="w"> </span>does<span class="w"> </span>not<span class="w"> </span>match.<span class="w"> </span>Expected<span class="w"> </span>False,<span class="w"> </span>returned<span class="w"> </span>True<span class="w"> </span>rules<span class="o">[</span><span class="m">1</span><span class="o">]</span>.JMESPathsMatch<span class="o">[</span><span class="m">12</span><span class="o">]</span>
+<span class="w">  </span>-<span class="w"> </span><span class="o">(</span>FIXED<span class="o">)</span><span class="w"> </span>JMESPath<span class="w"> </span><span class="s1">&#39;contains(keys(@), &#39;</span>conditional_constant<span class="s1">&#39;)&#39;</span><span class="w"> </span>does<span class="w"> </span>not<span class="w"> </span>match.<span class="w"> </span>Expected<span class="w"> </span>True,<span class="w"> </span>returned<span class="w"> </span>False<span class="w"> </span>rules<span class="o">[</span><span class="m">1</span><span class="o">]</span>.JMESPathsMatch<span class="o">[</span><span class="m">13</span><span class="o">]</span>
+<span class="w">  </span>-<span class="w"> </span><span class="o">(</span>FIXED<span class="o">)</span><span class="w"> </span>JMESPath<span class="w"> </span><span class="s1">&#39;boolean_constant&#39;</span><span class="w"> </span>does<span class="w"> </span>not<span class="w"> </span>match.<span class="w"> </span>Expected<span class="w"> </span>False,<span class="w"> </span>returned<span class="w"> </span>True<span class="w"> </span>rules<span class="o">[</span><span class="m">1</span><span class="o">]</span>.JMESPathsMatch<span class="o">[</span><span class="m">14</span><span class="o">]</span>
+<span class="w">  </span>-<span class="w"> </span><span class="o">(</span>FIXED<span class="o">)</span><span class="w"> </span>JMESPath<span class="w"> </span><span class="s1">&#39;op(length(an_array), &#39;</span>&gt;<span class="s1">&#39;, `0`)&#39;</span><span class="w"> </span>does<span class="w"> </span>not<span class="w"> </span>match.<span class="w"> </span>Expected<span class="w"> </span>True,<span class="w"> </span>returned<span class="w"> </span>False<span class="w"> </span>rules<span class="o">[</span><span class="m">1</span><span class="o">]</span>.JMESPathsMatch<span class="o">[</span><span class="m">15</span><span class="o">]</span>
+<span class="w">  </span>-<span class="w"> </span><span class="o">(</span>FIXED<span class="o">)</span><span class="w"> </span>JMESPath<span class="w"> </span><span class="s1">&#39;type(an_object.deepmerged_array)&#39;</span><span class="w"> </span>does<span class="w"> </span>not<span class="w"> </span>match.<span class="w"> </span>Expected<span class="w"> </span><span class="s1">&#39;array&#39;</span>,<span class="w"> </span>returned<span class="w"> </span><span class="s1">&#39;null&#39;</span><span class="w"> </span>rules<span class="o">[</span><span class="m">1</span><span class="o">]</span>.JMESPathsMatch<span class="o">[</span><span class="m">16</span><span class="o">]</span>
+<span class="w">  </span>-<span class="w"> </span><span class="o">(</span>FIXED<span class="o">)</span><span class="w"> </span>JMESPath<span class="w"> </span><span class="s1">&#39;op(length(an_object.deepmerged_array), &#39;</span>&lt;<span class="s1">&#39;, `6`)&#39;</span><span class="w"> </span>does<span class="w"> </span>not<span class="w"> </span>match.<span class="w"> </span>Expected<span class="w"> </span>False,<span class="w"> </span>returned<span class="w"> </span>True<span class="w"> </span>rules<span class="o">[</span><span class="m">1</span><span class="o">]</span>.JMESPathsMatch<span class="o">[</span><span class="m">18</span><span class="o">]</span>
+<span class="w">  </span>-<span class="w"> </span>JMESPath<span class="w"> </span><span class="s1">&#39;contains([1], [0])&#39;</span><span class="w"> </span>does<span class="w"> </span>not<span class="w"> </span>match.<span class="w"> </span>Expected<span class="w"> </span>True,<span class="w"> </span>returned<span class="w"> </span>False<span class="w"> </span>rules<span class="o">[</span><span class="m">1</span><span class="o">]</span>.crossJMESPathsMatch<span class="o">[</span><span class="m">0</span><span class="o">]</span>
+<span class="w">  </span>-<span class="w"> </span>JMESPath<span class="w"> </span><span class="s1">&#39;[1]&#39;</span><span class="w"> </span>does<span class="w"> </span>not<span class="w"> </span>match.<span class="w"> </span>Expected<span class="w"> </span>True,<span class="w"> </span>returned<span class="w"> </span>False<span class="w"> </span>rules<span class="o">[</span><span class="m">3</span><span class="o">]</span>.crossJMESPathsMatch<span class="o">[</span><span class="m">0</span><span class="o">]</span><span class="w"> </span>The<span class="w"> </span>field<span class="w"> </span><span class="sb">`</span>dependencies<span class="sb">`</span><span class="w"> </span>must<span class="w"> </span>preceed<span class="w"> </span><span class="sb">`</span>devDependencies<span class="sb">`</span>
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="Tutorials" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="package-json.html" class="btn btn-neutral float-right" title="Linting a package.json file" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022-2024, Álvaro Mondéjar Rubio &lt;mondejar1994@gmail.com&gt;.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

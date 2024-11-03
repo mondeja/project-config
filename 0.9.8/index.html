@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>project-config’s documentation &mdash; project-config 0.9.8 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+      <link rel="stylesheet" href="_static/bolditalic.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/override-styles.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Installation" href="install.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="#" class="icon icon-home">
+            project-config
+          </a>
+              <div class="version">
+                0.9
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Quickstart</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basic-usage.html">Basic usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/index.html">Tutorials</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="reference/cli.html">project-config CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference/config.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference/styling.html">Styling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference/plugins.html">Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference/ci.html">Using on CI</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">In depth</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="in-depth/rationale.html">Rationale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="in-depth/fetching.html">Fetching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="in-depth/serialization.html">Objects serialization</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For developers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="dev/plugins.html">Writing third party plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev/reporters.html">Writing third party reporters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev/changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev/contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev/reference/modules.html">Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">project-config</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">project-config’s documentation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="project-config-s-documentation">
+<h1>project-config’s documentation<a class="headerlink" href="#project-config-s-documentation" title="Permalink to this heading"></a></h1>
+<p>Project configuration linter. Enforce the same set of settings between
+multiple projects.</p>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Quickstart</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basic-usage.html">Basic usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#basic-usage">Basic usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#project-config-self-configuration">project-config self configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#files-absence">Files absence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#conditionals">Conditionals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#intercommunication-between-rules">Intercommunication between rules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#compare-values-between-files">Compare values between files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#jmespath-against-online-sources">JMESPath against online sources</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#assert-root-directory-name">Assert root directory name</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#toml-sections-order">TOML sections order</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#editing-a-gitignore-file">Editing a .gitignore file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#replacing-code-blocks-languages-in-rst-documents">Replacing code blocks languages in RST documents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#autofixing-editorconfig">Autofixing .editorconfig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#setting-hooks-in-pre-commit-config-yaml">Setting hooks in .pre-commit-config.yaml</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/index.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/pages/best-practices.html">Best practices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/pages/package-json.html">Linting a <code class="docutils literal notranslate"><span class="pre">package.json</span></code> file</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="reference/cli.html">project-config CLI</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reference/cli.html#reporting">Reporting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/cli.html#examples-of-usage">Examples of usage</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reference/config.html">Configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reference/config.html#style-string-or-string"><code class="docutils literal notranslate"><span class="pre">style</span></code> (<cite>string</cite> or <cite>string[]</cite>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/config.html#cache-string"><code class="docutils literal notranslate"><span class="pre">cache</span></code> (<cite>string</cite>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/config.html#cli-object"><code class="docutils literal notranslate"><span class="pre">cli</span></code> (<cite>object</cite>)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference/config.html#cli-rootdir-string"><code class="docutils literal notranslate"><span class="pre">cli.rootdir</span></code> (<cite>string</cite>)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/config.html#cli-reporter-string"><code class="docutils literal notranslate"><span class="pre">cli.reporter</span></code> (<cite>string</cite>)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/config.html#cli-color-boolean"><code class="docutils literal notranslate"><span class="pre">cli.color</span></code> (<cite>boolean</cite>)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/config.html#cli-colors-object"><code class="docutils literal notranslate"><span class="pre">cli.colors</span></code> (<cite>object</cite>)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/config.html#cli-only-hints-boolean"><code class="docutils literal notranslate"><span class="pre">cli.only_hints</span></code> (<cite>boolean</cite>)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reference/styling.html">Styling</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reference/styling.html#rules-object"><code class="docutils literal notranslate"><span class="pre">rules</span></code> (<cite>object[]</cite>)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference/styling.html#files-string-or-object-not-not"><code class="docutils literal notranslate"><span class="pre">files</span></code> (<cite>string[]</cite> or <cite>object{not{} | not[]}</cite>)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/styling.html#hint-string"><code class="docutils literal notranslate"><span class="pre">hint</span></code> (<cite>string</cite>)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference/styling.html#extends-string"><code class="docutils literal notranslate"><span class="pre">extends</span></code> (<cite>string[]</cite>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/styling.html#plugins-string"><code class="docutils literal notranslate"><span class="pre">plugins</span></code> (<cite>string[]</cite>)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reference/plugins.html">Plugins</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reference/plugins.html#inclusion">inclusion</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#includelines">includeLines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#ifincludelines">ifIncludeLines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#includecontent">includeContent</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#excludelines">excludeLines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#excludecontent">excludeContent</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference/plugins.html#existence">existence</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#iffilesexist">ifFilesExist</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference/plugins.html#jmespath">jmespath</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#starts_with"><code class="docutils literal notranslate"><span class="pre">starts_with()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#ends_with"><code class="docutils literal notranslate"><span class="pre">ends_with()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#regex_match"><code class="docutils literal notranslate"><span class="pre">regex_match()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#regex_matchall"><code class="docutils literal notranslate"><span class="pre">regex_matchall()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#regex_search"><code class="docutils literal notranslate"><span class="pre">regex_search()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#regex_sub"><code class="docutils literal notranslate"><span class="pre">regex_sub()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#regex_escape"><code class="docutils literal notranslate"><span class="pre">regex_escape()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#os"><code class="docutils literal notranslate"><span class="pre">os()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#getenv"><code class="docutils literal notranslate"><span class="pre">getenv()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#setenv"><code class="docutils literal notranslate"><span class="pre">setenv()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#rootdir_name"><code class="docutils literal notranslate"><span class="pre">rootdir_name()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#op"><code class="docutils literal notranslate"><span class="pre">op()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#shlex_split"><code class="docutils literal notranslate"><span class="pre">shlex_split()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#shlex_join"><code class="docutils literal notranslate"><span class="pre">shlex_join()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#round"><code class="docutils literal notranslate"><span class="pre">round()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#range"><code class="docutils literal notranslate"><span class="pre">range()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#count"><code class="docutils literal notranslate"><span class="pre">count()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#find"><code class="docutils literal notranslate"><span class="pre">find()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#isalnum"><code class="docutils literal notranslate"><span class="pre">isalnum()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#isalpha"><code class="docutils literal notranslate"><span class="pre">isalpha()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#isascii"><code class="docutils literal notranslate"><span class="pre">isascii()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#isdecimal"><code class="docutils literal notranslate"><span class="pre">isdecimal()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#isdigit"><code class="docutils literal notranslate"><span class="pre">isdigit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#isidentifier"><code class="docutils literal notranslate"><span class="pre">isidentifier()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#islower"><code class="docutils literal notranslate"><span class="pre">islower()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#isnumeric"><code class="docutils literal notranslate"><span class="pre">isnumeric()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#isprintable"><code class="docutils literal notranslate"><span class="pre">isprintable()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#isspace"><code class="docutils literal notranslate"><span class="pre">isspace()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#istitle"><code class="docutils literal notranslate"><span class="pre">istitle()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#isupper"><code class="docutils literal notranslate"><span class="pre">isupper()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#lower"><code class="docutils literal notranslate"><span class="pre">lower()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#lstrip"><code class="docutils literal notranslate"><span class="pre">lstrip()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#partition"><code class="docutils literal notranslate"><span class="pre">partition()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#rfind"><code class="docutils literal notranslate"><span class="pre">rfind()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#rpartition"><code class="docutils literal notranslate"><span class="pre">rpartition()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#rsplit"><code class="docutils literal notranslate"><span class="pre">rsplit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#split"><code class="docutils literal notranslate"><span class="pre">split()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#splitlines"><code class="docutils literal notranslate"><span class="pre">splitlines()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#swapcase"><code class="docutils literal notranslate"><span class="pre">swapcase()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#title"><code class="docutils literal notranslate"><span class="pre">title()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#upper"><code class="docutils literal notranslate"><span class="pre">upper()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#zfill"><code class="docutils literal notranslate"><span class="pre">zfill()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#enumerate"><code class="docutils literal notranslate"><span class="pre">enumerate()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#to_items"><code class="docutils literal notranslate"><span class="pre">to_items()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#from_items"><code class="docutils literal notranslate"><span class="pre">from_items()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#isfile"><code class="docutils literal notranslate"><span class="pre">isfile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#isdir"><code class="docutils literal notranslate"><span class="pre">isdir()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#exists"><code class="docutils literal notranslate"><span class="pre">exists()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#listdir"><code class="docutils literal notranslate"><span class="pre">listdir()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#mkdir"><code class="docutils literal notranslate"><span class="pre">mkdir()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#rmdir"><code class="docutils literal notranslate"><span class="pre">rmdir()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#glob"><code class="docutils literal notranslate"><span class="pre">glob()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#update"><code class="docutils literal notranslate"><span class="pre">update()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#insert"><code class="docutils literal notranslate"><span class="pre">insert()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#deepmerge"><code class="docutils literal notranslate"><span class="pre">deepmerge()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#set"><code class="docutils literal notranslate"><span class="pre">set()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#unset"><code class="docutils literal notranslate"><span class="pre">unset()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#replace"><code class="docutils literal notranslate"><span class="pre">replace()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#removeprefix"><code class="docutils literal notranslate"><span class="pre">removeprefix()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#removesuffix"><code class="docutils literal notranslate"><span class="pre">removesuffix()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#format"><code class="docutils literal notranslate"><span class="pre">format()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#strip"><code class="docutils literal notranslate"><span class="pre">strip()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#rstrip"><code class="docutils literal notranslate"><span class="pre">rstrip()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#capitalize"><code class="docutils literal notranslate"><span class="pre">capitalize()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#casefold"><code class="docutils literal notranslate"><span class="pre">casefold()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#center"><code class="docutils literal notranslate"><span class="pre">center()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#ljust"><code class="docutils literal notranslate"><span class="pre">ljust()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#rjust"><code class="docutils literal notranslate"><span class="pre">rjust()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#gh_tags"><code class="docutils literal notranslate"><span class="pre">gh_tags()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#jmespathsmatch">JMESPathsMatch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#crossjmespathsmatch">crossJMESPathsMatch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#ifjmespathsmatch">ifJMESPathsMatch</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference/plugins.html#pre-commit">pre-commit</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference/plugins.html#precommithookexists">preCommitHookExists</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reference/ci.html">Using on CI</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reference/ci.html#github-actions">Github Actions</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">In depth</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="in-depth/rationale.html">Rationale</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="in-depth/rationale.html#alternatives">Alternatives</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="in-depth/fetching.html">Fetching</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="in-depth/fetching.html#github">GitHub</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="in-depth/serialization.html">Objects serialization</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="in-depth/serialization.html#json">JSON</a></li>
+<li class="toctree-l2"><a class="reference internal" href="in-depth/serialization.html#json5">JSON5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="in-depth/serialization.html#yaml-v1-2">YAML (v1.2)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="in-depth/serialization.html#toml-v1">TOML (v1)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="in-depth/serialization.html#ini">INI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="in-depth/serialization.html#editorconfig">Editorconfig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="in-depth/serialization.html#python">Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="in-depth/serialization.html#text">Text</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">For developers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="dev/plugins.html">Writing third party plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev/reporters.html">Writing third party reporters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev/changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev/contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev/reference/modules.html">Reference</a></li>
+</ul>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>You can see other versions of this documentation using URLs like
+<code class="docutils literal notranslate"><span class="pre">https://mondeja.github.io/project-config/&lt;version&gt;</span></code>.</p>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="install.html" class="btn btn-neutral float-right" title="Installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022-2024, Álvaro Mondéjar Rubio &lt;mondejar1994@gmail.com&gt;.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

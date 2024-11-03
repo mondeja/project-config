@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>project_config package &mdash; project-config 0.9.8 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/bolditalic.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/override-styles.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="project_config.commands package" href="project_config.commands.html" />
+    <link rel="prev" title="Reference" href="modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            project-config
+          </a>
+              <div class="version">
+                0.9
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Quickstart</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../basic-usage.html">Basic usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/cli.html">project-config CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/config.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/styling.html">Styling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/plugins.html">Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/ci.html">Using on CI</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">In depth</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../in-depth/rationale.html">Rationale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../in-depth/fetching.html">Fetching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../in-depth/serialization.html">Objects serialization</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For developers</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../plugins.html">Writing third party plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reporters.html">Writing third party reporters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">project_config package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#project_config.ActionsContext"><code class="docutils literal notranslate"><span class="pre">ActionsContext</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#project_config.ActionsContext.files"><code class="docutils literal notranslate"><span class="pre">ActionsContext.files</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#project_config.ActionsContext.fix"><code class="docutils literal notranslate"><span class="pre">ActionsContext.fix</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="project_config.commands.html">project_config.commands package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.config.html">project_config.config package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.fetchers.html">project_config.fetchers package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.plugins.html">project_config.plugins package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.reporters.html">project_config.reporters package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.serializers.html">project_config.serializers package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.tests.html">project_config.tests package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.utils.html">project_config.utils package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="project_config.__main__.html">project_config.__main__ module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.cache.html">project_config.cache module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.compat.html">project_config.compat module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.constants.html">project_config.constants module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.exceptions.html">project_config.exceptions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.tree.html">project_config.tree module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.types_.html">project_config.types_ module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">project-config</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">Reference</a></li>
+      <li class="breadcrumb-item active">project_config package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/dev/reference/project_config.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-project_config">
+<span id="project-config-package"></span><h1>project_config package<a class="headerlink" href="#module-project_config" title="Permalink to this heading"></a></h1>
+<p>Reproducible configuration across projects.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="project_config.ActionsContext">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">project_config.</span></span><span class="sig-name descname"><span class="pre">ActionsContext</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fix:</span> <span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">files:</span> <span class="pre">list[str]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/project_config/types_.html#ActionsContext"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.ActionsContext" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>State of project config when executing rule verbs.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="project_config.ActionsContext.files">
+<span class="sig-name descname"><span class="pre">files</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#project_config.ActionsContext.files" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="project_config.ActionsContext.fix">
+<span class="sig-name descname"><span class="pre">fix</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#project_config.ActionsContext.fix" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="project_config.commands.html">project_config.commands package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="project_config.commands.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="project_config.commands.check.html">project_config.commands.check module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="project_config.commands.check.html#project_config.commands.check.ConditionalsFalseResult"><code class="docutils literal notranslate"><span class="pre">ConditionalsFalseResult</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.commands.check.html#project_config.commands.check.InterruptCheck"><code class="docutils literal notranslate"><span class="pre">InterruptCheck</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.commands.check.html#project_config.commands.check.ProjectConfigChecker"><code class="docutils literal notranslate"><span class="pre">ProjectConfigChecker</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.commands.check.html#project_config.commands.check.check"><code class="docutils literal notranslate"><span class="pre">check()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="project_config.commands.clean.html">project_config.commands.clean module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="project_config.commands.clean.html#project_config.commands.clean.clean"><code class="docutils literal notranslate"><span class="pre">clean()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="project_config.commands.fix.html">project_config.commands.fix module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="project_config.commands.init.html">project_config.commands.init module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="project_config.commands.init.html#project_config.commands.init.init"><code class="docutils literal notranslate"><span class="pre">init()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="project_config.commands.show.html">project_config.commands.show module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="project_config.commands.show.html#project_config.commands.show.show"><code class="docutils literal notranslate"><span class="pre">show()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="project_config.config.html">project_config.config package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="project_config.config.html#project_config.config.Config"><code class="docutils literal notranslate"><span class="pre">Config</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.config.html#project_config.config.FileConfig"><code class="docutils literal notranslate"><span class="pre">FileConfig</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="project_config.config.html#project_config.config.FileConfig.load_style"><code class="docutils literal notranslate"><span class="pre">FileConfig.load_style()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.config.html#project_config.config._cache_string_to_seconds"><code class="docutils literal notranslate"><span class="pre">_cache_string_to_seconds()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.config.html#project_config.config._validate_cli_config"><code class="docutils literal notranslate"><span class="pre">_validate_cli_config()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.config.html#project_config.config.initialize_config"><code class="docutils literal notranslate"><span class="pre">initialize_config()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.config.html#project_config.config.read_config"><code class="docutils literal notranslate"><span class="pre">read_config()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.config.html#project_config.config.read_config_from_pyproject_toml"><code class="docutils literal notranslate"><span class="pre">read_config_from_pyproject_toml()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.config.html#project_config.config.reporter_from_config"><code class="docutils literal notranslate"><span class="pre">reporter_from_config()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.config.html#project_config.config.validate_cli_config"><code class="docutils literal notranslate"><span class="pre">validate_cli_config()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.config.html#project_config.config.validate_config"><code class="docutils literal notranslate"><span class="pre">validate_config()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.config.html#project_config.config.validate_config_cache"><code class="docutils literal notranslate"><span class="pre">validate_config_cache()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.config.html#project_config.config.validate_config_style"><code class="docutils literal notranslate"><span class="pre">validate_config_style()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.config.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="project_config.config.style.html">project_config.config.style package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="project_config.config.style.html#project_config.config.style.ProjectConfigInvalidStyle"><code class="docutils literal notranslate"><span class="pre">ProjectConfigInvalidStyle</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.config.style.html#project_config.config.style.Style"><code class="docutils literal notranslate"><span class="pre">Style</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.config.style.html#project_config.config.style._prefetch_urls"><code class="docutils literal notranslate"><span class="pre">_prefetch_urls()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.config.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="project_config.config.exceptions.html">project_config.config.exceptions module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="project_config.config.exceptions.html#project_config.config.exceptions.ConfigurationFilesNotFound"><code class="docutils literal notranslate"><span class="pre">ConfigurationFilesNotFound</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.config.exceptions.html#project_config.config.exceptions.CustomConfigFileNotFound"><code class="docutils literal notranslate"><span class="pre">CustomConfigFileNotFound</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.config.exceptions.html#project_config.config.exceptions.ProjectConfigAlreadyInitialized"><code class="docutils literal notranslate"><span class="pre">ProjectConfigAlreadyInitialized</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.config.exceptions.html#project_config.config.exceptions.ProjectConfigInvalidConfig"><code class="docutils literal notranslate"><span class="pre">ProjectConfigInvalidConfig</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.config.exceptions.html#project_config.config.exceptions.ProjectConfigInvalidConfigSchema"><code class="docutils literal notranslate"><span class="pre">ProjectConfigInvalidConfigSchema</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.config.exceptions.html#project_config.config.exceptions.PyprojectTomlFoundButHasNoConfig"><code class="docutils literal notranslate"><span class="pre">PyprojectTomlFoundButHasNoConfig</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="project_config.fetchers.html">project_config.fetchers package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="project_config.fetchers.html#project_config.fetchers.FetchError"><code class="docutils literal notranslate"><span class="pre">FetchError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.fetchers.html#project_config.fetchers.SchemeProtocolNotImplementedError"><code class="docutils literal notranslate"><span class="pre">SchemeProtocolNotImplementedError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.fetchers.html#project_config.fetchers._get_scheme_from_urlparts"><code class="docutils literal notranslate"><span class="pre">_get_scheme_from_urlparts()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.fetchers.html#project_config.fetchers.download_file_from_urlsplit_scheme"><code class="docutils literal notranslate"><span class="pre">download_file_from_urlsplit_scheme()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.fetchers.html#project_config.fetchers.fetch"><code class="docutils literal notranslate"><span class="pre">fetch()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.fetchers.html#project_config.fetchers.resolve_maybe_relative_url"><code class="docutils literal notranslate"><span class="pre">resolve_maybe_relative_url()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.fetchers.html#project_config.fetchers.resolve_url"><code class="docutils literal notranslate"><span class="pre">resolve_url()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.fetchers.html#project_config.fetchers.uri_is_pointing_to_local_file"><code class="docutils literal notranslate"><span class="pre">uri_is_pointing_to_local_file()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.fetchers.html#project_config.fetchers.urlsplit_with_scheme"><code class="docutils literal notranslate"><span class="pre">urlsplit_with_scheme()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.fetchers.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="project_config.fetchers.file.html">project_config.fetchers.file module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="project_config.fetchers.file.html#project_config.fetchers.file.fetch"><code class="docutils literal notranslate"><span class="pre">fetch()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="project_config.fetchers.github.html">project_config.fetchers.github module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="project_config.fetchers.github.html#project_config.fetchers.github.AcceptHeader"><code class="docutils literal notranslate"><span class="pre">AcceptHeader</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.fetchers.github.html#project_config.fetchers.github._build_github_api_url"><code class="docutils literal notranslate"><span class="pre">_build_github_api_url()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.fetchers.github.html#project_config.fetchers.github._github_headers"><code class="docutils literal notranslate"><span class="pre">_github_headers()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.fetchers.github.html#project_config.fetchers.github.fetch"><code class="docutils literal notranslate"><span class="pre">fetch()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.fetchers.github.html#project_config.fetchers.github.get_latest_release_tags"><code class="docutils literal notranslate"><span class="pre">get_latest_release_tags()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.fetchers.github.html#project_config.fetchers.github.resolve_url"><code class="docutils literal notranslate"><span class="pre">resolve_url()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="project_config.fetchers.https.html">project_config.fetchers.https module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="project_config.fetchers.https.html#project_config.fetchers.https.fetch"><code class="docutils literal notranslate"><span class="pre">fetch()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="project_config.plugins.html">project_config.plugins package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="project_config.plugins.html#project_config.plugins.InvalidPluginFunction"><code class="docutils literal notranslate"><span class="pre">InvalidPluginFunction</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.plugins.html#project_config.plugins.Plugins"><code class="docutils literal notranslate"><span class="pre">Plugins</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="project_config.plugins.html#project_config.plugins.Plugins._add_plugin_to_cache"><code class="docutils literal notranslate"><span class="pre">Plugins._add_plugin_to_cache()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project_config.plugins.html#project_config.plugins.Plugins._prepare_all_plugins_cache"><code class="docutils literal notranslate"><span class="pre">Plugins._prepare_all_plugins_cache()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project_config.plugins.html#project_config.plugins.Plugins._prepare_default_plugins_cache"><code class="docutils literal notranslate"><span class="pre">Plugins._prepare_default_plugins_cache()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project_config.plugins.html#project_config.plugins.Plugins.get_function_for_action"><code class="docutils literal notranslate"><span class="pre">Plugins.get_function_for_action()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project_config.plugins.html#project_config.plugins.Plugins.is_valid_action"><code class="docutils literal notranslate"><span class="pre">Plugins.is_valid_action()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project_config.plugins.html#project_config.plugins.Plugins.plugin_action_names"><code class="docutils literal notranslate"><span class="pre">Plugins.plugin_action_names</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project_config.plugins.html#project_config.plugins.Plugins.plugin_names"><code class="docutils literal notranslate"><span class="pre">Plugins.plugin_names</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project_config.plugins.html#project_config.plugins.Plugins.prepare_3rd_party_plugin"><code class="docutils literal notranslate"><span class="pre">Plugins.prepare_3rd_party_plugin()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.plugins.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="project_config.plugins.contrib.html">project_config.plugins.contrib package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="project_config.plugins.contrib.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.plugins.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="project_config.plugins.existence.html">project_config.plugins.existence module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="project_config.plugins.existence.html#project_config.plugins.existence.ExistencePlugin"><code class="docutils literal notranslate"><span class="pre">ExistencePlugin</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="project_config.plugins.inclusion.html">project_config.plugins.inclusion module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="project_config.plugins.inclusion.html#project_config.plugins.inclusion.InclusionPlugin"><code class="docutils literal notranslate"><span class="pre">InclusionPlugin</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.plugins.inclusion.html#project_config.plugins.inclusion._directories_not_accepted_as_inputs_error"><code class="docutils literal notranslate"><span class="pre">_directories_not_accepted_as_inputs_error()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="project_config.plugins.jmespath.html">project_config.plugins.jmespath module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="project_config.plugins.jmespath.html#project_config.plugins.jmespath.JMESPathPlugin"><code class="docutils literal notranslate"><span class="pre">JMESPathPlugin</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="project_config.reporters.html">project_config.reporters package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="project_config.reporters.html#project_config.reporters.InvalidNotBasedThirdPartyReporter"><code class="docutils literal notranslate"><span class="pre">InvalidNotBasedThirdPartyReporter</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.reporters.html#project_config.reporters.InvalidThirdPartyReporterName"><code class="docutils literal notranslate"><span class="pre">InvalidThirdPartyReporterName</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.reporters.html#project_config.reporters.InvalidThirdPartyReportersModule"><code class="docutils literal notranslate"><span class="pre">InvalidThirdPartyReportersModule</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.reporters.html#project_config.reporters.ThirdPartyReporters"><code class="docutils literal notranslate"><span class="pre">ThirdPartyReporters</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="project_config.reporters.html#project_config.reporters.ThirdPartyReporters._prepare_third_party_reporters"><code class="docutils literal notranslate"><span class="pre">ThirdPartyReporters._prepare_third_party_reporters()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project_config.reporters.html#project_config.reporters.ThirdPartyReporters.ids"><code class="docutils literal notranslate"><span class="pre">ThirdPartyReporters.ids</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project_config.reporters.html#project_config.reporters.ThirdPartyReporters.instance"><code class="docutils literal notranslate"><span class="pre">ThirdPartyReporters.instance</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project_config.reporters.html#project_config.reporters.ThirdPartyReporters.load"><code class="docutils literal notranslate"><span class="pre">ThirdPartyReporters.load()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project_config.reporters.html#project_config.reporters.ThirdPartyReporters.validate_reporter_class"><code class="docutils literal notranslate"><span class="pre">ThirdPartyReporters.validate_reporter_class()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project_config.reporters.html#project_config.reporters.ThirdPartyReporters.validate_reporter_module"><code class="docutils literal notranslate"><span class="pre">ThirdPartyReporters.validate_reporter_module()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.reporters.html#project_config.reporters.UnparseableReporterError"><code class="docutils literal notranslate"><span class="pre">UnparseableReporterError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.reporters.html#project_config.reporters._parse_reporter_arguments"><code class="docutils literal notranslate"><span class="pre">_parse_reporter_arguments()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.reporters.html#project_config.reporters.get_reporter"><code class="docutils literal notranslate"><span class="pre">get_reporter()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.reporters.html#project_config.reporters.parse_reporter_id"><code class="docutils literal notranslate"><span class="pre">parse_reporter_id()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.reporters.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="project_config.reporters.base.html">project_config.reporters.base module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="project_config.reporters.base.html#project_config.reporters.base.BaseColorReporter"><code class="docutils literal notranslate"><span class="pre">BaseColorReporter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.reporters.base.html#project_config.reporters.base.BaseFormattedReporter"><code class="docutils literal notranslate"><span class="pre">BaseFormattedReporter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.reporters.base.html#project_config.reporters.base.BaseNoopFormattedReporter"><code class="docutils literal notranslate"><span class="pre">BaseNoopFormattedReporter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.reporters.base.html#project_config.reporters.base.BaseReporter"><code class="docutils literal notranslate"><span class="pre">BaseReporter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.reporters.base.html#project_config.reporters.base.InvalidColors"><code class="docutils literal notranslate"><span class="pre">InvalidColors</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.reporters.base.html#project_config.reporters.base.bold_color"><code class="docutils literal notranslate"><span class="pre">bold_color()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.reporters.base.html#project_config.reporters.base.colored_color_exists"><code class="docutils literal notranslate"><span class="pre">colored_color_exists()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.reporters.base.html#project_config.reporters.base.self_format_noop"><code class="docutils literal notranslate"><span class="pre">self_format_noop()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="project_config.reporters.default.html">project_config.reporters.default module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="project_config.reporters.default.html#project_config.reporters.default.BaseDefaultReporter"><code class="docutils literal notranslate"><span class="pre">BaseDefaultReporter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.reporters.default.html#project_config.reporters.default.DefaultColorReporter"><code class="docutils literal notranslate"><span class="pre">DefaultColorReporter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.reporters.default.html#project_config.reporters.default.DefaultReporter"><code class="docutils literal notranslate"><span class="pre">DefaultReporter</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="project_config.reporters.ghf_markdown.html">project_config.reporters.ghf_markdown module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="project_config.reporters.ghf_markdown.html#project_config.reporters.ghf_markdown.GithubFlavoredMarkdownColorReporter"><code class="docutils literal notranslate"><span class="pre">GithubFlavoredMarkdownColorReporter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.reporters.ghf_markdown.html#project_config.reporters.ghf_markdown.GithubFlavoredMarkdownReporter"><code class="docutils literal notranslate"><span class="pre">GithubFlavoredMarkdownReporter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.reporters.ghf_markdown.html#project_config.reporters.ghf_markdown.config_docs_markdown_link"><code class="docutils literal notranslate"><span class="pre">config_docs_markdown_link()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.reporters.ghf_markdown.html#project_config.reporters.ghf_markdown.config_docs_url_prefix"><code class="docutils literal notranslate"><span class="pre">config_docs_url_prefix()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.reporters.ghf_markdown.html#project_config.reporters.ghf_markdown.maybe_write_report_to_github_summary"><code class="docutils literal notranslate"><span class="pre">maybe_write_report_to_github_summary()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.reporters.ghf_markdown.html#project_config.reporters.ghf_markdown.plugin_or_verb_docs_url_prefix"><code class="docutils literal notranslate"><span class="pre">plugin_or_verb_docs_url_prefix()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.reporters.ghf_markdown.html#project_config.reporters.ghf_markdown.styling_docs_url_prefix"><code class="docutils literal notranslate"><span class="pre">styling_docs_url_prefix()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="project_config.reporters.json_.html">project_config.reporters.json_ module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="project_config.reporters.json_.html#project_config.reporters.json_.JsonColorReporter"><code class="docutils literal notranslate"><span class="pre">JsonColorReporter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.reporters.json_.html#project_config.reporters.json_.JsonReporter"><code class="docutils literal notranslate"><span class="pre">JsonReporter</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="project_config.reporters.table.html">project_config.reporters.table module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="project_config.reporters.table.html#project_config.reporters.table.TableColorReporter"><code class="docutils literal notranslate"><span class="pre">TableColorReporter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.reporters.table.html#project_config.reporters.table.TableReporter"><code class="docutils literal notranslate"><span class="pre">TableReporter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.reporters.table.html#project_config.reporters.table._common_generate_errors_report"><code class="docutils literal notranslate"><span class="pre">_common_generate_errors_report()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.reporters.table.html#project_config.reporters.table._common_generate_rows"><code class="docutils literal notranslate"><span class="pre">_common_generate_rows()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="project_config.reporters.toml.html">project_config.reporters.toml module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="project_config.reporters.toml.html#project_config.reporters.toml.TomlColorReporter"><code class="docutils literal notranslate"><span class="pre">TomlColorReporter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.reporters.toml.html#project_config.reporters.toml.TomlReporter"><code class="docutils literal notranslate"><span class="pre">TomlReporter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.reporters.toml.html#project_config.reporters.toml._common_generate_errors_report"><code class="docutils literal notranslate"><span class="pre">_common_generate_errors_report()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.reporters.toml.html#project_config.reporters.toml._normalize_indentation_to_2_spaces"><code class="docutils literal notranslate"><span class="pre">_normalize_indentation_to_2_spaces()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.reporters.toml.html#project_config.reporters.toml._replace_nulls_by_repr_strings_in_dict"><code class="docutils literal notranslate"><span class="pre">_replace_nulls_by_repr_strings_in_dict()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="project_config.reporters.yaml.html">project_config.reporters.yaml module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="project_config.reporters.yaml.html#project_config.reporters.yaml.YamlColorReporter"><code class="docutils literal notranslate"><span class="pre">YamlColorReporter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.reporters.yaml.html#project_config.reporters.yaml.YamlReporter"><code class="docutils literal notranslate"><span class="pre">YamlReporter</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="project_config.serializers.html">project_config.serializers package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="project_config.serializers.html#project_config.serializers.SerializerError"><code class="docutils literal notranslate"><span class="pre">SerializerError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.serializers.html#project_config.serializers._file_can_not_be_serialized_as_object_error"><code class="docutils literal notranslate"><span class="pre">_file_can_not_be_serialized_as_object_error()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.serializers.html#project_config.serializers._get_serializer_function"><code class="docutils literal notranslate"><span class="pre">_get_serializer_function()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.serializers.html#project_config.serializers._identify_serializer"><code class="docutils literal notranslate"><span class="pre">_identify_serializer()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.serializers.html#project_config.serializers.deserialize_for_url"><code class="docutils literal notranslate"><span class="pre">deserialize_for_url()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.serializers.html#project_config.serializers.guess_preferred_serializer"><code class="docutils literal notranslate"><span class="pre">guess_preferred_serializer()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.serializers.html#project_config.serializers.guess_serializer_for_path"><code class="docutils literal notranslate"><span class="pre">guess_serializer_for_path()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.serializers.html#project_config.serializers.serialize_for_url"><code class="docutils literal notranslate"><span class="pre">serialize_for_url()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.serializers.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="project_config.serializers.contrib.html">project_config.serializers.contrib package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="project_config.serializers.contrib.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.serializers.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="project_config.serializers.editorconfig.html">project_config.serializers.editorconfig module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="project_config.serializers.editorconfig.html#project_config.serializers.editorconfig._pyobject_to_ini_str"><code class="docutils literal notranslate"><span class="pre">_pyobject_to_ini_str()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.serializers.editorconfig.html#project_config.serializers.editorconfig.dumps"><code class="docutils literal notranslate"><span class="pre">dumps()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.serializers.editorconfig.html#project_config.serializers.editorconfig.loads"><code class="docutils literal notranslate"><span class="pre">loads()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="project_config.serializers.ini.html">project_config.serializers.ini module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="project_config.serializers.ini.html#project_config.serializers.ini.dumps"><code class="docutils literal notranslate"><span class="pre">dumps()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.serializers.ini.html#project_config.serializers.ini.loads"><code class="docutils literal notranslate"><span class="pre">loads()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="project_config.serializers.json.html">project_config.serializers.json module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="project_config.serializers.json.html#project_config.serializers.json.dumps"><code class="docutils literal notranslate"><span class="pre">dumps()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="project_config.serializers.python.html">project_config.serializers.python module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="project_config.serializers.python.html#project_config.serializers.python._pyobject_to_string"><code class="docutils literal notranslate"><span class="pre">_pyobject_to_string()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.serializers.python.html#project_config.serializers.python.dumps"><code class="docutils literal notranslate"><span class="pre">dumps()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.serializers.python.html#project_config.serializers.python.loads"><code class="docutils literal notranslate"><span class="pre">loads()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="project_config.serializers.text.html">project_config.serializers.text module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="project_config.serializers.text.html#project_config.serializers.text.dumps"><code class="docutils literal notranslate"><span class="pre">dumps()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.serializers.text.html#project_config.serializers.text.loads"><code class="docutils literal notranslate"><span class="pre">loads()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="project_config.serializers.toml.html">project_config.serializers.toml module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="project_config.serializers.toml.html#project_config.serializers.toml.loads"><code class="docutils literal notranslate"><span class="pre">loads()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="project_config.serializers.yaml.html">project_config.serializers.yaml module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="project_config.serializers.yaml.html#project_config.serializers.yaml.dumps"><code class="docutils literal notranslate"><span class="pre">dumps()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.serializers.yaml.html#project_config.serializers.yaml.loads"><code class="docutils literal notranslate"><span class="pre">loads()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="project_config.tests.html">project_config.tests package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="project_config.tests.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="project_config.tests.pytest_plugin.html">project_config.tests.pytest_plugin package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="project_config.tests.pytest_plugin.html#project_config.tests.pytest_plugin.project_config_data_report_asserter"><code class="docutils literal notranslate"><span class="pre">project_config_data_report_asserter()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.tests.pytest_plugin.html#project_config.tests.pytest_plugin.project_config_errors_report_asserter"><code class="docutils literal notranslate"><span class="pre">project_config_errors_report_asserter()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.tests.pytest_plugin.html#project_config.tests.pytest_plugin.project_config_plugin_action_asserter"><code class="docutils literal notranslate"><span class="pre">project_config_plugin_action_asserter()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.tests.pytest_plugin.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="project_config.utils.html">project_config.utils package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="project_config.utils.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="project_config.utils.crypto.html">project_config.utils.crypto module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="project_config.utils.crypto.html#project_config.utils.crypto._build_hash"><code class="docutils literal notranslate"><span class="pre">_build_hash()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.utils.crypto.html#project_config.utils.crypto.hash_file"><code class="docutils literal notranslate"><span class="pre">hash_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.utils.crypto.html#project_config.utils.crypto.hash_hexdigest"><code class="docutils literal notranslate"><span class="pre">hash_hexdigest()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="project_config.utils.http.html">project_config.utils.http module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="project_config.utils.http.html#project_config.utils.http.GET"><code class="docutils literal notranslate"><span class="pre">GET()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.utils.http.html#project_config.utils.http.ProjectConfigHTTPError"><code class="docutils literal notranslate"><span class="pre">ProjectConfigHTTPError</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.utils.http.html#project_config.utils.http.ProjectConfigTimeoutError"><code class="docutils literal notranslate"><span class="pre">ProjectConfigTimeoutError</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.utils.http.html#project_config.utils.http._GET_impl"><code class="docutils literal notranslate"><span class="pre">_GET_impl()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="project_config.utils.jmespath.html">project_config.utils.jmespath module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathError"><code class="docutils literal notranslate"><span class="pre">JMESPathError</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.utils.jmespath.html#project_config.utils.jmespath.JMESPathProjectConfigFunctions"><code class="docutils literal notranslate"><span class="pre">JMESPathProjectConfigFunctions</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.utils.jmespath.html#project_config.utils.jmespath._build_reverse_jmes_type_object"><code class="docutils literal notranslate"><span class="pre">_build_reverse_jmes_type_object()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.utils.jmespath.html#project_config.utils.jmespath._create_find_function_for_string_or_array"><code class="docutils literal notranslate"><span class="pre">_create_find_function_for_string_or_array()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.utils.jmespath.html#project_config.utils.jmespath._create_is_function_for_string"><code class="docutils literal notranslate"><span class="pre">_create_is_function_for_string()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.utils.jmespath.html#project_config.utils.jmespath._create_just_function_for_string"><code class="docutils literal notranslate"><span class="pre">_create_just_function_for_string()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.utils.jmespath.html#project_config.utils.jmespath._create_partition_function_for_string"><code class="docutils literal notranslate"><span class="pre">_create_partition_function_for_string()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.utils.jmespath.html#project_config.utils.jmespath._create_removeaffix_function_for_string"><code class="docutils literal notranslate"><span class="pre">_create_removeaffix_function_for_string()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.utils.jmespath.html#project_config.utils.jmespath._create_simple_transform_function_for_string"><code class="docutils literal notranslate"><span class="pre">_create_simple_transform_function_for_string()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.utils.jmespath.html#project_config.utils.jmespath._create_split_function_for_string"><code class="docutils literal notranslate"><span class="pre">_create_split_function_for_string()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.utils.jmespath.html#project_config.utils.jmespath._create_strip_function_for_string"><code class="docutils literal notranslate"><span class="pre">_create_strip_function_for_string()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.utils.jmespath.html#project_config.utils.jmespath._to_items"><code class="docutils literal notranslate"><span class="pre">_to_items()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.utils.jmespath.html#project_config.utils.jmespath.compile_JMESPath_expression"><code class="docutils literal notranslate"><span class="pre">compile_JMESPath_expression()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.utils.jmespath.html#project_config.utils.jmespath.compile_JMESPath_expression_or_error"><code class="docutils literal notranslate"><span class="pre">compile_JMESPath_expression_or_error()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.utils.jmespath.html#project_config.utils.jmespath.compile_JMESPath_or_expected_value_error"><code class="docutils literal notranslate"><span class="pre">compile_JMESPath_or_expected_value_error()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.utils.jmespath.html#project_config.utils.jmespath.compile_JMESPath_or_expected_value_from_other_file_error"><code class="docutils literal notranslate"><span class="pre">compile_JMESPath_or_expected_value_from_other_file_error()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.utils.jmespath.html#project_config.utils.jmespath.evaluate_JMESPath"><code class="docutils literal notranslate"><span class="pre">evaluate_JMESPath()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.utils.jmespath.html#project_config.utils.jmespath.evaluate_JMESPath_or_expected_value_error"><code class="docutils literal notranslate"><span class="pre">evaluate_JMESPath_or_expected_value_error()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.utils.jmespath.html#project_config.utils.jmespath.fix_tree_serialized_file_by_jmespath"><code class="docutils literal notranslate"><span class="pre">fix_tree_serialized_file_by_jmespath()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.utils.jmespath.html#project_config.utils.jmespath.is_literal_jmespath_expression"><code class="docutils literal notranslate"><span class="pre">is_literal_jmespath_expression()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.utils.jmespath.html#project_config.utils.jmespath.removeprefix"><code class="docutils literal notranslate"><span class="pre">removeprefix()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.utils.jmespath.html#project_config.utils.jmespath.removesuffix"><code class="docutils literal notranslate"><span class="pre">removesuffix()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.utils.jmespath.html#project_config.utils.jmespath.smart_fixer_by_expected_value"><code class="docutils literal notranslate"><span class="pre">smart_fixer_by_expected_value()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="project_config.__main__.html">project_config.__main__ module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="project_config.__main__.html#project_config.__main__.ReporterAction"><code class="docutils literal notranslate"><span class="pre">ReporterAction</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.__main__.html#project_config.__main__._controlled_error"><code class="docutils literal notranslate"><span class="pre">_controlled_error()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.__main__.html#project_config.__main__._parse_command_args"><code class="docutils literal notranslate"><span class="pre">_parse_command_args()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.__main__.html#project_config.__main__.build_main_parser"><code class="docutils literal notranslate"><span class="pre">build_main_parser()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.__main__.html#project_config.__main__.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.__main__.html#project_config.__main__.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.__main__.html#project_config.__main__.parse_cli_args_and_subargs"><code class="docutils literal notranslate"><span class="pre">parse_cli_args_and_subargs()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.__main__.html#project_config.__main__.run"><code class="docutils literal notranslate"><span class="pre">run()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="project_config.cache.html">project_config.cache module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="project_config.cache.html#project_config.cache.Cache"><code class="docutils literal notranslate"><span class="pre">Cache</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="project_config.cache.html#project_config.cache.Cache._expiration_time"><code class="docutils literal notranslate"><span class="pre">Cache._expiration_time</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project_config.cache.html#project_config.cache.Cache.clean"><code class="docutils literal notranslate"><span class="pre">Cache.clean()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project_config.cache.html#project_config.cache.Cache.ensure_dir"><code class="docutils literal notranslate"><span class="pre">Cache.ensure_dir()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project_config.cache.html#project_config.cache.Cache.generate_unique_key_from_tree_entry"><code class="docutils literal notranslate"><span class="pre">Cache.generate_unique_key_from_tree_entry()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project_config.cache.html#project_config.cache.Cache.get"><code class="docutils literal notranslate"><span class="pre">Cache.get()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project_config.cache.html#project_config.cache.Cache.set"><code class="docutils literal notranslate"><span class="pre">Cache.set()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project_config.cache.html#project_config.cache.Cache.set_expiration_time"><code class="docutils literal notranslate"><span class="pre">Cache.set_expiration_time()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.cache.html#project_config.cache.generate_possible_cache_dirs"><code class="docutils literal notranslate"><span class="pre">generate_possible_cache_dirs()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.cache.html#project_config.cache.get_creation_time_from_fpath"><code class="docutils literal notranslate"><span class="pre">get_creation_time_from_fpath()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.cache.html#project_config.cache.read_file"><code class="docutils literal notranslate"><span class="pre">read_file()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.cache.html#project_config.cache.write_file"><code class="docutils literal notranslate"><span class="pre">write_file()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="project_config.compat.html">project_config.compat module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="project_config.compat.html#project_config.compat.Protocol"><code class="docutils literal notranslate"><span class="pre">Protocol</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="project_config.compat.html#project_config.compat.Protocol._abc_impl"><code class="docutils literal notranslate"><span class="pre">Protocol._abc_impl</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project_config.compat.html#project_config.compat.Protocol._is_protocol"><code class="docutils literal notranslate"><span class="pre">Protocol._is_protocol</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project_config.compat.html#project_config.compat.Protocol._is_runtime_protocol"><code class="docutils literal notranslate"><span class="pre">Protocol._is_runtime_protocol</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.compat.html#project_config.compat.TypedDict"><code class="docutils literal notranslate"><span class="pre">TypedDict()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.compat.html#project_config.compat.cached_function"><code class="docutils literal notranslate"><span class="pre">cached_function()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.compat.html#project_config.compat.removeprefix"><code class="docutils literal notranslate"><span class="pre">removeprefix()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.compat.html#project_config.compat.removesuffix"><code class="docutils literal notranslate"><span class="pre">removesuffix()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="project_config.constants.html">project_config.constants module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="project_config.exceptions.html">project_config.exceptions module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="project_config.exceptions.html#project_config.exceptions.ProjectConfigCheckFailed"><code class="docutils literal notranslate"><span class="pre">ProjectConfigCheckFailed</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.exceptions.html#project_config.exceptions.ProjectConfigException"><code class="docutils literal notranslate"><span class="pre">ProjectConfigException</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="project_config.exceptions.html#project_config.exceptions.ProjectConfigException.message"><code class="docutils literal notranslate"><span class="pre">ProjectConfigException.message</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.exceptions.html#project_config.exceptions.ProjectConfigNotImplementedError"><code class="docutils literal notranslate"><span class="pre">ProjectConfigNotImplementedError</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="project_config.tree.html">project_config.tree module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="project_config.tree.html#project_config.tree.cache_file"><code class="docutils literal notranslate"><span class="pre">cache_file()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.tree.html#project_config.tree.cached_local_file"><code class="docutils literal notranslate"><span class="pre">cached_local_file()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.tree.html#project_config.tree.edit_local_file"><code class="docutils literal notranslate"><span class="pre">edit_local_file()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.tree.html#project_config.tree.fetch_remote_file"><code class="docutils literal notranslate"><span class="pre">fetch_remote_file()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="project_config.types_.html">project_config.types_ module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="project_config.types_.html#project_config.types_.ActionsContext"><code class="docutils literal notranslate"><span class="pre">ActionsContext</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="project_config.types_.html#project_config.types_.ActionsContext.files"><code class="docutils literal notranslate"><span class="pre">ActionsContext.files</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project_config.types_.html#project_config.types_.ActionsContext.fix"><code class="docutils literal notranslate"><span class="pre">ActionsContext.fix</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="modules.html" class="btn btn-neutral float-left" title="Reference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="project_config.commands.html" class="btn btn-neutral float-right" title="project_config.commands package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022-2024, Álvaro Mondéjar Rubio &lt;mondejar1994@gmail.com&gt;.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

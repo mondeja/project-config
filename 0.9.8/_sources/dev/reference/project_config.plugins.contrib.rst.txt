@@ -1,0 +1,16 @@
+project\_config.plugins.contrib package
+=======================================
+
+.. automodule:: project_config.plugins.contrib
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   project_config.plugins.contrib.pre_commit

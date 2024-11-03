@@ -1,0 +1,16 @@
+project\_config.serializers.contrib package
+===========================================
+
+.. automodule:: project_config.serializers.contrib
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   project_config.serializers.contrib.pre_commit

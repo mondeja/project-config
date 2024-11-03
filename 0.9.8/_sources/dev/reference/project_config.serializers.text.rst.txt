@@ -1,0 +1,8 @@
+project\_config.serializers.text module
+=======================================
+
+.. automodule:: project_config.serializers.text
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:

@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>project_config.tests.pytest_plugin package &mdash; project-config 0.9.8 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/bolditalic.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/override-styles.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="project_config.tests.pytest_plugin.helpers module" href="project_config.tests.pytest_plugin.helpers.html" />
+    <link rel="prev" title="project_config.tests package" href="project_config.tests.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            project-config
+          </a>
+              <div class="version">
+                0.9
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Quickstart</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../basic-usage.html">Basic usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/cli.html">project-config CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/config.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/styling.html">Styling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/plugins.html">Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/ci.html">Using on CI</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">In depth</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../in-depth/rationale.html">Rationale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../in-depth/fetching.html">Fetching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../in-depth/serialization.html">Objects serialization</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For developers</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../plugins.html">Writing third party plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reporters.html">Writing third party reporters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="project_config.html">project_config package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="project_config.html#project_config.ActionsContext"><code class="docutils literal notranslate"><span class="pre">ActionsContext</span></code></a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="project_config.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="project_config.commands.html">project_config.commands package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.config.html">project_config.config package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.fetchers.html">project_config.fetchers package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.plugins.html">project_config.plugins package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.reporters.html">project_config.reporters package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.serializers.html">project_config.serializers package</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="project_config.tests.html">project_config.tests package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.utils.html">project_config.utils package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="project_config.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">project-config</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">Reference</a></li>
+          <li class="breadcrumb-item"><a href="project_config.html">project_config package</a></li>
+          <li class="breadcrumb-item"><a href="project_config.tests.html">project_config.tests package</a></li>
+      <li class="breadcrumb-item active">project_config.tests.pytest_plugin package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/dev/reference/project_config.tests.pytest_plugin.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-project_config.tests.pytest_plugin">
+<span id="project-config-tests-pytest-plugin-package"></span><h1>project_config.tests.pytest_plugin package<a class="headerlink" href="#module-project_config.tests.pytest_plugin" title="Permalink to this heading"></a></h1>
+<p>Pytest plugin for project-config.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="project_config.tests.pytest_plugin.project_config_data_report_asserter">
+<span class="sig-prename descclassname"><span class="pre">project_config.tests.pytest_plugin.</span></span><span class="sig-name descname"><span class="pre">project_config_data_report_asserter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">monkeypatch</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pytest.MonkeyPatch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rootdir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><span class="pre">pathlib.Path</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">reporter_module</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/types.html#types.ModuleType" title="(in Python v3.13)"><span class="pre">types.ModuleType</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expected_result</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../_modules/project_config/tests/pytest_plugin/plugin.html#project_config_data_report_asserter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.tests.pytest_plugin.project_config_data_report_asserter" title="Permalink to this definition"></a></dt>
+<dd><p>Asserts a data report from a reporter module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>monkeypatch</strong> (<em>pytest.MonkeyPatch</em>) – Monkeypatch fixture. This is not
+needed to define in the fixture as is inserted before the
+execution.</p></li>
+<li><p><strong>rootdir</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><em>pathlib.Path</em></a>) – Path to root directory. This is not needed to
+define in the fixture as is inserted before the execution.</p></li>
+<li><p><strong>reporter_module</strong> (<em>ModuleType</em>) – Module containing the reporters.</p></li>
+<li><p><strong>data_key</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Data key.</p></li>
+<li><p><strong>data</strong> (<em>any</em>) – Data content to report.</p></li>
+<li><p><strong>expected_result</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Expected reported result.</p></li>
+<li><p><strong>fmt</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>optional</em>) – Format to use. Default value is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pytest</span>
+
+<span class="kn">from</span> <span class="nn">project_config.reporters</span> <span class="kn">import</span> <span class="n">default</span>
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span>
+    <span class="p">(</span><span class="s2">&quot;data_key&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;expected_result&quot;</span><span class="p">),</span>
+    <span class="p">(</span>
+        <span class="n">pytest</span><span class="o">.</span><span class="n">param</span><span class="p">(</span>
+            <span class="s2">&quot;config&quot;</span><span class="p">,</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;cache&quot;</span><span class="p">:</span> <span class="s2">&quot;5 minutes&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;style&quot;</span><span class="p">:</span> <span class="s2">&quot;foo.json5&quot;</span><span class="p">,</span>
+            <span class="p">},</span>
+<span class="w">            </span><span class="sd">&#39;&#39;&#39;cache: 5 minutes</span>
+<span class="sd">style: foo.json5</span>
+<span class="sd">&#39;&#39;&#39;</span><span class="p">,</span>
+            <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;config-style-string&quot;</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="n">pytest</span><span class="o">.</span><span class="n">param</span><span class="p">(</span>
+            <span class="s2">&quot;style&quot;</span><span class="p">,</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;rules&quot;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;files&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;foo.ext&quot;</span><span class="p">,</span> <span class="s2">&quot;bar.ext&quot;</span><span class="p">],</span>
+                    <span class="p">},</span>
+                <span class="p">],</span>
+            <span class="p">},</span>
+<span class="w">            </span><span class="sd">&#39;&#39;&#39;rules:</span>
+<span class="sd">  - files:</span>
+<span class="sd">      - foo.ext</span>
+<span class="sd">      - bar.ext</span>
+<span class="sd">&#39;&#39;&#39;</span><span class="p">,</span>
+            <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;style-basic&quot;</span><span class="p">,</span>
+        <span class="p">),</span>
+    <span class="p">),</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_default_data_report</span><span class="p">(</span>
+    <span class="n">data_key</span><span class="p">,</span>
+    <span class="n">data</span><span class="p">,</span>
+    <span class="n">expected_result</span><span class="p">,</span>
+    <span class="n">assert_data_report</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="n">assert_data_report</span><span class="p">(</span>
+        <span class="n">default</span><span class="p">,</span>
+        <span class="n">data_key</span><span class="p">,</span>
+        <span class="n">data</span><span class="p">,</span>
+        <span class="n">expected_result</span><span class="p">,</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="project_config.tests.pytest_plugin.project_config_errors_report_asserter">
+<span class="sig-prename descclassname"><span class="pre">project_config.tests.pytest_plugin.</span></span><span class="sig-name descname"><span class="pre">project_config_errors_report_asserter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">monkeypatch</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pytest.MonkeyPatch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rootdir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><span class="pre">pathlib.Path</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">reporter_module</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/types.html#types.ModuleType" title="(in Python v3.13)"><span class="pre">types.ModuleType</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">errors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><span class="pre">ErrorDict</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expected_result</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../_modules/project_config/tests/pytest_plugin/plugin.html#project_config_errors_report_asserter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.tests.pytest_plugin.project_config_errors_report_asserter" title="Permalink to this definition"></a></dt>
+<dd><p>Asserts an error report from a reporter module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>monkeypatch</strong> (<em>pytest.MonkeyPatch</em>) – Monkeypatch fixture. This is not
+needed to define in the fixture as is inserted before the execution.</p></li>
+<li><p><strong>rootdir</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><em>pathlib.Path</em></a>) – Path to root directory. This is not needed to
+define in the fixture as is inserted before the execution.</p></li>
+<li><p><strong>reporter_module</strong> (<a class="reference external" href="https://docs.python.org/3/library/types.html#types.ModuleType" title="(in Python v3.13)"><em>types.ModuleType</em></a>) – Module containing the reporters.</p></li>
+<li><p><strong>errors</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a>) – Errors.</p></li>
+<li><p><strong>expected_result</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Expected reported result.</p></li>
+<li><p><strong>fmt</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>optional</em>) – Format to use. Default value is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+<li><p><strong>color</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code> (default), the color version of
+the reporter will be tested also.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pytest</span>
+
+<span class="kn">from</span> <span class="nn">project_config.reporters</span> <span class="kn">import</span> <span class="n">default</span>
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span>
+    <span class="p">(</span><span class="s2">&quot;errors&quot;</span><span class="p">,</span> <span class="s2">&quot;expected_result&quot;</span><span class="p">),</span>
+    <span class="p">(</span>
+        <span class="n">pytest</span><span class="o">.</span><span class="n">param</span><span class="p">(</span>
+            <span class="p">[],</span>
+            <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;empty&quot;</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="n">pytest</span><span class="o">.</span><span class="n">param</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="s2">&quot;foo.py&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;message&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="s2">&quot;definition&quot;</span><span class="p">,</span>
+                <span class="p">},</span>
+            <span class="p">],</span>
+            <span class="s2">&quot;foo.py</span><span class="se">\n</span><span class="s2">  - message definition&quot;</span><span class="p">,</span>
+            <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;basic&quot;</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="n">pytest</span><span class="o">.</span><span class="n">param</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="s2">&quot;foo.py&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;message 1&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="s2">&quot;definition 1&quot;</span><span class="p">,</span>
+                <span class="p">},</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="s2">&quot;foo.py&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;message 2&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="s2">&quot;definition 2&quot;</span><span class="p">,</span>
+                <span class="p">},</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="s2">&quot;bar.py&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;message 3&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="s2">&quot;definition 3&quot;</span><span class="p">,</span>
+                <span class="p">},</span>
+            <span class="p">],</span>
+<span class="w">            </span><span class="sd">&#39;&#39;&#39;foo.py</span>
+<span class="sd">  - message 1 definition 1</span>
+<span class="sd">  - message 2 definition 2</span>
+<span class="sd">bar.py</span>
+<span class="sd">  - message 3 definition 3&#39;&#39;&#39;</span><span class="p">,</span>
+            <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;complex&quot;</span><span class="p">,</span>
+        <span class="p">),</span>
+    <span class="p">),</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_default_errors_report</span><span class="p">(</span>
+    <span class="n">errors</span><span class="p">,</span>
+    <span class="n">expected_result</span><span class="p">,</span>
+    <span class="n">assert_errors_report</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="n">assert_errors_report</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="n">errors</span><span class="p">,</span> <span class="n">expected_result</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="project_config.tests.pytest_plugin.project_config_plugin_action_asserter">
+<span class="sig-prename descclassname"><span class="pre">project_config.tests.pytest_plugin.</span></span><span class="sig-name descname"><span class="pre">project_config_plugin_action_asserter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rootdir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">RootdirType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plugin_class</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.13)"><span class="pre">type</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">plugin_method_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">files</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">FilesType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rule</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Rule</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expected_results</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><span class="pre">StrictResultType</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_files</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">FilesType</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">assert_case_method_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deprecated</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expected_files</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">FilesType</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../_modules/project_config/tests/pytest_plugin/plugin.html#project_config_plugin_action_asserter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.tests.pytest_plugin.project_config_plugin_action_asserter" title="Permalink to this definition"></a></dt>
+<dd><p>Convenient function to test a plugin action.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rootdir</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><em>pathlib.Path</em></a>) – Path to root directory. This is not needed to
+define in the fixture as is inserted before the execution.</p></li>
+<li><p><strong>plugin_class</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.13)"><em>type</em></a>) – Plugin class.</p></li>
+<li><p><strong>plugin_method_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Plugin method name.</p></li>
+<li><p><strong>files</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – Dictionary of files to create.
+Must have the file paths as keys and the content as values.
+The keys will be passed to the <code class="docutils literal notranslate"><span class="pre">files</span></code> property of the rule.
+If the value is <code class="docutils literal notranslate"><span class="pre">False</span></code>, the file will not be created.
+If the value is <code class="docutils literal notranslate"><span class="pre">None</span></code>, the file will be created as a directory.</p></li>
+<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a>) – Value passed to the action.</p></li>
+<li><p><strong>rule</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – Rule definition.</p></li>
+<li><p><strong>expected_results</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a>) – Expected results.</p></li>
+<li><p><strong>additional_files</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a><em>, </em><em>optional</em>) – Dictionary of additional files to
+create. These will not be defined inside the <code class="docutils literal notranslate"><span class="pre">files</span></code> property of
+the rule. Follows the same format as <code class="docutils literal notranslate"><span class="pre">files</span></code>.</p></li>
+<li><p><strong>assert_case_method_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code> (default), the
+method name will be checked to match against camelCase or
+PascalCase style.</p></li>
+<li><p><strong>deprecated</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, the action must raise a
+deprecation warning. Default value is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+<li><p><strong>fix</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, the action will be called with
+the <code class="docutils literal notranslate"><span class="pre">fix</span></code> mode active. Use <code class="docutils literal notranslate"><span class="pre">expected_files</span></code> to check the content
+of the files after the fix is applyed.</p></li>
+<li><p><strong>expected_files</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a><em>, </em><em>optional</em>) – Dictionary of expected files.
+Keys are the paths of the files and values are either strings
+for file contents (the content will be checked to be included as
+equality). an array of strings for partial file contents
+(will be checked to be included as subsets with an <code class="docutils literal notranslate"><span class="pre">in</span></code>
+operation), a boolean to skip the file (useful to pass files that
+doesn’t exist to plugins) or <code class="docutils literal notranslate"><span class="pre">None</span></code> to expect the existence of a
+directory.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pytest</span>
+
+<span class="kn">from</span> <span class="nn">project_config</span> <span class="kn">import</span> <span class="n">Error</span><span class="p">,</span> <span class="n">InterruptingError</span><span class="p">,</span> <span class="n">ResultValue</span>
+<span class="kn">from</span> <span class="nn">project_config.plugins.include</span> <span class="kn">import</span> <span class="n">IncludePlugin</span>
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span>
+    <span class="p">(</span><span class="s2">&quot;files&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="s2">&quot;rule&quot;</span><span class="p">,</span> <span class="s2">&quot;expected_results&quot;</span><span class="p">),</span>
+    <span class="p">(</span>
+        <span class="n">pytest</span><span class="o">.</span><span class="n">param</span><span class="p">(</span>
+            <span class="p">{</span><span class="s2">&quot;foo.ext&quot;</span><span class="p">:</span> <span class="s2">&quot;foo&quot;</span><span class="p">},</span>
+            <span class="p">[</span><span class="s2">&quot;foo&quot;</span><span class="p">],</span>
+            <span class="kc">None</span><span class="p">,</span>
+            <span class="p">[],</span>
+            <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;ok&quot;</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="n">pytest</span><span class="o">.</span><span class="n">param</span><span class="p">(</span>
+            <span class="p">{</span><span class="s2">&quot;foo.ext&quot;</span><span class="p">:</span> <span class="s2">&quot;foo&quot;</span><span class="p">},</span>
+            <span class="p">[</span><span class="s2">&quot;bar&quot;</span><span class="p">],</span>
+            <span class="kc">None</span><span class="p">,</span>
+            <span class="p">[</span>
+                <span class="p">(</span>
+                    <span class="n">Error</span><span class="p">,</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;definition&quot;</span><span class="p">:</span> <span class="s2">&quot;.includeLines[0]&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="s2">&quot;foo.ext&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Expected line &#39;bar&#39; not found&quot;</span><span class="p">,</span>
+                    <span class="p">},</span>
+                <span class="p">),</span>
+            <span class="p">],</span>
+            <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;error&quot;</span><span class="p">,</span>
+        <span class="p">),</span>
+    <span class="p">),</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_includeLines</span><span class="p">(</span>
+    <span class="n">files</span><span class="p">,</span>
+    <span class="n">value</span><span class="p">,</span>
+    <span class="n">rule</span><span class="p">,</span>
+    <span class="n">expected_results</span><span class="p">,</span>
+    <span class="n">assert_project_config_plugin_action</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="n">assert_project_config_plugin_action</span><span class="p">(</span>
+        <span class="n">IncludePlugin</span><span class="p">,</span>
+        <span class="s1">&#39;includeLines&#39;</span><span class="p">,</span>
+        <span class="n">files</span><span class="p">,</span>
+        <span class="n">value</span><span class="p">,</span>
+        <span class="n">rule</span><span class="p">,</span>
+        <span class="n">expected_results</span><span class="p">,</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="project_config.tests.pytest_plugin.helpers.html">project_config.tests.pytest_plugin.helpers module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="project_config.tests.pytest_plugin.helpers.html#project_config.tests.pytest_plugin.helpers.assert_expected_files"><code class="docutils literal notranslate"><span class="pre">assert_expected_files()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.tests.pytest_plugin.helpers.html#project_config.tests.pytest_plugin.helpers.create_files"><code class="docutils literal notranslate"><span class="pre">create_files()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.tests.pytest_plugin.helpers.html#project_config.tests.pytest_plugin.helpers.create_tree"><code class="docutils literal notranslate"><span class="pre">create_tree()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.tests.pytest_plugin.helpers.html#project_config.tests.pytest_plugin.helpers.get_reporter_class_from_module"><code class="docutils literal notranslate"><span class="pre">get_reporter_class_from_module()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="project_config.tests.pytest_plugin.plugin.html">project_config.tests.pytest_plugin.plugin module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="project_config.tests.pytest_plugin.plugin.html#project_config.tests.pytest_plugin.plugin.assert_data_report"><code class="docutils literal notranslate"><span class="pre">assert_data_report()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.tests.pytest_plugin.plugin.html#project_config.tests.pytest_plugin.plugin.assert_errors_report"><code class="docutils literal notranslate"><span class="pre">assert_errors_report()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.tests.pytest_plugin.plugin.html#project_config.tests.pytest_plugin.plugin.assert_project_config_plugin_action"><code class="docutils literal notranslate"><span class="pre">assert_project_config_plugin_action()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.tests.pytest_plugin.plugin.html#project_config.tests.pytest_plugin.plugin.project_config_data_report_asserter"><code class="docutils literal notranslate"><span class="pre">project_config_data_report_asserter()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.tests.pytest_plugin.plugin.html#project_config.tests.pytest_plugin.plugin.project_config_errors_report_asserter"><code class="docutils literal notranslate"><span class="pre">project_config_errors_report_asserter()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.tests.pytest_plugin.plugin.html#project_config.tests.pytest_plugin.plugin.project_config_plugin_action_asserter"><code class="docutils literal notranslate"><span class="pre">project_config_plugin_action_asserter()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="project_config.tests.html" class="btn btn-neutral float-left" title="project_config.tests package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="project_config.tests.pytest_plugin.helpers.html" class="btn btn-neutral float-right" title="project_config.tests.pytest_plugin.helpers module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022-2024, Álvaro Mondéjar Rubio &lt;mondejar1994@gmail.com&gt;.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
