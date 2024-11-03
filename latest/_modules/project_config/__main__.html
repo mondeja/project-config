@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.__main__ &mdash; project-config 0.9.6 documentation</title>
+  <title>project_config.__main__ &mdash; project-config 0.9.8 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -114,8 +114,7 @@
 <span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Sequence</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
 
-<span class="kn">from</span> <span class="nn">importlib_metadata_argparse_version</span> <span class="kn">import</span> <span class="n">ImportlibMetadataVersionAction</span>
-
+<span class="kn">from</span> <span class="nn">project_config</span> <span class="kn">import</span> <span class="n">__version__</span>
 <span class="kn">from</span> <span class="nn">project_config.exceptions</span> <span class="kn">import</span> <span class="n">ProjectConfigException</span>
 
 
@@ -184,9 +183,9 @@
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
         <span class="s2">&quot;-v&quot;</span><span class="p">,</span>
         <span class="s2">&quot;--version&quot;</span><span class="p">,</span>
-        <span class="n">action</span><span class="o">=</span><span class="n">ImportlibMetadataVersionAction</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;version&quot;</span><span class="p">,</span>
+        <span class="n">version</span><span class="o">=</span><span class="n">__version__</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Show project-config&#39;s version number and exit.&quot;</span><span class="p">,</span>
-        <span class="n">version_from</span><span class="o">=</span><span class="s2">&quot;project-config&quot;</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="c1"># common arguments</span>

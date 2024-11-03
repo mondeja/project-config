@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config package &mdash; project-config 0.9.6 documentation</title>
+  <title>project_config package &mdash; project-config 0.9.8 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -260,7 +260,6 @@
 <li class="toctree-l2"><a class="reference internal" href="project_config.plugins.html#project_config.plugins.InvalidPluginFunction"><code class="docutils literal notranslate"><span class="pre">InvalidPluginFunction</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="project_config.plugins.html#project_config.plugins.Plugins"><code class="docutils literal notranslate"><span class="pre">Plugins</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="project_config.plugins.html#project_config.plugins.Plugins._add_plugin_to_cache"><code class="docutils literal notranslate"><span class="pre">Plugins._add_plugin_to_cache()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="project_config.plugins.html#project_config.plugins.Plugins._extract_actions_from_plugin_module"><code class="docutils literal notranslate"><span class="pre">Plugins._extract_actions_from_plugin_module()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="project_config.plugins.html#project_config.plugins.Plugins._prepare_all_plugins_cache"><code class="docutils literal notranslate"><span class="pre">Plugins._prepare_all_plugins_cache()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="project_config.plugins.html#project_config.plugins.Plugins._prepare_default_plugins_cache"><code class="docutils literal notranslate"><span class="pre">Plugins._prepare_default_plugins_cache()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="project_config.plugins.html#project_config.plugins.Plugins.get_function_for_action"><code class="docutils literal notranslate"><span class="pre">Plugins.get_function_for_action()</span></code></a></li>
@@ -441,8 +440,9 @@
 <li class="toctree-l1"><a class="reference internal" href="project_config.utils.html">project_config.utils package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="project_config.utils.html#submodules">Submodules</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="project_config.utils.crypto.html">project_config.utils.crypto module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="project_config.utils.crypto.html#project_config.utils.crypto.hash_digest"><code class="docutils literal notranslate"><span class="pre">hash_digest()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.utils.crypto.html#project_config.utils.crypto._build_hash"><code class="docutils literal notranslate"><span class="pre">_build_hash()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="project_config.utils.crypto.html#project_config.utils.crypto.hash_file"><code class="docutils literal notranslate"><span class="pre">hash_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_config.utils.crypto.html#project_config.utils.crypto.hash_hexdigest"><code class="docutils literal notranslate"><span class="pre">hash_hexdigest()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="project_config.utils.http.html">project_config.utils.http module</a><ul>
@@ -502,15 +502,19 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="project_config.cache.html">project_config.cache module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="project_config.cache.html#project_config.cache.Cache"><code class="docutils literal notranslate"><span class="pre">Cache</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="project_config.cache.html#project_config.cache.Cache._cache"><code class="docutils literal notranslate"><span class="pre">Cache._cache</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="project_config.cache.html#project_config.cache.Cache._expiration_time"><code class="docutils literal notranslate"><span class="pre">Cache._expiration_time</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="project_config.cache.html#project_config.cache.Cache.clean"><code class="docutils literal notranslate"><span class="pre">Cache.clean()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project_config.cache.html#project_config.cache.Cache.ensure_dir"><code class="docutils literal notranslate"><span class="pre">Cache.ensure_dir()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project_config.cache.html#project_config.cache.Cache.generate_unique_key_from_tree_entry"><code class="docutils literal notranslate"><span class="pre">Cache.generate_unique_key_from_tree_entry()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="project_config.cache.html#project_config.cache.Cache.get"><code class="docutils literal notranslate"><span class="pre">Cache.get()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="project_config.cache.html#project_config.cache.Cache.set"><code class="docutils literal notranslate"><span class="pre">Cache.set()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="project_config.cache.html#project_config.cache.Cache.set_expiration_time"><code class="docutils literal notranslate"><span class="pre">Cache.set_expiration_time()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="project_config.cache.html#project_config.cache.generate_possible_cache_dirs"><code class="docutils literal notranslate"><span class="pre">generate_possible_cache_dirs()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.cache.html#project_config.cache.get_creation_time_from_fpath"><code class="docutils literal notranslate"><span class="pre">get_creation_time_from_fpath()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.cache.html#project_config.cache.read_file"><code class="docutils literal notranslate"><span class="pre">read_file()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_config.cache.html#project_config.cache.write_file"><code class="docutils literal notranslate"><span class="pre">write_file()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="project_config.compat.html">project_config.compat module</a><ul>

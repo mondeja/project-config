@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.utils.crypto module &mdash; project-config 0.9.6 documentation</title>
+  <title>project_config.utils.crypto module &mdash; project-config 0.9.8 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -128,25 +128,13 @@
 <span id="project-config-utils-crypto-module"></span><h1>project_config.utils.crypto module<a class="headerlink" href="#module-project_config.utils.crypto" title="Permalink to this heading"></a></h1>
 <p>Criptographic utilities.</p>
 <dl class="py function">
-<dt class="sig sig-object py" id="project_config.utils.crypto.hash_digest">
-<span class="sig-prename descclassname"><span class="pre">project_config.utils.crypto.</span></span><span class="sig-name descname"><span class="pre">hash_digest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.13)"><span class="pre">bytes</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.13)"><span class="pre">bytes</span></a></span></span><a class="reference internal" href="../../_modules/project_config/utils/crypto.html#hash_digest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.utils.crypto.hash_digest" title="Permalink to this definition"></a></dt>
-<dd><p>Return the hash digest of the data.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.13)"><em>bytes</em></a>) – The data to hash.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The hash digest of the data.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.13)">bytes</a></p>
-</dd>
-</dl>
-</dd></dl>
+<dt class="sig sig-object py" id="project_config.utils.crypto._build_hash">
+<span class="sig-prename descclassname"><span class="pre">project_config.utils.crypto.</span></span><span class="sig-name descname"><span class="pre">_build_hash</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.13)"><span class="pre">bytes</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">blake2b</span></span></span><a class="reference internal" href="../../_modules/project_config/utils/crypto.html#_build_hash"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.utils.crypto._build_hash" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="project_config.utils.crypto.hash_file">
-<span class="sig-prename descclassname"><span class="pre">project_config.utils.crypto.</span></span><span class="sig-name descname"><span class="pre">hash_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.13)"><span class="pre">bytes</span></a></span></span><a class="reference internal" href="../../_modules/project_config/utils/crypto.html#hash_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.utils.crypto.hash_file" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">project_config.utils.crypto.</span></span><span class="sig-name descname"><span class="pre">hash_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../_modules/project_config/utils/crypto.html#hash_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.utils.crypto.hash_file" title="Permalink to this definition"></a></dt>
 <dd><p>Return the hash digest of the file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -154,6 +142,23 @@
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The hash digest of the file.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="project_config.utils.crypto.hash_hexdigest">
+<span class="sig-prename descclassname"><span class="pre">project_config.utils.crypto.</span></span><span class="sig-name descname"><span class="pre">hash_hexdigest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.13)"><span class="pre">bytes</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../_modules/project_config/utils/crypto.html#hash_hexdigest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#project_config.utils.crypto.hash_hexdigest" title="Permalink to this definition"></a></dt>
+<dd><p>Return the hexadecimal hash digest of the data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.13)"><em>bytes</em></a>) – The data to hash.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The hexadecimal hash digest of the data.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>

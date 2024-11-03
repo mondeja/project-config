@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.config &mdash; project-config 0.9.6 documentation</title>
+  <title>project_config.config &mdash; project-config 0.9.8 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -396,6 +396,8 @@
 <span class="sd">            store_raw_config (bool): If ``True``, the raw configuration</span>
 <span class="sd">                of the file will be stored in the ``raw_`` attribute.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">Cache</span><span class="o">.</span><span class="n">ensure_dir</span><span class="p">()</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">config</span> <span class="o">=</span> <span class="n">read_config</span><span class="p">(</span><span class="n">rootdir</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">store_raw_config</span><span class="p">:</span>

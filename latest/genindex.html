@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Index &mdash; project-config 0.9.6 documentation</title>
+  <title>Index &mdash; project-config 0.9.8 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -123,6 +123,7 @@
  | <a href="#T"><strong>T</strong></a>
  | <a href="#U"><strong>U</strong></a>
  | <a href="#V"><strong>V</strong></a>
+ | <a href="#W"><strong>W</strong></a>
  | <a href="#Y"><strong>Y</strong></a>
  | <a href="#Z"><strong>Z</strong></a>
  
@@ -174,9 +175,9 @@
 </li>
       <li><a href="dev/reference/project_config.fetchers.github.html#project_config.fetchers.github._build_github_api_url">_build_github_api_url() (in module project_config.fetchers.github)</a>
 </li>
-      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath._build_reverse_jmes_type_object">_build_reverse_jmes_type_object() (in module project_config.utils.jmespath)</a>
+      <li><a href="dev/reference/project_config.utils.crypto.html#project_config.utils.crypto._build_hash">_build_hash() (in module project_config.utils.crypto)</a>
 </li>
-      <li><a href="dev/reference/project_config.cache.html#project_config.cache.Cache._cache">_cache (project_config.cache.Cache attribute)</a>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath._build_reverse_jmes_type_object">_build_reverse_jmes_type_object() (in module project_config.utils.jmespath)</a>
 </li>
       <li><a href="dev/reference/project_config.config.html#project_config.config._cache_string_to_seconds">_cache_string_to_seconds() (in module project_config.config)</a>
 </li>
@@ -215,8 +216,6 @@
       <li><a href="dev/reference/project_config.cache.html#project_config.cache.Cache._expiration_time">_expiration_time (project_config.cache.Cache attribute)</a>
 </li>
       <li><a href="dev/reference/project_config.config.style.html#project_config.config.style.Style._extend_partial_style">_extend_partial_style() (project_config.config.style.Style method)</a>
-</li>
-      <li><a href="dev/reference/project_config.plugins.html#project_config.plugins.Plugins._extract_actions_from_plugin_module">_extract_actions_from_plugin_module() (project_config.plugins.Plugins method)</a>
 </li>
       <li><a href="dev/reference/project_config.serializers.html#project_config.serializers._file_can_not_be_serialized_as_object_error">_file_can_not_be_serialized_as_object_error() (in module project_config.serializers)</a>
 </li>
@@ -748,6 +747,8 @@
         <li><a href="reference/plugins.html#ends_with">built-in function</a>
 </li>
       </ul></li>
+      <li><a href="dev/reference/project_config.cache.html#project_config.cache.Cache.ensure_dir">ensure_dir() (project_config.cache.Cache class method)</a>
+</li>
       <li>
     enumerate()
 
@@ -757,10 +758,10 @@
       </ul></li>
       <li><a href="dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseReporter.errors">errors (project_config.reporters.base.BaseReporter attribute)</a>
 </li>
-      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.evaluate_JMESPath">evaluate_JMESPath() (in module project_config.utils.jmespath)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.evaluate_JMESPath">evaluate_JMESPath() (in module project_config.utils.jmespath)</a>
+</li>
       <li><a href="dev/reference/project_config.utils.jmespath.html#project_config.utils.jmespath.evaluate_JMESPath_or_expected_value_error">evaluate_JMESPath_or_expected_value_error() (in module project_config.utils.jmespath)</a>
 </li>
       <li><a href="dev/reference/project_config.reporters.base.html#project_config.reporters.base.BaseReporter.exception_class">exception_class (project_config.reporters.base.BaseReporter attribute)</a>
@@ -969,9 +970,13 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="dev/reference/project_config.cache.html#project_config.cache.generate_possible_cache_dirs">generate_possible_cache_dirs() (in module project_config.cache)</a>
 </li>
+      <li><a href="dev/reference/project_config.cache.html#project_config.cache.Cache.generate_unique_key_from_tree_entry">generate_unique_key_from_tree_entry() (project_config.cache.Cache class method)</a>
+</li>
       <li><a href="dev/reference/project_config.utils.http.html#project_config.utils.http.GET">GET() (in module project_config.utils.http)</a>
 </li>
       <li><a href="dev/reference/project_config.cache.html#project_config.cache.Cache.get">get() (project_config.cache.Cache class method)</a>
+</li>
+      <li><a href="dev/reference/project_config.cache.html#project_config.cache.get_creation_time_from_fpath">get_creation_time_from_fpath() (in module project_config.cache)</a>
 </li>
       <li><a href="dev/reference/project_config.plugins.html#project_config.plugins.Plugins.get_function_for_action">get_function_for_action() (project_config.plugins.Plugins method)</a>
 </li>
@@ -1016,11 +1021,11 @@
 <h2 id="H">H</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="dev/reference/project_config.utils.crypto.html#project_config.utils.crypto.hash_digest">hash_digest() (in module project_config.utils.crypto)</a>
+      <li><a href="dev/reference/project_config.utils.crypto.html#project_config.utils.crypto.hash_file">hash_file() (in module project_config.utils.crypto)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="dev/reference/project_config.utils.crypto.html#project_config.utils.crypto.hash_file">hash_file() (in module project_config.utils.crypto)</a>
+      <li><a href="dev/reference/project_config.utils.crypto.html#project_config.utils.crypto.hash_hexdigest">hash_hexdigest() (in module project_config.utils.crypto)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -1872,6 +1877,8 @@
 </li>
       <li><a href="dev/reference/project_config.config.html#project_config.config.read_config_from_pyproject_toml">read_config_from_pyproject_toml() (in module project_config.config)</a>
 </li>
+      <li><a href="dev/reference/project_config.cache.html#project_config.cache.read_file">read_file() (in module project_config.cache)</a>
+</li>
       <li>
     regex_escape()
 
@@ -2203,6 +2210,14 @@
       <li><a href="dev/reference/project_config.reporters.html#project_config.reporters.ThirdPartyReporters.validate_reporter_class">validate_reporter_class() (project_config.reporters.ThirdPartyReporters method)</a>
 </li>
       <li><a href="dev/reference/project_config.reporters.html#project_config.reporters.ThirdPartyReporters.validate_reporter_module">validate_reporter_module() (project_config.reporters.ThirdPartyReporters method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="W">W</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="dev/reference/project_config.cache.html#project_config.cache.write_file">write_file() (in module project_config.cache)</a>
 </li>
   </ul></td>
 </tr></table>

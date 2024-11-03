@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.utils.crypto &mdash; project-config 0.9.6 documentation</title>
+  <title>project_config.utils.crypto &mdash; project-config 0.9.8 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
@@ -108,21 +108,22 @@
 <span class="kn">import</span> <span class="nn">hashlib</span>
 
 
-<div class="viewcode-block" id="hash_digest"><a class="viewcode-back" href="../../../dev/reference/project_config.utils.crypto.html#project_config.utils.crypto.hash_digest">[docs]</a><span class="k">def</span> <span class="nf">hash_digest</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the hash digest of the data.</span>
+<div class="viewcode-block" id="_build_hash"><a class="viewcode-back" href="../../../dev/reference/project_config.utils.crypto.html#project_config.utils.crypto._build_hash">[docs]</a><span class="k">def</span> <span class="nf">_build_hash</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">blake2b</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">blake2b</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">digest_size</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="hash_hexdigest"><a class="viewcode-back" href="../../../dev/reference/project_config.utils.crypto.html#project_config.utils.crypto.hash_hexdigest">[docs]</a><span class="k">def</span> <span class="nf">hash_hexdigest</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the hexadecimal hash digest of the data.</span>
 
 <span class="sd">    :param data: The data to hash.</span>
 <span class="sd">    :type data: bytes</span>
-<span class="sd">    :return: The hash digest of the data.</span>
-<span class="sd">    :rtype: bytes</span>
+<span class="sd">    :return: The hexadecimal hash digest of the data.</span>
+<span class="sd">    :rtype: str</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">blake2b</span><span class="p">(</span>
-        <span class="n">data</span><span class="p">,</span>
-        <span class="n">digest_size</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span>
-    <span class="p">)</span><span class="o">.</span><span class="n">digest</span><span class="p">()</span></div>
+    <span class="k">return</span> <span class="n">_build_hash</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="hash_file"><a class="viewcode-back" href="../../../dev/reference/project_config.utils.crypto.html#project_config.utils.crypto.hash_file">[docs]</a><span class="k">def</span> <span class="nf">hash_file</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+<div class="viewcode-block" id="hash_file"><a class="viewcode-back" href="../../../dev/reference/project_config.utils.crypto.html#project_config.utils.crypto.hash_file">[docs]</a><span class="k">def</span> <span class="nf">hash_file</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the hash digest of the file.</span>
 
 <span class="sd">    :param filename: The file to hash.</span>
@@ -131,7 +132,7 @@
 <span class="sd">    :rtype: str</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">hash_digest</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span></div>
+        <span class="k">return</span> <span class="n">hash_hexdigest</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span></div>
 </pre></div>
 
            </div>

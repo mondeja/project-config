@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.tree &mdash; project-config 0.9.6 documentation</title>
+  <title>project_config.tree &mdash; project-config 0.9.8 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -228,6 +228,7 @@
             <span class="c1"># the file is a directory, skip caching</span>
             <span class="k">return</span>
 
+        <span class="c1"># use hashes for files with multiple serializers</span>
         <span class="n">fhash</span> <span class="o">=</span> <span class="n">hash_file</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
 
         <span class="n">previous_value_in_cache</span> <span class="o">=</span> <span class="n">Cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">fhash</span><span class="p">)</span>
@@ -246,10 +247,7 @@
                         <span class="n">prefer_serializer</span><span class="o">=</span><span class="n">serializer</span><span class="p">,</span>
                     <span class="p">)</span>
 
-            <span class="n">Cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span>
-                <span class="n">fhash</span><span class="p">,</span>
-                <span class="n">new_cache_value</span><span class="p">,</span>
-            <span class="p">)</span>
+            <span class="n">Cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">fhash</span><span class="p">,</span> <span class="n">new_cache_value</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># file is already cached, just update serialized versions</span>
             <span class="n">_changed</span> <span class="o">=</span> <span class="kc">False</span>
@@ -264,10 +262,7 @@
                         <span class="n">_changed</span> <span class="o">=</span> <span class="kc">True</span>
 
             <span class="k">if</span> <span class="n">_changed</span><span class="p">:</span>
-                <span class="n">Cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span>
-                    <span class="n">fhash</span><span class="p">,</span>
-                    <span class="n">previous_value_in_cache</span><span class="p">,</span>
-                <span class="p">)</span>
+                <span class="n">Cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">fhash</span><span class="p">,</span> <span class="n">previous_value_in_cache</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="c1"># the file is remote, check if resides in the cache</span>
         <span class="n">previous_value_in_cache</span> <span class="o">=</span> <span class="n">Cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
@@ -356,10 +351,7 @@
             <span class="n">result</span> <span class="o">=</span> <span class="n">previous_value_in_cache</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;py&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">result</span> <span class="o">=</span> <span class="n">previous_value_in_cache</span><span class="p">[</span><span class="n">serializer</span><span class="p">]</span>
-        <span class="n">Cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span>
-            <span class="n">fhash</span><span class="p">,</span>
-            <span class="n">previous_value_in_cache</span><span class="p">,</span>
-        <span class="p">)</span>
+        <span class="n">Cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">fhash</span><span class="p">,</span> <span class="n">previous_value_in_cache</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">previous_value_in_cache</span><span class="p">[</span><span class="n">serializer</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">result</span></div>

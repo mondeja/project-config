@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>project_config.plugins &mdash; project-config 0.9.6 documentation</title>
+  <title>project_config.plugins &mdash; project-config 0.9.8 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -109,10 +109,8 @@
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">import</span> <span class="nn">importlib.util</span>
 <span class="kn">import</span> <span class="nn">inspect</span>
-<span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Iterator</span>
+<span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Callable</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Any</span>
 
 <span class="kn">from</span> <span class="nn">project_config.compat</span> <span class="kn">import</span> <span class="n">importlib_metadata</span>
@@ -153,9 +151,6 @@
         <span class="c1"># map from plugin names to loaded classes</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">loaded_plugins</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">type</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
 
-        <span class="c1"># map from plugin names to plugin class loaders functions</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">plugin_names_loaders</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="nb">type</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
-
         <span class="c1"># map from actions to plugins names</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">actions_plugin_names</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
 
@@ -174,7 +169,7 @@
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">plugin_names</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Available plugin names.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plugin_names_loaders</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">loaded_plugins</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">plugin_action_names</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
@@ -203,12 +198,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">action</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">actions_static_methods</span><span class="p">:</span>
             <span class="n">plugin_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">actions_plugin_names</span><span class="p">[</span><span class="n">action</span><span class="p">]</span>
-            <span class="k">if</span> <span class="n">plugin_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">loaded_plugins</span><span class="p">:</span>
-                <span class="n">load_plugin</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">plugin_names_loaders</span><span class="p">[</span><span class="n">plugin_name</span><span class="p">]</span>
-                <span class="n">plugin_class</span> <span class="o">=</span> <span class="n">load_plugin</span><span class="p">()</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">loaded_plugins</span><span class="p">[</span><span class="n">plugin_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">plugin_class</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">plugin_class</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">loaded_plugins</span><span class="p">[</span><span class="n">plugin_name</span><span class="p">]</span>
+            <span class="n">plugin_class</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">loaded_plugins</span><span class="p">[</span><span class="n">plugin_name</span><span class="p">]</span>
             <span class="n">method</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">plugin_class</span><span class="p">,</span> <span class="n">action</span><span class="p">)</span>
 
             <span class="c1"># the actions in plugins must be defined as static methods</span>
@@ -281,30 +271,17 @@
 
 <div class="viewcode-block" id="Plugins._add_plugin_to_cache"><a class="viewcode-back" href="../../dev/reference/project_config.plugins.html#project_config.plugins.Plugins._add_plugin_to_cache">[docs]</a>    <span class="k">def</span> <span class="nf">_add_plugin_to_cache</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">plugin</span><span class="p">:</span> <span class="n">importlib_metadata</span><span class="o">.</span><span class="n">EntryPoint</span><span class="p">,</span>
+        <span class="n">plugin_entry_point</span><span class="p">:</span> <span class="n">importlib_metadata</span><span class="o">.</span><span class="n">EntryPoint</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="c1"># do not load plugin until any action is called</span>
-        <span class="c1"># instead just save in cache and will be loaded on demand</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">plugin_names_loaders</span><span class="p">[</span><span class="n">plugin</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">plugin</span><span class="o">.</span><span class="n">load</span>
+        <span class="k">if</span> <span class="n">plugin_entry_point</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">loaded_plugins</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">plugin</span> <span class="o">=</span> <span class="n">plugin_entry_point</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loaded_plugins</span><span class="p">[</span><span class="n">plugin_entry_point</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">plugin</span>
 
-        <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_actions_from_plugin_module</span><span class="p">(</span><span class="n">plugin</span><span class="o">.</span><span class="n">module</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">action</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">actions_plugin_names</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">actions_plugin_names</span><span class="p">[</span><span class="n">action</span><span class="p">]</span> <span class="o">=</span> <span class="n">plugin</span><span class="o">.</span><span class="n">name</span></div>
-
-<div class="viewcode-block" id="Plugins._extract_actions_from_plugin_module"><a class="viewcode-back" href="../../dev/reference/project_config.plugins.html#project_config.plugins.Plugins._extract_actions_from_plugin_module">[docs]</a>    <span class="k">def</span> <span class="nf">_extract_actions_from_plugin_module</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">module_dotpath</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="c1"># TODO: raise error if specification or module not found</span>
-        <span class="c1">#   this could happen if an user as defined an entrypoint</span>
-        <span class="c1">#   pointing to a non existent module</span>
-        <span class="n">module_spec</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">find_spec</span><span class="p">(</span><span class="n">module_dotpath</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">module_spec</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">module_path</span> <span class="o">=</span> <span class="n">module_spec</span><span class="o">.</span><span class="n">origin</span>
-            <span class="k">if</span> <span class="n">module_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">module_path</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-                    <span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;def ([^_]\w+)\(&quot;</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()):</span>
-                        <span class="k">yield</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div></div>
+        <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">plugin</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">action</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">):</span>
+                <span class="k">continue</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">actions_plugin_names</span><span class="p">[</span><span class="n">action</span><span class="p">]</span> <span class="o">=</span> <span class="n">plugin_entry_point</span><span class="o">.</span><span class="n">name</span></div></div>
 </pre></div>
 
            </div>
