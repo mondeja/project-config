@@ -47,7 +47,7 @@ YAML (v1.2)
 * See `YAML supported types by version`_.
 
 .. _YAML supported types by version: https://perlpunk.github.io/yaml-test-schema/schemas.html
-.. _ruamel.yaml: https://yaml.readthedocs.io/en/latest
+.. _ruamel.yaml: https://yaml.dev/doc/ruamel.yaml/
 
 *********
 TOML (v1)
